@@ -29,6 +29,8 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'partner_id',
+        'partner_name',
         'first_name',
         'last_name',
         'username',
@@ -77,6 +79,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'check_online_status'=>'datetime',
+        'partner_id' => 'string',
     ];
 
     //get user full name

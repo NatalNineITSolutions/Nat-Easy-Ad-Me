@@ -59,6 +59,8 @@ Route::group(['middleware' => ['globalVariable', 'maintains_mode','setlang']], f
         Route::match(['get','post'],'user-register','userRegister')->name('user.register');
         Route::match(['get', 'post'], 'email-verify', 'emailVerify')->name('email.verify')->middleware('auth:web');
         Route::get('resend-verify-code-again', 'resendCode')->name('resend.verify.code')->middleware('auth:web');
+        Route::get('partner-data-availability','partnerAvailability')->name('partner.data.availability');
+        Route::post('verify-partner-id','partneridAvailability')->name('verify.partner.id');
     });
 
     Route::group(['middleware' => ['setlang', 'globalVariable']], function () {

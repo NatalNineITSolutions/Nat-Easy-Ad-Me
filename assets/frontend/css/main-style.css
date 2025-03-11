@@ -3514,6 +3514,10 @@ object {
   transition: width 0.3s ease-in-out, height 0.3s ease-in-out, margin 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
 
+.input-group{
+  padding: 5px;
+}
+
 .cursorInner.cursor-hover {
   margin-left: -30px;
   margin-top: -30px;

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Modules\Membership\app\Http\Services\MembershipService;
 use Modules\Wallet\app\Models\Wallet;
+use App\Models\Backend\Admin;
 
 class RegisterController extends Controller
 {
@@ -155,60 +156,56 @@ class RegisterController extends Controller
         ]);
     }
 
-    public function userRegister(Request $request){
-
-        if($request->isMethod('POST')){
-
-            if(get_static_option('site_google_captcha_enable') == 'on'){
-                $request->validate([
-                    'first_name' => 'required|max:191',
-                    'last_name' => 'required|max:191',
-                    'email' => 'required|email|unique:users|max:191',
-                    'username' => 'required|unique:users|max:191',
-                    'phone' => 'required|unique:users|max:191',
-                    'password' => 'required|min:6|max:191',
-                    'g-recaptcha-response' => 'required',
-                ]);
-            }else{
-                $request->validate([
-                    'first_name' => 'required|max:191',
-                    'last_name' => 'required|max:191',
-                    'email' => 'required|email|unique:users|max:191',
-                    'username' => 'required|unique:users|max:191',
-                    'phone' => 'required|unique:users|max:191',
-                    'password' => 'required|min:6|max:191',
-                ]);
+    public function userRegister(Request $request) {
+        if ($request->isMethod('POST')) {
+            $validationRules = [
+                'first_name' => 'required|max:191',
+                'last_name' => 'required|max:191',
+                'email' => 'required|email|unique:users|max:191',
+                'username' => 'required|unique:users|max:191',
+                'phone' => 'required|max:191',
+                'country_code' => 'required|max:10',
+                'password' => 'required|min:6|max:191',
+                'confirm_password' => 'required|same:password',
+            ];
+    
+            if (get_static_option('site_google_captcha_enable') == 'on') {
+                $validationRules['g-recaptcha-response'] = 'nullable';
             }
-
-            if($request->password != $request->confirm_password){
-                toastr_warning(__('Password does not match'));
-                return back();
+    
+            $request->validate($validationRules);
+    
+            $email_verify_token = sprintf("%d", random_int(123456, 999999));
+    
+            $phone_number = Str::replace(['-', '(', ')', ' '], '', $request->phone);
+            $country_code = '+' . ltrim($request->country_code, '+');
+            $full_phone_number = $country_code . ' - ' . $phone_number;
+    
+            if (!empty($full_phone_number) && User::where('phone', $full_phone_number)->exists()) {
+                return redirect()->back()->withErrors(['phone' => __('Phone number is already taken')]);
             }
-            $email_verify_tokn = sprintf("%d", random_int(123456, 999999));
+    
 
-            // phone number check
-            $phone_number = Str::replace(['-', '(' , ')' ,' '], '', $request->country_code ?? $request->phone);
-            if (!empty($phone_number)){
-                $existingUser = User::where('phone', $phone_number)->first();
-                if ($existingUser) {
-                    return redirect()->back()->withErrors(['phone' => __('Phone number is already taken')]);
-                }
-            }
-
-            // create user
+            do {
+                $partnerId = 'EAM' . Str::upper(Str::random(6)); 
+            } while (User::where('partner_id', $partnerId)->exists());
+            
+            $partnerName = ucwords(strtolower($request->first_name)) . ' ' . ucwords(strtolower($request->last_name));
+    
             $user = User::create([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
                 'username' => $request->username,
-                'phone' => $phone_number,
+                'phone' => $full_phone_number, 
                 'password' => Hash::make($request->password),
-                'terms_conditions' =>1,
-                'email_verify_token'=> $email_verify_tokn,
+                'terms_conditions' => 1,
+                'email_verify_token' => $email_verify_token,
+                'partner_id' => $partnerId, // Store the unique partner ID
+                'partner_name' => $partnerName, 
             ]);
-
-            // if exists wallet module
-            if(moduleExists("Wallet")){
+    
+            if (moduleExists("Wallet")) {
                 Wallet::create([
                     'user_id' => $user->id,
                     'balance' => 0,
@@ -217,42 +214,31 @@ class RegisterController extends Controller
                     'status' => 1
                 ]);
             }
-
-            // Create membership
+    
+            if ($user && moduleExists("Membership") && membershipModuleExistsAndEnable('Membership')) {
+                $this->membershipService->createFreeMembership($user);
+            }
+    
+            if ($user && !empty(get_static_option('user_email_verify_enable_disable'))) {
+                try {
+                    Mail::to($user->email)->send(new BasicMail([
+                        'subject' => __('Otp Email'),
+                        'message' => __('Your otp code') . ' ' . $email_verify_token
+                    ]));
+                } catch (\Exception $e) {}
+            }
+    
             if ($user) {
-                if (moduleExists("Membership")) {
-                    if (membershipModuleExistsAndEnable('Membership')) {
-                      $this->membershipService->createFreeMembership($user);
-                    }
-                }
+                dispatch(new SendRegisterUserEmailJob($user, $request->password));
             }
-
-
-            if($user){
-                //send OTP to user Email
-                if (!empty(get_static_option('user_email_verify_enable_disable'))){
-                    try {
-                        Mail::to($user->email)->send(new BasicMail([
-                            'subject' =>  __('Otp Email'),
-                            'message' => __('Your otp code').' '.$email_verify_tokn
-                        ]));
-                    }
-                    catch (\Exception $e) {}
-                }
-
-                $user_request_password = $request->password;
-                // Dispatch job to send welcome email in the background
-                dispatch(new SendRegisterUserEmailJob($user,$user_request_password));
-            }
-
+    
             if (Auth::guard('web')->attempt(['username' => $request->username, 'password' => $request->password])) {
-                if(Auth::user()){
-                    return redirect()->route('user.dashboard');
-                }
+                return redirect()->route('user.dashboard');
             }
         }
+    
         return view('frontend.user.user-register');
-    }
+    }       
 
     public function emailVerify(Request $request)
     {
@@ -313,4 +299,28 @@ class RegisterController extends Controller
         return redirect()->back()->with(['msg' => __('Resend Email Verify Code, Please check your inbox of spam.') ,'type' => 'success' ]);
     }
 
+    public function partnerAvailability()
+    {
+        $admin = Admin::first(); 
+        
+        if ($admin) {
+            return response()->json([
+                'success' => true,
+                'partner_id' => $admin->partner_id,
+                'partner_name' => $admin->partner_name
+            ]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'No admin found']);
+        }
+    }
+
+    public function partneridAvailability(Request $request) {
+        $partner = User::where('partner_id', $request->partner_id)->first();
+    
+        if ($partner) {
+            return response()->json(['status' => 'success', 'partner_name' => $partner->partner_name]);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'Partner ID not found']);
+        }
+    }
 }

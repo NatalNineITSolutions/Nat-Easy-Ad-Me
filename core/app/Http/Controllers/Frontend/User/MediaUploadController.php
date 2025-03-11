@@ -20,6 +20,7 @@ class MediaUploadController extends Controller
         $this->validate($request, [
             'file' => 'nullable|mimes:jpg,jpeg,png,gif,webp|max:11000'
         ]);
+
         MediaHelper::insert_media_image($request,'web');
     }
 

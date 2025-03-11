@@ -1,0 +1,2 @@
+<img src="<?php echo e(asset('assets/frontend/img/static/user-no-image.webp')); ?>" alt="<?php echo e(__('author')); ?>">
+<?php /**PATH C:\laragon\www\easyadme\core\resources\views/components/image/user-no-image.blade.php ENDPATH**/ ?>

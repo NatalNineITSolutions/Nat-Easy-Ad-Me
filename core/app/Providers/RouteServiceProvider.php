@@ -16,6 +16,13 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
+
+        $this->routes(function () {
+    
+            Route::middleware('web') // Load matrimony routes without auth middleware
+            ->group(base_path('routes/matrimony.php'));
+
+        });
     }
 
     public function map()

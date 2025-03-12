@@ -190,7 +190,7 @@ class RegisterController extends Controller
                 $partnerId = 'EAM' . Str::upper(Str::random(6)); 
             } while (User::where('partner_id', $partnerId)->exists());
             
-            $partnerName = ucwords(strtolower($request->first_name)) . ' ' . ucwords(strtolower($request->last_name));
+            $partnerName = 'EASYADME-' . strtoupper($request->first_name);
     
             $user = User::create([
                 'first_name' => $request->first_name,

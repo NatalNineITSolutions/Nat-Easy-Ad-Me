@@ -59,7 +59,7 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="btn-wrapper text-center mt-50">
-                                        <button type="submit" id="login_btn"  class="cmn-btn4 w-100 mb-60 verify-account"><?php echo e(__('Send OTP')); ?></button>
+                                        <button type="submit" id="login_btn"  class="cmn-btn4 w-100 mb-60 verify-account"><?php echo e(__('Verify OTP')); ?></button>
                                     </div>
                                 </div>
                             </div>

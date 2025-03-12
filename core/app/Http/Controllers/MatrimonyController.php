@@ -10,12 +10,12 @@ class MatrimonyController extends Controller
 {
     public function index()
     {
-        return view('matrimony.index'); // Ensure this view exists
+        return view('matrimony.index'); 
     }
 
     public function register()
     {
-        return view('matrimony.register'); // Ensure this view file exists
+        return view('matrimony.register'); 
     }
 
     public function store(Request $request)

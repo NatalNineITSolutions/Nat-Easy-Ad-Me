@@ -25,7 +25,8 @@
         "twilio/sdk": "^7.15",
         "xgenious/installer": "^1.6.0",
         "xgenious/paymentgateway": "^4.19.0",
-        "xgenious/xgapiclient": "^3.0"
+        "xgenious/xgapiclient": "^3.0",
+        "kalnoy/nestedset": "^6.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -85,11 +86,5 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true,
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/Sharifur/paymentgateway.git"
-        }
-    ]
+    "prefer-stable": true
 }

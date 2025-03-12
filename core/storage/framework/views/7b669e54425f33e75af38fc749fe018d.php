@@ -148,6 +148,39 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- MLM Tree Section -->
+                                <?php if(isset($mlmTree) && $mlmTree): ?>
+                                    <div class="mlm-tree-container box-shadow1 mt-20">
+                                        <h4 class="dis-title"><?php echo e(__('My MLM Network')); ?></h4>
+                                        <div class="tree">
+                                            <ul>
+                                                <li>
+                                                    <div class="node"><?php echo e($mlmTree->name ?? 'N/A'); ?></div>
+                                                    <?php if(isset($mlmTree->children) && $mlmTree->children->count() > 0): ?>
+                                                        <ul>
+                                                            <?php $__currentLoopData = $mlmTree->children; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $child): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                <li>
+                                                                    <div class="node"><?php echo e($child->name); ?></div>
+                                                                    <?php if(isset($child->children) && $child->children->count() > 0): ?>
+                                                                        <ul>
+                                                                            <?php $__currentLoopData = $child->children; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $subchild): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                                <li>
+                                                                                    <div class="node"><?php echo e($subchild->name); ?></div>
+                                                                                </li>
+                                                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                                        </ul>
+                                                                    <?php endif; ?>
+                                                                </li>
+                                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                        </ul>
+                                                    <?php endif; ?>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                <?php else: ?>
+                                    <p><?php echo e(__('No MLM Data Found')); ?></p>
+                                <?php endif; ?>
                                 <!--All Reviews-->
                                 <div class="all-reviews box-shadow1 mt-20">
                                     <h4 class="dis-title"><?php echo e(__('All Reviews')); ?></h4>

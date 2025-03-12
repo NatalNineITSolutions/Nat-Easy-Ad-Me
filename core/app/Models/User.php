@@ -18,10 +18,11 @@ use Modules\CountryManage\app\Models\Country;
 use Modules\CountryManage\app\Models\State;
 use Modules\Membership\app\Models\UserMembership;
 use Modules\Wallet\app\Models\Wallet;
+use Kalnoy\Nestedset\NodeTrait;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, softDeletes;
+    use HasApiTokens, HasFactory, Notifiable, softDeletes, NodeTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -58,6 +59,8 @@ class User extends Authenticatable
         'verified_status',
         'is_suspend',
         'status',
+        'user_code',
+        'parent_id'
     ];
 
     /**
@@ -78,7 +81,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'check_online_status'=>'datetime',
+        'check_online_status' => 'datetime',
         'partner_id' => 'string',
     ];
 
@@ -90,43 +93,46 @@ class User extends Authenticatable
 
     public function user_country()
     {
-        return $this->belongsTo(Country::class,'country_id')->select('id','country','status');
+        return $this->belongsTo(Country::class, 'country_id')->select('id', 'country', 'status');
     }
     public function user_state()
     {
-        return $this->belongsTo(State::class,'state_id');
+        return $this->belongsTo(State::class, 'state_id');
     }
     public function user_city()
     {
-        return $this->belongsTo(City::class,'city_id');
+        return $this->belongsTo(City::class, 'city_id');
     }
 
     public function identity_verify()
     {
-        return $this->hasOne(IdentityVerification::class,'user_id','id');
+        return $this->hasOne(IdentityVerification::class, 'user_id', 'id');
     }
     public function user_wallet()
     {
-        return $this->hasOne(Wallet::class,'user_id','id');
+        return $this->hasOne(Wallet::class, 'user_id', 'id');
     }
 
     public function membershipUser()
     {
-        if(!moduleExists('Membership')){
+        if (!moduleExists('Membership')) {
             return null;
         }
-        return $this->hasOne(UserMembership::class,'user_id','id');
+        return $this->hasOne(UserMembership::class, 'user_id', 'id');
     }
 
-    public function listings(){
-        return $this->hasMany(Listing::class,'user_id','id');
+    public function listings()
+    {
+        return $this->hasMany(Listing::class, 'user_id', 'id');
     }
 
-    public function reviews(){
-        return $this->hasMany(Review::class,'user_id','id');
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'user_id', 'id');
     }
-    public function account_deactivates(){
-        return $this->hasMany(AccountDeactivate::class,'user_id','id');
+    public function account_deactivates()
+    {
+        return $this->hasMany(AccountDeactivate::class, 'user_id', 'id');
     }
 
     public function member_unseen_message()
@@ -143,6 +149,11 @@ class User extends Authenticatable
             return $this->hasManyThrough(LiveChatMessage::class, LiveChat::class, 'user_id', 'live_chat_id');
         }
         return null;
+    }
+
+    public function children()
+    {
+        return $this->hasMany(User::class, 'parent_id'); 
     }
 
 }

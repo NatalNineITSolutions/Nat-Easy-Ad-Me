@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'laravel/laravel',
-        'pretty_version' => 'dev-main',
-        'version' => 'dev-main',
-        'reference' => '552c7b791fdee340307d54cef095794895b053b4',
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => 'e6137e61756cd9a794e9def65fe370664207ecfc',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -589,6 +589,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'kalnoy/nestedset' => array(
+            'pretty_version' => 'v6.0.5',
+            'version' => '6.0.5.0',
+            'reference' => 'fa3f77bb96709eb6b394f66b54eb08f0d8d47d63',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../kalnoy/nestedset',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'kodova/hamcrest-php' => array(
             'dev_requirement' => true,
             'replaced' => array(
@@ -614,9 +623,9 @@
             'dev_requirement' => false,
         ),
         'laravel/laravel' => array(
-            'pretty_version' => 'dev-main',
-            'version' => 'dev-main',
-            'reference' => '552c7b791fdee340307d54cef095794895b053b4',
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => 'e6137e61756cd9a794e9def65fe370664207ecfc',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -1080,8 +1089,8 @@
         'php-http/async-client-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0',
-                1 => '*',
+                0 => '*',
+                1 => '1.0',
             ),
         ),
         'php-http/client-common' => array(
@@ -1096,8 +1105,8 @@
         'php-http/client-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0',
-                1 => '*',
+                0 => '*',
+                1 => '1.0',
             ),
         ),
         'php-http/discovery' => array(

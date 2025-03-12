@@ -13,13 +13,16 @@ class DashboardController extends Controller
     public function dashboard()
     {
         $user_id = Auth::guard('web')->user()->id;
-        $user = User::with('listings', 'reviews', 'user_country','user_state')->findOrFail($user_id);
+        $user = User::with('listings', 'reviews', 'user_country', 'user_state')->findOrFail($user_id);
+
+        // Fetch MLM tree
+        $mlmTree = User::with('children.children.children')->where('id', $user_id)->first();
 
         // listings
         $user_ads_posted = $user->listings->count();
         $user_active_listings = $user->listings->where('is_published', 1)->where('status', 1)->count();
         $user_deactivated_ads = $user->listings->where('is_published', 0)->where('status', 0)->count();
-        $user_favorite_ads =   ListingFavorite::where('user_id', $user_id)->count();
+        $user_favorite_ads = ListingFavorite::where('user_id', $user_id)->count();
 
         // Ratings
         $averageRating = $user->reviews?->avg('rating');
@@ -37,7 +40,8 @@ class DashboardController extends Controller
             'averageRating' => $averageRating,
             'user_review_count' => $user_review_count,
             'user_given_reviews' => $user_given_reviews,
+            'mlmTree' => $mlmTree, 
         ]);
-
     }
+
 }

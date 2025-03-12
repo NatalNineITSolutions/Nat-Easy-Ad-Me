@@ -107,6 +107,39 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- MLM Tree Section -->
+                                @if(isset($mlmTree) && $mlmTree)
+                                    <div class="mlm-tree-container box-shadow1 mt-20">
+                                        <h4 class="dis-title">{{ __('My MLM Network') }}</h4>
+                                        <div class="tree">
+                                            <ul>
+                                                <li>
+                                                    <div class="node">{{ $mlmTree->name ?? 'N/A' }}</div>
+                                                    @if(isset($mlmTree->children) && $mlmTree->children->count() > 0)
+                                                        <ul>
+                                                            @foreach($mlmTree->children as $child)
+                                                                <li>
+                                                                    <div class="node">{{ $child->name }}</div>
+                                                                    @if(isset($child->children) && $child->children->count() > 0)
+                                                                        <ul>
+                                                                            @foreach($child->children as $subchild)
+                                                                                <li>
+                                                                                    <div class="node">{{ $subchild->name }}</div>
+                                                                                </li>
+                                                                            @endforeach
+                                                                        </ul>
+                                                                    @endif
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    @endif
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                @else
+                                    <p>{{ __('No MLM Data Found') }}</p>
+                                @endif
                                 <!--All Reviews-->
                                 <div class="all-reviews box-shadow1 mt-20">
                                     <h4 class="dis-title">{{ __('All Reviews') }}</h4>

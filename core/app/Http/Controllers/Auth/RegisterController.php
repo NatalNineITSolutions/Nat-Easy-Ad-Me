@@ -164,10 +164,12 @@ class RegisterController extends Controller
                 'email' => 'required|email|unique:users|max:191',
                 'username' => 'required|unique:users|max:191',
                 'phone' => 'required|max:191',
-                'country_code' => 'required|max:10',
+                'country_code' => 'nullable|max:10',
                 'password' => 'required|min:6|max:191',
                 'confirm_password' => 'required|same:password',
+                'sponsor_partner_id' => 'nullable|exists:users,partner_id', // Ensure the sponsor_partner_id exists in the users table
             ];
+            \Log::info($request->all());
     
             if (get_static_option('site_google_captcha_enable') == 'on') {
                 $validationRules['g-recaptcha-response'] = 'nullable';
@@ -185,12 +187,18 @@ class RegisterController extends Controller
                 return redirect()->back()->withErrors(['phone' => __('Phone number is already taken')]);
             }
     
-
             do {
                 $partnerId = 'EAM' . Str::upper(Str::random(6)); 
             } while (User::where('partner_id', $partnerId)->exists());
-            
+    
             $partnerName = 'EASYADME-' . strtoupper($request->first_name);
+    
+            $sponsor = User::where('partner_id', $request->sponsor_partner_id)->first();
+            if (!$sponsor && $request->sponsor_partner_id) {
+                return redirect()->back()->withErrors(['sponsor_partner_id' => __('Invalid Sponsor ID')]);
+            }
+            $parent_id = $sponsor ? $sponsor->id : null; 
+            \Log::info($parent_id);
     
             $user = User::create([
                 'first_name' => $request->first_name,
@@ -201,8 +209,9 @@ class RegisterController extends Controller
                 'password' => Hash::make($request->password),
                 'terms_conditions' => 1,
                 'email_verify_token' => $email_verify_token,
-                'partner_id' => $partnerId, // Store the unique partner ID
+                'partner_id' => $partnerId, 
                 'partner_name' => $partnerName, 
+                'parent_id' => $parent_id, 
             ]);
     
             if (moduleExists("Wallet")) {
@@ -238,7 +247,7 @@ class RegisterController extends Controller
         }
     
         return view('frontend.user.user-register');
-    }       
+    }
 
     public function emailVerify(Request $request)
     {
@@ -323,4 +332,25 @@ class RegisterController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Partner ID not found']);
         }
     }
+
+    public function store(Request $request)
+    {
+        $parent = User::find($request->parent_id); 
+
+        if (!$parent) {
+            return response()->json(['error' => 'Parent not found'], 404);
+        }
+
+        $child = new User([
+            'name' => $request->name,
+            'email' => $request->email,
+            'user_code' => $request->user_code,
+            'password' => bcrypt($request->password)
+        ]);
+
+        $parent->appendNode($child);
+
+        return response()->json(['message' => 'User added successfully!', 'user' => $child]);
+    }
+    
 }

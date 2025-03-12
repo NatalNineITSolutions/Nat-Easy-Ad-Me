@@ -126,7 +126,7 @@
                             <div class="col-lg-6 col-md-12">
                                 <label class="infoTitle"><?php echo e(__('Phone Number')); ?></label>
                                 <div class="input-form input-form2">
-                                    <input type="hidden" id="country-code" name="country_code">
+                                    <!-- <input type="hidden" id="country-code" name="country_code"> -->
                                     <input type="tel" name="phone" value="<?php echo e(old('phone')); ?>" id="phone"
                                         placeholder="<?php echo e(__('Type Phone')); ?>">
                                     <span id="phone_availability"></span>

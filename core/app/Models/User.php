@@ -156,4 +156,25 @@ class User extends Authenticatable
         return $this->hasMany(User::class, 'parent_id'); 
     }
 
+    public function getMLMTree($userId) {
+    $user = User::with('children')->find($userId);
+
+    if (!$user) {
+        return null;
+    }
+
+    $tree = [
+        'id' => $user->id,
+        'name' => $user->first_name . ' ' . $user->last_name,
+        'partner_id' => $user->partner_id,
+        'children' => [],
+    ];
+
+    foreach ($user->children as $child) {
+        $tree['children'][] = $this->getMLMTree($child->id);
+    }
+
+    return $tree;
+}
+
 }

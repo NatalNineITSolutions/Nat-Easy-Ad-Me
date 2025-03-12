@@ -126,7 +126,7 @@
                             <div class="col-lg-6 col-md-12">
                                 <label class="infoTitle"><?php echo e(__('Phone Number')); ?></label>
                                 <div class="input-form input-form2">
-                                    <!-- <input type="hidden" id="country-code" name="country_code"> -->
+                                    <input type="hidden" id="country-code" name="country_code">
                                     <input type="tel" name="phone" value="<?php echo e(old('phone')); ?>" id="phone"
                                         placeholder="<?php echo e(__('Type Phone')); ?>">
                                     <span id="phone_availability"></span>
@@ -176,14 +176,14 @@
                             </div>
 
                             <!-- <?php if(get_static_option('site_google_captcha_enable') == 'on'): ?>
-                                                <div class="col-md-12 my-3">
-                                                    <div class="g-recaptcha" data-sitekey="<?php echo e(get_static_option('recaptcha_2_site_key')); ?>">
+                                                    <div class="col-md-12 my-3">
+                                                        <div class="g-recaptcha" data-sitekey="<?php echo e(get_static_option('recaptcha_2_site_key')); ?>">
+                                                        </div>
+                                                        <?php if($errors->has('g-recaptcha-response')): ?>
+                                                            <span class="text-danger"><?php echo e($errors->first('g-recaptcha-response')); ?></span>
+                                                        <?php endif; ?>
                                                     </div>
-                                                    <?php if($errors->has('g-recaptcha-response')): ?>
-                                                        <span class="text-danger"><?php echo e($errors->first('g-recaptcha-response')); ?></span>
-                                                    <?php endif; ?>
-                                                </div>
-                                            <?php endif; ?> -->
+                                                <?php endif; ?> -->
 
                             <div class="col-sm-12 mt-2">
                                 <div class="btn-wrapper text-center">

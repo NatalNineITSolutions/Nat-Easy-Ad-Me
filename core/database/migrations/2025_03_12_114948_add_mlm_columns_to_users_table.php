@@ -13,7 +13,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            NestedSet::columns($table); // Adds `_lft`, `_rgt`, and `parent_id`
+            NestedSet::columns($table); 
         });
     }
 

@@ -167,9 +167,8 @@ class RegisterController extends Controller
                 'country_code' => 'nullable|max:10',
                 'password' => 'required|min:6|max:191',
                 'confirm_password' => 'required|same:password',
-                'sponsor_partner_id' => 'nullable|exists:users,partner_id', // Ensure the sponsor_partner_id exists in the users table
+                'partner_id' => 'nullable|exists:users,partner_id',
             ];
-            \Log::info($request->all());
     
             if (get_static_option('site_google_captcha_enable') == 'on') {
                 $validationRules['g-recaptcha-response'] = 'nullable';
@@ -193,11 +192,8 @@ class RegisterController extends Controller
     
             $partnerName = 'EASYADME-' . strtoupper($request->first_name);
     
-            $sponsor = User::where('partner_id', $request->partner_id)->first();
-            if (!$sponsor && $request->partner_id) {
-                return redirect()->back()->withErrors(['sponsor_partner_id' => __('Invalid Sponsor ID')]);
-            }
-            $parent_id = $sponsor ? $sponsor->id : null; 
+            $partner = User::where('partner_id', $request->partner_id)->first();
+            $parent_id = $partner ? $partner->id : null; 
     
             $user = User::create([
                 'first_name' => $request->first_name,

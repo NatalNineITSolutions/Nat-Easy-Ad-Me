@@ -110,30 +110,27 @@
                                 <!-- MLM Tree Section -->
                                 @if(isset($mlmTree) && $mlmTree)
                                     <div class="mlm-tree-container box-shadow1 mt-20">
-                                        <h4 class="dis-title">{{ __('My MLM Network') }}</h4>
+                                        <h4 class="dis-title">{{ __('Genology') }}</h4>
                                         <div class="tree">
                                             <ul>
-                                                <li>
-                                                    <div class="node">{{ $mlmTree->name ?? 'N/A' }}</div>
-                                                    @if(isset($mlmTree->children) && $mlmTree->children->count() > 0)
-                                                        <ul>
-                                                            @foreach($mlmTree->children as $child)
-                                                                <li>
-                                                                    <div class="node">{{ $child->name }}</div>
-                                                                    @if(isset($child->children) && $child->children->count() > 0)
-                                                                        <ul>
-                                                                            @foreach($child->children as $subchild)
-                                                                                <li>
-                                                                                    <div class="node">{{ $subchild->name }}</div>
-                                                                                </li>
-                                                                            @endforeach
-                                                                        </ul>
-                                                                    @endif
-                                                                </li>
-                                                            @endforeach
-                                                        </ul>
-                                                    @endif
-                                                </li>
+                                                @php
+                                                    $renderTree = function($node) use (&$renderTree) {
+                                                        echo '<li>';
+                                                        echo '<div class="node">';
+                                                        echo '<span class="node-name">' . ($node['name'] ?? 'N/A') . '</span>';
+                                                        echo '<span class="node-id">' . ($node['partner_id'] ?? 'N/A') . '</span>';
+                                                        echo '</div>';
+                                                        if (isset($node['children']) && count($node['children']) > 0) {
+                                                            echo '<ul class="horizontal">';
+                                                            foreach ($node['children'] as $child) {
+                                                                $renderTree($child); 
+                                                            }
+                                                            echo '</ul>';
+                                                        }
+                                                        echo '</li>';
+                                                    };
+                                                @endphp
+                                                {{ $renderTree($mlmTree) }}
                                             </ul>
                                         </div>
                                     </div>
@@ -176,3 +173,95 @@
 @section('scripts')
     <script src="{{asset('assets/backend/js/sweetalert2.js')}}"></script>
 @endsection
+
+<style>
+    .mlm-tree-container {
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .tree ul {
+        padding-left: 0;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .tree li {
+        list-style-type: none;
+        margin: 0;
+        padding: 20px 10px 0 10px;
+        position: relative;
+        text-align: center;
+    }
+
+    .tree li::before {
+        content: '';
+        position: absolute;
+        border-left: 1.5px solid #aaa; 
+        height: 25px;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .tree li::after {
+        content: '';
+        position: absolute;
+        border-top: 1.5px solid #aaa;
+        height: 1px;
+        top: -15px;
+        left: 0;
+        width: 100%;
+    }
+
+    .tree > ul > li::before,
+    .tree > ul > li::after {
+        display: none; 
+    }
+
+    .tree ul.horizontal {
+        display: flex;
+        justify-content: center;
+        padding-top: 20px;
+        gap: 20px;
+    }
+
+    .tree ul.horizontal li:first-child::after {
+        left: 50%;
+        width: 86%;
+    }
+
+    .tree ul.horizontal li:last-child::after {
+        left: 0;
+        width: 50%;
+        display: none;
+    }
+
+    /* Node Styling */
+    .tree li div.node {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 8px 12px;
+        background: #fff;
+        display: inline-block;
+        min-width: 140px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* Soft shadow */
+        font-family: Arial, sans-serif;
+    }
+
+    .tree li div.node .node-name {
+        font-weight: bold;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .tree li div.node .node-id {
+        font-size: 12px;
+        color: #666;
+        margin-left: 5px;
+    }
+</style>

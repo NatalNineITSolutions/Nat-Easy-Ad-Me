@@ -17,6 +17,7 @@ class DashboardController extends Controller
 
         // Fetch MLM tree
         $mlmTree = User::with('children.children.children')->where('id', $user_id)->first();
+        $mlmTree = User::find($user_id)->getMLMTree($user_id);
 
         // listings
         $user_ads_posted = $user->listings->count();

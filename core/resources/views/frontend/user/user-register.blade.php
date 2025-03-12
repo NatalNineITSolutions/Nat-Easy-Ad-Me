@@ -151,14 +151,14 @@
                             </div>
 
                             <!-- @if(get_static_option('site_google_captcha_enable') == 'on')
-                                                <div class="col-md-12 my-3">
-                                                    <div class="g-recaptcha" data-sitekey="{{ get_static_option('recaptcha_2_site_key')}}">
+                                                    <div class="col-md-12 my-3">
+                                                        <div class="g-recaptcha" data-sitekey="{{ get_static_option('recaptcha_2_site_key')}}">
+                                                        </div>
+                                                        @if ($errors->has('g-recaptcha-response'))
+                                                            <span class="text-danger">{{ $errors->first('g-recaptcha-response') }}</span>
+                                                        @endif
                                                     </div>
-                                                    @if ($errors->has('g-recaptcha-response'))
-                                                        <span class="text-danger">{{ $errors->first('g-recaptcha-response') }}</span>
-                                                    @endif
-                                                </div>
-                                            @endif -->
+                                                @endif -->
 
                             <div class="col-sm-12 mt-2">
                                 <div class="btn-wrapper text-center">

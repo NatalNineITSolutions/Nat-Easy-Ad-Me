@@ -193,12 +193,11 @@ class RegisterController extends Controller
     
             $partnerName = 'EASYADME-' . strtoupper($request->first_name);
     
-            $sponsor = User::where('partner_id', $request->sponsor_partner_id)->first();
-            if (!$sponsor && $request->sponsor_partner_id) {
+            $sponsor = User::where('partner_id', $request->partner_id)->first();
+            if (!$sponsor && $request->partner_id) {
                 return redirect()->back()->withErrors(['sponsor_partner_id' => __('Invalid Sponsor ID')]);
             }
             $parent_id = $sponsor ? $sponsor->id : null; 
-            \Log::info($parent_id);
     
             $user = User::create([
                 'first_name' => $request->first_name,

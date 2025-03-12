@@ -1,14 +1,16 @@
-[2025-03-12 12:51:09] production.INFO: array (
-  '_token' => 'BhQpYPBbvMjnMWcoYUefpNiwK8bmFwdzF8FcCZ6r',
+[2025-03-12 13:06:45] production.INFO: array (
+  '_token' => 'IEWKNMXQY03kR0GMhT0oBytnquBel9o8lBJnr6Rs',
   'partner_id' => 'EAMOKINWB',
   'partner_name' => 'EASYADME-KIRUTHIKA',
-  'first_name' => 'Vikashin',
-  'last_name' => 'J',
-  'username' => 'Vika',
-  'email' => 'jayapalvikashini@gmail.com',
-  'phone' => '9090909090',
+  'first_name' => 'jinu1',
+  'last_name' => 'Jinu',
+  'username' => 'akhil7',
+  'email' => 'natalnines@gmail.com',
+  'country_code' => NULL,
+  'phone' => '09655804621',
   'full_number' => NULL,
-  'password' => '12121212',
-  'confirm_password' => '12121212',
+  'password' => '12345678',
+  'confirm_password' => '12345678',
   'terms_conditions' => '1',
 )  
+[2025-03-12 13:06:45] production.INFO: 12  

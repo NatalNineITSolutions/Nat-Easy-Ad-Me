@@ -13,7 +13,6 @@
         .left {
             width: 50%;
             display: block;
-            background-color: black;
             padding: 50px 0;
             height: auto;
         }

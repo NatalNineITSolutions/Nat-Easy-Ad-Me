@@ -12,25 +12,27 @@ use Illuminate\Validation\Rule;
 use Modules\Membership\app\Models\Membership;
 use Modules\Membership\app\Models\MembershipFeature;
 use Modules\Membership\app\Models\MembershipType;
+use App\Models\User;
 
 class MembershipController extends Controller
 {
     public function all_membership()
     {
         $all_memberships = Membership::with('membership_type')->latest()->paginate(10);
-        return view('membership::backend.membership.all-membership',compact('all_memberships'));
+        return view('membership::backend.membership.all-membership', compact('all_memberships'));
     }
 
     public function add_membership(Request $request)
     {
-        if($request->isMethod('post')){
+        if ($request->isMethod('post')) {
             $request->validate([
-                'type'=> 'required',
-                'title'=> ['required',Rule::unique('memberships')->where(fn ($query) => $query->where('membership_type_id', request()->type)),'max:191'],
-                'price'=> 'required',
-                'listing_limit'=> 'required|gt:0',
-                'feature'=> 'required|array',
-                'status'=> 'nullable|array',
+                'type' => 'required',
+                'title' => ['required', Rule::unique('memberships')->where(fn($query) => $query->where('membership_type_id', request()->type)), 'max:191'],
+                'price' => 'required',
+                'listing_limit' => 'required|gt:0',
+                'feature' => 'required|array',
+                'status' => 'nullable|array',
+                'bv' => 'required|numeric', // Validation for BV points
             ]);
 
             DB::beginTransaction();
@@ -52,44 +54,49 @@ class MembershipController extends Controller
                     'business_hour' => $business_hour,
                     'membership_badge' => $membership_badge,
                     'status' => 1,
+                    'bv_points' => $request->bv, // Storing the BV Points
                 ]);
 
                 $arr = [];
-                foreach($request->feature as $key => $attr) {
+                foreach ($request->feature as $key => $attr) {
                     $arr[] = [
                         'membership_id' => $subscription->id,
                         'feature' => $request->feature[$key] ?? '',
                         'status' => $request->status[$key] ?? 'off',
-                        'created_at' => date('Y-m-d H:i:s'),
-                        'updated_at' => date('Y-m-d H:i:s'),
+                        'created_at' => now(),
+                        'updated_at' => now(),
                     ];
                 }
-                $data = Validator::make($arr,["*.feature" => "required"]);
+
+                $data = Validator::make($arr, ["*.feature" => "required"]);
                 $data->validated();
                 MembershipFeature::insert($arr);
                 DB::commit();
-                return back()->with(FlashMsg::item_new(__('New Subscription Successfully Added')));
-            }catch(Exception $e){
 
+                return back()->with(FlashMsg::item_new(__('New Subscription Successfully Added')));
+            } catch (Exception $e) {
+                DB::rollBack();
+                return back()->withErrors(__('Something went wrong. Please try again.'));
             }
         }
 
         $all_types = MembershipType::all_types();
-        return view('membership::backend.membership.add-membership',compact('all_types'));
+        return view('membership::backend.membership.add-membership', compact('all_types'));
     }
 
-    public function edit_membership(Request $request,$id)
+    public function edit_membership(Request $request, $id)
     {
-        if($request->isMethod('post')){
+        if ($request->isMethod('post')) {
             $request->validate([
-                'title'=> ['required',Rule::unique('memberships')->where(fn ($query) => $query->where('membership_type_id', request()->type))->ignore($id),'max:191'],
-                'type'=> 'required',
-                'price'=> 'required',
-                'listing_limit'=> 'required|gt:0',
-                'feature'=> 'required|array',
-                'status'=> 'nullable|array'
-            ],[
-                'title.unique'=> __('Title already exists for this membership type')
+                'title' => ['required', Rule::unique('memberships')->where(fn($query) => $query->where('membership_type_id', request()->type))->ignore($id), 'max:191'],
+                'type' => 'required',
+                'price' => 'required',
+                'listing_limit' => 'required|gt:0',
+                'feature' => 'required|array',
+                'status' => 'nullable|array',
+                'bv' => 'required|numeric',
+            ], [
+                'title.unique' => __('Title already exists for this membership type')
             ]);
 
             DB::beginTransaction();
@@ -99,7 +106,7 @@ class MembershipController extends Controller
             $membership_badge = isset($request->membership_badge) ? 1 : 0;
 
             try {
-                Membership::where('id',$id)->update([
+                Membership::where('id', $id)->update([
                     'membership_type_id' => $request->type,
                     'title' => $request->title,
                     'price' => $request->price,
@@ -110,12 +117,13 @@ class MembershipController extends Controller
                     'enquiry_form' => $enquiry_form,
                     'business_hour' => $business_hour,
                     'membership_badge' => $membership_badge,
+                    'bv_points' => $request->bv,
                 ]);
 
-                MembershipFeature::where('membership_id',$id)->delete();
+                MembershipFeature::where('membership_id', $id)->delete();
 
                 $arr = [];
-                foreach($request->feature as $key => $attr) {
+                foreach ($request->feature as $key => $attr) {
                     $arr[] = [
                         'membership_id' => $id,
                         'feature' => $request->feature[$key] ?? '',
@@ -124,45 +132,57 @@ class MembershipController extends Controller
                         'updated_at' => Carbon::now(),
                     ];
                 }
-                $data = Validator::make($arr,["*.feature" => "required"]);
+
+                $data = Validator::make($arr, ["*.feature" => "required"]);
                 $data->validated();
                 MembershipFeature::insert($arr);
                 DB::commit();
-                return back()->with(FlashMsg::item_new(__('Subscription Successfully Updated')));
-            }catch(Exception $e){}
-        }
-        $all_types = MembershipType::all_types();
-        $membership_details = Membership::with('features')->where('id',$id)->first();
-        return !empty($membership_details) ?  view('membership::backend.membership.edit-membership',compact('all_types','membership_details')) : back();
-    }
 
+                return back()->with(FlashMsg::item_new(__('Subscription Successfully Updated')));
+            } catch (Exception $e) {
+                DB::rollBack();
+                return back()->withErrors(__('Something went wrong. Please try again.'));
+            }
+        }
+
+        $all_types = MembershipType::all_types();
+        $membership_details = Membership::with('features')->where('id', $id)->first();
+
+        return !empty($membership_details)
+            ? view('membership::backend.membership.edit-membership', compact('all_types', 'membership_details'))
+            : back();
+    }
 
     // search category
     public function search_membership(Request $request)
     {
-        $all_memberships = Membership::whereHas('membership_type', function ($query) use ($request){
-            $query->where('type', 'LIKE', "%". strip_tags($request->string_search) ."%");
+        $all_memberships = Membership::whereHas('membership_type', function ($query) use ($request) {
+            $query->where('type', 'LIKE', "%" . strip_tags($request->string_search) . "%");
         })
-            ->with(['membership_type' => function($query) use ($request){
-                $query->where('type', 'LIKE', "%". strip_tags($request->string_search) ."%");
-            }])
+            ->with([
+                'membership_type' => function ($query) use ($request) {
+                    $query->where('type', 'LIKE', "%" . strip_tags($request->string_search) . "%");
+                }
+            ])
             ->paginate(10);
-        return $all_memberships->total() >= 1 ? view('membership::backend.membership.search-result', compact('all_memberships'))->render() : response()->json(['status'=>__('nothing')]);
+        return $all_memberships->total() >= 1 ? view('membership::backend.membership.search-result', compact('all_memberships'))->render() : response()->json(['status' => __('nothing')]);
     }
 
     // pagination
     function pagination(Request $request)
     {
-        if($request->ajax()){
+        if ($request->ajax()) {
             $request->string_search == ''
                 ? $all_memberships = Membership::with('membership_type')->latest()->paginate(10)
-                : $all_memberships = Membership::whereHas('membership_type', function ($query) use ($request){
-                $query->where('type', 'LIKE', "%". strip_tags($request->string_search) ."%");
-            })
-                ->with(['memberships_type' => function($query) use ($request){
-                    $query->where('type', 'LIKE', "%". strip_tags($request->string_search) ."%");
-                }])
-                ->paginate(10);
+                : $all_memberships = Membership::whereHas('membership_type', function ($query) use ($request) {
+                    $query->where('type', 'LIKE', "%" . strip_tags($request->string_search) . "%");
+                })
+                    ->with([
+                        'memberships_type' => function ($query) use ($request) {
+                            $query->where('type', 'LIKE', "%" . strip_tags($request->string_search) . "%");
+                        }
+                    ])
+                    ->paginate(10);
             return view('membership::backend.membership.search-result', compact('all_memberships'))->render();
         }
     }
@@ -172,20 +192,21 @@ class MembershipController extends Controller
     {
         $membership = Membership::find($id);
         $membership_users = $membership->user_memberships?->count();
-        if($membership_users == 0){
+        if ($membership_users == 0) {
             $membership->delete();
             return back()->with(FlashMsg::error(__('Membership Successfully Deleted')));
-        }else{
+        } else {
             return back()->with(FlashMsg::error(__('Membership is not deletable because it is related to user Memberships')));
         }
     }
 
     // bulk action membership
-    public function bulk_action_membership(Request $request){
-        foreach($request->ids as $membership_id){
+    public function bulk_action_membership(Request $request)
+    {
+        foreach ($request->ids as $membership_id) {
             $membership = Membership::find($membership_id);
             $membership_users = $membership->user_memberships?->count();
-            if($membership_users == 0){
+            if ($membership_users == 0) {
                 $membership->delete();
             }
         }
@@ -195,9 +216,42 @@ class MembershipController extends Controller
     // change membership status
     public function status($id)
     {
-        $membership = Membership::select('status')->where('id',$id)->first();
-        $membership->status == 1 ? $status=0 : $status=1;
-        Membership::where('id',$id)->update(['status'=>$status]);
+        $membership = Membership::select('status')->where('id', $id)->first();
+        $membership->status == 1 ? $status = 0 : $status = 1;
+        Membership::where('id', $id)->update(['status' => $status]);
         return redirect()->back()->with(FlashMsg::error(__('Status Successfully Changed')));
+    }
+
+    public function upgradeMembership(Request $request)
+    {
+        $validatedData = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'membership_id' => 'required|exists:memberships,id',
+        ]);
+
+        $user = User::find($validatedData['user_id']);
+        $newMembership = Membership::find($validatedData['membership_id']);
+
+        if ($user->membership_id != $newMembership->id) {
+            $previousBV = $user->bv_points;
+
+            $user->membership_id = $newMembership->id;
+            $user->bv_points = $newMembership->bv_points; 
+            $user->save();
+
+            if ($user->partner_id) {
+                $referringUser = User::where('partner_id', $user->partner_id)->first();
+                if ($referringUser) {
+                    $referringUser->bv_points -= $previousBV;
+                    $referringUser->bv_points += $newMembership->bv_points;
+                    $referringUser->save();
+                }
+            }
+        }
+
+        return response()->json([
+            'message' => 'Membership upgraded successfully',
+            'user' => $user
+        ]);
     }
 }

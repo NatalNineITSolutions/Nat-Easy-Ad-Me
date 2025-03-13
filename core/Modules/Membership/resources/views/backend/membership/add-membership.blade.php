@@ -50,6 +50,7 @@
 
                     <x-form.text :title="__('Title')" :required="'required'" :type="__('text')" :name="'title'" :id="'title'" :value="old('title', '')" :placeholder="__('Enter title')"/>
                     <x-form.text :title="__('Price')" :required="'required'"  :type="__('number')" :name="'price'" :id="'price'" :value="old('price', '')" :placeholder="__('Enter price')"/>
+                    <x-form.text :title="__('Business Value (BV)')" :required="'required'"  :type="__('number')" :name="'bv'" :id="'bv'" :value="old('bv', '')" :placeholder="__('Enter bv')"/>
                     <x-form.text :title="__('Listings Limit')" :required="'required'"  :type="__('number')" :name="'listing_limit'" :id="'listing_limit'" :divClass="'mb-0'" :value="old('listing_limit', '')" :placeholder="__('Enter listings limit')"/>
                     <x-form.text :title="__('Images Limit')" :required="'required'"  :type="__('number')" :name="'gallery_images'" :id="'gallery_images'" :divClass="'mb-0'" :value="old('gallery_images', '')" :placeholder="__('Enter Gallery Images limit')"/>
                     <x-form.text :title="__('Featured listing Limit')" :required="'required'"  :type="__('number')" :name="'featured_listing'" :id="'featured_listing'" :divClass="'mb-0'" :value="old('featured_listing', '')" :placeholder="__('Featured listing Limit')"/>

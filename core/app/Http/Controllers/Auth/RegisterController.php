@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendRegisterUserEmailJob;
 use App\Mail\BasicMail;
 use App\Models\User;
+use App\Models\UsersBV;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +18,7 @@ use Illuminate\Support\Str;
 use Modules\Membership\app\Http\Services\MembershipService;
 use Modules\Wallet\app\Models\Wallet;
 use App\Models\Backend\Admin;
+use Modules\Membership\app\Models\Membership;
 
 class RegisterController extends Controller
 {
@@ -28,8 +31,9 @@ class RegisterController extends Controller
      *
      * @var string
      */
-//    protected $redirectTo = RouteServiceProvider::HOME;
-    public function redirectTo(){
+    //    protected $redirectTo = RouteServiceProvider::HOME;
+    public function redirectTo()
+    {
         return route('homepage');
     }
     /**
@@ -63,7 +67,7 @@ class RegisterController extends Controller
             'username' => ['required', 'string', 'string', 'max:255', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ],[
+        ], [
             'captcha_token.required' => __('google captcha is required'),
             'name.required' => __('name is required'),
             'name.max' => __('name is must be between 191 character'),
@@ -77,7 +81,8 @@ class RegisterController extends Controller
         ]);
     }
 
-    protected function adminValidator(array $data){
+    protected function adminValidator(array $data)
+    {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'username' => ['required', 'string', 'max:255', 'unique:admins'],
@@ -109,55 +114,58 @@ class RegisterController extends Controller
 
     public function userNameAvailability(Request $request)
     {
-        $username = User::where('username',$request->username)->first();
-        if(!empty($username) && $username->username == $request->username){
+        $username = User::where('username', $request->username)->first();
+        if (!empty($username) && $username->username == $request->username) {
             $status = 'not_available';
             $msg = __('Sorry! Username name is not available');
-        }else{
+        } else {
             $status = 'available';
             $msg = __('Congrats! Username name is available');
         }
         return response()->json([
-            'status'=>$status,
-            'msg'=>$msg,
+            'status' => $status,
+            'msg' => $msg,
         ]);
     }
 
     public function emailAvailability(Request $request)
     {
-        $email = User::where('email',$request->email)->first();
-        if(!empty($email) && $email->email == $request->email){
+        $email = User::where('email', $request->email)->first();
+        if (!empty($email) && $email->email == $request->email) {
             $status = 'not_available';
             $msg = __('Sorry! Email has already taken');
-        }else{
+        } else {
             $status = 'available';
             $msg = __('Congrats! Email is available');
         }
         return response()->json([
-            'status'=>$status,
-            'msg'=>$msg,
+            'status' => $status,
+            'msg' => $msg,
         ]);
     }
 
     public function phoneNumberAvailability(Request $request)
     {
-        $phone = User::where('phone',$request->phone)->first();
-        if(!empty($phone) && $phone->phone == $request->phone){
+        $phone = User::where('phone', $request->phone)->first();
+        if (!empty($phone) && $phone->phone == $request->phone) {
             $status = 'not_available';
             $msg = __('Sorry! Phone Number has already taken');
-        }else{
+        } else {
             $status = 'available';
             $msg = __('Congrats! Phone number is available');
         }
         return response()->json([
-            'status'=>$status,
-            'msg'=>$msg,
-            'phone'=>$phone,
+            'status' => $status,
+            'msg' => $msg,
+            'phone' => $phone,
         ]);
     }
 
-    public function userRegister(Request $request) {
+    public function userRegister(Request $request)
+    {
         if ($request->isMethod('POST')) {
+            Log::info('User registration request received.', ['request_data' => $request->all()]);
+
             $validationRules = [
                 'first_name' => 'required|max:191',
                 'last_name' => 'required|max:191',
@@ -169,93 +177,136 @@ class RegisterController extends Controller
                 'confirm_password' => 'required|same:password',
                 'partner_id' => 'nullable|exists:users,partner_id',
             ];
-    
+
             if (get_static_option('site_google_captcha_enable') == 'on') {
                 $validationRules['g-recaptcha-response'] = 'nullable';
             }
-    
+
             $request->validate($validationRules);
-    
-            $email_verify_token = sprintf("%d", random_int(123456, 999999));
-    
-            $phone_number = Str::replace(['-', '(', ')', ' '], '', $request->phone);
-            $country_code = '+' . ltrim($request->country_code, '+');
-            $full_phone_number = $country_code . ' - ' . $phone_number;
-    
-            if (!empty($full_phone_number) && User::where('phone', $full_phone_number)->exists()) {
-                return redirect()->back()->withErrors(['phone' => __('Phone number is already taken')]);
-            }
-    
-            do {
-                $partnerId = 'EAM' . Str::upper(Str::random(6)); 
-            } while (User::where('partner_id', $partnerId)->exists());
-    
-            $partnerName = 'EASYADME-' . strtoupper($request->first_name);
-    
-            $partner = User::where('partner_id', $request->partner_id)->first();
-            $parent_id = $partner ? $partner->id : null; 
-    
-            $user = User::create([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'email' => $request->email,
-                'username' => $request->username,
-                'phone' => $full_phone_number, 
-                'password' => Hash::make($request->password),
-                'terms_conditions' => 1,
-                'email_verify_token' => $email_verify_token,
-                'partner_id' => $partnerId, 
-                'partner_name' => $partnerName, 
-                'parent_id' => $parent_id, 
-            ]);
-    
-            if (moduleExists("Wallet")) {
-                Wallet::create([
-                    'user_id' => $user->id,
-                    'balance' => 0,
-                    'remaining_balance' => 0,
-                    'withdraw_amount' => 0,
-                    'status' => 1
+
+            try {
+                $email_verify_token = sprintf("%d", random_int(123456, 999999));
+
+                $phone_number = Str::replace(['-', '(', ')', ' '], '', $request->phone);
+                $country_code = '+' . ltrim($request->country_code, '+');
+                $full_phone_number = $country_code . ' - ' . $phone_number;
+
+                if (!empty($full_phone_number) && User::where('phone', $full_phone_number)->exists()) {
+                    Log::warning('Phone number already taken.', ['phone' => $full_phone_number]);
+                    return redirect()->back()->withErrors(['phone' => __('Phone number is already taken')]);
+                }
+
+                do {
+                    $partnerId = 'EAM' . Str::upper(Str::random(6));
+                } while (User::where('partner_id', $partnerId)->exists());
+
+                $partnerName = 'EASYADME-' . strtoupper($request->first_name);
+
+                $parent_id = null;
+                if ($request->partner_id) {
+                    $partner = User::where('partner_id', $request->partner_id)->first();
+                    if ($partner) {
+                        $parent_id = $partner->id;
+                        Log::info('Referred by existing user.', ['referrer_id' => $parent_id]);
+                    }
+                }
+
+                $default_membership = Membership::find(1); 
+                $membership_id = $default_membership ? $default_membership->id : 1;
+                $bv_points = $default_membership ? $default_membership->bv_points : 0;
+
+                $user = User::create([
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'email' => $request->email,
+                    'username' => $request->username,
+                    'phone' => $full_phone_number,
+                    'password' => Hash::make($request->password),
+                    'terms_conditions' => 1,
+                    'email_verify_token' => $email_verify_token,
+                    'partner_id' => $partnerId,
+                    'partner_name' => $partnerName,
+                    'parent_id' => $parent_id,
                 ]);
-            }
-    
-            if ($user && moduleExists("Membership") && membershipModuleExistsAndEnable('Membership')) {
-                $this->membershipService->createFreeMembership($user);
-            }
-    
-            if ($user && !empty(get_static_option('user_email_verify_enable_disable'))) {
-                try {
-                    Mail::to($user->email)->send(new BasicMail([
-                        'subject' => __('Otp Email'),
-                        'message' => __('Your otp code') . ' ' . $email_verify_token
-                    ]));
-                } catch (\Exception $e) {}
-            }
-    
-            if ($user) {
-                dispatch(new SendRegisterUserEmailJob($user, $request->password));
-            }
-    
-            if (Auth::guard('web')->attempt(['username' => $request->username, 'password' => $request->password])) {
-                return redirect()->route('user.dashboard');
+
+                Log::info('User created successfully.', ['user_id' => $user->id]);
+
+                UsersBv::create([
+                    'user_id' => $user->id,
+                    'membership_id' => $membership_id,
+                    'bv_points' => $bv_points,
+                    'upgrade_time' => now(),
+                ]);
+
+                Log::info('User BV points recorded.', [
+                    'user_id' => $user->id,
+                    'membership_id' => $membership_id,
+                    'bv_points' => $bv_points
+                ]);
+
+                if ($parent_id) {
+                    $referrer = User::find($parent_id);
+                    if ($referrer) {
+                        $referrer->bv_points += $bv_points;
+                        $referrer->save();
+
+                        Log::info('Referrer BV points updated.', [
+                            'referrer_id' => $referrer->id,
+                            'new_bv_points' => $referrer->bv_points
+                        ]);
+                    }
+                }
+
+                if (moduleExists("Wallet")) {
+                    Wallet::create([
+                        'user_id' => $user->id,
+                        'balance' => 0,
+                        'remaining_balance' => 0,
+                        'withdraw_amount' => 0,
+                        'status' => 1,
+                    ]);
+                }
+
+                if (!empty(get_static_option('user_email_verify_enable_disable'))) {
+                    try {
+                        Mail::to($user->email)->send(new BasicMail([
+                            'subject' => __('Otp Email'),
+                            'message' => __('Your OTP code is: ') . $email_verify_token,
+                        ]));
+                    } catch (\Exception $e) {
+                        Log::error('Failed to send OTP email.', ['error' => $e->getMessage()]);
+                    }
+                }
+
+                if ($user) {
+                    dispatch(new SendRegisterUserEmailJob($user, $request->password));
+                }
+
+                if (Auth::guard('web')->attempt(['username' => $request->username, 'password' => $request->password])) {
+                    return redirect()->route('user.dashboard');
+                }
+
+            } catch (\Exception $e) {
+                Log::error('Error during user registration.', ['error' => $e->getMessage()]);
+                return redirect()->back()->withErrors(['error' => __('An error occurred during registration. Please try again.')]);
             }
         }
-    
+
         return view('frontend.user.user-register');
     }
 
     public function emailVerify(Request $request)
     {
         $user_details = Auth::guard('web')->user();
-        if($request->isMethod('post')){
-            $this->validate($request,[
+        if ($request->isMethod('post')) {
+            $this->validate($request, [
                 'email_verify_token' => 'required|max:191'
-            ],[
+            ], [
                 'email_verify_token.required' => __('verify code is required')
             ]);
 
-            $user_details = User::where(['email_verify_token' => $request->email_verify_token,'email' => $user_details->email ])->first();
-            if(!is_null($user_details)){
+            $user_details = User::where(['email_verify_token' => $request->email_verify_token, 'email' => $user_details->email])->first();
+            if (!is_null($user_details)) {
                 $user_details->email_verified = 1;
                 $user_details->save();
                 return redirect()->route('user.dashboard');
@@ -265,48 +316,48 @@ class RegisterController extends Controller
         }
         $verify_token = $user_details->email_verify_token ?? null;
         try {
-            //check user has verify token has or not
-            if(is_null($verify_token)){
+            if (is_null($verify_token)) {
                 $verify_token = Str::random(8);
                 $user_details->email_verify_token = Str::random(8);
                 $user_details->save();
 
-                $message_body = __('Hello').' '.$user_details->name.' <br>'.__('Here is your verification code').' <span class="verify-code">'.$verify_token.'</span>';
+                $message_body = __('Hello') . ' ' . $user_details->name . ' <br>' . __('Here is your verification code') . ' <span class="verify-code">' . $verify_token . '</span>';
                 Mail::to($user_details->email)->send(new BasicMail([
-                    'subject' => sprintf(__('Verify your email address %s'),get_static_option('site_title')),
+                    'subject' => sprintf(__('Verify your email address %s'), get_static_option('site_title')),
                     'message' => $message_body
                 ]));
             }
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
         }
         return view('frontend.user.email-verify');
     }
 
-    public function resendCode(){
+    public function resendCode()
+    {
 
         $user_details = Auth::guard('web')->user();
         $verify_token = $user_details->email_verify_token ?? null;
 
         try {
-            if(is_null($verify_token)){
+            if (is_null($verify_token)) {
                 $verify_token = Str::random(8);
                 $user_details->email_verify_token = Str::random(8);
                 $user_details->save();
             }
-            $message_body = __('Hello').' '.$user_details->name.' <br>'.__('Here is your verification code').' <span class="verify-code">'.$verify_token.'</span>';
+            $message_body = __('Hello') . ' ' . $user_details->name . ' <br>' . __('Here is your verification code') . ' <span class="verify-code">' . $verify_token . '</span>';
             Mail::to($user_details->email)->send(new BasicMail([
-                'subject' => sprintf(__('Verify your email address %s'),get_static_option('site_title')),
+                'subject' => sprintf(__('Verify your email address %s'), get_static_option('site_title')),
                 'message' => $message_body
             ]));
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
         }
-        return redirect()->back()->with(['msg' => __('Resend Email Verify Code, Please check your inbox of spam.') ,'type' => 'success' ]);
+        return redirect()->back()->with(['msg' => __('Resend Email Verify Code, Please check your inbox of spam.'), 'type' => 'success']);
     }
 
     public function partnerAvailability()
     {
-        $admin = Admin::first(); 
-        
+        $admin = Admin::first();
+
         if ($admin) {
             return response()->json([
                 'success' => true,
@@ -318,9 +369,10 @@ class RegisterController extends Controller
         }
     }
 
-    public function partneridAvailability(Request $request) {
+    public function partneridAvailability(Request $request)
+    {
         $partner = User::where('partner_id', $request->partner_id)->first();
-    
+
         if ($partner) {
             return response()->json(['status' => 'success', 'partner_name' => $partner->partner_name]);
         } else {
@@ -330,7 +382,7 @@ class RegisterController extends Controller
 
     public function store(Request $request)
     {
-        $parent = User::find($request->parent_id); 
+        $parent = User::find($request->parent_id);
 
         if (!$parent) {
             return response()->json(['error' => 'Parent not found'], 404);
@@ -347,5 +399,5 @@ class RegisterController extends Controller
 
         return response()->json(['message' => 'User added successfully!', 'user' => $child]);
     }
-    
+
 }

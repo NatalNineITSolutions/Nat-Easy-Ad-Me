@@ -50,6 +50,7 @@
 
                     <x-form.text :title="__('Title')" :required="'required'"  :type="__('text')" :name="'title'" :id="'title'" :value="$membership_details->title ?? ''" :placeholder="__('Enter title')"/>
                     <x-form.text :title="__('Price')" :required="'required'"  :type="__('number')" :name="'price'" :id="'price'" :value="$membership_details->price ?? ''" :placeholder="__('Enter price')"/>
+                    <x-form.text :title="__('Business Value (BV)')" :required="'required'" :type="__('number')" :name="'bv'" :id="'bv'" :value="old('bv', $membership_details->bv_points ?? '')" :placeholder="__('Enter BV')"/>
                     <x-form.text :title="__('Listings Limit')" :required="'required'"  :type="__('number')" :name="'listing_limit'" :id="'listing_limit'" :divClass="'mb-0'" :value="$membership_details->listing_limit ?? ''" :placeholder="__('Enter listings limit')"/>
                     <x-form.text :title="__('Images Limit')" :required="'required'"  :type="__('number')" :name="'gallery_images'" :id="'gallery_images'" :divClass="'mb-0'" :value="$membership_details->gallery_images ?? ''" :placeholder="__('Enter Gallery Images limit')"/>
                     <x-form.text :title="__('Featured listing Limit')" :required="'required'"  :type="__('number')" :name="'featured_listing'" :id="'featured_listing'" :divClass="'mb-0'" :value="$membership_details->featured_listing ?? ''" :placeholder="__('Featured listing Limit')"/>
@@ -78,7 +79,6 @@
                             <label></label>
                         </div>
                     </div>
-
 
                     <div class="form__input__single">
                         <div id="features">

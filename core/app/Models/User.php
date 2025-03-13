@@ -60,7 +60,9 @@ class User extends Authenticatable
         'is_suspend',
         'status',
         'user_code',
-        'parent_id'
+        'parent_id',
+        'membership_id', 
+        'bv_points'
     ];
 
     /**

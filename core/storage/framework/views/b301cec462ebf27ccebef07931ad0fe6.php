@@ -61,10 +61,10 @@
                         <?php echo csrf_field(); ?>
                         <div class="row">
                             <div class="col-lg-6 col-md-12">
-                                <label class="infoTitle"><?php echo e(__('Partner Id')); ?></label>
+                                <label class="infoTitle"><?php echo e(__('Sponsor Id')); ?></label>
                                 <div class="input-group" style="height: 40px;">
-                                    <input type="text" class="form-control ps-3 py-2" name="partner_id"
-                                        value="<?php echo e(old('partner_id')); ?>" id="partner_id" placeholder="<?php echo e(__('Partner Id')); ?>"
+                                    <input type="text" class="form-control" name="partner_id"
+                                        value="<?php echo e(old('partner_id')); ?>" id="partner_id" placeholder="<?php echo e(__('Sponsor Id')); ?>"
                                         style="height: 40px; border-radius: 8px;">
                                     <button type="button" class="btn btn-primary" id="verify_partner_id"
                                         style="height: 40px; border-radius: 8px;">
@@ -76,10 +76,10 @@
                             </div>
 
                             <div class="col-lg-6 col-md-12">
-                                <label class="infoTitle"><?php echo e(__('Partner Name')); ?></label>
-                                <div class="input-form input-form2">
+                                <label class="infoTitle"><?php echo e(__('Sponsor Name')); ?></label>
+                                <div class="input-form input-form2" style="padding-top: 5px;">
                                     <input type="text" class="ps-3 form-control" name="partner_name" id="partner_name"
-                                        placeholder="<?php echo e(__('Partner Name')); ?>" readonly style="height: 40px;">
+                                        placeholder="<?php echo e(__('Sponsor Name')); ?>" readonly style="height: 40px;">
                                 </div>
                             </div>
                             <p>Don't have a Partner Id?</p>

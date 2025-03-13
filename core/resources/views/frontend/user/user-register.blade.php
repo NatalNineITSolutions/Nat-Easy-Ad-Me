@@ -39,10 +39,10 @@
                         @csrf
                         <div class="row">
                             <div class="col-lg-6 col-md-12">
-                                <label class="infoTitle">{{ __('Partner Id') }}</label>
+                                <label class="infoTitle">{{ __('Sponsor Id') }}</label>
                                 <div class="input-group" style="height: 40px;">
-                                    <input type="text" class="form-control ps-3 py-2" name="partner_id"
-                                        value="{{ old('partner_id') }}" id="partner_id" placeholder="{{ __('Partner Id') }}"
+                                    <input type="text" class="form-control" name="partner_id"
+                                        value="{{ old('partner_id') }}" id="partner_id" placeholder="{{ __('Sponsor Id') }}"
                                         style="height: 40px; border-radius: 8px;">
                                     <button type="button" class="btn btn-primary" id="verify_partner_id"
                                         style="height: 40px; border-radius: 8px;">
@@ -53,10 +53,10 @@
                             </div>
 
                             <div class="col-lg-6 col-md-12">
-                                <label class="infoTitle">{{ __('Partner Name') }}</label>
-                                <div class="input-form input-form2">
+                                <label class="infoTitle">{{ __('Sponsor Name') }}</label>
+                                <div class="input-form input-form2" style="padding-top: 5px;">
                                     <input type="text" class="ps-3 form-control" name="partner_name" id="partner_name"
-                                        placeholder="{{ __('Partner Name') }}" readonly style="height: 40px;">
+                                        placeholder="{{ __('Sponsor Name') }}" readonly style="height: 40px;">
                                 </div>
                             </div>
                             <p>Don't have a Partner Id?</p>

@@ -47,6 +47,13 @@ Route::group(['prefix'=>'user','as'=>'user.'],function() {
             });
         });
 
+        //genology
+        Route::controller(DashboardController::class)->group(function () {
+            Route::prefix('genology')->group(function () {
+                Route::get('info', 'genology')->name('genology');
+            });
+        });      
+
           // add listing
           Route::controller(ListingController::class)->group(function () {
               Route::group(['prefix'=>'listing'],function(){

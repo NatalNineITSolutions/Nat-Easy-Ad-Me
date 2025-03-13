@@ -205,7 +205,7 @@
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 991px) {
 
             .left {
                 display: none;
@@ -313,38 +313,38 @@
 
 @section('script')
 
-{{-- Toaster --}}
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Check for success message in sessionStorage
-        if (sessionStorage.getItem("successMessage")) {
-            // Display the success message using toastr
-            toastr.success(sessionStorage.getItem("successMessage"));
+    {{-- Toaster --}}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Check for success message in sessionStorage
+            if (sessionStorage.getItem("successMessage")) {
+                // Display the success message using toastr
+                toastr.success(sessionStorage.getItem("successMessage"));
 
-            // Clear the message from sessionStorage
-            sessionStorage.removeItem("successMessage");
+                // Clear the message from sessionStorage
+                sessionStorage.removeItem("successMessage");
 
-            // Redirect after a delay (e.g., 2 seconds)
-            setTimeout(function () {
-                window.location.href = "/matrimony";
-            }, 2000); // 2 seconds delay
-        }
+                // Redirect after a delay (e.g., 2 seconds)
+                setTimeout(function () {
+                    window.location.href = "/matrimony";
+                }, 2000); // 2 seconds delay
+            }
 
-        // Display validation errors if any
-        @if($errors->any())
-            @foreach($errors->all() as $error)
-                toastr.error("{{ $error }}");
-            @endforeach
+            // Display validation errors if any
+            @if($errors->any())
+                @foreach($errors->all() as $error)
+                    toastr.error("{{ $error }}");
+                @endforeach
+            @endif
+        });
+
+        @if(session('success'))
+            // Store the success message in sessionStorage
+            sessionStorage.setItem("successMessage", "{{ session('success') }}");
         @endif
-    });
+    </script>
 
-    @if(session('success'))
-        // Store the success message in sessionStorage
-        sessionStorage.setItem("successMessage", "{{ session('success') }}");
-    @endif
-</script>
-
-{{-- Date Picker --}}
+    {{-- Date Picker --}}
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const dobInput = document.getElementById("dob");
@@ -357,8 +357,7 @@
         });
     </script>
 
-
-{{-- Number Validation --}}
+    {{-- Number Validation --}}
     <script>
         const countryCodeSelect = document.getElementById("country_code");
         const mobileInput = document.getElementById("mobile");

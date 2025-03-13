@@ -1,7 +1,9 @@
 <header class="header">
     <div class="container header-container">
         <!-- Logo -->
-        <div class="logo">EASY AD ME</div>
+        <a href="/matrimony" class="logo-link">
+            <h3 class="logo">EASY AD ME</h3>
+        </a>
 
         <!-- Desktop Navigation Links -->
         <nav>
@@ -15,9 +17,14 @@
 
         <!-- Right Side: Login/Register -->
         <div class="auth-buttons">
-            <a href="/login" class="btn btn-outline-primary">Login</a>
-            <a href="/register" class="btn btn-primary">Register</a>
-        </div>
+        
+            @if(isset($user) && $user)
+                <a href="#" class="btn profile">Profile</a>
+            @else
+                <a href="{{ route('matrimony.login') }}" class="btn login">Login</a>
+                <a href="{{ route('matrimony.register') }}" class="btn register">Register</a>
+            @endif
+        </div>  
 
         <!-- Mobile Menu Toggle -->
         <div class="menu-toggle">

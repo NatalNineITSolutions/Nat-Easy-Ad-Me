@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\MatrimonyUser;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class MatrimonyController extends Controller
 {
     public function index()
     {
-        return view('matrimony.index'); 
+        $user = Auth::user();
+        return view('matrimony.index', compact('user'));
     }
 
     public function register()
@@ -49,6 +52,29 @@ class MatrimonyController extends Controller
     public function price()
     {
         return view('matrimony.price'); // Ensure this view exists
+    }
+
+    public function showLoginForm()
+    {
+        return view('matrimony.login'); // Ensure you have a `login.blade.php` file
+    }
+
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        $user = MatrimonyUser::where('email', $request->email)->first();
+
+        if ($user && Hash::check($request->password, $user->password)) {
+            // Store user session
+            Auth::login($user);
+            return redirect()->route('matrimony.index')->with('success', 'Login successful!');
+        }
+
+        return back()->withErrors(['email' => 'Invalid credentials.'])->withInput();
     }
 
 }

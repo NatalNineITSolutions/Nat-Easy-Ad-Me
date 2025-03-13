@@ -240,63 +240,32 @@
                         <div class="input-group">
                             <input type="text" placeholder="Name" name="name" required>
                         </div>
+
+                        <div class="input-group">
+                            <input type="email" placeholder="Email" name="email" required>
+                        </div>
                     
                         <div class="input-group">
                             <input type="password" placeholder="Password" name="password" required>
                         </div>
                     
-                        <div class="input-group">
-                            <input type="email" placeholder="Email" name="email" required>
-                        </div>
+                        
                     
-                        <div class="row">
-                            <div class="col-6">
-                                <select name="gender" required>
-                                    <option value="">Select Gender</option>
-                                    <option value="Male" <?php echo e(old('gender') == 'Male' ? 'selected' : ''); ?>>Male</option>
-                                    <option value="Female" <?php echo e(old('gender') == 'Female' ? 'selected' : ''); ?>>Female</option>
-                                </select>
-                            </div>
-                    
-                            <div class="col-6">
-                                <div class="date-input-container">
-                                    <input type="date" name="dob" id="dob" required>
-                                    <span class="calendar-icon">&#128197;</span>
-                                </div>
-                            </div>
-                        </div>
-                    
-                        <div class="row">
-                            <div class="col-6">
-                                <select name="country" required>
-                                    <option value="">Select Country</option>
-                                    <option value="India">India</option>
-                                    <option value="USA">USA</option>
-                                </select>
-                            </div>
-                    
-                            <div class="col-6">
-                                <select name="location" required>
-                                    <option value="">Select Location</option>
-                                    <option value="Chennai">Chennai</option>
-                                    <option value="Bangalore">Bangalore</option>
-                                </select>
-                            </div>
-                        </div>
+                        
                     
                         <div class="phone-input-container">
-                            <select class="country-code" name="country_code">
+                            <select class="country-code" name="country_code" id="country_code">
                                 <option value="+91">+91</option>
-                                <option value="+1" >+1</option>
-                                <option value="+44" >+44</option>
-                                <option value="+61" >+61</option>
+                                <option value="+1">+1</option>
+                                <option value="+44">+44</option>
+                                <option value="+61">+61</option>
                                 <option value="+971">+971</option>
                             </select>
-                    
-                            <input type="tel" class="mobile-number" name="mobile" placeholder="Mobile Number" value="<?php echo e(old('mobile')); ?>" required>
+                        
+                            <input type="tel" class="mobile-number" id="mobile" name="mobile" placeholder="Mobile Number" required>
                         </div>
                     
-                        <button type="submit" class="register-btn">REGISTER FREE</button>
+                        <button type="submit" id="submitBtn" class="register-btn">Submit</button>
                     
                         <p class="terms">By clicking on Register Free, you agree to the <a href="#">Terms & Conditions</a>.</p>
                         <p class="login">Already a member? <a href="#">Login Now</a></p>
@@ -312,6 +281,39 @@
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('script'); ?>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Check for success message in sessionStorage
+        if (sessionStorage.getItem("successMessage")) {
+            // Display the success message using toastr
+            toastr.success(sessionStorage.getItem("successMessage"));
+
+            // Clear the message from sessionStorage
+            sessionStorage.removeItem("successMessage");
+
+            // Redirect after a delay (e.g., 2 seconds)
+            setTimeout(function () {
+                window.location.href = "/matrimony";
+            }, 2000); // 2 seconds delay
+        }
+
+        // Display validation errors if any
+        <?php if($errors->any()): ?>
+            <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                toastr.error("<?php echo e($error); ?>");
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+        <?php endif; ?>
+    });
+
+    <?php if(session('success')): ?>
+        // Store the success message in sessionStorage
+        sessionStorage.setItem("successMessage", "<?php echo e(session('success')); ?>");
+    <?php endif; ?>
+</script>
+
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const dobInput = document.getElementById("dob");
@@ -324,28 +326,45 @@
         });
     </script>
 
+
+
     <script>
-        window.history.pushState(null, "", window.location.href);
-        window.onpopstate = function() {
-            window.history.pushState(null, "", window.location.href);
-        };
+        const countryCodeSelect = document.getElementById("country_code");
+        const mobileInput = document.getElementById("mobile");
+        const submitBtn = document.getElementById("submitBtn");
+
+        // Function to enforce max length dynamically
+        function enforceMaxLength() {
+            if (countryCodeSelect.value === "+91") {
+                mobileInput.setAttribute("maxlength", "10");
+            } else {
+                mobileInput.removeAttribute("maxlength"); // Remove restriction for other countries
+            }
+        }
+
+        // Restrict input to only numbers
+        mobileInput.addEventListener("input", function() {
+            this.value = this.value.replace(/\D/g, ""); // Remove non-numeric characters
+            enforceMaxLength(); // Apply length restriction when typing
+        });
+
+        // Apply length restriction when country code changes
+        countryCodeSelect.addEventListener("change", function() {
+            enforceMaxLength();
+        });
+
+        // Validate on form submission
+        submitBtn.addEventListener("click", function(event) {
+            let mobileNumber = mobileInput.value.trim();
+
+            if (countryCodeSelect.value === "+91" && mobileNumber.length !== 10) {
+                event.preventDefault(); // Prevent form submission
+                toastr.error("Indian mobile numbers must be exactly 10 digits.");
+            }
+        });
+
+        // Initialize on page load
+        enforceMaxLength();
     </script>
-
-<script>
-    // Display Toastr notifications
-    <?php if(session('success')): ?>
-        toastr.success("<?php echo e(session('success')); ?>");
-    <?php endif; ?>
-
-    <?php if(session('error')): ?>
-        toastr.error("<?php echo e(session('error')); ?>");
-    <?php endif; ?>
-
-    <?php if($errors->any()): ?>
-        <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-            toastr.error("<?php echo e($error); ?>");
-        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-    <?php endif; ?>
-</script>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('matrimony.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\Nat-Easy-Ad-Me\core\resources\views/matrimony/register.blade.php ENDPATH**/ ?>

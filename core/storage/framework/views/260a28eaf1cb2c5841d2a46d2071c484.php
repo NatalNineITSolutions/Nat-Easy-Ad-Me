@@ -21,11 +21,11 @@
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('script'); ?>
-<script>
-    history.pushState(null, null, location.href);
-    window.onpopstate = function () {
+    <script>
         history.pushState(null, null, location.href);
-    };
-</script>
+        window.onpopstate = function () {
+            history.pushState(null, null, location.href);
+        };
+    </script>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('matrimony.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\Nat-Easy-Ad-Me\core\resources\views/matrimony/index.blade.php ENDPATH**/ ?>

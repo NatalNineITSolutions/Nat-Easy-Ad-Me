@@ -16,10 +16,10 @@ return new class extends Migration
             $table->string('name'); // Name field
             $table->string('email')->unique(); // Unique email field
             $table->string('password'); // Password field
-            $table->enum('gender', ['Male', 'Female', 'Other']); // Gender field
-            $table->date('dob'); // Date of Birth field
-            $table->string('country'); // Country field
-            $table->string('location'); // Location field
+            $table->string('gender')->nullable()->change();
+            $table->date('dob')->nullable()->change();
+            $table->string('country')->nullable()->change();
+            $table->string('location')->nullable()->change();
             $table->string('mobile', 15); // Mobile number field
             $table->timestamps(); // Created_at and updated_at fields
         });

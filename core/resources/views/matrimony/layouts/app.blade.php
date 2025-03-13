@@ -31,28 +31,130 @@
             font-family: "Montserrat", sans-serif;
         }
 
-        .navbar {
-            padding: 10px 0;
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: white;
+            border-bottom: 1px solid #ddd;
         }
 
-        .navbar-brand img {
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #b57e41;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: #b57e41;
+        }
+
+        /* Profile Dropdown */
+        .profile-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-dropdown img {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
+            cursor: pointer;
         }
 
-        .navbar-nav .nav-link {
-            font-size: 16px;
-            font-weight: 500;
-            padding: 10px 15px;
-            transition: color 0.3s ease-in-out;
+        .dropdown-menu {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: white;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            display: none;
+            min-width: 150px;
+            border-radius: 5px;
+            z-index: 10;
         }
 
-        .navbar-nav .nav-link:hover {
-            color: #007bff;
+        .dropdown-menu a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: #333;
         }
 
-        .btn {
-            font-size: 14px;
-            font-weight: 500;
+        .dropdown-menu a:hover {
+            background: #f8f8f8;
+        }
+
+        .profile-dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            background: white;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        .mobile-menu a {
+            padding: 10px;
+            text-align: center;
+            display: block;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .mobile-menu a:hover {
+            background: #f8f8f8;
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .nav-links {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .mobile-menu {
+                display: none;
+            }
         }
 
         /* Footer Styling */
@@ -126,23 +228,11 @@
     {{-- Bootstrap --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const menuToggle = document.querySelector(".menu-toggle");
-            const navLinks = document.querySelector(".nav-links");
-
-            menuToggle.addEventListener("click", function () {
-                navLinks.classList.toggle("active");
-            });
-        });
-    </script>
-
     <!-- Include jQuery (required for Toastr) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <!-- Include Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-
 
     @yield('script') <!-- Custom scripts section -->
 

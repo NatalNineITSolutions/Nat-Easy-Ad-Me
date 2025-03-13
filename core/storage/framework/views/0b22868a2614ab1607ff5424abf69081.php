@@ -1,34 +1,34 @@
-<nav class="navbar navbar-expand-lg bg-light shadow-sm">
-    <div class="container">
+<header class="header">
+    <div class="container header-container">
         <!-- Logo -->
-        <a class="navbar-brand d-flex align-items-center" href="#">
-            <span class="fw-bold">Matrimony</span>
-        </a>
+        <div class="logo">WEDDING MATRIMONY</div>
 
-        <!-- Mobile Menu Toggle Button -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- Navigation Links -->
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
-                </li>
+        <!-- Desktop Navigation Links -->
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#">Explore</a></li>
+                <li><a href="#">All Pages</a></li>
+                <li><a href="#">Top Pages</a></li>
+                <li><a href="#">Plans</a></li>
+                <li><a href="#">Register</a></li>
             </ul>
+        </nav>
 
-            <!-- Login / Register Buttons -->
-            <div class="ms-lg-3">
-                <a href="#" class="btn btn-outline-primary me-2">Login</a>
-                <a href="#" class="btn btn-primary">Register</a>
-            </div>
+        <!-- Right Side: Profile/Login -->
+        <div id="userSection"></div>
+
+        <!-- Mobile Menu Toggle -->
+        <div class="menu-toggle">
+            <i class="fas fa-bars"></i>
         </div>
     </div>
-</nav><?php /**PATH C:\laragon\www\Nat-Easy-Ad-Me\core\resources\views/matrimony/partials/header.blade.php ENDPATH**/ ?>
+</header>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+    <a href="#">Explore</a>
+    <a href="#">All Pages</a>
+    <a href="#">Top Pages</a>
+    <a href="#">Plans</a>
+    <a href="#">Register</a>
+</div><?php /**PATH C:\laragon\www\Nat-Easy-Ad-Me\core\resources\views/matrimony/partials/header.blade.php ENDPATH**/ ?>

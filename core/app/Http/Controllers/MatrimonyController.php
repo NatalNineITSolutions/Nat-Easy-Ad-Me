@@ -23,44 +23,32 @@ class MatrimonyController extends Controller
         try {
             // Validate the form data
             $request->validate([
-                'name'      => 'required|string|max:255',
-                'email'     => 'required|email|unique:matrimony_users,email',
-                'password'  => 'required|min:6',
-                'gender'    => 'required|in:Male,Female',
-                'dob'       => 'required|date',
-                'country'   => 'required|string',
-                'location'  => 'required|string',
-                'mobile'    => 'required|numeric|digits_between:7,15|unique:matrimony_users,mobile',
+                'name'     => 'required|string|max:255',
+                'email'    => 'required|email|unique:matrimony_users,email',
+                'password' => 'required|min:6',
+                'mobile'   => 'required|numeric|digits_between:7,15|unique:matrimony_users,mobile',
             ]);
 
             // Store in the database
             MatrimonyUser::create([
-                'name'      => $request->name,
-                'email'     => $request->email,
-                'password'  => bcrypt($request->password), // Hashing the password
-                'gender'    => $request->gender,
-                'dob'       => $request->dob,
-                'country'   => $request->country,
-                'location'  => $request->location,
-                'mobile'    => $request->mobile,
+                'name'     => $request->name,
+                'email'    => $request->email,
+                'password' => bcrypt($request->password),
+                'mobile'   => $request->mobile,
             ]);
 
-            // Store a session flag to prevent back navigation
-            session()->put('registration_success', true);
-
-            return redirect()->route('matrimony.index')->with('success', 'Registration successful!');
+            // Store a session success message
+            return redirect()->route('matrimony.index')->with('success', 'Form submitted successfully!');
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // Handle validation errors
             return redirect()->back()
                 ->withErrors($e->errors())
-                ->withInput()
-                ->with('error', 'Email is already taken.'); // Add this line to pass the error message
+                ->withInput();
         }
     }
 
     public function price()
     {
-        return view('matrimony.index'); // Ensure this view exists
+        return view('matrimony.price'); // Ensure this view exists
     }
 
 }

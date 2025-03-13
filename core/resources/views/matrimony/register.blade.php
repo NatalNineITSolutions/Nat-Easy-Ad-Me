@@ -240,16 +240,16 @@
                         <div class="input-group">
                             <input type="text" placeholder="Name" name="name" required>
                         </div>
+
+                        <div class="input-group">
+                            <input type="email" placeholder="Email" name="email" required>
+                        </div>
                     
                         <div class="input-group">
                             <input type="password" placeholder="Password" name="password" required>
                         </div>
                     
-                        <div class="input-group">
-                            <input type="email" placeholder="Email" name="email" required>
-                        </div>
-                    
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-6">
                                 <select name="gender" required>
                                     <option value="">Select Gender</option>
@@ -264,9 +264,9 @@
                                     <span class="calendar-icon">&#128197;</span>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-6">
                                 <select name="country" required>
                                     <option value="">Select Country</option>
@@ -282,21 +282,21 @@
                                     <option value="Bangalore">Bangalore</option>
                                 </select>
                             </div>
-                        </div>
+                        </div> --}}
                     
                         <div class="phone-input-container">
-                            <select class="country-code" name="country_code">
+                            <select class="country-code" name="country_code" id="country_code">
                                 <option value="+91">+91</option>
-                                <option value="+1" >+1</option>
-                                <option value="+44" >+44</option>
-                                <option value="+61" >+61</option>
+                                <option value="+1">+1</option>
+                                <option value="+44">+44</option>
+                                <option value="+61">+61</option>
                                 <option value="+971">+971</option>
                             </select>
-                    
-                            <input type="tel" class="mobile-number" name="mobile" placeholder="Mobile Number" value="{{ old('mobile') }}" required>
+                        
+                            <input type="tel" class="mobile-number" id="mobile" name="mobile" placeholder="Mobile Number" required>
                         </div>
                     
-                        <button type="submit" class="register-btn">REGISTER FREE</button>
+                        <button type="submit" id="submitBtn" class="register-btn">Submit</button>
                     
                         <p class="terms">By clicking on Register Free, you agree to the <a href="#">Terms & Conditions</a>.</p>
                         <p class="login">Already a member? <a href="#">Login Now</a></p>
@@ -312,6 +312,39 @@
 @endsection
 
 @section('script')
+
+{{-- Toaster --}}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Check for success message in sessionStorage
+        if (sessionStorage.getItem("successMessage")) {
+            // Display the success message using toastr
+            toastr.success(sessionStorage.getItem("successMessage"));
+
+            // Clear the message from sessionStorage
+            sessionStorage.removeItem("successMessage");
+
+            // Redirect after a delay (e.g., 2 seconds)
+            setTimeout(function () {
+                window.location.href = "/matrimony";
+            }, 2000); // 2 seconds delay
+        }
+
+        // Display validation errors if any
+        @if($errors->any())
+            @foreach($errors->all() as $error)
+                toastr.error("{{ $error }}");
+            @endforeach
+        @endif
+    });
+
+    @if(session('success'))
+        // Store the success message in sessionStorage
+        sessionStorage.setItem("successMessage", "{{ session('success') }}");
+    @endif
+</script>
+
+{{-- Date Picker --}}
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const dobInput = document.getElementById("dob");
@@ -324,27 +357,44 @@
         });
     </script>
 
+
+{{-- Number Validation --}}
     <script>
-        window.history.pushState(null, "", window.location.href);
-        window.onpopstate = function() {
-            window.history.pushState(null, "", window.location.href);
-        };
+        const countryCodeSelect = document.getElementById("country_code");
+        const mobileInput = document.getElementById("mobile");
+        const submitBtn = document.getElementById("submitBtn");
+
+        // Function to enforce max length dynamically
+        function enforceMaxLength() {
+            if (countryCodeSelect.value === "+91") {
+                mobileInput.setAttribute("maxlength", "10");
+            } else {
+                mobileInput.removeAttribute("maxlength"); // Remove restriction for other countries
+            }
+        }
+
+        // Restrict input to only numbers
+        mobileInput.addEventListener("input", function() {
+            this.value = this.value.replace(/\D/g, ""); // Remove non-numeric characters
+            enforceMaxLength(); // Apply length restriction when typing
+        });
+
+        // Apply length restriction when country code changes
+        countryCodeSelect.addEventListener("change", function() {
+            enforceMaxLength();
+        });
+
+        // Validate on form submission
+        submitBtn.addEventListener("click", function(event) {
+            let mobileNumber = mobileInput.value.trim();
+
+            if (countryCodeSelect.value === "+91" && mobileNumber.length !== 10) {
+                event.preventDefault(); // Prevent form submission
+                toastr.error("Indian mobile numbers must be exactly 10 digits.");
+            }
+        });
+
+        // Initialize on page load
+        enforceMaxLength();
     </script>
-
-<script>
-    // Display Toastr notifications
-    @if(session('success'))
-        toastr.success("{{ session('success') }}");
-    @endif
-
-    @if(session('error'))
-        toastr.error("{{ session('error') }}");
-    @endif
-
-    @if($errors->any())
-        @foreach($errors->all() as $error)
-            toastr.error("{{ $error }}");
-        @endforeach
-    @endif
-</script>
 @endsection

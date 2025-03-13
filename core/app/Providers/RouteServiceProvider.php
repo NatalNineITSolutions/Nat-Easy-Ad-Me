@@ -16,17 +16,11 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
-
-        $this->routes(function () {
-    
-            Route::middleware('web') // Load matrimony routes without auth middleware
-            ->group(base_path('routes/matrimony.php'));
-
-        });
     }
 
     public function map()
     {
+        $this->mapMatrimonyRoutes(); 
         $this->mapApiRoutes();
         $this->mapAdminRoutes();
         $this->mapWebRoutes();
@@ -39,6 +33,14 @@ class RouteServiceProvider extends ServiceProvider
             ->group(base_path('routes/web.php'));
     }
 
+    protected function mapMatrimonyRoutes()
+    {
+        Route::middleware('web')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/matrimony.php'));
+    }
+
+
     protected function mapApiRoutes()
     {
         Route::prefix('api')
@@ -47,8 +49,9 @@ class RouteServiceProvider extends ServiceProvider
             ->group(base_path('routes/api.php'));
     }
 
-    protected function mapAdminRoutes(){
-        Route::middleware(['web','auth:admin','setlang','adminglobalVariable'])
+    protected function mapAdminRoutes()
+    {
+        Route::middleware(['web', 'auth:admin', 'setlang', 'adminglobalVariable'])
             ->namespace($this->namespace)
             ->prefix('admin')
             ->group(base_path('routes/admin.php'));

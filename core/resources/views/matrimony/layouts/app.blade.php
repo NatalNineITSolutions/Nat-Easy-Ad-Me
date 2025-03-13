@@ -142,6 +142,39 @@
             cursor: pointer;
         }
 
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .auth-buttons .btn {
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .mobile-menu {
+        display: none;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        background: white;
+        padding: 10px;
+        border-top: 1px solid #ddd;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .mobile-menu.show {
+        display: block;
+    }
+
+        @media (max-width: 992px) {
+            .auth-buttons {
+                display: none;
+            }
+        }
+
         /* Responsive Design */
         @media (max-width: 992px) {
             .nav-links {
@@ -233,6 +266,26 @@
 
     <!-- Include Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Select elements
+            const menuToggle = document.querySelector(".menu-toggle");
+            const mobileMenu = document.getElementById("mobileMenu");
+    
+            // Toggle menu on click
+            menuToggle.addEventListener("click", function () {
+                mobileMenu.classList.toggle("show");
+            });
+    
+            // Close menu when clicking outside
+            document.addEventListener("click", function (event) {
+                if (!menuToggle.contains(event.target) && !mobileMenu.contains(event.target)) {
+                    mobileMenu.classList.remove("show");
+                }
+            });
+        });
+    </script>
 
     @yield('script') <!-- Custom scripts section -->
 

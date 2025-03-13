@@ -1,7 +1,7 @@
 <header class="header">
     <div class="container header-container">
         <!-- Logo -->
-        <div class="logo">WEDDING MATRIMONY</div>
+        <div class="logo">EASY AD ME</div>
 
         <!-- Desktop Navigation Links -->
         <nav>
@@ -10,7 +10,6 @@
                 <li><a href="#">All Pages</a></li>
                 <li><a href="#">Top Pages</a></li>
                 <li><a href="#">Plans</a></li>
-                <li><a href="#">Register</a></li>
             </ul>
         </nav>
 

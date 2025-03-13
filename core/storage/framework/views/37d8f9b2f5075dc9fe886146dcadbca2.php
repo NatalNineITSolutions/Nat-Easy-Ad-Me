@@ -142,6 +142,39 @@
             cursor: pointer;
         }
 
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .auth-buttons .btn {
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .mobile-menu {
+        display: none;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        background: white;
+        padding: 10px;
+        border-top: 1px solid #ddd;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .mobile-menu.show {
+        display: block;
+    }
+
+        @media (max-width: 992px) {
+            .auth-buttons {
+                display: none;
+            }
+        }
+
         /* Responsive Design */
         @media (max-width: 992px) {
             .nav-links {
@@ -236,40 +269,20 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            let isLoggedIn = true;  // Change to false for testing guest mode
-            let userName = "Ashley emyy";
-            let userProfilePic = "https://i.pravatar.cc/150";
-    
-            function updateUserSection() {
-                let userSection = document.getElementById("userSection");
-    
-                if (isLoggedIn) {
-                    userSection.innerHTML = `
-                        <div class="profile-dropdown">
-                            <img src="${userProfilePic}" alt="Profile">
-                            <div class="dropdown-menu">
-                                <a href="/profile">Go to Profile</a>
-                                <a href="/logout">Logout</a>
-                            </div>
-                            <span>${userName}</span>
-                        </div>
-                    `;
-                } else {
-                    userSection.innerHTML = `
-                        <a href="/login">Login</a> / 
-                        <a href="/register">Register</a>
-                    `;
-                }
-            }
-    
-            updateUserSection();
-    
-            // Mobile Menu Toggle
+            // Select elements
             const menuToggle = document.querySelector(".menu-toggle");
             const mobileMenu = document.getElementById("mobileMenu");
     
+            // Toggle menu on click
             menuToggle.addEventListener("click", function () {
-                mobileMenu.style.display = mobileMenu.style.display === "block" ? "none" : "block";
+                mobileMenu.classList.toggle("show");
+            });
+    
+            // Close menu when clicking outside
+            document.addEventListener("click", function (event) {
+                if (!menuToggle.contains(event.target) && !mobileMenu.contains(event.target)) {
+                    mobileMenu.classList.remove("show");
+                }
             });
         });
     </script>

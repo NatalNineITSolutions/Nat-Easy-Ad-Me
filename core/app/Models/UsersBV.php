@@ -16,6 +16,7 @@ class UsersBV extends Model
         'user_id',
         'membership_id',
         'bv_points',
+        'upgrade_time',
         'created_at',
     ];
 

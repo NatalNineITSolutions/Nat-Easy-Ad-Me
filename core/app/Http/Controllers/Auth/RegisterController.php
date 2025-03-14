@@ -211,7 +211,7 @@ class RegisterController extends Controller
                     }
                 }
 
-                $default_membership = Membership::find(1); 
+                $default_membership = Membership::find(1);
                 $membership_id = $default_membership ? $default_membership->id : 1;
                 $bv_points = $default_membership ? $default_membership->bv_points : 0;
 

@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Mail\BasicMail;
 use App\Models\Backend\AdminNotification;
 use App\Models\User;
+use App\Models\UsersBV;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -144,12 +146,12 @@ class RenewMembershipIPNController extends Controller
 
     private function common_ipn_data($payment_data)
     {
-        if (isset($payment_data['status']) && $payment_data['status'] === 'complete'){
+        if (isset($payment_data['status']) && $payment_data['status'] === 'complete') {
             $order_id = $payment_data['order_id'];
             $history_id = session()->get('history_id');
             $user_id = session()->get('user_id');
             $this->update_database($order_id, $history_id, $payment_data['transaction_id']);
-            $this->send_jobs_mail($order_id,$user_id);
+            $this->send_jobs_mail($order_id, $user_id);
 
             toastr_success(__('Membership Renew success'));
             return redirect()->route('user.membership.all');
@@ -163,37 +165,41 @@ class RenewMembershipIPNController extends Controller
         return $this->common_ipn_data($data);
     }
 
-    public function send_jobs_mail($last_membership_id,$user_id)
+    public function send_jobs_mail($last_membership_id, $user_id)
     {
-        if(empty($last_membership_id)){ return redirect()->route('homepage');}
-        $user = User::select(['id','first_name','last_name','email'])->where('id',$user_id)->first();
+        if (empty($last_membership_id)) {
+            return redirect()->route('homepage');
+        }
+        $user = User::select(['id', 'first_name', 'last_name', 'email'])->where('id', $user_id)->first();
 
 
         //Send subscription email to user
         try {
             $subject = get_static_option('user_membership_renew_email_subject') ?? __('Membership renew email.');
             $message = get_static_option('user_membership_renew_message') ?? __('Your membership purchase successfully completed.');
-            $message = str_replace(["@name","@membership_id"],[$user->first_name.' '.$user->last_name, $last_membership_id], $message);
+            $message = str_replace(["@name", "@membership_id"], [$user->first_name . ' ' . $user->last_name, $last_membership_id], $message);
             Mail::to($user->email)->send(new BasicMail([
                 'subject' => $subject,
                 'message' => $message
             ]));
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
 
         //Send subscription email to admin
         try {
             $subject = get_static_option('user_membership_renew_email_subject') ?? __('Membership renew email.');
             $message = get_static_option('user_membership_renew_message_for_admin') ?? __('A user just renew a membership.');
-            $message = str_replace(["@name","@membership_id"],[$user->first_name.' '.$user->last_name, $last_membership_id], $message);
+            $message = str_replace(["@name", "@membership_id"], [$user->first_name . ' ' . $user->last_name, $last_membership_id], $message);
             Mail::to(get_static_option('site_global_email'))->send(new BasicMail([
                 'subject' => $subject,
                 'message' => $message
             ]));
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
     }
     private function update_database($last_membership_id, $history_id, $transaction_id)
     {
-        $membership_details = UserMembership::find($last_membership_id);
+        $membership_details = UserMembership::with('membership')->find($last_membership_id);
         $membership_history = MembershipHistory::find($history_id);
 
         // Parse existing expire dates as Carbon instances
@@ -203,7 +209,7 @@ class RenewMembershipIPNController extends Controller
         $new_days_to_expire = $new_history_expire_date->diffInDays(Carbon::now());
         $expire_date = Carbon::now()->addDays($current_days_to_expire + $new_days_to_expire);
 
-        UserMembership::where('id', $last_membership_id)->where('user_id',$membership_details->user_id)
+        UserMembership::where('id', $last_membership_id)->where('user_id', $membership_details->user_id)
             ->update([
                 'payment_status' => 'complete',
                 'transaction_id' => $transaction_id,
@@ -219,7 +225,25 @@ class RenewMembershipIPNController extends Controller
                 'membership_badge' => $membership_history->membership_badge,
             ]);
 
-        if (!empty($membership_history)){
+        if ($membership_details && $membership_details->membership) {
+            if (!$membership_details) {
+                throw new Exception("UserMembership record not found.");
+            }
+            if (!$membership_details->membership) {
+                throw new Exception("Related Membership record not found.");
+            }
+
+            $bv_points = $membership_details->membership->bv_points ?? 0;
+
+            UsersBV::create([
+                'user_id'       => $membership_details->user_id,
+                'membership_id' => $membership_details->membership->id,
+                'bv_points'     => $bv_points,
+                'upgrade_time'  => Carbon::now(),
+            ]);
+        }
+
+        if (!empty($membership_history)) {
             MembershipHistory::where('id', $history_id)->update([
                 'payment_status' => 'complete',
                 'transaction_id' => $transaction_id,
@@ -229,10 +253,10 @@ class RenewMembershipIPNController extends Controller
         }
 
         AdminNotification::create([
-            'identity'=>$last_membership_id,
-            'user_id'=>$membership_details->user_id,
-            'type'=>__('Renew Membership'),
-            'message'=>__('User membership renew'),
+            'identity' => $last_membership_id,
+            'user_id' => $membership_details->user_id,
+            'type' => __('Renew Membership'),
+            'message' => __('User membership renew'),
         ]);
     }
 }

@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Mail\BasicMail;
 use App\Models\Backend\AdminNotification;
 use App\Models\User;
+use App\Models\UsersBV;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -146,15 +148,15 @@ class BuyMembershipIPNController extends Controller
 
     private function common_ipn_data($payment_data)
     {
-        if (isset($payment_data['status']) && $payment_data['status'] === 'complete'){
+        if (isset($payment_data['status']) && $payment_data['status'] === 'complete') {
             $order_id = $payment_data['order_id'];
             $user_id = session()->get('user_id');
             $membership_history_id = session()->get('membership_history_id');
             $upgrade_membership_id = session()->get('upgrade_membership_id');
             $this->update_database($order_id, $payment_data['transaction_id'], $membership_history_id, $upgrade_membership_id);
-            $this->send_jobs_mail($order_id,$user_id);
+            $this->send_jobs_mail($order_id, $user_id);
 
-           toastr_success(__('Membership purchase success'));
+            toastr_success(__('Membership purchase success'));
             return redirect()->route('user.membership.all');
         }
 
@@ -166,11 +168,13 @@ class BuyMembershipIPNController extends Controller
         return $this->common_ipn_data($data);
     }
 
-    public function send_jobs_mail($last_membership_id,$user_id)
+    public function send_jobs_mail($last_membership_id, $user_id)
     {
-        if(empty($last_membership_id)){ return redirect()->route('homepage');}
-        $user = User::select(['id','first_name','last_name','email'])->where('id',$user_id)->first();
-        $name = $user->first_name. ' ' .$user->last_name;
+        if (empty($last_membership_id)) {
+            return redirect()->route('homepage');
+        }
+        $user = User::select(['id', 'first_name', 'last_name', 'email'])->where('id', $user_id)->first();
+        $name = $user->first_name . ' ' . $user->last_name;
         $email = $user->email;
 
         $membership = UserMembership::find($last_membership_id);
@@ -191,12 +195,11 @@ class BuyMembershipIPNController extends Controller
             //Send membership email to admin
             $subject = get_static_option('user_membership_purchase_email_subject') ?? __('Membership purchase email');
             $message = get_static_option('user_membership_purchase_message_for_admin') ?? __('A user just purchase a membership.');
-            $message = str_replace(["@membership_id", "@membership_type", "@membership_price", "@membership_expire_date","@name","@email"],[$last_membership_id, $membership_type, $membership_price, $membership_expire_date, $name,$email], $message);
+            $message = str_replace(["@membership_id", "@membership_type", "@membership_price", "@membership_expire_date", "@name", "@email"], [$last_membership_id, $membership_type, $membership_price, $membership_expire_date, $name, $email], $message);
             Mail::to(get_static_option('site_global_email'))->send(new BasicMail([
                 'subject' => $subject,
                 'message' => $message
             ]));
-
         } catch (\Exception $e) {
             Log::error('Failed to clear session: ' . $e->getMessage());
         }
@@ -209,9 +212,9 @@ class BuyMembershipIPNController extends Controller
             $last_membership_id = (int) $last_membership_id;
             $membership_history_id = (int) $membership_history_id;
 
-              // Retrieve membership details
-              $membership_details = UserMembership::find($last_membership_id);
-              $membership_history = MembershipHistory::find($membership_history_id);
+            // Retrieve membership details
+            $membership_details = UserMembership::with('membership')->find($last_membership_id);
+            $membership_history = MembershipHistory::find($membership_history_id);
 
             $check_user_current_membership = UserMembership::where('id', $last_membership_id)
                 ->where('user_id', $membership_details->user_id)
@@ -224,21 +227,37 @@ class BuyMembershipIPNController extends Controller
                 throw new \Exception("Membership not found for ID: $last_membership_id");
             }
 
-             UserMembership::where('id', $last_membership_id)->where('user_id',$membership_details->user_id)
+            UserMembership::where('id', $last_membership_id)->where('user_id', $membership_details->user_id)
                 ->update([
                     'payment_status' => 'complete',
                     'status' => 1,
                     'transaction_id' => $transaction_id,
                 ]);
 
-            MembershipHistory::where('id', $membership_history_id)->where('user_id',$membership_details->user_id)
+            MembershipHistory::where('id', $membership_history_id)->where('user_id', $membership_details->user_id)
                 ->update([
                     'payment_status' => 'complete',
                     'status' => 1,
                     'transaction_id' => $transaction_id,
                 ]);
 
-
+            if ($membership_details && $membership_details->membership) {
+                if (!$membership_details) {
+                    throw new Exception("UserMembership record not found.");
+                }
+                if (!$membership_details->membership) {
+                    throw new Exception("Related Membership record not found.");
+                }
+                
+                $bv_points = $membership_details->membership->bv_points ?? 0;
+                
+                UsersBV::create([
+                    'user_id'       => $membership_details->user_id,
+                    'membership_id' => $membership_details->membership->id, 
+                    'bv_points'     => $bv_points,
+                    'upgrade_time'  => Carbon::now(),
+                ]);
+            }
 
             // if user current membership upgrade
             if ($membership_history_id && !empty($membership_history) && $check_user_current_membership) {
@@ -289,7 +308,7 @@ class BuyMembershipIPNController extends Controller
                 $initial_membership_badge = $membership_history->membership_badge;
 
 
-                 $membership_history_updated = MembershipHistory::where('id', $membership_history_id)->where('user_id',$membership_details->user_id)
+                $membership_history_updated = MembershipHistory::where('id', $membership_history_id)->where('user_id', $membership_details->user_id)
                     ->update([
                         'payment_status' => 'complete',
                         'payment_gateway' => $payment_gateway_name,
@@ -300,7 +319,7 @@ class BuyMembershipIPNController extends Controller
                     ]);
 
 
-                if ($membership_history_updated){
+                if ($membership_history_updated) {
                     UserMembership::where('id', $last_membership_id)->where('user_id', $membership_details->user_id)->update([
                         'membership_id' => $upgrade_membership_id,
                         'payment_status' => 'complete',
@@ -324,15 +343,15 @@ class BuyMembershipIPNController extends Controller
                         'initial_enquiry_form' => $initial_enquiry_form,
                         'initial_business_hour' => $initial_business_hour,
                         'initial_membership_badge' => $initial_membership_badge,
-                        ]);
+                    ]);
                 }
             }
 
             AdminNotification::create([
-                'identity'=>$last_membership_id,
-                'user_id'=>$membership_details->user_id,
-                'type'=>__('Buy Membership'),
-                'message'=>__('User membership purchase'),
+                'identity' => $last_membership_id,
+                'user_id' => $membership_details->user_id,
+                'type' => __('Buy Membership'),
+                'message' => __('User membership purchase'),
             ]);
 
             // Clear session data
@@ -340,10 +359,8 @@ class BuyMembershipIPNController extends Controller
             session()->forget('user_id');
             session()->forget('membership_history_id');
             session()->forget('upgrade_membership_id');
-
         } catch (\Exception $e) {
             Log::error('Failed to clear session: ' . $e->getMessage());
         }
-
     }
 }

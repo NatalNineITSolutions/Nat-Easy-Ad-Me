@@ -12,6 +12,7 @@ class PageBuilderSetup
         $addons = [
             \plugins\PageBuilder\Addons\Listing\ListingsOne::class,
             \plugins\PageBuilder\Addons\Listing\TopListingOne::class,
+            \plugins\PageBuilder\Addons\Listing\LocationListing::class,
             \plugins\PageBuilder\Addons\Listing\RecentListingOne::class,
             \plugins\PageBuilder\Addons\Listing\CategoryWiseListing::class,
             \plugins\PageBuilder\Addons\BrowseCategory\BrowseCategoryOne::class,

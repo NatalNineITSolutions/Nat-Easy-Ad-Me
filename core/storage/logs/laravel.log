@@ -1,1 +1,5 @@
-[2025-03-14 07:27:21] production.ERROR: Failed to clear session: Connection could not be established with host "YOUR_SMTP_HOST_NAME:587": stream_socket_client(): php_network_getaddresses: getaddrinfo for YOUR_SMTP_HOST_NAME failed: No such host is known.   
+
+[2025-03-14 09:58:41] production.INFO: LocationListing frontend_render called  
+[2025-03-14 09:58:41] production.INFO: Settings: {"addon_name":"LocationListing","addon_namespace":"cGx1Z2luc1xQYWdlQnVpbGRlclxBZGRvbnNcTGlzdGluZ1xMb2NhdGlvbkxpc3Rpbmc=","addon_type":"new","addon_location":"dynamic_page","addon_order":"4","addon_page_id":"3","addon_page_type":"dynamic_page","title":"Locations","explore_all":"See all","items":"10","padding_top":"260","padding_bottom":"190","section_bg":null,"btn_color":null,"button_text_color":null} 
+[2025-03-14 10:02:41] production.INFO: LocationListing frontend_render called  
+[2025-03-14 10:02:41] production.INFO: Settings: {"id":"39","addon_name":"LocationListing","addon_namespace":"cGx1Z2luc1xQYWdlQnVpbGRlclxBZGRvbnNcTGlzdGluZ1xMb2NhdGlvbkxpc3Rpbmc=","addon_type":"update","addon_location":"dynamic_page","addon_order":"4","addon_page_id":"3","addon_page_type":"dynamic_page","title":"Location","explore_all":"See all","items":"10","padding_top":"260","padding_bottom":"190","section_bg":null,"btn_color":null,"button_text_color":null} 

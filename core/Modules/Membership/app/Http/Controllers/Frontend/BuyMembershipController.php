@@ -215,18 +215,6 @@ class BuyMembershipController extends Controller
                                     'status' => $status,
                                 ]);
 
-                                if ($payment_status === 'complete') {
-                                    UsersBv::updateOrCreate(
-                                        ['user_id' => $user->id],
-                                        [
-                                            'membership_id' => $membership_details->id,
-                                            'bv_points' => $membership_details->bv_points,
-                                            'expire_date' => $expire_date,
-                                            'upgrade_time' => Carbon::now(),
-                                        ]
-                                    );
-                                }
-
                                 // membership history ID in session
                                 if ($new_membership_history) {
                                     session()->put('membership_history_id', $new_membership_history->id);
@@ -285,18 +273,6 @@ class BuyMembershipController extends Controller
                                         'price' => $this->total,
                                         'status' => $status,
                                     ]);
-
-                                    if ($user_membership->payment_status === 'complete') {
-                                        UsersBv::updateOrCreate(
-                                            ['user_id' => $user->id],
-                                            [
-                                                'membership_id' => $membership_details->id,
-                                                'bv_points' => $membership_details->bv_points,
-                                                'expire_date' => $expire_date,
-                                                'upgrade_time' => Carbon::now(),
-                                            ]
-                                        );
-                                    }
 
                                     // membership history ID in session
                                     if ($new_membership_history) {
@@ -363,18 +339,6 @@ class BuyMembershipController extends Controller
                                     'status' => $status,
                                 ]);
 
-                                if ($user_membership->payment_status === 'complete') {
-                                    UsersBv::updateOrCreate(
-                                        ['user_id' => $user->id],
-                                        [
-                                            'membership_id' => $membership_details->id,
-                                            'bv_points' => $membership_details->bv_points,
-                                            'expire_date' => $expire_date,
-                                            'upgrade_time' => Carbon::now(),
-                                        ]
-                                    );
-                                }
-
                                 // membership history ID in session
                                 if ($new_membership_history) {
                                     session()->put('membership_history_id', $new_membership_history->id);
@@ -432,19 +396,6 @@ class BuyMembershipController extends Controller
                                     'price' => $this->total,
                                     'status' => $status,
                                 ]);
-
-                                // Only create UsersBv if payment is complete
-                                if ($user_membership->payment_status === 'complete') {
-                                    UsersBv::updateOrCreate(
-                                        ['user_id' => $user->id],
-                                        [
-                                            'membership_id' => $membership_details->id,
-                                            'bv_points' => $membership_details->bv_points,
-                                            'expire_date' => $expire_date,
-                                            'upgrade_time' => Carbon::now(),
-                                        ]
-                                    );
-                                }
 
                                 // membership history ID in session
                                 if ($new_membership_history) {
@@ -504,19 +455,6 @@ class BuyMembershipController extends Controller
                             if ($new_membership_history) {
                                 session()->put('membership_history_id', $new_membership_history->id);
                                 session()->put('upgrade_membership_id', $membership_details->id);
-                            }
-
-                            // Only create UsersBv if payment is complete
-                            if ($payment_status === 'complete') {
-                                UsersBv::updateOrCreate(
-                                    ['user_id' => $user->id],
-                                    [
-                                        'membership_id' => $membership_details->id,
-                                        'bv_points' => $membership_details->bv_points,
-                                        'expire_date' => $expire_date,
-                                        'upgrade_time' => Carbon::now(),
-                                    ]
-                                );
                             }
                         }
                     } else {

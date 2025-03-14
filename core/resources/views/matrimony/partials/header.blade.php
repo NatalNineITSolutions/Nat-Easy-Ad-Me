@@ -2,16 +2,17 @@
     <div class="container header-container">
         <!-- Logo -->
         <a href="/matrimony" class="logo-link">
-            <h3 class="logo">EASY AD ME</h3>
+            <img class="logo" src="/assets/uploads/media-uploader/new-logo.png" alt="">
         </a>
 
         <!-- Desktop Navigation Links -->
         <nav>
             <ul class="nav-links">
-                <li><a href="#">Explore</a></li>
-                <li><a href="#">All Pages</a></li>
-                <li><a href="#">Top Pages</a></li>
-                <li><a href="#">Plans</a></li>
+                <li><a href="/matrimony">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">Search</a></li>
+                <li><a href="#">Contact</a></li>
             </ul>
         </nav>
 

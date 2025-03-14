@@ -61,20 +61,37 @@ class MatrimonyController extends Controller
 
     public function login(Request $request)
     {
+        // Validate the input
         $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
+            'login' => 'required|string', // 'login' can be either email or username
+            'password' => 'required|string',
         ]);
 
-        $user = MatrimonyUser::where('email', $request->email)->first();
+        // Determine if the input is an email or username
+        $loginType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
 
+        // Attempt to find the user
+        $user = MatrimonyUser::where($loginType, $request->login)->first();
+
+        // Check if the user exists and the password is correct
         if ($user && Hash::check($request->password, $user->password)) {
             // Store user session
             Auth::login($user);
             return redirect()->route('matrimony.index')->with('success', 'Login successful!');
         }
 
-        return back()->withErrors(['email' => 'Invalid credentials.'])->withInput();
+        // If authentication fails, return with an error message
+        return back()->withErrors(['login' => 'Invalid credentials.'])->withInput();
+    }
+
+    public function profiledetails()
+    {
+        $user = Auth::user();
+        return view('matrimony.profile-details');
+    }
+
+    public function otp() {
+        return view ('matrimony.otp');
     }
 
 }

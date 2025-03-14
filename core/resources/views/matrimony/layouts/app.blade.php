@@ -35,6 +35,10 @@
             font-family: "Montserrat", sans-serif;
         }
 
+        .logo {
+            width: 130px;
+        }
+
         /* Header Styles */
         .header {
             display: flex;

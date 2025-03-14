@@ -27,7 +27,7 @@
 
         .banner {
             position: relative;
-            height: 100vh;
+            height: 93vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -38,7 +38,7 @@
         }
 
         .banner-bg {
-            background: url('/assets/img/ban-bg.jpg') no-repeat center center/cover;
+            background: url('/assets/uploads/media-uploader/ban-bg.jpg') no-repeat center center/cover;
             position: absolute;
             top: 0;
             left: 0;
@@ -56,6 +56,10 @@
             to {
                 transform: scale(1.1); /* Slight zoom-in effect */
             }
+        }
+
+        .grass-border {
+            width: 100%;
         }
 
         .banner::before {
@@ -146,232 +150,262 @@
                 width: 80%;
         }
             
-            .slick-prev-icon,
-            .slick-next-icon {
-                color: black;
+        .slick-prev-icon,
+        .slick-next-icon {
+            color: black;
+        }
+        
+        .slick-slide {
+            padding: 0 10px;
+        }
+        
+        .card {
+            position: relative;
+            display: flex !important;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            border-radius: 3px;
+            border: 1px solid rgba(0,0,0,.2);
+            background-color: white;
+            text-decoration: none;
+            color: rgba(0,0,0,.9);
+            transition: all .1s linear;
+            @media screen and (max-width: 600px) {
+            height: auto;
             }
-            
-            .slick-slide {
-                padding: 0 10px;
-            }
-            
-            .card {
-                position: relative;
-                display: flex !important;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                padding: 15px;
-                border-radius: 3px;
-                border: 1px solid rgba(0,0,0,.2);
-                background-color: white;
-                text-decoration: none;
-                color: rgba(0,0,0,.9);
-                transition: all .1s linear;
-                @media screen and (max-width: 600px) {
-                height: auto;
-                }
-            }
+        }
 
-               .card h2 {
-                font-size: 15px;
-                font-weight: 600;
-                text-align: center;
-                margin-top: 15px;
-                margin-bottom: 15px;
-               }
+        .card h2 {
+        font-size: 15px;
+        font-weight: 600;
+        text-align: center;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        }
 
-               .card p {
-                font-size: 12px;
-                font-weight: 600;
-               }
+        .card p {
+        font-size: 12px;
+        font-weight: 600;
+        }
 
-                /** Product title */
-                .card .title {
-                color: #000;
-                margin: 0;
-                padding: 10px 10px 5px 10px;
-                font-size: 16px;
-                font-weight: bold;
-                }
+        /** Product title */
+        .card .title {
+        color: #000;
+        margin: 0;
+        padding: 10px 10px 5px 10px;
+        font-size: 16px;
+        font-weight: bold;
+        }
 
-                .card .title:hover {
-                    text-decoration: underline;
-                }
+        .card .title:hover {
+            text-decoration: underline;
+        }
 
-                /** Product image */
-                .card .image {
-                /** Visually place the image above all other content (like the heading) in the parent flex container (.card). */
-                order: -1;
+        /** Product image */
+        .card .image {
+        /** Visually place the image above all other content (like the heading) in the parent flex container (.card). */
+        order: -1;
 
-                position: relative;
-                height: 100px;
-                padding: 2px;
-                overflow: hidden;
+        position: relative;
+        height: 100px;
+        padding: 2px;
+        overflow: hidden;
 
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                }
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        }
 
-                .card .image img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    filter: grayscale(.5);
-                    transition: all .3s ease-in-out;
-                }
+        .card .image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(.5);
+            transition: all .3s ease-in-out;
+        }
 
-                    .card .image:hover img {
-                    width: 110%;
-                    height: 110%;
-                    }
-
-                /** Product description */
-                .card .description {
-                margin: 7px 10px 15px 10px;
-                font-size: 14px;
-                opacity: .8;
-                }
-
-                /** Floating "sale" badge */
-                .card .badge {
-                position: absolute;
-                top: 2px;
-                right: 2px;
-                z-index: 1;
-
-                padding: 5px 10px;
-
-                font-size: 12px;
-                font-weight: bold;
-                text-transform: uppercase;
-                color: white;
-                background-color: rgb(200,0,0);
-                }
-
-                /** Price */
-                .card .price {
-                padding-left: 10px;
-                }
-
-                .card .price .new-price {
-                    font-weight: bold;
-                }
-
-                .card .price .original-price {
-                    margin-left: 5px;
-                    font-size: 14px;
-                    font-style: italic;
-                    opacity: .5;
-                    text-decoration: line-through;
-                }
-
-                /** Rating */
-                .card .rating {
-                margin: 10px 0 15px 10px;
-                color: orange;
-                font-size: 12px;
-                }
-
-                /** "30 reviews" link next to stars */
-                .card .rating .reviews-link {
-                    color: rgba(0,0,0,.6);
-                    margin-left: 5px;
-                }
-
-                    .card .rating .reviews-link:hover {
-                    color: black;
-                    }
-
-                    .card .rating .reviews-link:focus {
-                    color: royalblue;
-                    outline: 3px dotted royalblue;
-                    outline-offset: 2px;
-                    }
-
-                /** Hover state = add box shadow, underline the title */
-                .card:hover {
-                border-color: rgba(0,0,0,.4);
-                box-shadow: 0 0 10px 0 rgba(0,0,0,.15);
-                }
-
-                .card:hover .image img,
-                .card:focus .image img {
-                    filter: grayscale(0);
-                }
-
-                .card a:focus {
-                    outline: none;
-                }
+            .card .image:hover img {
+            width: 110%;
+            height: 110%;
             }
 
-            .slick-next,
-            .slick-prev {
-                background-color: black;
+        /** Product description */
+        .card .description {
+        margin: 7px 10px 15px 10px;
+        font-size: 14px;
+        opacity: .8;
+        }
+
+        /** Floating "sale" badge */
+        .card .badge {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        z-index: 1;
+
+        padding: 5px 10px;
+
+        font-size: 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: white;
+        background-color: rgb(200,0,0);
+        }
+
+        /** Price */
+        .card .price {
+        padding-left: 10px;
+        }
+
+        .card .price .new-price {
+            font-weight: bold;
+        }
+
+        .card .price .original-price {
+            margin-left: 5px;
+            font-size: 14px;
+            font-style: italic;
+            opacity: .5;
+            text-decoration: line-through;
+        }
+
+        /** Rating */
+        .card .rating {
+        margin: 10px 0 15px 10px;
+        color: orange;
+        font-size: 12px;
+        }
+
+        /** "30 reviews" link next to stars */
+        .card .rating .reviews-link {
+            color: rgba(0,0,0,.6);
+            margin-left: 5px;
+        }
+
+            .card .rating .reviews-link:hover {
+            color: black;
             }
 
-            .slick-next:hover,
-            .slick-prev:hover {
-                background-color: black;
-            } 
-
-            .profile-container {
-                margin-top: 30px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
+            .card .rating .reviews-link:focus {
+            color: royalblue;
+            outline: 3px dotted royalblue;
+            outline-offset: 2px;
             }
 
-            .card-slider {
-                margin-top: 20px;
-            }
+        /** Hover state = add box shadow, underline the title */
+        .card:hover {
+        border-color: rgba(0,0,0,.4);
+        box-shadow: 0 0 10px 0 rgba(0,0,0,.15);
+        }
 
-            .trusted-profiles {
-                text-align: center;
-            }
+        .card:hover .image img,
+        .card:focus .image img {
+            filter: grayscale(0);
+        }
 
-            .trusted-profiles h2 {
-                font-size: 18px;
-                color: #C48C46;
-                margin-bottom: 10px;
-            }
+        .card a:focus {
+            outline: none;
+        }
+        }
 
-            .trusted-profiles p {
-                font-size: 18px;
-                font-weight: 600;
-                color: #66451C;
-            }
+        .slick-next,
+        .slick-prev {
+            background-color: black;
+        }
 
-            .slick-slide {
-                margin: 0 5px;
-            } 
+        .slick-next:hover,
+        .slick-prev:hover {
+            background-color: black;
+        } 
 
-            .btn-profile {
-                padding: 10px 15px;
-                background-color: #FF166C;
-                border: none;
-                font-size: 13px;
-                font-weight: 600;
-                text-transform: uppercase;
-                letter-spacing: 1.2px;
-                color: white;
-                text-decoration: none;
-            }
+        .profile-container {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 60px;
+        }
 
-            /* Perfect match */
-            .perfect-match-banner {
-                margin-top: 30px;
-                margin-bottom: 30px;
-                background-color: #ffeebf;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                padding: 40px 20px;
-                border-radius: 12px;
-                text-align: center;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            }
+        .dividers {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        .dividers img {
+            width: 90px;
+        }
+
+        .dividers img:nth-child(2) {
+            transform: rotate(-180deg);
+        }
+
+        .card-slider {
+            margin-top: 30px;
+        }
+
+        .card-profile {
+            width: 60px;
+        }
+
+        .profile-container-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;;
+        }
+
+        .profile-container-section-img {
+            width: 120px;
+        }
+
+        .trusted-profiles {
+            text-align: center;
+        }
+
+        .trusted-profiles h2 {
+            font-size: 25px;
+            color: #C48C46;
+            margin-bottom: 10px;
+        }
+
+        .trusted-profiles p {
+            font-size: 25px;
+            font-weight: 600;
+            color: #66451C;
+        }
+
+        .slick-slide {
+            margin: 0 5px;
+        } 
+
+        .btn-profile {
+            padding: 10px 15px;
+            background-color: #FF166C;
+            border: none;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Perfect match */
+        .perfect-match-banner {
+            position: relative;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            background-color: #ffeebf;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
 
         .perfect-match-banner h1 {
             font-family: "Prociono", serif;
@@ -389,10 +423,17 @@
             text-align: center;
         }
 
+        .perfect-match-banner-img {
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+        }
+
         .buttons {
             display: flex;
             justify-content: center;
             gap: 15px;
+            margin-bottom: 30px;
         }
 
         .register-now {
@@ -456,6 +497,22 @@
             .buttons {
                 flex-direction: column;
             }
+
+            .dividers img {
+                width: 60px;
+            }
+
+            .trusted-profiles h2 {
+                font-size: 10px;
+            }
+
+            .trusted-profiles p {
+                font-size: 10px;
+            }
+
+            .profile-container-section {
+                gap: 5px;
+            }
         }
     </style>
 @endsection
@@ -464,7 +521,7 @@
     <div class="banner">
         <div class="banner-bg"></div> <!-- Background for Zoom Effect -->
         <div class="banner-content">
-            <img class="hibiscus" src="/assets/img/hibiscus.png" alt="Hibiscus">
+            <img class="hibiscus" src="/assets/uploads/media-uploader/hibiscus.png" alt="Hibiscus">
             <h2 class="banner-heading">Find your <br> <span class="highlight">Right Match</span> here</h2>
             <p class="banner-desp">Forever Starts Here: Your Love, Your Journey, Your Wedding Wonderland!</p>
 
@@ -499,58 +556,70 @@
                 <button class="btn btn-primary">Search</button>
             </div>
         </div>
-    </div>   
+    </div> 
+    
+    <img class="grass-border" src="/assets/uploads/media-uploader/grass-border.png" alt="">
 
     <div class="container profile-container">
-        <div class="trusted-profiles">
-            <h2>TRUSTED PROFILES</h2>
-            <p>More than 1500+ Trusted Profiles</p>
+        <div class="profile-container-section">
+            <img class="profile-container-section-img" src="/assets/uploads/media-uploader/profile-design.png" alt="">
+            <div class="trusted-profiles">
+                <div>
+                    <h2>TRUSTED PROFILES</h2>
+                    <p>More than 1500+ Trusted Profiles</p>
+                </div>
+                <div class="dividers">
+                    <img src="/assets/uploads/media-uploader/divider.png" alt="">
+                    <img src="/assets/uploads/media-uploader/divider.png" alt="">
+                </div>
+            </div>
+            <img class="profile-container-section-img" src="/assets/uploads/media-uploader/profile-design.png" alt="">
         </div>
         <div class="card-slider">
             <div class="card">
-                <img src="profile.jpg" alt="Profile Image">
+                <img class="card-profile" src="/assets/uploads/media-uploader/profile.png" alt="Profile Image">
                 <h2>Nikitha</h2>
                 <p>📅 20 Years &nbsp; 🏋️‍♀️ 5ft, 2in</p>
                 <p>📍 Chennai &nbsp; 🎓 UG</p>
                 <a href="#" class="btn-profile">View Profile</a>
             </div>
             <div class="card">
-                <img src="profile.jpg" alt="Profile Image">
+                <img class="card-profile" src="/assets/uploads/media-uploader/profile.png" alt="Profile Image">
                 <h2>Nikitha</h2>
                 <p>📅 20 Years &nbsp; 🏋️‍♀️ 5ft, 2in</p>
                 <p>📍 Chennai &nbsp; 🎓 UG</p>
                 <a href="#" class="btn-profile">View Profile</a>
             </div>
             <div class="card">
-                <img src="profile.jpg" alt="Profile Image">
+                <img class="card-profile" src="/assets/uploads/media-uploader/profile.png" alt="Profile Image">
                 <h2>Nikitha</h2>
                 <p>📅 20 Years &nbsp; 🏋️‍♀️ 5ft, 2in</p>
                 <p>📍 Chennai &nbsp; 🎓 UG</p>
                 <a href="#" class="btn-profile">View Profile</a>
             </div>
             <div class="card">
-                <img src="profile.jpg" alt="Profile Image">
+                <img class="card-profile" src="/assets/uploads/media-uploader/profile.png" alt="Profile Image">
                 <h2>Nikitha</h2>
                 <p>📅 20 Years &nbsp; 🏋️‍♀️ 5ft, 2in</p>
                 <p>📍 Chennai &nbsp; 🎓 UG</p>
                 <a href="#" class="btn-profile">View Profile</a>
             </div>
             <div class="card">
-                <img src="profile.jpg" alt="Profile Image">
+                <img class="card-profile" src="/assets/uploads/media-uploader/profile.png" alt="Profile Image">
                 <h2>Nikitha</h2>
                 <p>📅 20 Years &nbsp; 🏋️‍♀️ 5ft, 2in</p>
                 <p>📍 Chennai &nbsp; 🎓 UG</p>
                 <a href="#" class="btn-profile">View Profile</a>
             </div>
             <div class="card">
-                <img src="profile.jpg" alt="Profile Image">
+                <img class="card-profile" src="/assets/uploads/media-uploader/profile.png" alt="Profile Image">
                 <h2>Nikitha</h2>
                 <p>📅 20 Years &nbsp; 🏋️‍♀️ 5ft, 2in</p>
                 <p>📍 Chennai &nbsp; 🎓 UG</p>
                 <a href="#" class="btn-profile">View Profile</a>
             </div>
             <div class="card">
-                <img src="profile.jpg" alt="Profile Image">
+                <img class="card-profile" src="/assets/uploads/media-uploader/profile.png" alt="Profile Image">
                 <h2>Nikitha</h2>
                 <p>📅 20 Years &nbsp; 🏋️‍♀️ 5ft, 2in</p>
                 <p>📍 Chennai &nbsp; 🎓 UG</p>
@@ -558,6 +627,8 @@
             </div>
         </div>
     </div>
+
+    <img class="grass-border" src="/assets/uploads/media-uploader/grass-border.png" alt="">
 
     <div class="container">
         <div class="perfect-match-banner">
@@ -569,6 +640,7 @@
                 </a>
                 <button class="support">HELP & SUPPORT</button>
             </div>
+            <img class="perfect-match-banner-img" src="/assets/uploads/media-uploader/perfect-match-banner.png" alt="">
         </div>
     </div>
       

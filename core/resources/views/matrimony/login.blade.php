@@ -6,14 +6,21 @@
     <style>
         .login-container {
             /* background: url('bg-pattern.png') repeat; */
-            background-color: #ff8800;
+            background-image: url('/assets/uploads/media-uploader/bg.png');
+            height: 90vh;
             padding: 50px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .left {
             width: 50%;
             display: block;
-            background-color: black;
+            background-image: url('/assets/uploads/media-uploader/reg-bg.jpeg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
             padding: 50px 0;
             height: auto;
         }
@@ -94,9 +101,41 @@
             font-weight: 500;
         }
 
-        .login {
+        .login-text {
             font-size: 13px;
             font-weight: 500;
+        }
+
+        .or {
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+
+        .login-btn-otp {
+            border: 1px solid #FF166C;
+            background: white;
+            color: #FF166C;
+            padding: 8px 12px;
+            width: 100%;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .login-btn-otp:hover {
+            background: #FF166C;
+            color: white;
+        }
+
+        .login-text a {
+            text-decoration: none;
+        }
+
+        .terms a {
+            text-decoration: none;
         }
 
         @media (max-width: 991px) {
@@ -129,18 +168,24 @@
                     <form class="form" method="POST" action="{{ route('matrimony.login') }}">
                         @csrf
                         <div class="input-group">
-                            <input type="email" placeholder="Email" name="email" required value="{{ old('email') }}">
+                            <input type="text" placeholder="Email or Username" name="login" required">
                         </div>
                     
                         <div class="input-group">
                             <input type="password" placeholder="Password" name="password" required>
                         </div>
                     
-                        <button type="submit" class="login-btn">Submit</button>
-
-                        <p class="terms">By clicking on Register Free, you agree to the <a href="#">Terms & Conditions</a>.</p>
-                        <p class="login">Don't have an account?<a href="/matrimony/register">Sign Up</a></p>
+                        <button type="submit" class="login-btn">Login</button>
                     </form>
+
+                    <p class="or">Or</p>
+
+                    <a href="/matrimony/otp" class="login-btn-outer">
+                        <button class="login-btn-otp">Login with OTP</button>
+                    </a>
+
+                    <p class="terms">By clicking on Register Free, you agree to the <a href="#">Terms & Conditions</a>.</p>
+                    <p class="login-text">Don't have an account?<a href="/matrimony/register">Sign Up</a></p>
                 </div>
             </div>
         </div>

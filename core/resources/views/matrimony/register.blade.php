@@ -6,14 +6,33 @@
     <style>
         .matrimony-container {
             /* background: url('bg-pattern.png') repeat; */
-            background-color: #ff8800;
-            padding: 50px 0;
+            background-image: url('/assets/uploads/media-uploader/bg.png');
+            /* background-image: url('/assets/uploads/media-uploader/mandala.jpeg'); */
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            height: 90vh;
+            padding: 40px 0 60px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .grass-border {
+            width: 100%;
+            position: absolute;
+            bottom: 0;
         }
 
         .left {
             width: 50%;
             display: block;
             background-color: black;
+            background-image: url('/assets/uploads/media-uploader/register-left.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
             padding: 50px 0;
             height: auto;
         }
@@ -23,7 +42,7 @@
             background: white;
             padding: 30px 0;
             display: flex;
-            align-content: center;
+            align-items: center;
             justify-content: center;
         }
 
@@ -120,7 +139,6 @@
         .login {
             font-size: 13px;
             color: #666;
-            margin-top: 10px;
         }
 
         .terms {
@@ -308,6 +326,7 @@
                 </div>
             </div>
         </div>
+        <img class="grass-border" src="/assets/uploads/media-uploader/reg-grass-border.png" alt="">
     </section>
 @endsection
 

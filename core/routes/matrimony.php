@@ -13,5 +13,7 @@ Route::middleware(['web'])->group(function () {
         Route::get('/login', [MatrimonyController::class, 'showLoginForm'])->name('login.form');
         Route::post('/login', [MatrimonyController::class, 'login'])->name('login');
         Route::get('/pricing', [MatrimonyController::class, 'price'])->name('price');
+        Route::get('/profile-details', [MatrimonyController::class, 'profiledetails'])->name('profile-details');
+        Route::get('/otp', [MatrimonyController::class, 'otp'])->name('otp');
     });
 });

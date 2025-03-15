@@ -70,7 +70,6 @@ class Membership extends PageBuilderBase
     // This function will render the addon on frontend, you can get the inputted values passed from the admin_render function
     public function frontend_render()
     {
-
         $settings = $this->get_settings();
         $title = $settings['title'] ?? '';
         $title_text_color = $settings['title_text_color'] ?? '';
@@ -84,11 +83,10 @@ class Membership extends PageBuilderBase
         $close_text = __('Close');
         $buy_now_text = __('Buy Now');
         $apply = __('Apply');
-        $number_of_connect = get_static_option('set_number_of_connect',2);
-        $connect_text = sprintf(__('Connect to get order from buyer, each order will deduct %d connect from seller account.'),$number_of_connect);
+        $number_of_connect = get_static_option('set_number_of_connect', 2);
+        $connect_text = sprintf(__('Connect to get order from buyer, each order will deduct %d connect from seller account.'), $number_of_connect);
         $route = '';
         $csrf_token = csrf_token();
-
 
         $wallet_gateway = '';
         if (moduleExists('Wallet')) {
@@ -99,46 +97,49 @@ class Membership extends PageBuilderBase
         $abcd = get_static_option('site_manual_payment_description');
         $receipt = __('Receipt');
 
-        $memberships = \Modules\Membership\app\Models\Membership::with('membership_type')->where('status',1)->get();
+        // Modify the query to filter memberships where category is 0
+        $memberships = \Modules\Membership\app\Models\Membership::with('membership_type')
+            ->where('status', 1)
+            ->where('category', 0) // Add this line to filter by category
+            ->get();
 
         $user = auth()->guard('web')->user();
-        if ($user){
+        if ($user) {
             $user_current_membership = UserMembership::where('user_id', auth()->guard('web')->user()->id)
                 ->whereDate('expire_date', '>', now()) // Check if expire_date is greater than current date
-                ->latest()->first();
-        }else{
+                ->latest()
+                ->first();
+        } else {
             $user_current_membership = null;
         }
 
-
         // readable values must be pass via an array
         $data = [
-            'user_current_membership'=> $user_current_membership,
-            'settings'=> $settings,
-            'title'=> $title,
-            'title_text_color'=> $title_text_color,
-            'explode'=> $explode,
-            'title_start'=> $title_start,
-            'title_end'=> $title_end,
-            'subtitle'=> $subtitle,
-            'padding_top'=> $padding_top,
-            'padding_bottom'=> $padding_bottom,
-            'subscription_text'=> $subscription_text,
-            'close_text'=> $close_text,
-            'buy_now_text'=> $buy_now_text,
-            'apply'=> $apply,
-            'number_of_connect'=> $number_of_connect,
-            'connect_text'=> $connect_text,
-            'route'=> $route,
-            'csrf_token'=> $csrf_token,
-            'wallet_gateway'=> $wallet_gateway,
-            'abc'=> $abc,
-            'abcd'=> $abcd,
-            'receipt'=> $receipt,
-            'memberships'=> $memberships,
+            'user_current_membership' => $user_current_membership,
+            'settings' => $settings,
+            'title' => $title,
+            'title_text_color' => $title_text_color,
+            'explode' => $explode,
+            'title_start' => $title_start,
+            'title_end' => $title_end,
+            'subtitle' => $subtitle,
+            'padding_top' => $padding_top,
+            'padding_bottom' => $padding_bottom,
+            'subscription_text' => $subscription_text,
+            'close_text' => $close_text,
+            'buy_now_text' => $buy_now_text,
+            'apply' => $apply,
+            'number_of_connect' => $number_of_connect,
+            'connect_text' => $connect_text,
+            'route' => $route,
+            'csrf_token' => $csrf_token,
+            'wallet_gateway' => $wallet_gateway,
+            'abc' => $abc,
+            'abcd' => $abcd,
+            'receipt' => $receipt,
+            'memberships' => $memberships,
         ];
 
-        // renderView function will render the view file, this function will take three parameter, your view file name, passed array, module name
         return self::renderBlade('membership-plans', $data, 'Membership');
     }
 

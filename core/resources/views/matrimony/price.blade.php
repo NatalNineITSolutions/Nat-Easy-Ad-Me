@@ -140,19 +140,76 @@
         <div class="row justify-content-center">
             @foreach ($memberships as $membership)
                 <div class="col-md-4 d-flex">
-                    <div class="pricing-card w-100 h-100 d-flex flex-column">
+                    <div class="pricing-card w-100 h-100 d-flex flex-column @if(!empty($user_current_membership) && $user_current_membership->membership_id === $membership->id) active @endif">
                         <h4>{{ $membership->title }}</h4>
                         <p>{{ $membership->description ?? 'No description available.' }}</p>
-                        <button class="btn btn-light">Get Started</button>
                         <h3 class="mt-3">₹{{ $membership->price }}<span>/mo</span></h3>
-                        <ul class="list-unstyled mt-3 flex-grow-1 box-list">
-                            @if ($membership->features)
-                                @foreach (explode(',', $membership->features) as $feature)
-                                    <li>✅ {{ trim($feature) }}</li>
-                                @endforeach
+                        <div class="btn-wrapper">
+                            @if($membership->price == 0)
+                                <!-- Free Membership Plan -->
+                                @php
+                                    $buttonText = __('Get Started');
+                                    $buttonUrl = url('/user-register');
+                                @endphp
+
+                                @if(!empty($user_current_membership) && $user_current_membership->membership_id === $membership->id)
+                                    @php
+                                        $buttonText = __('Current Plan');
+                                        $buttonUrl = null;
+                                    @endphp
+                                @endif
+
+                                @if(empty($user_current_membership))
+                                    <!--free membership form start -->
+                                    <form action="{{route('user.membership.buy')}}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="membership_id" class="membership_id" value="{{ $membership->id }}">
+                                        <input type="hidden" name="price" value="{{$membership->price}}">
+                                        <input type="hidden" name="selected_payment_gateway" class="selected_payment_gateway" value="Trial">
+                                        <button type="submit" class="btn btn-light">{{ $buttonText }}</button>
+                                    </form>
+                                    <!--free membership form end -->
+                                @else
+                                    <a href="{{ $buttonUrl }}">
+                                        <button class="btn btn-light">{{ $buttonText }}</button>
+                                    </a>
+                                @endif
                             @else
-                                <li>No features available.</li>
+                                <!-- Paid Membership Plan -->
+                                @php
+                                    if(empty($user_current_membership)){
+                                       $buttonText = __('Buy Now');
+                                     }else{
+                                       $buttonText = __('Upgrade Now');
+                                    }
+
+                                     $modalTarget = '#loginModal';
+
+                                       if(Auth::check() && Auth::guard('web')->user()){
+                                           $modalTarget = '#paymentGatewayModal';
+                                       }
+                                       if(!empty($user_current_membership) && $user_current_membership->membership_id === $membership->id){
+                                           $buttonText = __('Current Plan');
+                                           $modalTarget = null;
+                                       }
+                                @endphp
+                                <button class="btn btn-light choose_membership_plan"
+                                        data-bs-toggle="modal"
+                                        data-id="{{ $membership->id }}"
+                                        data-price="{{ $membership->price }}"
+                                        data-bs-target="{{ $modalTarget }}">
+                                    {{ $buttonText }}
+                                </button>
                             @endif
+                        </div>
+                        <ul class="list-unstyled mt-3 flex-grow-1 box-list">
+                            @foreach($membership->features as $feature)
+                                @if ($feature->status == 'on')
+                                    <li>✅ {{ $feature->feature }}</li>
+                                @else
+                                    <li>❌ {{ $feature->feature }}</li>
+                                @endif
+                            @endforeach
                         </ul>
                     </div>
                 </div>
@@ -160,3 +217,9 @@
         </div>
     </div>
 @endsection
+
+@if (Auth::check() && Auth::guard('web')->user())
+    @include('membership::addon-view.gateway-markup')
+@else
+    @include('membership::addon-view.login-markup')
+@endif

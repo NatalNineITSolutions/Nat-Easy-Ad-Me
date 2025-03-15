@@ -28,12 +28,8 @@
             <div class="titleWithBtn d-flex justify-content-between align-items-center mb-40">
                 <h2 class="head3">{{ $section_title ?? 'Location Listing' }}</h2>
             </div>
-            <div class="row">
-                @foreach($listings as $listing)
-                    <div class="col-lg-4">
-                        <x-listings.listing-single :listing="$listing" />
-                    </div>
-                @endforeach
+            <div class="slider-inner-margin">
+                <x-listings.listing-single-list-view :listings="$listings" />
             </div>
         </div>
     </section>

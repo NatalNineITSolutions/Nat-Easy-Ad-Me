@@ -120,9 +120,7 @@ class LocationListing extends PageBuilderBase
             )
                 ->havingRaw('distance <= ?', [$distance])
                 ->orderBy('distance', 'asc');
-        } else {
-            $listings = $listings->where('location', 'like', '%' . $location . '%');
-        }
+        } 
 
         $listings = $listings->take($items)->get();
 

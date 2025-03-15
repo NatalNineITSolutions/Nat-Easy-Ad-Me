@@ -20,7 +20,8 @@ class Membership extends Model
         'enquiry_form',
         'business_hour',
         'membership_badge',
-        'status'
+        'status',
+        'category'
     ];
 
     public function features()

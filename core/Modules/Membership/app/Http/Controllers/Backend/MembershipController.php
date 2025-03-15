@@ -32,7 +32,8 @@ class MembershipController extends Controller
                 'listing_limit' => 'required|gt:0',
                 'feature' => 'required|array',
                 'status' => 'nullable|array',
-                'bv' => 'required|numeric', // Validation for BV points
+                'bv' => 'required|numeric',
+                'category' => 'required|in:0,1',
             ]);
 
             DB::beginTransaction();
@@ -40,6 +41,7 @@ class MembershipController extends Controller
             $enquiry_form = isset($request->enquiry_form) ? 1 : 0;
             $business_hour = isset($request->business_hour) ? 1 : 0;
             $membership_badge = isset($request->membership_badge) ? 1 : 0;
+            $category = $request->category; 
 
             try {
                 $subscription = Membership::create([
@@ -54,7 +56,8 @@ class MembershipController extends Controller
                     'business_hour' => $business_hour,
                     'membership_badge' => $membership_badge,
                     'status' => 1,
-                    'bv_points' => $request->bv, // Storing the BV Points
+                    'bv_points' => $request->bv, 
+                    'category' => $category, 
                 ]);
 
                 $arr = [];
@@ -220,38 +223,5 @@ class MembershipController extends Controller
         $membership->status == 1 ? $status = 0 : $status = 1;
         Membership::where('id', $id)->update(['status' => $status]);
         return redirect()->back()->with(FlashMsg::error(__('Status Successfully Changed')));
-    }
-
-    public function upgradeMembership(Request $request)
-    {
-        $validatedData = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'membership_id' => 'required|exists:memberships,id',
-        ]);
-
-        $user = User::find($validatedData['user_id']);
-        $newMembership = Membership::find($validatedData['membership_id']);
-
-        if ($user->membership_id != $newMembership->id) {
-            $previousBV = $user->bv_points;
-
-            $user->membership_id = $newMembership->id;
-            $user->bv_points = $newMembership->bv_points; 
-            $user->save();
-
-            if ($user->partner_id) {
-                $referringUser = User::where('partner_id', $user->partner_id)->first();
-                if ($referringUser) {
-                    $referringUser->bv_points -= $previousBV;
-                    $referringUser->bv_points += $newMembership->bv_points;
-                    $referringUser->save();
-                }
-            }
-        }
-
-        return response()->json([
-            'message' => 'Membership upgraded successfully',
-            'user' => $user
-        ]);
     }
 }

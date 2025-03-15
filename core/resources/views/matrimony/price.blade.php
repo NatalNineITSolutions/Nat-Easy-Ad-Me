@@ -126,7 +126,6 @@
             }
         }
     </style>
-
 @endsection
 
 @section('content')
@@ -135,64 +134,29 @@
         <h2>Get Started</h2>
         <h3>Pick your Plan Now</h3>
         <p>Choose a plan that fits your needs. Get access to premium features and start your journey today!</p>
-        {{-- <a href="#" class="pricing-btn">See Available Pricing Plans</a> --}}
     </section>
 
     <div class="container py-5">
         <div class="row justify-content-center">
-            
-            <!-- Free Plan -->
-            <div class="col-md-4 d-flex">
-                <div class="pricing-card w-100 h-100 d-flex flex-column">
-                    <h4>Free</h4>
-                    <p>Printer took a type and scrambled</p>
-                    <button class="btn btn-light">Get Started</button>
-                    <h3 class="mt-3">₹0<span>/mo</span></h3>
-                    <ul class="list-unstyled mt-3 flex-grow-1 box-list">
-                        <li>✅ 5 Premium Profiles view /mo</li>
-                        <li>✅ Free user profile can view</li>
-                        <li class="cross-icon">❌ View contact details</li>
-                        <li class="cross-icon">❌ Send interest</li>
-                        <li class="cross-icon">❌ Start Chat</li>
-                    </ul>
+            @foreach ($memberships as $membership)
+                <div class="col-md-4 d-flex">
+                    <div class="pricing-card w-100 h-100 d-flex flex-column">
+                        <h4>{{ $membership->title }}</h4>
+                        <p>{{ $membership->description ?? 'No description available.' }}</p>
+                        <button class="btn btn-light">Get Started</button>
+                        <h3 class="mt-3">₹{{ $membership->price }}<span>/mo</span></h3>
+                        <ul class="list-unstyled mt-3 flex-grow-1 box-list">
+                            @if ($membership->features)
+                                @foreach (explode(',', $membership->features) as $feature)
+                                    <li>✅ {{ trim($feature) }}</li>
+                                @endforeach
+                            @else
+                                <li>No features available.</li>
+                            @endif
+                        </ul>
+                    </div>
                 </div>
-            </div>
-    
-            <!-- Gold Plan -->
-            <div class="col-md-4 d-flex">
-                <div class="pricing-card gold-plan w-100 h-100 d-flex flex-column">
-                    <span class="badge">Most popular plan</span>
-                    <h4>Gold</h4>
-                    <p>Printer took a type and scrambled</p>
-                    <button class="btn">Get Started</button>
-                    <h3 class="mt-3">₹349<span>/mo</span></h3>
-                    <ul class="list-unstyled mt-3 flex-grow-1 box-list">
-                        <li class="check-icon">✅ 20 Premium Profiles view /mo</li>
-                        <li class="check-icon">✅ Free user profile can view</li>
-                        <li class="check-icon">✅ View contact details</li>
-                        <li class="check-icon">✅ Send interest</li>
-                        <li class="check-icon">✅ Start Chat</li>
-                    </ul>
-                </div>
-            </div>
-    
-            <!-- Platinum Plan -->
-            <div class="col-md-4 d-flex">
-                <div class="pricing-card w-100 h-100 d-flex flex-column">
-                    <h4>Platinum</h4>
-                    <p>Printer took a type and scrambled</p>
-                    <button class="btn btn-light">Get Started</button>
-                    <h3 class="mt-3">₹549<span>/mo</span></h3>
-                    <ul class="list-unstyled mt-3 flex-grow-1 box-list">
-                        <li class="check-icon">✅ 50 Premium Profiles view /mo</li>
-                        <li class="check-icon">✅ Free user profile can view</li>
-                        <li class="check-icon">✅ View contact details</li>
-                        <li class="check-icon">✅ Send interest</li>
-                        <li class="check-icon">✅ Start Chat</li>
-                    </ul>
-                </div>
-            </div>
-    
+            @endforeach
         </div>
     </div>
 @endsection

@@ -26,12 +26,9 @@
           
         </div>
 
-        <div class="row">
-            @foreach($listings as $listing)
-                <div class="col-lg-4">
-                    <x-listings.listing-single :listing="$listing"/>
-                </div>
-            @endforeach
+        <div class="slider-inner-margin">
+            <!-- Single -->
+            <x-listings.listing-single-list-view :listings="$listings"/>
         </div>
     </div>
 </section>

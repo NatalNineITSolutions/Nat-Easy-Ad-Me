@@ -7,30 +7,28 @@
             height: 8px;
             background: #ddd;
         }
-
         .noUi-handle {
             width: 20px;
             height: 20px;
             border-radius: 50%;
             background: var(--main-color-one);
         }
-
         .noUi-connect {
             background: gray;
         }
     </style>
 @endsection
 
-@section('content')
-    <section class="featureListing" data-padding-top="{{$padding_top}}" data-padding-bottom="{{$padding_bottom}}"
-        style="background-color:{{$section_bg}}">
-        <div class="container-1440">
-            <div class="titleWithBtn d-flex justify-content-between align-items-center mb-40">
-                <h2 class="head3">{{ $section_title ?? 'Location Listing' }}</h2>
-            </div>
-            <div class="slider-inner-margin">
-                <x-listings.listing-single-list-view :listings="$listings" />
-            </div>
+<section class="featureListing" data-padding-top="{{$padding_top}}" data-padding-bottom="{{$padding_bottom}}" style="background-color:{{$section_bg}}">
+    <div class="container-1440">
+        <div class="titleWithBtn d-flex justify-content-between align-items-center mb-40">
+            <h2 class="head3">{{ $section_title ?? 'Location Listing' }}</h2>
+          
         </div>
-    </section>
-@endsection
+
+        <div class="slider-inner-margin">
+            <!-- Single -->
+            <x-listings.listing-single-list-view :listings="$listings"/>
+        </div>
+    </div>
+</section>

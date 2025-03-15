@@ -101,20 +101,21 @@ class LocationListing extends PageBuilderBase
     {
         $settings = $this->get_settings();
         $items = $settings['items'] ?? 6;
-        $distance = $settings['distance'] ?? 50; 
+        $distance = $settings['distance'] ?? 50;
         $padding_top = $settings['padding_top'] ?? 260;
         $padding_bottom = $settings['padding_bottom'] ?? 190;
 
         $location = request()->get('location', 'Coimbatore');
-        $latitude = request()->get('latitude');
-        $longitude = request()->get('longitude');
+
+        $latitude = session('latitude');
+        $longitude = session('longitude');
 
         $listings = Listing::where('status', 1)
             ->where('is_published', 1);
 
         if ($latitude && $longitude) {
             $listings = $listings->selectRaw(
-                "*, (6371 * acos(cos(radians(?)) * cos(radians(lat)) * cos(radians(lon) - radians(?)) + sin(radians(?)) * sin(radians(lat))) AS distance",
+                "*, (6371 * acos(cos(radians(?)) * cos(radians(lat)) * cos(radians(lon) - radians(?)) + sin(radians(?)) * sin(radians(lat)))) AS distance",
                 [$latitude, $longitude, $latitude]
             )
                 ->havingRaw('distance <= ?', [$distance])
@@ -126,20 +127,21 @@ class LocationListing extends PageBuilderBase
         $listings = $listings->take($items)->get();
 
         return $this->renderBlade('listing.location-wise-listing', [
-            'padding_top' => $padding_top,
-            'padding_bottom' => $padding_bottom,
-            'section_bg' => $settings['section_bg'] ?? '',
-            'section_title' => $settings['title'] ?? '',
-            'explore_text' => $settings['explore_all'] ?? '',
-            'listings' => $listings,
-            'btn_color' => $settings['btn_color'] ?? '',
-            'button_text_color' => $settings['button_text_color'] ?? '',
-            'location' => $location,
-            'distance' => $distance,
-            'latitude' => $latitude,
-            'longitude' => $longitude,
+            'padding_top'        => $padding_top,
+            'padding_bottom'     => $padding_bottom,
+            'section_bg'         => $settings['section_bg'] ?? '',
+            'section_title'      => $settings['title'] ?? '',
+            'explore_text'       => $settings['explore_all'] ?? '',
+            'listings'           => $listings,
+            'btn_color'          => $settings['btn_color'] ?? '',
+            'button_text_color'  => $settings['button_text_color'] ?? '',
+            'location'           => $location,
+            'distance'           => $distance,
+            'latitude'           => $latitude,
+            'longitude'          => $longitude,
         ]);
     }
+
 
     public function addon_title()
     {

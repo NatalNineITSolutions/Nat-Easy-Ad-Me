@@ -206,4 +206,22 @@ class FrontendListingController extends Controller
     HTML;
     }
 
+
+    public function store(Request $request)
+    {
+        // Validate if needed
+        $data = $request->validate([
+            'latitude'  => 'required|numeric',
+            'longitude' => 'required|numeric',
+        ]);
+
+        // Store data in session
+        session([
+            'latitude'  => $data['latitude'],
+            'longitude' => $data['longitude'],
+        ]);
+
+        return response()->json(['message' => 'Location saved successfully in session.']);
+    }
+
 }

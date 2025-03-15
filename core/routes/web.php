@@ -82,6 +82,7 @@ Route::group(['middleware' => ['globalVariable', 'maintains_mode','setlang']], f
     Route::group(['prefix' => 'listing'], function () {
         Route::get('/{slug?}', [FrontendListingController::class, 'frontendListingDetails'])->name('frontend.listing.details');
         Route::post('/load-more-relevant', [FrontendListingController::class, 'loadMoreListing'])->name('frontend.listing.load-more-relevant');
+        Route::post('/store-location', [FrontendListingController::class, 'store']);
 
         // category, subcategory & child wise listing
         Route::controller(CategoryWiseListingController::class)->group(function(){

@@ -15,5 +15,8 @@ Route::middleware(['web'])->group(function () {
         Route::get('/pricing', [MatrimonyController::class, 'price'])->name('price');
         Route::get('/profile-details', [MatrimonyController::class, 'profiledetails'])->name('profile-details');
         Route::get('/otp', [MatrimonyController::class, 'otp'])->name('otp');
+
+        // KYC
+        Route::get('/user-details', [MatrimonyController::class, 'userdetails'])->name('user-details');
     });
 });

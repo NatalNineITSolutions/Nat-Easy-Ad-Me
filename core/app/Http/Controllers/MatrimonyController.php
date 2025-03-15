@@ -94,4 +94,9 @@ class MatrimonyController extends Controller
         return view ('matrimony.otp');
     }
 
+    public function userdetails()
+    {
+        return view('matrimony.user-details');
+    }
+
 }

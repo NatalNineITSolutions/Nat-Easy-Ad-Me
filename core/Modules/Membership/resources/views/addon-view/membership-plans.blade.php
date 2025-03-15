@@ -99,7 +99,6 @@
                                 @endif
                             @endforeach
                         </ul>
-
                     </div>
                 </div>
             @endforeach

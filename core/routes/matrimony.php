@@ -18,5 +18,6 @@ Route::middleware(['web'])->group(function () {
 
         // KYC
         Route::get('/user-details', [MatrimonyController::class, 'userdetails'])->name('user-details');
+        Route::post('/user-details', [MatrimonyController::class, 'storeUserDetails'])->name('user-details.store');
     });
 });

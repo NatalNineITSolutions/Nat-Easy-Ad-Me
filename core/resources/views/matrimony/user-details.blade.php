@@ -304,290 +304,277 @@
                             <!-- Marital Status -->
                             <div class="col-md-6">
                                 <label class="form-label">Marital Status</label>
-                                <select class="form-select">
-                                    <option selected>Choose Status</option>
-                                    <option>Unmarried</option>
-                                    <option>Divorced</option>
-                                    <option>Widowed</option>
+                                <select class="form-select" name="marital_status" id="marital_status">
+                                    <option value="" selected>Choose Status</option>
+                                    <option value="Unmarried">Unmarried</option>
+                                    <option value="Married">Married</option>
+                                    <option value="Divorce">Divorce</option>
                                 </select>
                             </div>
                     
                             <!-- DOB -->
                             <div class="col-md-6">
                                 <label class="form-label">DOB</label>
-                                <input type="date" class="form-control">
+                                <input type="date" class="form-control" name="dob" id="dob">
                             </div>
                     
                             <!-- Family Status -->
                             <div class="col-md-6">
                                 <label class="form-label">Family Status</label>
                                 <div class="badge-select">
-                                    <span class="badge" onclick="toggleBadge(this)">
+                                    <span class="badge" onclick="toggleBadge(this, 'Middle Class', 'family_status')">
                                         <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
                                         <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
                                         Middle Class
                                     </span>
-                                    <span class="badge" onclick="toggleBadge(this)">
+                                    <span class="badge" onclick="toggleBadge(this, 'Rich/Affluent', 'family_status')">
                                         <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
                                         <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
                                         Rich/Affluent
                                     </span>
-                                    <span class="badge" onclick="toggleBadge(this)">
+                                    <span class="badge" onclick="toggleBadge(this, 'Upper Middle Class', 'family_status')">
                                         <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
                                         <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
                                         Upper Middle Class
                                     </span>
                                 </div>
+                                <input type="hidden" name="family_status" id="family_status">
                             </div>
                     
                             <!-- Family Values -->
                             <div class="col-md-6">
                                 <label class="form-label">Family Values</label>
                                 <div class="badge-select">
-                                    <span class="badge" onclick="toggleBadge(this)">
+                                    <span class="badge" onclick="toggleBadge(this, 'Orthodox', 'family_values')">
                                         <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
                                         <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
                                         Orthodox
                                     </span>
-                                    <span class="badge" onclick="toggleBadge(this)">
+                                    <span class="badge" onclick="toggleBadge(this, 'Traditional', 'family_values')">
                                         <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
                                         <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
                                         Traditional
                                     </span>
-                                    <span class="badge" onclick="toggleBadge(this)">
+                                    <span class="badge" onclick="toggleBadge(this, 'Moderate', 'family_values')">
                                         <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
                                         <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
                                         Moderate
                                     </span>
-                                    <span class="badge" onclick="toggleBadge(this)">
+                                    <span class="badge" onclick="toggleBadge(this, 'Liberal', 'family_values')">
                                         <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
                                         <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
                                         Liberal
                                     </span>
                                 </div>
+                                <input type="hidden" name="family_values" id="family_values">
                             </div>
                     
                             <!-- Family Type -->
                             <div class="col-md-6">
                                 <label class="form-label">Family Type</label>
-                                <select class="form-select">
-                                    <option selected>Choose Family Type</option>
-                                    <option>Joint</option>
-                                    <option>Nuclear</option>
-                                    <option>Extended</option>
+                                <select class="form-select" name="family_type" id="family_type">
+                                    <option value="" selected>Choose Family Type</option> <!-- Empty value -->
+                                    <option value="Joint">Joint</option>
+                                    <option value="Nuclear">Nuclear</option>
+                                    <option value="Extended">Extended</option>
                                 </select>
                             </div>
                     
                             <!-- Any Disability -->
                             <div class="col-md-6">
                                 <label class="form-label">Any Disability</label>
-                                <select class="form-select">
-                                    <option selected>No</option>
-                                    <option>Yes</option>
+                                <select class="form-select" name="disability" id="disability">
+                                    <option value="" selected>Choose Disability</option> <!-- Empty value -->
+                                    <option value="No">No</option>
+                                    <option value="Yes">Yes</option>
                                 </select>
                             </div>
                     
                             <!-- Height -->
                             <div class="col-md-6">
-                                <label class="form-label">Height</label>
-                                <select class="form-select">
-                                    <option selected>Feet/Inches</option>
-                                    <option>Centimeters</option>
-                                </select>
+                                <label class="form-label">Height (in cm)</label>
+                                <input type="number" class="form-control" name="height" id="height" step="0.1" min="50" max="250">
                             </div>
                     
                             <!-- Weight -->
                             <div class="col-md-6">
                                 <label class="form-label">Weight</label>
-                                <input type="text" class="form-control" placeholder="56kg">
+                                <input type="text" class="form-control" name="weight" id="weight" placeholder="56kg">
                             </div>
-
+                    
                             <div class="col-12 text-end">
-                                <button type="submit" class="next-button" onclick="event.preventDefault(); showSection(2)">Next</button>
+                                <button type="submit" class="next-button" onclick="validateSection(event, 1)">Next</button>
                             </div>
                         </div>
                     </form>
 
                     <form class="user-form section-2" style="display: none;">
                         <div class="row g-3">
-
-                            <!--Caste -->
-                            <div class="col-md-6">
+                            <!-- Caste -->
+                            <div class="col-md-12">
                                 <label class="form-label">Caste</label>
-                                <select class="form-select">
-                                    <option selected>Choose caste</option>
-                                    <option>Mudaliyar</option>
-                                    <option>Chettiyar</option>
-                                    <option>24manai devanga chettiyar</option>
+                                <select class="form-select" name="caste" id="caste">
+                                    <option value="" selected>Choose caste</option> <!-- Empty value -->
+                                    <option value="Mudaliyar">Mudaliyar</option>
+                                    <option value="Chettiyar">Chettiyar</option>
+                                    <option value="24manai devanga chettiyar">24manai devanga chettiyar</option>
                                 </select>
                             </div>
-    
-                            <!-- Family Type -->
-                            <div class="col-md-6">
-                                <label class="form-label">Family Type</label>
-                                <select class="form-select">
-                                    <option selected>Choose Family Type</option>
-                                    <option>Joint</option>
-                                    <option>Nuclear</option>
-                                    <option>Extended</option>
-                                </select>
-                            </div>
-    
+                    
                             <!-- Dosham -->
                             <div class="col-md-6">
                                 <label class="form-label">Dosham</label>
-                                <select class="form-select">
-                                    <option selected>No</option>
-                                    <option>Yes</option>
+                                <select class="form-select" name="dosham" id="dosham">
+                                    <option value="" selected>Choose Dosham</option> <!-- Empty value -->
+                                    <option value="No">No</option>
+                                    <option value="Yes">Yes</option>
                                 </select>
                             </div>
-
+                    
                             <!-- Gothram -->
                             <div class="col-md-6">
                                 <label class="form-label">Gothram</label>
-                                <select class="form-select">
-                                    <option selected>Select one</option>
-                                    <option>Viswamithrar</option>
-                                    <option>Valmiki Maharshi</option>
+                                <select class="form-select" name="gothram" id="gothram">
+                                    <option value="" selected>Select one</option> <!-- Empty value -->
+                                    <option value="Viswamithrar">Viswamithrar</option>
+                                    <option value="Valmiki Maharshi">Valmiki Maharshi</option>
                                 </select>
                             </div>
-    
+                    
                             <!-- Next Button -->
                             <div class="col-12 text-end">
-                                <button type="submit" class="next-button" onclick="event.preventDefault(); showSection(3)">Next</button>
+                                <button type="submit" class="next-button" onclick="validateSection(event, 2)">Next</button>
                             </div>
                         </div>
                     </form>
 
                     <form class="user-form section-3" style="display: none;">
                         <div class="row g-3">
-
-                            <!-- Higher education -->
+                            <!-- Higher Education -->
                             <div class="col-md-4">
                                 <label class="form-label">Higher Education</label>
-                                <select class="form-select">
-                                    <option selected>Choose one</option>
-                                    <option>BE</option>
-                                    <option>MBA</option>
-                                    <option>MBBS</option>
+                                <select class="form-select" name="education" id="education">
+                                    <option value="" selected>Choose one</option>
+                                    <option value="BE">BE</option>
+                                    <option value="MBA">MBA</option>
+                                    <option value="MBBS">MBBS</option>
                                 </select>
                             </div>
-
+                    
                             <!-- Occupation -->
                             <div class="col-md-4">
                                 <label class="form-label">Occupation</label>
-                                <select class="form-select">
-                                    <option selected>Choose one</option>
-                                    <option>Biomedical Engineer</option>
-                                    <option>Doctor</option>
-                                    <option>Developer</option>
+                                <select class="form-select" name="occupation" id="occupation">
+                                    <option value="" selected>Choose one</option>
+                                    <option value="Biomedical Engineer">Biomedical Engineer</option>
+                                    <option value="Doctor">Doctor</option>
+                                    <option value="Developer">Developer</option>
                                 </select>
                             </div>
-
-                             {{-- Annual Income --}}
-                             <div class="col-md-4">
+                    
+                            <!-- Annual Income -->
+                            <div class="col-md-4">
                                 <label class="form-label">Annual Income</label>
-                                <input type="text" class="form-control" placeholder="Annual income">
+                                <input type="text" class="form-control" name="annual_income" id="annual_income" placeholder="Annual income">
                             </div>
-
+                    
                             <!-- Employed In -->
                             <div class="col-md-12">
                                 <label class="form-label">Employed In</label>
                                 <div class="badge-select">
-                                    <span class="badge" onclick="toggleBadge(this, 'Government/PSU')">
+                                    <span class="badge" onclick="toggleBadge(this, 'Government', 'employed_in')">
                                         <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
                                         <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
-                                        Government/PSU
+                                        Government
                                     </span>
-                                    <span class="badge" onclick="toggleBadge(this, 'Private')">
+                                    <span class="badge" onclick="toggleBadge(this, 'Private', 'employed_in')">
                                         <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
                                         <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
                                         Private
                                     </span>
-                                    <span class="badge" onclick="toggleBadge(this, 'Defense')">
+                                    <span class="badge" onclick="toggleBadge(this, 'Defense', 'employed_in')">
                                         <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
                                         <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
                                         Defense
                                     </span>
-                                    <span class="badge" onclick="toggleBadge(this, 'Business')">
+                                    <span class="badge" onclick="toggleBadge(this, 'Business', 'employed_in')">
                                         <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
                                         <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
                                         Business
                                     </span>
-                                    <span class="badge" onclick="toggleBadge(this, 'Self-employed')">
+                                    <span class="badge" onclick="toggleBadge(this, 'Self-employed', 'employed_in')">
                                         <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
                                         <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
                                         Self-employed
                                     </span>
-                                    <span class="badge" onclick="toggleBadge(this, 'Not working')">
+                                    <span class="badge" onclick="toggleBadge(this, 'Not working', 'employed_in')">
                                         <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
                                         <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
                                         Not working
                                     </span>
                                 </div>
+                                <input type="hidden" name="employed_in" id="employed_in">
                             </div>
-                           
-
+                    
                             <!-- Country, State, and City Fields -->
-                            <div class="col-md-4 country-state-city" style="display: none;">
+                            <div class="col-md-4 country-state-city">
                                 <label class="form-label">Country</label>
-                                <select class="form-select">
-                                    <option selected>Select Country</option>
-                                    <option>India</option>
-                                    <option>Africa</option>
-                                    <option>America</option>
+                                <select class="form-select" name="country" id="country">
+                                    <option value="" selected>Select Country</option>
+                                    <option value="India">India</option>
+                                    <option value="Africa">Africa</option>
+                                    <option value="America">America</option>
                                 </select>
                             </div>
-
-                            <div class="col-md-4 country-state-city" style="display: none;">
+                    
+                            <div class="col-md-4 country-state-city">
                                 <label class="form-label">State</label>
-                                <select class="form-select">
-                                    <option selected>Select State</option>
-                                    <option>Andhra Pradesh</option>
-                                    <option>Tamil Nadu</option>
-                                    <option>Karnataka</option>
+                                <select class="form-select" name="state" id="state">
+                                    <option value="" selected>Select State</option>
+                                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                    <option value="Tamil Nadu">Tamil Nadu</option>
+                                    <option value="Karnataka">Karnataka</option>
                                 </select>
                             </div>
-
-                            <div class="col-md-4 country-state-city" style="display: none;">
+                    
+                            <div class="col-md-4 country-state-city">
                                 <label class="form-label">City</label>
-                                <select class="form-select">
-                                    <option selected>Select City</option>
-                                    <option>Anakapalli</option>
-                                    <option>Coimbatore</option>
-                                    <option>Bengaluru</option>
+                                <select class="form-select" name="city" id="city">
+                                    <option value="" selected>Select City</option>
+                                    <option value="Anakapalli">Anakapalli</option>
+                                    <option value="Coimbatore">Coimbatore</option>
+                                    <option value="Bengaluru">Bengaluru</option>
                                 </select>
                             </div>
-                            
+                    
                             <!-- Next Button -->
                             <div class="col-12 text-end">
-                                <button type="submit" class="next-button" onclick="event.preventDefault(); showSection(4)">Next</button>
+                                <button type="submit" class="next-button" onclick="validateSection(event, 3)">Next</button>
                             </div>
                         </div>
                     </form>
 
-                    <form class="user-form section-4" style="display: none;">
+                    <form class="user-form section-4" style="display: none;" id="user-form">
                         <div class="row g-3">
-
                             <!-- About You Text Area -->
                             <div class="col-md-8">
                                 <label class="form-label">About You</label>
-                                <textarea class="form-control" rows="4" placeholder="Enter about yourself"></textarea>
+                                <textarea class="form-control" name="about" id="about_you" rows="4" placeholder="Enter about yourself"></textarea>
                             </div>
-
+                    
                             <!-- Description -->
                             <div class="col-md-4 d-flex align-items-center">
                                 <p class="text">Write a few words to get to know you better</p>
                             </div>
-                            
-                            <!-- Next Button -->
+                    
+                            <!-- Submit Button -->
                             <div class="col-12 text-end">
-                                <button type="submit" class="next-button" onclick="event.preventDefault(); showSection(5)">Next</button>
+                                <button type="submit" id="submit-btn" class="submit-button">Submit</button>
                             </div>
                         </div>
                     </form>
 
-                    <form class="user-form section-5" style="display: none;">
+                    {{-- <form class="user-form section-5" style="display: none;">
                         <div class="row g-3">
                             <div class="col-12">
                                 <label class="form-label fw-bold">Upload Image</label>
@@ -599,7 +586,7 @@
                                         <img src="/assets/uploads/media-uploader/upload.png" alt="Upload Icon" class="upload-icon">
                                         <p class="upload-text mb-0">Drop file or Browse</p>
                                         <p class="text-muted mb-0">Format: jpg, jpeg, png & Max file size: 25 MB</p>
-                                        <input type="file" class="file-input" accept="image/jpg, image/jpeg, image/png" hidden multiple>
+                                        <input type="file" class="file-input" name="image" id="image" accept="image/jpg, image/jpeg, image/png" hidden multiple>
                                     </div>
                     
                                     <!-- Buttons -->
@@ -615,10 +602,10 @@
                     
                             <!-- Next Button -->
                             <div class="col-12 text-end">
-                                <button type="submit" class="next-button" onclick="event.preventDefault(); showSection(6)">Submit</button>
+                                <button type="submit" id="submit-btn" class="next-button" onclick="validateSection(event, 5)">Submit</button>
                             </div>
                         </div>
-                    </form>
+                    </form> --}}
 
                     <form class="user-form section-6 text-center" style="display: none;">
                         <div class="row g-3 justify-content-center">
@@ -635,7 +622,7 @@
                     
                             <!-- Button -->
                             <div class="col-12">
-                                <button type="button" class="preference-button">Lets Get a Preference</button>
+                                <button type="button" class="preference-button">Let's Get a Preference</button>
                             </div>
                         </div>
                     </form>
@@ -647,21 +634,34 @@
 
 @section('script')
 
+    {{-- Toaster initialization --}}
+    <script>
+        toastr.options = {
+            closeButton: true,
+            progressBar: true,
+            positionClass: 'toast-top-right',
+            timeOut: 5000
+        };
+    </script>
+
     {{-- Badge toggle --}}
     <script>
-        function toggleBadge(element) {
-            // Deselect all badges
-            document.querySelectorAll(".badge").forEach(badge => {
-                if (badge !== element) { // Skip the clicked badge
-                    badge.classList.remove("selected");
-                }
+        function toggleBadge(element, value, inputId) {
+            // Deselect all badges within the same container
+            const badgeContainer = element.closest('.badge-select');
+            badgeContainer.querySelectorAll('.badge').forEach(badge => {
+                badge.classList.remove('selected');
             });
-    
+
             // Toggle the clicked badge
-            if (element.classList.contains("selected")) {
-                element.classList.remove("selected");
+            element.classList.toggle('selected');
+
+            // Update the hidden input field with the selected value
+            const hiddenInput = document.getElementById(inputId);
+            if (element.classList.contains('selected')) {
+                hiddenInput.value = value;
             } else {
-                element.classList.add("selected");
+                hiddenInput.value = ''; // Clear if deselected
             }
         }
     </script>
@@ -683,112 +683,127 @@
         }
     </script>
 
-    {{-- Country, city and state toggle --}}
+    {{-- Form Validation --}}
     <script>
-        // Function to toggle badge selection and show/hide fields
-        function toggleBadge(selectedBadge, badgeText) {
-            // Remove "selected" from all badges
-            document.querySelectorAll(".badge").forEach(badge => {
-                badge.classList.remove("selected");
-                badge.querySelector(".tick").style.display = "none";
-                badge.querySelector(".delete").style.display = "inline";
+        function validateSection(event, sectionNumber) {
+            event.preventDefault(); // Prevent form submission
+
+            const sectionFields = {
+                1: [
+                    { id: 'marital_status', name: 'Marital Status' },
+                    { id: 'dob', name: 'Date of Birth' },
+                    { id: 'family_status', name: 'Family Status' },
+                    { id: 'family_values', name: 'Family Values' },
+                    { id: 'family_type', name: 'Family Type' },
+                    { id: 'disability', name: 'Disability' },
+                    { id: 'height', name: 'Height' },
+                    { id: 'weight', name: 'Weight' }
+                ],
+                2: [
+                    { id: 'caste', name: 'Caste' },
+                    { id: 'dosham', name: 'Dosham' },
+                    { id: 'gothram', name: 'Gothram' }
+                ],
+                3: [
+                    { id: 'education', name: 'Higher Education' },
+                    { id: 'occupation', name: 'Occupation' },
+                    { id: 'annual_income', name: 'Annual Income' },
+                    { id: 'employed_in', name: 'Employed In' },
+                    { id: 'country', name: 'Country' },
+                    { id: 'state', name: 'State' },
+                    { id: 'city', name: 'City' }
+                ],
+                4: [
+                    { id: 'about_you', name: 'About You' }
+                ],
+                5: [] // Removed 'image' field
+            };
+
+            const requiredFields = sectionFields[sectionNumber];
+            let isValid = true;
+            let missingFields = [];
+            let validationMessage = '';
+
+            requiredFields.forEach(field => {
+                const value = document.getElementById(field.id).value;
+                if (!value) {
+                    isValid = false;
+                    missingFields.push(field.name);
+                }
             });
 
-            // Add "selected" to the clicked badge
-            selectedBadge.classList.add("selected");
-            selectedBadge.querySelector(".tick").style.display = "inline";
-            selectedBadge.querySelector(".delete").style.display = "none";
-
-            // Show/hide Country, State, and City fields based on the selected badge
-            const countryStateCityFields = document.querySelectorAll(".country-state-city");
-            if (badgeText === "Private") {
-                countryStateCityFields.forEach(field => {
-                    field.style.display = "block"; // Show fields
-                });
+            if (!isValid) {
+                toastr.error(`Please fill out the following fields: ${missingFields.join(', ')}`);
             } else {
-                countryStateCityFields.forEach(field => {
-                    field.style.display = "none"; // Hide fields
-                });
+                if (sectionNumber === 4) { // If section 4 is validated, submit the form
+                    submitForm();
+                } else {
+                    showSection(sectionNumber + 1);
+                }
             }
+        }
+
+        function submitForm() {
+            const formData = new FormData();
+
+            function getValue(selector) {
+                const element = document.querySelector(selector);
+                return element ? element.value : ''; // Return empty string if not found
+            }
+
+            formData.append('marital_status', document.querySelector('[name="marital_status"]').value);
+            formData.append('dob', document.querySelector('[name="dob"]').value);
+            formData.append('family_status', document.getElementById('family_status').value);
+            formData.append('family_values', document.getElementById('family_values').value);
+            formData.append('family_type', document.querySelector('[name="family_type"]').value);
+            formData.append('disability', document.querySelector('[name="disability"]').value);
+            formData.append('height', document.querySelector('[name="height"]').value);
+            formData.append('weight', document.querySelector('[name="weight"]').value);
+            formData.append('caste', document.querySelector('[name="caste"]').value);
+            formData.append('dosham', document.querySelector('[name="dosham"]').value);
+            formData.append('gothram', document.querySelector('[name="gothram"]').value);
+            formData.append('education', document.querySelector('[name="education"]').value);
+            formData.append('occupation', document.querySelector('[name="occupation"]').value);
+            formData.append('annual_income', document.querySelector('[name="annual_income"]').value);
+            formData.append('employed_in', document.getElementById('employed_in').value);
+            formData.append('country', document.querySelector('[name="country"]').value);
+            formData.append('state', document.querySelector('[name="state"]').value);
+            formData.append('city', document.querySelector('[name="city"]').value);
+            formData.append('about', document.querySelector('[name="about"]').value);
+            // Removed 'image' field
+
+            for (let [key, value] of formData.entries()) {
+                console.log(key, value);
+            }
+
+            fetch('/matrimony/user-details', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showSection(6); // Directly show section 6 on successful submission
+                    document.querySelector('.user-id strong').textContent = data.user_id;
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                toastr.error(error.message || 'An unexpected error occurred.');
+            });
         }
     </script>
 
-    {{-- Upload Images --}}
+    {{-- Form submission --}}
     <script>
-        const fileInput = document.querySelector('.file-input');
-        const browseBtn = document.querySelector('.browse-btn');
-        const cancelBtn = document.querySelector('.cancel-button');
-        const uploadedImagesContainer = document.querySelector('.uploaded-images');
-    
-        // Array to store uploaded images
-        let uploadedImages = [];
-    
-        // Trigger file input when Browse button is clicked
-        browseBtn.addEventListener('click', () => {
-            fileInput.click(); // Open file dialog
-        });
-    
-        // Handle file selection
-        fileInput.addEventListener('change', (event) => {
-            const files = event.target.files; // Get selected files
-    
-            if (files.length > 0) {
-                // Check if the total number of uploaded images exceeds 5
-                if (uploadedImages.length + files.length > 5) {
-                    alert('You can upload a maximum of 5 images.');
-                    return;
-                }
-    
-                for (const file of files) {
-                    if (file.type.startsWith('image/')) { // Check if the file is an image
-                        const reader = new FileReader(); // Read the file
-                        reader.onload = (e) => {
-                            // Create an image element and set its source
-                            const img = document.createElement('img');
-                            img.src = e.target.result;
-                            img.classList.add('uploaded-image');
-    
-                            // Add a delete button for the image
-                            const deleteBtn = document.createElement('button');
-                            deleteBtn.textContent = '❌';
-                            deleteBtn.type = 'button'; // Ensure it doesn't submit the form
-                            deleteBtn.classList.add('delete-image-btn');
-                            deleteBtn.addEventListener('click', (event) => {
-                                event.preventDefault(); // Prevent form submission
-                                event.stopPropagation(); // Stop event bubbling
-    
-                                // Remove the image container (which includes the image and delete button)
-                                imageContainer.remove();
-    
-                                // Remove the image from the uploadedImages array
-                                uploadedImages = uploadedImages.filter((image) => image !== img);
-                            });
-    
-                            // Wrap the image and delete button in a container
-                            const imageContainer = document.createElement('div');
-                            imageContainer.classList.add('image-container');
-                            imageContainer.appendChild(img);
-                            imageContainer.appendChild(deleteBtn);
-    
-                            // Add the image container to the uploadedImagesContainer
-                            uploadedImagesContainer.appendChild(imageContainer);
-    
-                            // Add the image to the uploadedImages array
-                            uploadedImages.push(img);
-                        };
-                        reader.readAsDataURL(file); // Read the file as a data URL
-                    } else {
-                        alert('Please upload only images (jpg, jpeg, png).');
-                    }
-                }
-            }
-        });
-    
-        // Handle Cancel button click
-        cancelBtn.addEventListener('click', () => {
-            fileInput.value = ''; // Clear the file input
-            uploadedImagesContainer.innerHTML = ''; // Remove all uploaded images
-            uploadedImages = []; // Clear the uploadedImages array
+        document.getElementById('submit-btn').addEventListener('click', function(event) {
+            event.preventDefault();
+            validateSection(event, 4); 
         });
     </script>
 

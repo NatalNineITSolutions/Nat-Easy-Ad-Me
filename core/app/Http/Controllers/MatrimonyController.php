@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\MatrimonyUser;
+use App\Models\MatrimonyKyc;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -21,34 +21,6 @@ class MatrimonyController extends Controller
         return view('matrimony.register'); 
     }
 
-    public function store(Request $request)
-    {
-        try {
-            // Validate the form data
-            $request->validate([
-                'name'     => 'required|string|max:255',
-                'email'    => 'required|email|unique:matrimony_users,email',
-                'password' => 'required|min:6',
-                'mobile'   => 'required|numeric|digits_between:7,15|unique:matrimony_users,mobile',
-            ]);
-
-            // Store in the database
-            MatrimonyUser::create([
-                'name'     => $request->name,
-                'email'    => $request->email,
-                'password' => bcrypt($request->password),
-                'mobile'   => $request->mobile,
-            ]);
-
-            // Store a session success message
-            return redirect()->route('matrimony.index')->with('success', 'Form submitted successfully!');
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return redirect()->back()
-                ->withErrors($e->errors())
-                ->withInput();
-        }
-    }
-
     public function price()
     {
         return view('matrimony.price'); // Ensure this view exists
@@ -59,30 +31,6 @@ class MatrimonyController extends Controller
         return view('matrimony.login'); // Ensure you have a `login.blade.php` file
     }
 
-    public function login(Request $request)
-    {
-        // Validate the input
-        $request->validate([
-            'login' => 'required|string', // 'login' can be either email or username
-            'password' => 'required|string',
-        ]);
-
-        // Determine if the input is an email or username
-        $loginType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
-
-        // Attempt to find the user
-        $user = MatrimonyUser::where($loginType, $request->login)->first();
-
-        // Check if the user exists and the password is correct
-        if ($user && Hash::check($request->password, $user->password)) {
-            // Store user session
-            Auth::login($user);
-            return redirect()->route('matrimony.index')->with('success', 'Login successful!');
-        }
-
-        // If authentication fails, return with an error message
-        return back()->withErrors(['login' => 'Invalid credentials.'])->withInput();
-    }
 
     public function profiledetails()
     {
@@ -97,6 +45,75 @@ class MatrimonyController extends Controller
     public function userdetails()
     {
         return view('matrimony.user-details');
+    }
+
+    public function storeUserDetails(Request $request)
+    {
+        try {
+            // Log the incoming request data
+            \Log::info('Incoming request data:', $request->all());
+
+            // Validate the request data
+            $validatedData = $request->validate([
+                'marital_status' => 'required|string',
+                'dob' => 'required|date',
+                'family_status' => 'required|string',
+                'family_values' => 'required|string',
+                'family_type' => 'required|string',
+                'disability' => 'required|string',
+                'height' => 'required|numeric|min:50|max:250',
+                'weight' => 'required|string',
+                'caste' => 'required|string',
+                'dosham' => 'required|string',
+                'gothram' => 'required|string',
+                'education' => 'required|string',
+                'occupation' => 'required|string',
+                'annual_income' => 'required|string',
+                'employed_in' => 'required|string',
+                'country' => 'required|string',
+                'state' => 'required|string',
+                'city' => 'required|string',
+                'about' => 'required|string',
+                'name' => 'nullable|string',
+                'email' => 'nullable|email',
+                'password' => 'nullable|string',
+                'mobile' => 'nullable|string',
+            ]);
+
+            // Convert marital_status to lowercase (to match ENUM values in DB)
+            $validatedData['marital_status'] = strtolower($validatedData['marital_status']);
+
+            // Hash the password before saving
+            if (!empty($validatedData['password'])) {
+                $validatedData['password'] = bcrypt($validatedData['password']);
+            }
+
+            // Log validated data
+            \Log::info('Validated data:', $validatedData);
+
+            // Store Data in MatrimonyKyc table
+            $matrimonyKyc = MatrimonyKyc::create($validatedData);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'User details saved successfully!',
+                'user_id' => $matrimonyKyc->id
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('User Details Store Error: ' . $e->getMessage());
+            \Log::error('Stack Trace: ' . $e->getTraceAsString());
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred. Please try again.'
+            ], 500);
+        }
     }
 
 }

@@ -45,7 +45,15 @@ class ListingController extends Controller
         // Check Membership Status
         if (moduleExists('Membership') && membershipModuleExistsAndEnable('Membership')) {
             $user_membership_check = UserMembership::where('user_id', Auth::guard('web')->user()->id)->first();
-            if ($user_membership_check && $user_membership_check->status === 0 || $user_membership_check->payment_status == 'pending') {
+
+            // Add a null check
+            if (!$user_membership_check) {
+                toastr_error(__('You do not have an active membership plan. Please subscribe to a plan before creating listings.'));
+                return redirect()->back();
+            }
+
+            // Check if the membership is inactive or payment is pending
+            if ($user_membership_check->status === 0 || $user_membership_check->payment_status == 'pending') {
                 toastr_error(__('Your membership plan is inactive. Please activate your plan before creating listings.'));
                 return redirect()->back();
             }
@@ -53,21 +61,21 @@ class ListingController extends Controller
 
         if ($request->isMethod('post')) {
             //user Verify check
-            if (get_static_option('listing_create_settings') == 'verified_user'){
-                $user_identity = IdentityVerification::select('user_id','status')->where('user_id',Auth::guard('web')->user()->id)->first();
+            if (get_static_option('listing_create_settings') == 'verified_user') {
+                $user_identity = IdentityVerification::select('user_id', 'status')->where('user_id', Auth::guard('web')->user()->id)->first();
                 $user_verified_status = $user_identity?->status ?? 0;
-                if($user_verified_status != 1 ){
+                if ($user_verified_status != 1) {
                     toastr_error(__('You are not verified. to add listings you must have to verify your account first'));
                     return redirect()->back();
                 }
             }
 
             //check membership
-            if(moduleExists('Membership')){
-                if(membershipModuleExistsAndEnable('Membership')){
+            if (moduleExists('Membership')) {
+                if (membershipModuleExistsAndEnable('Membership')) {
                     $user_membership = UserMembership::where('user_id', Auth::guard('web')->user()->id)->first();
                     // if user membership is null
-                    if(is_null($user_membership)){
+                    if (is_null($user_membership)) {
                         toastr_error(__('you have to membership a package to create listings'));
                         return redirect()->back();
                     }
@@ -76,13 +84,13 @@ class ListingController extends Controller
 
 
                     // check user membership all listing limit
-                    if ($user_membership->listing_limit == 0 && $user_membership->expire_date <= Carbon::now()){
+                    if ($user_membership->listing_limit == 0 && $user_membership->expire_date <= Carbon::now()) {
                         session()->flash('message', __('Your Membership is expired'));
                         return redirect()->back();
-                    }elseif ($user_membership->listing_limit === 0){
+                    } elseif ($user_membership->listing_limit === 0) {
                         toastr_error(__('Your membership listing limit is over!. please renew it'));
                         return redirect()->back();
-                    }elseif ($user_membership->expire_date <= Carbon::now()){
+                    } elseif ($user_membership->expire_date <= Carbon::now()) {
                         toastr_error(__('Your Membership is expired'));
                         return redirect()->back();
                     }
@@ -99,8 +107,8 @@ class ListingController extends Controller
                     }
 
                     // Check featured listing
-                    if (!empty($request->is_featured)){
-                        if ($user_membership->initial_featured_listing != 0){
+                    if (!empty($request->is_featured)) {
+                        if ($user_membership->initial_featured_listing != 0) {
                             if ($user_membership->featured_listing === 0) {
                                 toastr_error(__('You have exceeded the maximum number of featured listings allowed by your membership package.'));
                                 return redirect()->back();
@@ -111,18 +119,18 @@ class ListingController extends Controller
                 }
             }
 
-            // Validation start
+            // Validation rules
             $request->validate([
                 'category_id' => 'required',
                 'title' => 'required|max:191',
                 'description' => 'required|min:150',
                 'slug' => 'required|max:255|unique:listings',
-                'price' => 'required|numeric',
-                // Attributes Validation
-                'attributes_title' => 'nullable|array',
-                'attributes_title.*' => 'nullable|string|max:255',
-                'attributes_description' => 'nullable|array',
-                'attributes_description.*' => 'nullable|string|max:1000',
+                'price' => $request->category_id == 54 ? 'nullable|numeric' : 'required|numeric',
+                // Job-related fields validation
+                'qualification' => $request->category_id == 54 ? 'required|string|max:255' : 'nullable|string|max:255',
+                'experience' => $request->category_id == 54 ? 'required|string|max:255' : 'nullable|string|max:255',
+                'salary' => $request->category_id == 54 ? 'required|numeric' : 'nullable|numeric',
+                'job_location' => $request->category_id == 54 ? 'required|string|max:255' : 'nullable|string|max:255',
             ], [
                 'title.required' => __('The title field is required.'),
                 'title.max' => __('The title must not exceed 191 characters.'),
@@ -131,21 +139,25 @@ class ListingController extends Controller
                 'slug.required' => __('The slug field is required.'),
                 'slug.unique' => __('The slug has already been taken.'),
                 'price.required' => __('The price field is required.'),
-                'price.numeric' => __('The price must be a numeric value.')
+                'price.numeric' => __('The price must be a numeric value.'),
+                'qualification.required' => __('The qualification field is required for job listings.'),
+                'experience.required' => __('The experience field is required for job listings.'),
+                'salary.required' => __('The expected salary field is required for job listings.'),
+                'job_location.required' => __('The job location field is required for job listings.'),
             ]);
 
             $user = User::where('id', Auth::guard('web')->user()->id)->first();
             $slug = !empty($request->slug) ? $request->slug : $request->title;
 
-            if(get_static_option('listing_create_status_settings') == 'approved'){
+            if (get_static_option('listing_create_status_settings') == 'approved') {
                 $status = 1;
-            }else{
+            } else {
                 $status = 0;
             }
 
             // video url
             $video_url = null;
-            if(!empty($request->video_url)){
+            if (!empty($request->video_url)) {
                 $video_url = getYoutubeEmbedUrl($request->video_url);
             }
 
@@ -163,9 +175,9 @@ class ListingController extends Controller
             $listing->city_id = $request->city_id;
             $listing->brand_id = $request->brand_id;
             $listing->title = $request->title;
-            $listing->slug = Str::slug(purify_html($slug),'-',null);
+            $listing->slug = Str::slug(purify_html($slug), '-', null);
             $listing->description = $request->description;
-            $listing->price = $request->price;
+            $listing->price = $request->category_id == 54 ? null : $request->price; // Set price to null for job category
             $listing->negotiable = $request->negotiable ?? 0;
             $listing->condition = $request->condition;
             $listing->authenticity = $request->authenticity;
@@ -177,9 +189,18 @@ class ListingController extends Controller
             $listing->address = $request->address;
             $listing->lat = $request->latitude;
             $listing->lon = $request->longitude;
-            $listing->is_featured =  $request->is_featured ?? 0;
+            $listing->is_featured = $request->is_featured ?? 0;
             $listing->status = $status;
 
+            // Add job-related fields if category is job category
+            if ($request->category_id == 54) {
+                $listing->qualification = $request->qualification;
+                $listing->experience = $request->experience;
+                $listing->expected_salary = $request->salary;
+                $listing->job_location = $request->job_location;
+            }
+
+            $listing->save();
 
             $tags_name = '';
             if (!empty($request->tags)) {
@@ -207,7 +228,7 @@ class ListingController extends Controller
                     // Sanitize title and description
                     $sanitizedTitle = strip_tags($title);
                     $sanitizedDescription = strip_tags($description);
-                    if(!is_null($title)){
+                    if (!is_null($title)) {
                         ListingAttribute::create([
                             'listing_id' => $last_listing_id,
                             'title' => $sanitizedTitle,
@@ -230,19 +251,19 @@ class ListingController extends Controller
             $user_id = Auth::guard('web')->user()->id;
 
             // if membership system decrement listing limit
-            if(moduleExists('Membership')){
+            if (moduleExists('Membership')) {
                 if (membershipModuleExistsAndEnable('Membership')) {
                     // listing limit
-                     UserMembership::where('user_id', $user_id)->update([
-                        'listing_limit' => DB::raw(sprintf("listing_limit - %s", (int)strip_tags(1))),
+                    UserMembership::where('user_id', $user_id)->update([
+                        'listing_limit' => DB::raw(sprintf("listing_limit - %s", (int) strip_tags(1))),
                     ]);
 
                     // is featured listing
                     $user_membership_check = UserMembership::where('user_id', $user_id)->first();
-                    if ($user_membership_check->initial_featured_listing != 0){
-                        if (!empty($request->is_featured)){
+                    if ($user_membership_check->initial_featured_listing != 0) {
+                        if (!empty($request->is_featured)) {
                             UserMembership::where('user_id', $user_id)->update([
-                                'featured_listing' => DB::raw(sprintf("featured_listing - %s", (int)strip_tags(1))),
+                                'featured_listing' => DB::raw(sprintf("featured_listing - %s", (int) strip_tags(1))),
                             ]);
                         }
                     }
@@ -251,14 +272,14 @@ class ListingController extends Controller
 
             //create listing notification to admin
             AdminNotification::create([
-                'identity'=> $last_listing_id,
-                'user_id'=> $user_id,
-                'type'=>'Create Listing',
-                'message'=>__('A new listing has been created'),
+                'identity' => $last_listing_id,
+                'user_id' => $user_id,
+                'type' => 'Create Listing',
+                'message' => __('A new listing has been created'),
             ]);
 
             // sent email to admin
-            if (get_static_option('listing_create_status_settings') == 'pending'){
+            if (get_static_option('listing_create_status_settings') == 'pending') {
                 try {
                     $subject = get_static_option('listing_approve_subject') ?? __('New Listing Approve Request');
                     $message = get_static_option('listing_approve_message');
@@ -277,10 +298,10 @@ class ListingController extends Controller
 
 
         //check membership
-        if(moduleExists('Membership')){
-            if(membershipModuleExistsAndEnable('Membership')){
+        if (moduleExists('Membership')) {
+            if (membershipModuleExistsAndEnable('Membership')) {
                 $user_membership = UserMembership::where('user_id', Auth::guard('web')->user()->id)->first();
-                if(is_null($user_membership)){
+                if (is_null($user_membership)) {
                     toastr_error(__('you have to membership a package to create listings'));
                     return redirect()->back();
                 }
@@ -301,13 +322,13 @@ class ListingController extends Controller
         $membership_page_url = get_static_option('membership_plan_page') ? Page::select('slug')->find(get_static_option('membership_plan_page'))->slug : '';
         $user_featured_listing_enable = false;
         $user_listing_limit_check = false;
-        if(moduleExists('Membership')){
-            if(membershipModuleExistsAndEnable('Membership')){
+        if (moduleExists('Membership')) {
+            if (membershipModuleExistsAndEnable('Membership')) {
                 $user_membership = UserMembership::where('user_id', $user->id)->first();
-                if ($user_membership->featured_listing != 0){
+                if ($user_membership->featured_listing != 0) {
                     $user_featured_listing_enable = true;
                 }
-                if ($user_membership->listing_limit === 0){
+                if ($user_membership->listing_limit === 0) {
                     $user_listing_limit_check = true;
                 }
             }
@@ -360,15 +381,15 @@ class ListingController extends Controller
             $user = User::where('id', Auth::guard('web')->user()->id)->first();
             $slug = !empty($request->slug) ? $request->slug : $request->title;
 
-            if(get_static_option('listing_create_status_settings') == 'approved'){
+            if (get_static_option('listing_create_status_settings') == 'approved') {
                 $status = 1;
-            }else{
+            } else {
                 $status = 0;
             }
 
             // video url
             $video_url = null;
-            if(!empty($request->video_url)){
+            if (!empty($request->video_url)) {
                 $video_url = getYoutubeEmbedUrl($request->video_url);
             }
 
@@ -386,7 +407,7 @@ class ListingController extends Controller
             $listing->city_id = $request->city_id;
             $listing->brand_id = $request->brand_id;
             $listing->title = $request->title;
-            $listing->slug = Str::slug(purify_html($slug),'-',null);
+            $listing->slug = Str::slug(purify_html($slug), '-', null);
             $listing->description = $request->description;
             $listing->price = $request->price;
             $listing->negotiable = $request->negotiable ?? 0;
@@ -432,7 +453,7 @@ class ListingController extends Controller
                     $description = $request->input('attributes_description')[$index] ?? null;
                     $sanitizedTitle = strip_tags($title);
                     $sanitizedDescription = strip_tags($description);
-                    if(!is_null($sanitizedTitle) && !empty($sanitizedTitle)){
+                    if (!is_null($sanitizedTitle) && !empty($sanitizedTitle)) {
                         ListingAttribute::create([
                             'listing_id' => $last_listing_id,
                             'title' => $sanitizedTitle,
@@ -483,17 +504,17 @@ class ListingController extends Controller
         $membership_page_url = get_static_option('membership_plan_page') ? Page::select('slug')->find(get_static_option('membership_plan_page'))->slug : '';
         $user_featured_listing_enable = false;
         $user_listing_limit_check = false;
-        if(moduleExists('Membership')){
-            if(membershipModuleExistsAndEnable('Membership')){
+        if (moduleExists('Membership')) {
+            if (membershipModuleExistsAndEnable('Membership')) {
                 $user_membership = UserMembership::where('user_id', Auth::guard('web')->user()->id)->first();
-               if (!empty($user_membership)){
-                   if ($user_membership->featured_listing != 0){
-                       $user_featured_listing_enable = true;
-                   }
-                   if ($user_membership->listing_limit === 0){
-                       $user_listing_limit_check = true;
-                   }
-               }
+                if (!empty($user_membership)) {
+                    if ($user_membership->featured_listing != 0) {
+                        $user_featured_listing_enable = true;
+                    }
+                    if ($user_membership->listing_limit === 0) {
+                        $user_listing_limit_check = true;
+                    }
+                }
 
             }
         }

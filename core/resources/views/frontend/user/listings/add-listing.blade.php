@@ -213,7 +213,7 @@
                                         <div class="col-lg-8">
                                             <div class="post-add-wraper">
                                                 <div class="item-name box-shadow1 p-24">
-                                                    <label for="item-name">{{ __('Item Name') }} <span class="text-danger">*</span> </label>
+                                                    <label for="item-name" id="item-name-label">{{ __('Item Name') }} <span class="text-danger">*</span> </label>
                                                     <input type="text" name="title" id="title" value="{{ old('title') }}" class="input-filed w-100" placeholder="{{ __('Item Name') }}">
 
                                                     <div class="input-form input-form2 permalink_label">
@@ -754,6 +754,57 @@
 
             });
         })(jQuery)
+    </script>
+
+    <script>
+        (function ($) {
+            "use strict";
+            $(document).ready(function () {
+                $('#category').on('change', function () {
+                    let selectedCategoryId = $(this).val();
+
+                    if (selectedCategoryId == 54) { 
+                        $('#item-name-label').text('Job Title');
+                        $('#title').attr('placeholder', 'Job Title');
+
+                        // Hide fields for Job Category
+                        $('.brand, .item-condition-wraper, .item-authenticity-wraper, .price-wraper, .attribute-section').hide();
+
+                        // Append extra fields if not already added
+                        if (!$('.qualification').length) {
+                            let extraFields = `
+                                <div class="qualification box-shadow1 p-24 mt-4">
+                                    <label for="qualification">{{ __('Qualification') }} <span class="text-danger">*</span></label>
+                                    <input type="text" name="qualification" id="qualification" class="input-filed w-100" placeholder="{{ __('Enter Qualification') }}">
+                                </div>
+                                <div class="experience box-shadow1 p-24 mt-4">
+                                    <label for="experience">{{ __('Experience') }} <span class="text-danger">*</span></label>
+                                    <input type="text" name="experience" id="experience" class="input-filed w-100" placeholder="{{ __('Enter Experience') }}">
+                                </div>
+                                <div class="salary box-shadow1 p-24 mt-4">
+                                    <label for="salary">{{ __('Expected Salary') }} <span class="text-danger">*</span></label>
+                                    <input type="number" name="salary" id="salary" class="input-filed w-100" placeholder="{{ __('Enter Expected Salary') }}">
+                                </div>
+                                <div class="job-location box-shadow1 p-24 mt-4">
+                                    <label for="job-location">{{ __('Job Location') }} <span class="text-danger">*</span></label>
+                                    <input type="text" name="job_location" id="job-location" class="input-filed w-100" placeholder="{{ __('Enter Job Location') }}">
+                                </div>
+                            `;
+                            $('.about-item-form').append(extraFields);
+                        }
+                    } else {
+                        $('#item-name-label').text('Item Name');
+                        $('#title').attr('placeholder', 'Item Name');
+
+                        // Show fields for non-job categories
+                        $('.brand, .item-condition-wraper, .item-authenticity-wraper, .price-wraper, .attribute-section').show();
+
+                        // Remove job-related fields
+                        $('.qualification, .experience, .salary, .job-location').remove();
+                    }
+                });
+            });
+        })(jQuery);
     </script>
 
     @if(session('success'))

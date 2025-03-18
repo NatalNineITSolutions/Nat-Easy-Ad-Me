@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\MatrimonyPreference;
 use Illuminate\Http\Request;
 use App\Models\MatrimonyKyc;
 use Illuminate\Support\Facades\Auth;
@@ -12,23 +13,17 @@ class MatrimonyController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
-        return view('matrimony.index', compact('user'));
-    }
+        // Check if user is logged in
+        if (!auth()->check()) {
+            return redirect()->route('user.login')->with('error', 'Please log in or register first to access Matrimony'); 
+        }
 
-    public function register()
-    {
-        return view('matrimony.register'); 
+        return redirect()->route('matrimony.user-details');
     }
 
     public function price()
     {
         return view('matrimony.price'); // Ensure this view exists
-    }
-
-    public function showLoginForm()
-    {
-        return view('matrimony.login'); // Ensure you have a `login.blade.php` file
     }
 
 
@@ -37,11 +32,6 @@ class MatrimonyController extends Controller
         $user = Auth::user();
         return view('matrimony.profile-details');
     }
-
-    public function otp() {
-        return view ('matrimony.otp');
-    }
-
     public function userdetails()
     {
         return view('matrimony.user-details');
@@ -50,6 +40,14 @@ class MatrimonyController extends Controller
     public function storeUserDetails(Request $request)
     {
         try {
+            // Ensure the user is logged in
+            if (!auth()->check()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'User must be logged in to submit details.'
+                ], 401);
+            }
+
             // Log the incoming request data
             \Log::info('Incoming request data:', $request->all());
 
@@ -74,22 +72,16 @@ class MatrimonyController extends Controller
                 'state' => 'required|string',
                 'city' => 'required|string',
                 'about' => 'required|string',
-                'name' => 'nullable|string',
-                'email' => 'nullable|email',
-                'password' => 'nullable|string',
-                'mobile' => 'nullable|string',
             ]);
 
             // Convert marital_status to lowercase (to match ENUM values in DB)
             $validatedData['marital_status'] = strtolower($validatedData['marital_status']);
 
-            // Hash the password before saving
-            if (!empty($validatedData['password'])) {
-                $validatedData['password'] = bcrypt($validatedData['password']);
-            }
+            // Assign the logged-in user's ID
+            $validatedData['user_id'] = auth()->id();
 
             // Log validated data
-            \Log::info('Validated data:', $validatedData);
+            \Log::info('Validated data with user_id:', $validatedData);
 
             // Store Data in MatrimonyKyc table
             $matrimonyKyc = MatrimonyKyc::create($validatedData);
@@ -115,5 +107,39 @@ class MatrimonyController extends Controller
             ], 500);
         }
     }
+
+    public function preference()  {
+        return view('matrimony.preference');
+    }
+
+    public function storePreference(Request $request)
+    {
+        // Validate the request data
+        $validatedData = $request->validate([
+            'partner_age' => 'required|integer|min:18|max:100',
+            'mother_tongue' => 'required|string',
+            'religion' => 'required|string',
+            'caste' => 'required|string',
+            'height' => 'required|string',
+            'weight' => 'required|string',
+            'occupation' => 'required|string',
+            'location' => 'required|string',
+            'income' => 'required|string',
+        ]);
+
+        // Get the authenticated user's ID
+        $validatedData['user_id'] = auth()->id(); 
+
+        // Store data in database
+        $preference = MatrimonyPreference::create($validatedData);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Preferences saved successfully!',
+            'redirect_url' => url('/'), // Ensure full URL
+            'data' => $preference
+        ]);
+    }
+
 
 }

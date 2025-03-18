@@ -11,29 +11,29 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('matrimony_kyc', function (Blueprint $table) {
-            $table->id(); // Primary Key
-            $table->enum('marital_status', ['unmarried', 'married', 'divorce'])->nullable();
-            $table->date('dob')->nullable();
-            $table->string('family_status')->nullable();
-            $table->string('family_values')->nullable();
-            $table->string('family_type')->nullable();
-            $table->string('disability')->nullable();
-            $table->integer('height')->nullable();
-            $table->integer('weight')->nullable();
-            $table->string('caste')->nullable();
-            $table->string('dosham')->nullable();
-            $table->string('gothram')->nullable();
-            $table->string('education')->nullable();
-            $table->string('occupation')->nullable();
-            $table->string('annual_income')->nullable();
-            $table->string('employed_in')->nullable();
-            $table->string('country')->nullable();
-            $table->string('state')->nullable();
-            $table->string('city')->nullable();
-            $table->text('about')->nullable();
-            $table->timestamps(); 
-        });
+        // Schema::create('matrimony_kyc', function (Blueprint $table) {
+        //     $table->id(); // Primary Key
+        //     $table->enum('marital_status', ['unmarried', 'married', 'divorce'])->nullable();
+        //     $table->date('dob')->nullable();
+        //     $table->string('family_status')->nullable();
+        //     $table->string('family_values')->nullable();
+        //     $table->string('family_type')->nullable();
+        //     $table->string('disability')->nullable();
+        //     $table->integer('height')->nullable();
+        //     $table->integer('weight')->nullable();
+        //     $table->string('caste')->nullable();
+        //     $table->string('dosham')->nullable();
+        //     $table->string('gothram')->nullable();
+        //     $table->string('education')->nullable();
+        //     $table->string('occupation')->nullable();
+        //     $table->string('annual_income')->nullable();
+        //     $table->string('employed_in')->nullable();
+        //     $table->string('country')->nullable();
+        //     $table->string('state')->nullable();
+        //     $table->string('city')->nullable();
+        //     $table->text('about')->nullable();
+        //     $table->timestamps(); 
+        // });
     }
 
     /**
@@ -41,6 +41,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('matrimony_kyc');
+        // Schema::dropIfExists('matrimony_kyc');
     }
 };

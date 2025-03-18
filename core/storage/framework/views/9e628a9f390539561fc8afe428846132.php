@@ -25,6 +25,4 @@
             </div>
         </div>
     </nav>
-</header>
-
-<?php /**PATH C:\laragon\www\Nat-Easy-Ad-Me\core\resources\views/frontend/layout/partials/navbar-variant/navbar-01.blade.php ENDPATH**/ ?>
+</header><?php /**PATH C:\laragon\www\Nat-Easy-Ad-Me\core\resources\views/frontend/layout/partials/navbar-variant/navbar-01.blade.php ENDPATH**/ ?>

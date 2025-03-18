@@ -1,5 +1,8 @@
 
 <?php $__env->startSection('site_title', __('User Login')); ?>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
 <?php $__env->startSection('style'); ?>
     <style>
         .table {
@@ -145,7 +148,17 @@
         </div>
     </div>
 <?php $__env->stopSection(); ?>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 <?php $__env->startSection('scripts'); ?>
+
+    <?php if(session('error')): ?>
+    <script>
+        toastr.error("<?php echo e(session('error')); ?>");
+    </script>
+    <?php endif; ?>
+
     <script>
         (function ($) {
             "use strict";

@@ -13,10 +13,7 @@ class MatrimonyKyc extends Authenticatable
     protected $table = 'matrimony_kyc'; // Ensure correct table name if different
 
     protected $fillable = [
-        'name', // Make name nullable
-        'email', // Make email nullable
-        'password', // Make password nullable
-        'mobile', // Make mobile nullable
+        'user_id',
         'marital_status',
         'dob',
         'family_status',
@@ -35,10 +32,15 @@ class MatrimonyKyc extends Authenticatable
         'country',
         'state',
         'city',
-        'about_you',
+        'about',
         'image', // Add image if needed
         'matrimony_id', // Add matrimony_id if needed
     ];
 
     protected $hidden = ['password']; // Hide password from JSON responses
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

@@ -1,5 +1,8 @@
 @extends('frontend.layout.master')
 @section('site_title', __('User Login'))
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
 @section('style')
     <style>
         .table {
@@ -122,7 +125,17 @@
         </div>
     </div>
 @endsection
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 @section('scripts')
+
+    @if(session('error'))
+    <script>
+        toastr.error("{{ session('error') }}");
+    </script>
+    @endif
+
     <script>
         (function ($) {
             "use strict";

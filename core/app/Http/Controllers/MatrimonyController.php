@@ -18,12 +18,13 @@ class MatrimonyController extends Controller
 
     public function register()
     {
-        return view('matrimony.register');
+        return view('matrimony.register'); 
     }
 
     public function price()
     {
-        $memberships = Membership::where('category', 1)->get();
+        return view('matrimony.price'); // Ensure this view exists
+    }
 
     public function showLoginForm()
     {

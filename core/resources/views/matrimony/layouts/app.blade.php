@@ -7,12 +7,17 @@
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title')</title>
 
     {{-- Bootstrap --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+    <!-- Add this to the <head> section -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
 
     {{-- Google Fonts --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,6 +34,10 @@
             margin: 0;
             box-sizing: border-box;
             font-family: "Montserrat", sans-serif;
+        }
+
+        .logo {
+            width: 130px;
         }
 
         /* Header Styles */
@@ -48,9 +57,10 @@
         }
 
         .logo {
-            font-size: 22px;
+            font-size: 15px;
             font-weight: bold;
             color: #b57e41;
+            margin-bottom: 0;
         }
 
         .nav-links {
@@ -154,20 +164,63 @@
         }
 
         .mobile-menu {
-        display: none;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        width: 100%;
-        background: white;
-        padding: 10px;
-        border-top: 1px solid #ddd;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
+            display: none;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            background: white;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
-    .mobile-menu.show {
-        display: block;
-    }
+        .mobile-menu.show {
+            display: block;
+        }
+
+        .btn {
+            border-radius: 0;
+        }
+
+        .nav-links li a {
+            font-size: 13px;
+            font-weight: 600;
+            color: #66451C;
+        }
+
+        .login {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: rgb(196, 60, 60);
+            background: transparent;
+            border: 1px solid brown;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .login:hover {
+            border: 1px solid brown;
+            color: rgb(196, 60, 60);
+        }
+
+        .register {
+            padding: 10px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+            background: rgb(196, 60, 60);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .register:hover {
+            background: rgb(196, 60, 60);
+            color: white;
+        }
 
         @media (max-width: 992px) {
             .auth-buttons {
@@ -188,6 +241,10 @@
             .mobile-menu {
                 display: none;
             }
+        }
+
+        .logo-link {
+            text-decoration: none;
         }
 
         /* Footer Styling */

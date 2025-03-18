@@ -9,6 +9,9 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Auth;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,17 +31,26 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(191);
+
         try {
             $all_language = Language::all();
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             $all_language = null;
         }
 
         Paginator::useBootstrap();
-        if (get_static_option('site_force_ssl_redirection') === 'on'){
+
+        if (get_static_option('site_force_ssl_redirection') === 'on') {
             URL::forceScheme('https');
         }
+
         Paginator::useBootstrap();
-        $this->loadViewsFrom(__DIR__.'/../../plugins/PageBuilder/views','pagebuilder');
+        
+        $this->loadViewsFrom(__DIR__.'/../../plugins/PageBuilder/views', 'pagebuilder');
+
+        // Share authenticated user globally across all views
+        View::composer('*', function ($view) {
+            $view->with('user', Auth::user());
+        });
     }
 }

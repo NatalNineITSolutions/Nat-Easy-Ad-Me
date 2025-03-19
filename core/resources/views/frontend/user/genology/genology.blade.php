@@ -14,7 +14,7 @@
                             @include('frontend.user.layout.partials.sidebar')
                             <div class="main-body">
                                 <!-- MLM Tree Section -->
-                                @if(isset($mlmTree) && $mlmTree)
+                                @if (isset($mlmTree) && $mlmTree)
                                     <div class="mlm-tree-container box-shadow1 mt-20">
                                         <h4 class="dis-title text-center">{{ __('Genology') }}</h4>
                                         <div class="tree">
@@ -29,36 +29,38 @@
                                                         </div>
                                                     </div>
                                                     <ul>
-                                                        @foreach ($mlmTree->children as $child)
-                                                            <li>
-                                                                <div class="node">
-                                                                    <span class="node-name">{{ $child->first_name ?? 'N/A' }}</span>
-                                                                    <span class="node-id">{{ $child->partner_id ?? 'N/A' }}</span>
-                                                                    <div class="bv-points">
-                                                                        <span> BV :
-                                                                            <strong>{{ $child->userBvs->sum('bv_points') }}</strong>
-                                                                        </span>
-                                                                    </div>
+                                                        <!-- Left Slot -->
+                                                        <li>
+                                                            @if ($mlmTree->leftChild)
+                                                                @include(
+                                                                    'frontend.user.genology.partials.tree-node',
+                                                                    ['node' => $mlmTree->leftChild]
+                                                                )
+                                                            @else
+                                                                <div class="node placeholder">
+                                                                    <a
+                                                                        href="{{ route('user.mlm.addNewMember', ['sponsor' => $mlmTree->id, 'position' => 'left']) }}">
+                                                                        {{ __('Add New Member') }}
+                                                                    </a>
                                                                 </div>
-                                                                <ul>
-                                                                    @foreach ($child->children as $grandChild)
-                                                                        <li>
-                                                                            <div class="node">
-                                                                                <span
-                                                                                    class="node-name">{{ $grandChild->first_name ?? 'N/A' }}</span>
-                                                                                <span
-                                                                                    class="node-id">{{ $grandChild->partner_id ?? 'N/A' }}</span>
-                                                                                <div class="bv-points">
-                                                                                    <span> BV :
-                                                                                        <strong>{{ $grandChild->userBvs->sum('bv_points') }}</strong>
-                                                                                    </span>
-                                                                                </div>
-                                                                            </div>
-                                                                        </li>
-                                                                    @endforeach
-                                                                </ul>
-                                                            </li>
-                                                        @endforeach
+                                                            @endif
+                                                        </li>
+                                                        <!-- Right Slot -->
+                                                        <li>
+                                                            @if ($mlmTree->rightChild)
+                                                                @include(
+                                                                    'frontend.user.genology.partials.tree-node',
+                                                                    ['node' => $mlmTree->rightChild]
+                                                                )
+                                                            @else
+                                                                <div class="node placeholder">
+                                                                    <a
+                                                                        href="{{ route('user.mlm.addNewMember', ['sponsor' => $mlmTree->id, 'position' => 'right']) }}">
+                                                                        {{ __('Add New Member') }}
+                                                                    </a>
+                                                                </div>
+                                                            @endif
+                                                        </li>
                                                     </ul>
                                                 </li>
                                             </ul>
@@ -67,9 +69,9 @@
                                 @else
                                     <p class="text-center">{{ __('No MLM Data Found') }}</p>
                                 @endif
-                            </div>
-                        </div>
-                    </div>
+                            </div><!-- main-body -->
+                        </div><!-- down-body-wraper -->
+                    </div><!-- profile-setting-wraper -->
                 </div>
             </div>
         </div>
@@ -132,62 +134,6 @@
             display: none;
         }
 
-        .tree ul {
-            padding-left: 0;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            align-items: flex-start;
-        }
-
-        .tree li {
-            list-style-type: none;
-            margin: 0;
-            padding: 20px 10px 0 10px;
-            position: relative;
-            text-align: center;
-        }
-
-        .tree li::before {
-            content: '';
-            position: absolute;
-            border-left: 1.5px solid #ddd;
-            height: 20px;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .tree li::after {
-            content: '';
-            position: absolute;
-            border-top: 1.5px solid #ddd;
-            width: 100%;
-            top: 10px;
-            left: 0;
-        }
-
-        .tree>ul>li::before,
-        .tree>ul>li::after {
-            display: none;
-        }
-
-        .tree ul ul li::after {
-            width: 50%;
-            left: 50%;
-        }
-
-        .tree ul ul li:first-child::after {
-            width: 50%;
-            left: 50%;
-        }
-
-        .tree ul ul li:last-child::after {
-            width: 50%;
-            left: 0;
-        }
-
         .tree li div.node {
             border-radius: 8px;
             padding: 12px;
@@ -214,14 +160,21 @@
             margin-top: 5px;
         }
 
-        .user-bv-points {
-            padding: 12px;
-            background: #f9f9f9;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        .node.placeholder {
+            background: #f5f5f5;
+            border: 1px dashed #ccc;
+            box-shadow: none;
+        }
+
+        .node.placeholder a {
+            display: inline-block;
+            padding: 10px;
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .node.placeholder a:hover {
+            text-decoration: underline;
         }
     </style>
 @endsection

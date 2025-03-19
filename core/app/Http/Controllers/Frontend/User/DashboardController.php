@@ -37,17 +37,49 @@ class DashboardController extends Controller
         ]);
     }
 
+    // public function genology()
+    // {
+    //     $user_id = Auth::id();
+    //     $user = User::with(['children.children.children', 'userBvs'])->where('id', $user_id)->first();
+
+    //     if (!$user) {
+    //         return redirect()->back()->withErrors(['error' => __('User not found')]);
+    //     }
+
+    //     $leftBV = $user->children->first()?->userBvs->sum('bv_points') ?? 0;
+    //     $rightBV = $user->children->skip(1)->first()?->userBvs->sum('bv_points') ?? 0;
+
+    //     $mlmTree = $user;
+
+    //     if (request()->expectsJson()) {
+    //         return response()->json([
+    //             'success' => true,
+    //             'mlmTree' => $mlmTree,
+    //             'leftBV' => $leftBV,
+    //             'rightBV' => $rightBV,
+    //         ]);
+    //     }
+
+    //     return view('frontend.user.genology.genology', compact('mlmTree', 'leftBV', 'rightBV'));
+    // }
+
     public function genology()
     {
         $user_id = Auth::id();
-        $user = User::with(['children.children.children', 'userBvs'])->where('id', $user_id)->first();
+        // Eager load the binary tree relationships recursively
+        $user = User::with([
+            'leftChild.leftChild.leftChild',
+            'rightChild.rightChild.rightChild',
+            'userBvs'
+        ])->where('id', $user_id)->first();
 
         if (!$user) {
             return redirect()->back()->withErrors(['error' => __('User not found')]);
         }
 
-        $leftBV = $user->children->first()?->userBvs->sum('bv_points') ?? 0;
-        $rightBV = $user->children->skip(1)->first()?->userBvs->sum('bv_points') ?? 0;
+        // Calculate BV using the binary relationships
+        $leftBV = $user->leftChild ? $user->leftChild->userBvs->sum('bv_points') : 0;
+        $rightBV = $user->rightChild ? $user->rightChild->userBvs->sum('bv_points') : 0;
 
         $mlmTree = $user;
 
@@ -63,5 +95,3 @@ class DashboardController extends Controller
         return view('frontend.user.genology.genology', compact('mlmTree', 'leftBV', 'rightBV'));
     }
 }
-
-

@@ -62,7 +62,8 @@ class User extends Authenticatable
         'user_code',
         'parent_id',
         'membership_id', 
-        'bv_points'
+        'bv_points',
+        'profile_completed'
     ];
 
     /**

@@ -121,6 +121,13 @@
             display: block;
         }
 
+        .profile {
+            text-transform: capitalize;
+            text-decoration: none;
+            font-weight: 600;
+            color: black;
+        }
+
         /* Mobile Menu */
         .mobile-menu {
             display: none;
@@ -154,7 +161,8 @@
 
         .auth-buttons {
             display: flex;
-            gap: 10px;
+            gap: 5px;
+            cursor: pointer;
         }
 
         .auth-buttons .btn {

@@ -61,6 +61,21 @@
                     </li>
                 @endcanany
 
+                {{-- Admin Matrimony manage --}}
+                <li  class="dashboard__bottom__list__item has-children @if (request()->is('admin/listings/*')) active open show @endif">
+                    <a href="javascript:void(0)"> <i class="las la-th-list"></i> {{ __('Matrimony Manage') }} </a>
+                    <ul class="submenu">
+                        <li class="dashboard__bottom__list__item @if (request()->is('admin/listings/user-all-listings')) selected @endif">
+                            <a href="#"> {{ __('Verified Users') }} </a>
+                        </li>
+
+                        <li class="dashboard__bottom__list__item @if (request()->is('admin/listings/user-all-listings')) selected @endif">
+                            <a href="#"> {{ __('Non-Verified Users') }} </a>
+                        </li>
+                        
+                    </ul>
+                </li>
+
                 <!--Admin advertisement manage -->
                 @if(get_static_option('google_adsense_status') == 'on')
                     @canany(['advertisement-list', 'advertisement-add'])

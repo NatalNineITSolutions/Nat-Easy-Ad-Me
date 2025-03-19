@@ -15,11 +15,22 @@ class MatrimonyController extends Controller
     {
         // Check if user is logged in
         if (!auth()->check()) {
-            return redirect()->route('user.login')->with('error', 'Please log in or register first to access Matrimony'); 
+            return redirect()->route('user.login')->with('error', 'Please log in or register first to access Matrimony');
         }
 
-        return redirect()->route('matrimony.user-details');
+        // Get the authenticated user
+        $user = auth()->user();
+
+        // Check if the profile is completed
+        if ($user->profile_completed == 1) {
+            // If profile is completed, allow access to matrimony.index
+            return view('matrimony.index'); // Replace with your actual view for matrimony.index
+        } else {
+            // If profile is not completed, redirect to matrimony.user-details
+            return redirect()->route('matrimony.user-details')->with('info', 'Please complete your profile to proceed.');
+        }
     }
+
 
     public function price()
     {
@@ -127,19 +138,31 @@ class MatrimonyController extends Controller
             'income' => 'required|string',
         ]);
 
-        // Get the authenticated user's ID
-        $validatedData['user_id'] = auth()->id(); 
+        // Get the authenticated user
+        $user = auth()->user();
 
-        // Store data in database
-        $preference = MatrimonyPreference::create($validatedData);
+        // Assign the user_id
+        $validatedData['user_id'] = $user->id;
+
+        // Store data in the MatrimonyPreference table
+        MatrimonyPreference::updateOrCreate(
+            ['user_id' => $user->id], // Ensure only one record per user
+            $validatedData
+        );
+
+        // Check if both forms are completed
+        if ($user->kyc && $user->matrimonyPreference) {
+            $user->update(['profile_completed' => 1]); // Update profile completion status
+        }
+
+        // Log the response for debugging
+        \Log::info('Preferences saved successfully for user: ' . $user->id);
 
         return response()->json([
             'success' => true,
             'message' => 'Preferences saved successfully!',
-            'redirect_url' => url('/'), // Ensure full URL
-            'data' => $preference
+            'redirect_url' => url('/'), // Redirect to home page
         ]);
     }
-
 
 }

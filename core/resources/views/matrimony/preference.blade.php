@@ -1,13 +1,43 @@
-@extends('matrimony.layouts.app')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Matrimony Preference</title>
 
-@section('title', 'Matrimony Login')
+    {{-- Bootstrap --}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-@section('style')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+    {{-- Google Fonts --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    {{-- Font awesome --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <style>
+
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: "Montserrat", sans-serif;
+        } 
+
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #dee2e6;
+        }
+
         .login-container {
             /* background: url('bg-pattern.png') repeat; */
             background-image: url('/assets/uploads/media-uploader/bg.png');
-            height: 120vh;
+            height: 100vh;
             padding: 50px 0;
             display: flex;
             align-items: center;
@@ -288,16 +318,15 @@
             }
         }
     </style>
-@endsection
 
-@section('content')
+</head>
+<body>
     <div class="login-container">
         <div class="container d-flex">
             <div class="left"></div>
             <div class="right">
                <div class="user-detail-form">
-                    <h3>Matrimony</h3>
-                    <p>Join South India's fastest growing matrimonial site</p>
+                    <h3>Let's get your partner preferences!</h3>
 
                     <form class="user-form" id="preferenceForm">
                         <div class="row g-3">
@@ -364,17 +393,32 @@
             </div>
         </div>
     </div>
-@endsection
 
-@section('script')
+    {{-- Bootstrap --}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    {{-- Toaster --}}
+    <!-- Include jQuery (required for Toastr) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Include Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    {{-- Toaster initialization --}}
+    <script>
+        toastr.options = {
+            closeButton: true,
+            progressBar: true,
+            positionClass: 'toast-top-right',
+            timeOut: 5000
+        };
+    </script>
+
+    {{-- Form Submission AJAX --}}
     <script>
         document.getElementById('preferenceForm').addEventListener('submit', function (event) {
-            // Prevent the form from submitting
             event.preventDefault();
-        
-            // Get all input fields
+
+            // Validation logic
             const fields = [
                 { id: 'partner_age', name: "Partner's Age" },
                 { id: 'mother_tongue', name: "Mother Tongue" },
@@ -386,65 +430,52 @@
                 { id: 'location', name: "Location" },
                 { id: 'income', name: "Monthly Income" }
             ];
-        
-            // Array to store missing field names
+
             let missingFields = [];
-        
-            // Check each field
             fields.forEach(field => {
                 const input = document.getElementById(field.id);
                 if (!input.value.trim()) {
-                    // Add missing field name to the array
                     missingFields.push(field.name);
                 }
             });
-        
-            // If there are missing fields, show a single toaster message
-            if (missingFields.length > 0) {
-                // Join missing field names with a comma
-                const errorMessage = `${missingFields.join(', ')} is required.`;
-                // Show toaster message
-                toastr.error(errorMessage, 'Validation Error');
-            } else {
-                // If all fields are valid, submit the form
-                this.submit();
-            }
-        });
-    </script>
 
-    {{-- Form Submission AJAX --}}
-    <script>
-        document.getElementById('preferenceForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent form default submission
-    
+            if (missingFields.length > 0) {
+                const errorMessage = `${missingFields.join(', ')} is required.`;
+                toastr.error(errorMessage, 'Validation Error');
+                return; // Stop further execution if validation fails
+            }
+
+            // AJAX submission logic
             const formData = new FormData(this);
             const jsonData = {};
             formData.forEach((value, key) => {
                 jsonData[key] = value;
             });
-    
+
             fetch('/matrimony/preference', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') // CSRF Token
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(jsonData)
             })
-            .then(response => response.json()) // Ensure response is JSON
+            .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Preferences saved successfully!');
-                    window.location.href = data.redirect_url; // Redirect to matrimony page
+                    toastr.success('Preferences saved successfully! Redirecting...');
+                    setTimeout(() => {
+                        window.location.href = data.redirect_url;
+                    }, 2000);
                 } else {
-                    alert('Failed to save preferences. Please try again.');
+                    toastr.error('Error: ' + data.message);
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('An error occurred while saving preferences.');
+                toastr.error('An unexpected error occurred.');
             });
         });
-    </script>    
-
-@endsection
+    </script>   
+</body>
+</html>

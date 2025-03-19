@@ -62,6 +62,21 @@
                     </li>
                 <?php endif; ?>
 
+                
+                <li  class="dashboard__bottom__list__item has-children <?php if(request()->is('admin/listings/*')): ?> active open show <?php endif; ?>">
+                    <a href="javascript:void(0)"> <i class="las la-th-list"></i> <?php echo e(__('Matrimony Manage')); ?> </a>
+                    <ul class="submenu">
+                        <li class="dashboard__bottom__list__item <?php if(request()->is('admin/listings/user-all-listings')): ?> selected <?php endif; ?>">
+                            <a href="#"> <?php echo e(__('Verified Users')); ?> </a>
+                        </li>
+
+                        <li class="dashboard__bottom__list__item <?php if(request()->is('admin/listings/user-all-listings')): ?> selected <?php endif; ?>">
+                            <a href="#"> <?php echo e(__('Non-Verified Users')); ?> </a>
+                        </li>
+                        
+                    </ul>
+                </li>
+
                 <!--Admin advertisement manage -->
                 <?php if(get_static_option('google_adsense_status') == 'on'): ?>
                     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->any(['advertisement-list', 'advertisement-add'])): ?>

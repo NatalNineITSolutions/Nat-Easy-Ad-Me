@@ -17,15 +17,15 @@
         </nav>
 
         <!-- Right Side: Login/Register -->
-        <div class="auth-buttons">
-        
-            @if(isset($user) && $user)
-                <a href="#" class="btn profile">Profile</a>
-            @else
-                <a href="{{ route('matrimony.login') }}" class="btn login">Login</a>
-                <a href="{{ route('matrimony.register') }}" class="btn register">Register</a>
+        <div class="auth-buttons d-flex align-items-center">
+            @if(auth()->check())
+                <img src="{{ auth()->user()->profile_image ?? '/assets/uploads/matrimony/avatar.png' }}" 
+                     alt="Profile Image" 
+                     class="rounded-circle" 
+                     width="40" height="40">
+                <p class="profile mb-0">{{ auth()->user()->username }}</p>
             @endif
-        </div>  
+        </div>
 
         <!-- Mobile Menu Toggle -->
         <div class="menu-toggle">

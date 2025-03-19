@@ -21,7 +21,9 @@ class Membership extends Model
         'business_hour',
         'membership_badge',
         'status',
-        'category'
+        'category',
+        'profile_limit',
+        'bv_points',
     ];
 
     public function features()

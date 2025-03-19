@@ -52,6 +52,10 @@ class Listing extends Model
         'status',
         'is_published',
         'published_at',
+        'qualification', 
+        'experience',
+        'expected_salary', 
+        'job_location',
     ];
 
     protected $casts = [

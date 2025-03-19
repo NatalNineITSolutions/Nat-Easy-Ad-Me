@@ -52,7 +52,8 @@ Route::group(['prefix'=>'user','as'=>'user.'],function() {
             Route::prefix('genology')->group(function () {
                 Route::get('info', 'genology')->name('genology');
             });
-        });      
+        }); 
+        
 
           // add listing
           Route::controller(ListingController::class)->group(function () {

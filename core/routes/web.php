@@ -18,6 +18,7 @@ use App\Http\Controllers\Auth\LoginController;
 use \App\Http\Controllers\Frontend\User\MediaUploadController;
 use \App\Http\Controllers\Frontend\FrontendListingController;
 use \App\Http\Controllers\Frontend\FrontendUserProfileController;
+use App\Http\Controllers\Frontend\User\UserController;
 
 require_once __DIR__ . '/admin.php';
 require_once __DIR__ . '/user.php';

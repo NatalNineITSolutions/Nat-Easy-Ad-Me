@@ -1,23 +1,31 @@
 <header class="header">
     <div class="container header-container">
         <!-- Logo -->
-        <div class="logo">EASY AD ME</div>
+        <a href="/matrimony" class="logo-link">
+            <img class="logo" src="/assets/uploads/media-uploader/new-logo.png" alt="">
+        </a>
 
         <!-- Desktop Navigation Links -->
         <nav>
             <ul class="nav-links">
-                <li><a href="#">Explore</a></li>
-                <li><a href="#">All Pages</a></li>
-                <li><a href="#">Top Pages</a></li>
-                <li><a href="#">Plans</a></li>
+                <li><a href="/matrimony">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">Search</a></li>
+                <li><a href="#">Contact</a></li>
             </ul>
         </nav>
 
         <!-- Right Side: Login/Register -->
         <div class="auth-buttons">
-            <a href="/login" class="btn btn-outline-primary">Login</a>
-            <a href="/register" class="btn btn-primary">Register</a>
-        </div>
+        
+            @if(isset($user) && $user)
+                <a href="#" class="btn profile">Profile</a>
+            @else
+                <a href="{{ route('matrimony.login') }}" class="btn login">Login</a>
+                <a href="{{ route('matrimony.register') }}" class="btn register">Register</a>
+            @endif
+        </div>  
 
         <!-- Mobile Menu Toggle -->
         <div class="menu-toggle">

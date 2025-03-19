@@ -34,7 +34,29 @@
                                                                 <div class="node">
                                                                     <span class="node-name">{{ $child->first_name ?? 'N/A' }}</span>
                                                                     <span class="node-id">{{ $child->partner_id ?? 'N/A' }}</span>
+                                                                    <div class="bv-points">
+                                                                        <span> BV :
+                                                                            <strong>{{ $child->userBvs->sum('bv_points') }}</strong>
+                                                                        </span>
+                                                                    </div>
                                                                 </div>
+                                                                <ul>
+                                                                    @foreach ($child->children as $grandChild)
+                                                                        <li>
+                                                                            <div class="node">
+                                                                                <span
+                                                                                    class="node-name">{{ $grandChild->first_name ?? 'N/A' }}</span>
+                                                                                <span
+                                                                                    class="node-id">{{ $grandChild->partner_id ?? 'N/A' }}</span>
+                                                                                <div class="bv-points">
+                                                                                    <span> BV :
+                                                                                        <strong>{{ $grandChild->userBvs->sum('bv_points') }}</strong>
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </li>
+                                                                    @endforeach
+                                                                </ul>
                                                             </li>
                                                         @endforeach
                                                     </ul>

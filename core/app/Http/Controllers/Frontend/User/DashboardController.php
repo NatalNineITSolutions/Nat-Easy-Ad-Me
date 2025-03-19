@@ -40,17 +40,17 @@ class DashboardController extends Controller
     public function genology()
     {
         $user_id = Auth::id();
-        $user = User::with('children.children.children')->where('id', $user_id)->first();
-    
+        $user = User::with(['children.children.children', 'userBvs'])->where('id', $user_id)->first();
+
         if (!$user) {
             return redirect()->back()->withErrors(['error' => __('User not found')]);
         }
-    
-        $leftBV = $user->children->first()?->bv_points ?? 0;
-        $rightBV = $user->children->skip(1)->first()?->bv_points ?? 0;
-    
-        $mlmTree = $user; 
-    
+
+        $leftBV = $user->children->first()?->userBvs->sum('bv_points') ?? 0;
+        $rightBV = $user->children->skip(1)->first()?->userBvs->sum('bv_points') ?? 0;
+
+        $mlmTree = $user;
+
         if (request()->expectsJson()) {
             return response()->json([
                 'success' => true,
@@ -59,9 +59,9 @@ class DashboardController extends Controller
                 'rightBV' => $rightBV,
             ]);
         }
-    
+
         return view('frontend.user.genology.genology', compact('mlmTree', 'leftBV', 'rightBV'));
-    }    
+    }
 }
 
 

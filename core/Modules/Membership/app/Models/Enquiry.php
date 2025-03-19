@@ -14,7 +14,7 @@ class Enquiry extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['user_id', 'listing_id', 'name','email','phone','message'];
+    protected $fillable = ['user_id', 'listing_id', 'name','email','phone','message', 'resume'];
 
     protected static function newFactory(): EnquiryFactory
     {

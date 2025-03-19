@@ -40,6 +40,12 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'matrimony' => [ // Custom guard for matrimony users
+            'driver' => 'session',
+            'provider' => 'matrimony_users',
+        ],
+
         'admin' => [
             'driver' => 'session',
             'provider' => 'admins',

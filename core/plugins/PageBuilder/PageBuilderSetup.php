@@ -15,6 +15,7 @@ class PageBuilderSetup
             \plugins\PageBuilder\Addons\Listing\LocationListing::class,
             \plugins\PageBuilder\Addons\Listing\RecentListingOne::class,
             \plugins\PageBuilder\Addons\Listing\CategoryWiseListing::class,
+            \plugins\PageBuilder\Addons\Listing\JobListing::class,
             \plugins\PageBuilder\Addons\BrowseCategory\BrowseCategoryOne::class,
             \plugins\PageBuilder\Addons\MarketPlace\MarketPlaceOne::class,
             \plugins\PageBuilder\Addons\Contact\ContactInfo::class,

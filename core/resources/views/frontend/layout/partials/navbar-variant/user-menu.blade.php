@@ -186,7 +186,7 @@
     @else
         <li class="single">
             <div class="btn-wrapper">
-                <a href="{{ route('guest.add.listing') }}"  class="cmn-btn1 popup-modal">
+                <a href="{{ route('user.login') }}"  class="cmn-btn1 popup-modal">
                     <i class="las la-plus-circle"></i><span class="text">{{ __('Post your ad') }}</span>
                 </a>
             </div>

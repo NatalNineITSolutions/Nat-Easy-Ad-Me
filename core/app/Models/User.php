@@ -17,6 +17,7 @@ use Modules\CountryManage\app\Models\City;
 use Modules\CountryManage\app\Models\Country;
 use Modules\CountryManage\app\Models\State;
 use Modules\Membership\app\Models\UserMembership;
+use App\Models\UsersBV;
 use Modules\Wallet\app\Models\Wallet;
 use Kalnoy\Nestedset\NodeTrait;
 
@@ -156,6 +157,11 @@ class User extends Authenticatable
     public function children()
     {
         return $this->hasMany(User::class, 'parent_id'); 
+    }
+
+    public function userBvs()
+    {
+        return $this->hasMany(UsersBV::class);
     }
 
     public function getMLMTree($userId) {

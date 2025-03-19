@@ -206,7 +206,13 @@ class RegisterController extends Controller
                 if ($request->partner_id) {
                     $partner = User::where('partner_id', $request->partner_id)->first();
                     if ($partner) {
-                        $parent_id = $partner->id;
+                        // Check if the partner already has two children
+                        if ($partner->children->count() < 2) {
+                            $parent_id = $partner->id;
+                        } else {
+                            // If the partner already has two children, place the new user under one of the children
+                            $parent_id = $partner->children->first()->id;
+                        }
                         Log::info('Referred by existing user.', ['referrer_id' => $parent_id]);
                     }
                 }
@@ -215,7 +221,8 @@ class RegisterController extends Controller
                 $membership_id = $default_membership ? $default_membership->id : 1;
                 $bv_points = $default_membership ? $default_membership->bv_points : 0;
 
-                $user = User::create([
+                // Create the user
+                $user = new User([
                     'first_name' => $request->first_name,
                     'last_name' => $request->last_name,
                     'email' => $request->email,
@@ -229,8 +236,17 @@ class RegisterController extends Controller
                     'parent_id' => $parent_id,
                 ]);
 
+                // Save the user within the nested set structure
+                if ($parent_id) {
+                    $parent = User::find($parent_id);
+                    $parent->appendNode($user); // Append the new user as a child of the parent
+                } else {
+                    $user->saveAsRoot(); // Save the user as a root node
+                }
+
                 Log::info('User created successfully.', ['user_id' => $user->id]);
 
+                // Assign BV points
                 UsersBv::create([
                     'user_id' => $user->id,
                     'membership_id' => $membership_id,
@@ -244,6 +260,7 @@ class RegisterController extends Controller
                     'bv_points' => $bv_points
                 ]);
 
+                // Update referrer's BV points
                 if ($parent_id) {
                     $referrer = User::find($parent_id);
                     if ($referrer) {
@@ -257,6 +274,7 @@ class RegisterController extends Controller
                     }
                 }
 
+                // Create wallet if the Wallet module exists
                 if (moduleExists("Wallet")) {
                     Wallet::create([
                         'user_id' => $user->id,
@@ -267,6 +285,7 @@ class RegisterController extends Controller
                     ]);
                 }
 
+                // Send OTP email if email verification is enabled
                 if (!empty(get_static_option('user_email_verify_enable_disable'))) {
                     try {
                         Mail::to($user->email)->send(new BasicMail([
@@ -278,10 +297,12 @@ class RegisterController extends Controller
                     }
                 }
 
+                // Dispatch job to send registration email
                 if ($user) {
                     dispatch(new SendRegisterUserEmailJob($user, $request->password));
                 }
 
+                // Log in the user
                 if (Auth::guard('web')->attempt(['username' => $request->username, 'password' => $request->password])) {
                     return redirect()->route('user.dashboard');
                 }
@@ -294,6 +315,27 @@ class RegisterController extends Controller
 
         return view('frontend.user.user-register');
     }
+
+    private function propagateBvPoints($userId, $bvPoints)
+    {
+        $user = User::find($userId);
+        if ($user) {
+            // Add BV points to the current user
+            $user->bv_points += $bvPoints;
+            $user->save();
+
+            Log::info('BV points propagated.', [
+                'user_id' => $user->id,
+                'new_bv_points' => $user->bv_points,
+            ]);
+
+            // Propagate BV points to the parent user
+            if ($user->parent_id) {
+                $this->propagateBvPoints($user->parent_id, $bvPoints);
+            }
+        }
+    }
+
 
     public function emailVerify(Request $request)
     {

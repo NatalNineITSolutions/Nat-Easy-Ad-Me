@@ -12,14 +12,14 @@
             <!-- Single -->
             <?php if (isset($component)) { $__componentOriginalb6539d82a33f5d27d4ce1be9ef6b85ce = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalb6539d82a33f5d27d4ce1be9ef6b85ce = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.listings.listing-single-list-view','data' => ['listings' => $listings]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.listings.listing-single-list-view','data' => ['listings' => $listings->reject(function($listing) { return $listing->category_id == 54; })]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('listings.listing-single-list-view'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['listings' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listings)]); ?>
+<?php $component->withAttributes(['listings' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listings->reject(function($listing) { return $listing->category_id == 54; }))]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalb6539d82a33f5d27d4ce1be9ef6b85ce)): ?>

@@ -23,13 +23,12 @@ class MatrimonyController extends Controller
 
     public function price()
     {
-        return view('matrimony.price'); // Ensure this view exists
+        return view('matrimony.price'); 
     }
 
     public function showLoginForm()
     {
-        return view('matrimony.login'); // Ensure you have a `login.blade.php` file
-    }
+        return view('matrimony.login'); 
 
 
     public function profiledetails()
@@ -114,6 +113,13 @@ class MatrimonyController extends Controller
                 'message' => 'An error occurred. Please try again.'
             ], 500);
         }
+    }
+
+    public function price()
+    {
+        $memberships = Membership::where('category', 1)->get();
+
+        return view('matrimony.price', compact('memberships'));
     }
 
 }

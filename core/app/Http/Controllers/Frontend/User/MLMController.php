@@ -27,7 +27,7 @@ class MLMController extends Controller
     public function addNewMember(Request $request)
     {
         $sponsorId = $request->query('sponsor');
-        $position  = $request->query('position');
+        $position = $request->query('position');
 
         // Validate the parameters.
         if (!$sponsorId || !in_array($position, ['left', 'right'])) {
@@ -49,23 +49,22 @@ class MLMController extends Controller
         return view('frontend.user.genology.add-member', compact('sponsor', 'position'));
     }
 
-
     public function registerNewMember(Request $request)
     {
         if ($request->isMethod('POST')) {
             Log::info('MLM new member registration request received.', ['request_data' => $request->all()]);
 
             $validationRules = [
-                'first_name'       => 'required|max:191',
-                'last_name'        => 'required|max:191',
-                'email'            => 'required|email|unique:users|max:191',
-                'username'         => 'required|unique:users|max:191',
-                'phone'            => 'required|max:191',
-                'password'         => 'required|min:6|max:191',
+                'first_name' => 'required|max:191',
+                'last_name' => 'required|max:191',
+                'email' => 'required|email|unique:users|max:191',
+                'username' => 'required|unique:users|max:191',
+                'phone' => 'required|max:191',
+                'password' => 'required|min:6|max:191',
                 'confirm_password' => 'required|same:password',
                 // Hidden fields from the form:
-                'sponsor_id'       => 'required|exists:users,id',
-                'position'         => 'required|in:left,right',
+                'sponsor_id' => 'required|exists:users,id',
+                'position' => 'required|in:left,right',
             ];
 
             if (get_static_option('site_google_captcha_enable') == 'on') {
@@ -94,7 +93,7 @@ class MLMController extends Controller
 
                 // The sponsor_id and position are passed as hidden fields from the form.
                 $parent_id = $request->input('sponsor_id');
-                $position  = $request->input('position');
+                $position = $request->input('position');
 
                 Log::info('New member referred by existing user.', ['referrer_id' => $parent_id, 'position' => $position]);
 
@@ -104,18 +103,18 @@ class MLMController extends Controller
 
                 // Create the new user record
                 $user = new User([
-                    'first_name'       => $request->first_name,
-                    'last_name'        => $request->last_name,
-                    'email'            => $request->email,
-                    'username'         => $request->username,
-                    'phone'            => $full_phone_number,
-                    'password'         => Hash::make($request->password),
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'email' => $request->email,
+                    'username' => $request->username,
+                    'phone' => $full_phone_number,
+                    'password' => Hash::make($request->password),
                     'terms_conditions' => 1,
                     'email_verify_token' => $email_verify_token,
-                    'partner_id'       => $partnerId,
-                    'partner_name'     => $partnerName,
-                    'parent_id'        => $parent_id,
-                    'position'         => $position,
+                    'partner_id' => $partnerId,
+                    'partner_name' => $partnerName,
+                    'parent_id' => $parent_id,
+                    'position' => $position,
                 ]);
 
                 // Save the user within the nested set structure
@@ -131,53 +130,35 @@ class MLMController extends Controller
 
                 // Assign BV points
                 UsersBv::create([
-                    'user_id'       => $user->id,
+                    'user_id' => $user->id,
                     'membership_id' => $membership_id,
-                    'bv_points'     => $bv_points,
-                    'upgrade_time'  => now(),
+                    'bv_points' => $bv_points,
+                    'upgrade_time' => now(),
                 ]);
 
                 Log::info('User BV points recorded.', [
-                    'user_id'       => $user->id,
+                    'user_id' => $user->id,
                     'membership_id' => $membership_id,
-                    'bv_points'     => $bv_points
+                    'bv_points' => $bv_points
                 ]);
 
-                // Update the sponsor's BV points
+                // Distribute BV points to the parent users
                 if ($parent_id) {
                     $referrer = User::find($parent_id);
                     if ($referrer) {
-                        $referrer->bv_points += $bv_points;
-                        $referrer->save();
-
-                        Log::info('Referrer BV points updated.', [
-                            'referrer_id'   => $referrer->id,
-                            'new_bv_points' => $referrer->bv_points
-                        ]);
+                        $this->distributeBVPoints($referrer, $bv_points);
                     }
                 }
 
                 // Create wallet if needed
                 if (moduleExists("Wallet")) {
                     Wallet::create([
-                        'user_id'           => $user->id,
-                        'balance'           => 0,
+                        'user_id' => $user->id,
+                        'balance' => 0,
                         'remaining_balance' => 0,
-                        'withdraw_amount'   => 0,
-                        'status'            => 1,
+                        'withdraw_amount' => 0,
+                        'status' => 1,
                     ]);
-                }
-
-                // Send OTP email if email verification is enabled
-                if (!empty(get_static_option('user_email_verify_enable_disable'))) {
-                    try {
-                        Mail::to($user->email)->send(new BasicMail([
-                            'subject' => __('Otp Email'),
-                            'message' => __('Your OTP code is: ') . $email_verify_token,
-                        ]));
-                    } catch (\Exception $e) {
-                        Log::error('Failed to send OTP email.', ['error' => $e->getMessage()]);
-                    }
                 }
 
                 // Dispatch job to send registration email
@@ -185,10 +166,8 @@ class MLMController extends Controller
                     dispatch(new SendRegisterUserEmailJob($user, $request->password));
                 }
 
-                // Optionally, log in the user immediately
-                if (Auth::guard('web')->attempt(['username' => $request->username, 'password' => $request->password])) {
-                    return redirect()->route('user.dashboard');
-                }
+                // Redirect back to the genealogy page with a success message
+                return redirect()->route('genealogy.page')->with('success', __('New member registered successfully!'));
             } catch (\Exception $e) {
                 Log::error('Error during MLM member registration.', ['error' => $e->getMessage()]);
                 return redirect()->back()->withErrors(['error' => __('An error occurred during registration. Please try again.')]);
@@ -198,4 +177,26 @@ class MLMController extends Controller
         // For GET requests, show the registration form
         return view('frontend.user.genology.add-member');
     }
+
+    // private function distributeBVPoints($user, $bvPoints)
+    // {
+    //     if (!$user) {
+    //         return;
+    //     }
+
+    //     // Update the current user's BV points
+    //     $user->bv_points += $bvPoints;
+    //     $user->save();
+
+    //     Log::info('Distributed BV points to user:', [
+    //         'user_id' => $user->id,
+    //         'bv_points' => $user->bv_points,
+    //     ]);
+
+    //     // Recursively distribute BV points to the parent user
+    //     if ($user->parent_id) {
+    //         $parentUser = User::find($user->parent_id);
+    //         $this->distributeBVPoints($parentUser, $bvPoints);
+    //     }
+    // }
 }

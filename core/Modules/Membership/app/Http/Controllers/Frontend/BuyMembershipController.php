@@ -21,6 +21,7 @@ use Modules\Membership\app\Models\UserMembership;
 use Modules\Wallet\app\Models\Wallet;
 use Modules\Membership\app\Http\Services\MembershipService;
 use App\Models\UsersBV;
+use App\Models\User;
 
 class BuyMembershipController extends Controller
 {
@@ -95,6 +96,12 @@ class BuyMembershipController extends Controller
                                 'expire_date' => Carbon::now()->addDays($membership_details->membership_type->validity),
                                 'upgrade_time' => Carbon::now(),
                             ]);
+
+                            // Distribute BV points to parent users
+                            if ($user->parent_id) {
+                                $parentUser = User::find($user->parent_id);
+                                $this->distributeBVPoints($parentUser, $membership_details->bv_points);
+                            }
 
                             toastr_success(__('Congratulations! Your free membership has been activated'));
                             return redirect()->back();
@@ -503,7 +510,7 @@ class BuyMembershipController extends Controller
                                 session()->put('membership_history_id', $new_membership_history->id);
                             }
 
-                            
+
                         }
                     }
 
@@ -547,6 +554,28 @@ class BuyMembershipController extends Controller
                     // all payment gateway check end
                 }
             }
+        }
+    }
+
+    private function distributeBVPoints($user, $bvPoints)
+    {
+        if (!$user) {
+            return;
+        }
+
+        // Update the current user's BV points
+        $user->bv_points += $bvPoints;
+        $user->save();
+
+        Log::info('Distributed BV points to user:', [
+            'user_id' => $user->id,
+            'bv_points' => $user->bv_points,
+        ]);
+
+        // Recursively distribute BV points to the parent user
+        if ($user->parent_id) {
+            $parentUser = User::find($user->parent_id);
+            $this->distributeBVPoints($parentUser, $bvPoints);
         }
     }
 

@@ -498,28 +498,6 @@ class RegisterController extends Controller
         return view('frontend.user.user-register');
     }
 
-
-    private function propagateBvPoints($userId, $bvPoints)
-    {
-        $user = User::find($userId);
-        if ($user) {
-            // Add BV points to the current user
-            $user->bv_points += $bvPoints;
-            $user->save();
-
-            Log::info('BV points propagated.', [
-                'user_id' => $user->id,
-                'new_bv_points' => $user->bv_points,
-            ]);
-
-            // Propagate BV points to the parent user
-            if ($user->parent_id) {
-                $this->propagateBvPoints($user->parent_id, $bvPoints);
-            }
-        }
-    }
-
-
     public function emailVerify(Request $request)
     {
         $user_details = Auth::guard('web')->user();

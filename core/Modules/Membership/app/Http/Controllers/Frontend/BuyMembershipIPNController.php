@@ -8,6 +8,7 @@ use App\Mail\BasicMail;
 use App\Models\Backend\AdminNotification;
 use App\Models\User;
 use App\Models\UsersBV;
+use App\Services\BVDistributionService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -279,7 +280,8 @@ class BuyMembershipIPNController extends Controller
 
                     // Distribute BV points to the parent user
                     $user = User::find($membership_details->user_id);
-                    $this->distributeBVPoints($user, $usersBv->bv_points, $upgrade_membership_id, $membership_details->user_id);
+                    $bvService = new BVDistributionService();
+                    $bvService->distributeBVPoints($user, $usersBv->bv_points, $upgrade_membership_id, $membership_details->user_id);
                 }
             }
 
@@ -352,38 +354,4 @@ class BuyMembershipIPNController extends Controller
     //         $this->distributeBVPoints($rightParentUser, $bvPoints, $upgradeMembershipId, $originalUserId);
     //     }
     // }
-
-    private function distributeBVPoints($user, $bvPoints, $upgradeMembershipId)
-    {
-        // If there's no user or no parent, stop the recursion.
-        if (!$user || !$user->parent_id) {
-            return;
-        }
-
-        // Get the immediate parent of the current user.
-        $parent = User::find($user->parent_id);
-        if (!$parent) {
-            return;
-        }
-
-        // Update the parent's BV points.
-        $parent->bv_points += $bvPoints;
-        $parent->save();
-
-        // Record the BV distribution in the UsersBV table.
-        UsersBV::create([
-            'user_id'       => $parent->id,
-            'membership_id' => $upgradeMembershipId,
-            'bv_points'     => $bvPoints,
-            'upgrade_time'  => Carbon::now(),
-        ]);
-
-        Log::info('Distributed BV points to parent user:', [
-            'user_id'   => $parent->id,
-            'bv_points' => $bvPoints,
-        ]);
-
-        // Recursively distribute BV points upward through the parent's chain.
-        $this->distributeBVPoints($parent, $bvPoints, $upgradeMembershipId);
-    }
 }

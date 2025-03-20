@@ -10,15 +10,11 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::table('memberships', function (Blueprint $table) {
-            $table->integer('profile_limit')->nullable()->after('featured_listing');
-        });
+        
     }
 
     public function down()
     {
-        Schema::table('memberships', function (Blueprint $table) {
-            $table->dropColumn('profile_limit');
-        });
+        
     }
 };

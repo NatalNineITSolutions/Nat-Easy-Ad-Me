@@ -6,27 +6,21 @@
 
 @section('content')
     <div class="genology-full-width">
-        <div class="container-fluid p-0"> <!-- Use container-fluid for full width -->
-            <div class="row justify-content-center">
-                <div class="col-12 p-0"> <!-- Remove padding to ensure full width -->
-                    <!-- MLM Tree Section -->
-                    @if (isset($mlmTree) && $mlmTree)
-                        <div class="mlm-tree box-shadow1">
-                            <h4 class="dis-title text-center">{{ __('Genology') }}</h4>
-                            <div class="tree">
-                                <ul>
-                                    <li>
-                                        @include('frontend.user.genology.partials.tree-node', ['node' => $mlmTree, 'position' => 'root'])
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    @else
-                        <p class="text-center">{{ __('No MLM Data Found') }}</p>
-                    @endif
+        <!-- MLM Tree Section -->
+        @if (isset($mlmTree) && $mlmTree)
+            <div class="mlm-tree box-shadow1">
+                <h4 class="dis-title text-center">{{ __('Genology') }}</h4>
+                <div class="tree">
+                    <ul>
+                        <li>
+                            @include('frontend.user.genology.partials.tree-node', ['node' => $mlmTree, 'position' => 'root'])
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </div>
+        @else
+            <p class="text-center">{{ __('No MLM Data Found') }}</p>
+        @endif
     </div>
 @endsection
 
@@ -42,11 +36,7 @@
             width: 100%;
             margin: 0;
             padding: 0;
-        }
-
-        .container-fluid {
-            max-width: 100%;
-            padding: 0;
+            overflow-x: auto; /* Allow horizontal scrolling if needed */
         }
 
         .mlm-tree {
@@ -69,13 +59,13 @@
             position: relative;
             display: flex;
             justify-content: center;
-            flex-wrap: wrap;
         }
 
         .tree li {
+            width: 100%;
             list-style-type: none;
             margin: 0;
-            padding: 20px 5px 0 5px;
+            padding: 0px 5px 0 5px;
             position: relative;
             text-align: center;
         }

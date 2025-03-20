@@ -209,6 +209,8 @@ class BuyMembershipIPNController extends Controller
     private function update_database($last_membership_id, $transaction_id, $membership_history_id, $upgrade_membership_id)
     {
         try {
+
+
             $last_membership_id = (int) $last_membership_id;
             $membership_history_id = (int) $membership_history_id;
 
@@ -242,10 +244,17 @@ class BuyMembershipIPNController extends Controller
                     'transaction_id' => $transaction_id,
                 ]);
 
+            Log::info('data to user:', [
+                'last_membership_id' => $last_membership_id,
+                'membership_history_id' => $membership_history_id,
+                "upgrade_membership_id" => $upgrade_membership_id
+            ]);
+
+
             if ($membership_history && $check_user_current_membership) {
                 $expire_date = Carbon::now()->addDays(
                     Carbon::parse($membership_details->expire_date)->diffInDays(Carbon::now()) +
-                    Carbon::parse($membership_history->expire_date)->diffInDays(Carbon::now())
+                        Carbon::parse($membership_history->expire_date)->diffInDays(Carbon::now())
                 );
 
                 UserMembership::where('id', $last_membership_id)
@@ -286,52 +295,95 @@ class BuyMembershipIPNController extends Controller
             Log::error('Failed to update membership: ' . $e->getMessage());
         }
     }
-    
-    private function distributeBVPoints($user, $bvPoints, $upgradeMembershipId, $originalUserId)
+
+    // private function distributeBVPoints($user, $bvPoints, $upgradeMembershipId, $originalUserId)
+    // {
+    //     if (!$user) {
+    //         return;
+    //     }
+    //     Log::info('Distributed BV points to user:', [
+    //         'user_id' => $user->id,
+    //         'bv_points' => $bvPoints,
+    //         'left' => $user->left_parent_id,
+    //         'right' => $user->right_parent_id,
+    //     ]);
+
+
+    //     // Skip the original user (sameeksha) to avoid duplicate entries
+    //     if ($user->id === $originalUserId) {
+    //         // Recursively distribute BV points to the left and right parents
+    //         if ($user->left_parent_id) {
+    //             $leftParentUser = User::find($user->left_parent_id);
+    //             $this->distributeBVPoints($leftParentUser, $bvPoints, $upgradeMembershipId, $originalUserId);
+    //         }
+    //         if ($user->right_parent_id) {
+    //             $rightParentUser = User::find($user->right_parent_id);
+    //             $this->distributeBVPoints($rightParentUser, $bvPoints, $upgradeMembershipId, $originalUserId);
+    //         }
+    //         return;
+    //     }
+
+    //     // Update the current user's BV points in the Users table
+    //     $user->bv_points += $bvPoints;
+    //     $user->save();
+
+    //     // Create a new entry in the user_bvs table for the distributed BV points
+    //     UsersBV::create([
+    //         'user_id' => $user->id,
+    //         'membership_id' => $upgradeMembershipId, // The upgraded membership ID
+    //         'bv_points' => $bvPoints, // The distributed BV points
+    //         'upgrade_time' => Carbon::now(), // Timestamp of distribution
+    //     ]);
+
+    //     Log::info('Distributed BV points to user:', [
+    //         'user_id' => $user->id,
+    //         'bv_points' => $bvPoints,
+    //         'left' => $user->left_parent_id,
+    //         'right' => $user->right_parent_id,
+    //     ]);
+
+    //     // Recursively distribute BV points to the left and right parents
+    //     if ($user->left_parent_id) {
+    //         $leftParentUser = User::find($user->left_parent_id);
+    //         $this->distributeBVPoints($leftParentUser, $bvPoints, $upgradeMembershipId, $originalUserId);
+    //     }
+    //     if ($user->right_parent_id) {
+    //         $rightParentUser = User::find($user->right_parent_id);
+    //         $this->distributeBVPoints($rightParentUser, $bvPoints, $upgradeMembershipId, $originalUserId);
+    //     }
+    // }
+
+    private function distributeBVPoints($user, $bvPoints, $upgradeMembershipId)
     {
-        if (!$user) {
+        // If there's no user or no parent, stop the recursion.
+        if (!$user || !$user->parent_id) {
             return;
         }
 
-        // Skip the original user (sameeksha) to avoid duplicate entries
-        if ($user->id === $originalUserId) {
-            // Recursively distribute BV points to the left and right parents
-            if ($user->left_parent_id) {
-                $leftParentUser = User::find($user->left_parent_id);
-                $this->distributeBVPoints($leftParentUser, $bvPoints, $upgradeMembershipId, $originalUserId);
-            }
-            if ($user->right_parent_id) {
-                $rightParentUser = User::find($user->right_parent_id);
-                $this->distributeBVPoints($rightParentUser, $bvPoints, $upgradeMembershipId, $originalUserId);
-            }
+        // Get the immediate parent of the current user.
+        $parent = User::find($user->parent_id);
+        if (!$parent) {
             return;
         }
 
-        // Update the current user's BV points in the Users table
-        $user->bv_points += $bvPoints;
-        $user->save();
+        // Update the parent's BV points.
+        $parent->bv_points += $bvPoints;
+        $parent->save();
 
-        // Create a new entry in the user_bvs table for the distributed BV points
+        // Record the BV distribution in the UsersBV table.
         UsersBV::create([
-            'user_id' => $user->id,
-            'membership_id' => $upgradeMembershipId, // The upgraded membership ID
-            'bv_points' => $bvPoints, // The distributed BV points
-            'upgrade_time' => Carbon::now(), // Timestamp of distribution
+            'user_id'       => $parent->id,
+            'membership_id' => $upgradeMembershipId,
+            'bv_points'     => $bvPoints,
+            'upgrade_time'  => Carbon::now(),
         ]);
 
-        Log::info('Distributed BV points to user:', [
-            'user_id' => $user->id,
+        Log::info('Distributed BV points to parent user:', [
+            'user_id'   => $parent->id,
             'bv_points' => $bvPoints,
         ]);
 
-        // Recursively distribute BV points to the left and right parents
-        if ($user->left_parent_id) {
-            $leftParentUser = User::find($user->left_parent_id);
-            $this->distributeBVPoints($leftParentUser, $bvPoints, $upgradeMembershipId, $originalUserId);
-        }
-        if ($user->right_parent_id) {
-            $rightParentUser = User::find($user->right_parent_id);
-            $this->distributeBVPoints($rightParentUser, $bvPoints, $upgradeMembershipId, $originalUserId);
-        }
+        // Recursively distribute BV points upward through the parent's chain.
+        $this->distributeBVPoints($parent, $bvPoints, $upgradeMembershipId);
     }
 }

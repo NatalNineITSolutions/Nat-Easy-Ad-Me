@@ -161,21 +161,176 @@ class RegisterController extends Controller
         ]);
     }
 
+    // public function userRegister(Request $request)
+    // {
+    //     if ($request->isMethod('POST')) {
+    //         Log::info('User registration request received.', ['request_data' => $request->all()]);
+
+    //         $validationRules = [
+    //             'first_name' => 'required|max:191',
+    //             'last_name' => 'required|max:191',
+    //             'email' => 'required|email|unique:users|max:191',
+    //             'username' => 'required|unique:users|max:191',
+    //             'phone' => 'required|max:191',
+    //             'country_code' => 'nullable|max:10',
+    //             'password' => 'required|min:6|max:191',
+    //             'confirm_password' => 'required|same:password',
+    //             'partner_id' => 'nullable|exists:users,partner_id',
+    //         ];
+
+    //         if (get_static_option('site_google_captcha_enable') == 'on') {
+    //             $validationRules['g-recaptcha-response'] = 'nullable';
+    //         }
+
+    //         $request->validate($validationRules);
+
+    //         try {
+    //             $email_verify_token = sprintf("%d", random_int(123456, 999999));
+
+    //             $phone_number = Str::replace(['-', '(', ')', ' '], '', $request->phone);
+    //             $country_code = '+' . ltrim($request->country_code, '+');
+    //             $full_phone_number = $country_code . ' - ' . $phone_number;
+
+    //             if (!empty($full_phone_number) && User::where('phone', $full_phone_number)->exists()) {
+    //                 Log::warning('Phone number already taken.', ['phone' => $full_phone_number]);
+    //                 return redirect()->back()->withErrors(['phone' => __('Phone number is already taken')]);
+    //             }
+
+    //             do {
+    //                 $partnerId = 'EAM' . Str::upper(Str::random(6));
+    //             } while (User::where('partner_id', $partnerId)->exists());
+
+    //             $partnerName = 'EASYADME-' . strtoupper($request->first_name);
+
+    //             $parent_id = null;
+    //             if ($request->partner_id) {
+    //                 $partner = User::where('partner_id', $request->partner_id)->first();
+    //                 if ($partner) {
+    //                     // Check if the partner already has two children
+    //                     if ($partner->children->count() < 2) {
+    //                         $parent_id = $partner->id;
+    //                     } else {
+    //                         // If the partner already has two children, place the new user under one of the children
+    //                         $parent_id = $partner->children->first()->id;
+    //                     }
+    //                     Log::info('Referred by existing user.', ['referrer_id' => $parent_id]);
+    //                 }
+    //             }
+
+    //             $default_membership = Membership::find(1);
+    //             $membership_id = $default_membership ? $default_membership->id : 1;
+    //             $bv_points = $default_membership ? $default_membership->bv_points : 0;
+
+    //             // Create the user
+    //             $user = new User([
+    //                 'first_name' => $request->first_name,
+    //                 'last_name' => $request->last_name,
+    //                 'email' => $request->email,
+    //                 'username' => $request->username,
+    //                 'phone' => $full_phone_number,
+    //                 'password' => Hash::make($request->password),
+    //                 'terms_conditions' => 1,
+    //                 'email_verify_token' => $email_verify_token,
+    //                 'partner_id' => $partnerId,
+    //                 'partner_name' => $partnerName,
+    //                 'parent_id' => $parent_id,
+    //             ]);
+
+    //             // Save the user within the nested set structure
+    //             if ($parent_id) {
+    //                 $parent = User::find($parent_id);
+    //                 $parent->appendNode($user); // Append the new user as a child of the parent
+    //             } else {
+    //                 $user->saveAsRoot(); // Save the user as a root node
+    //             }
+
+    //             Log::info('User created successfully.', ['user_id' => $user->id]);
+
+    //             // Assign BV points
+    //             UsersBv::create([
+    //                 'user_id' => $user->id,
+    //                 'membership_id' => $membership_id,
+    //                 'bv_points' => $bv_points,
+    //                 'upgrade_time' => now(),
+    //             ]);
+
+    //             Log::info('User BV points recorded.', [
+    //                 'user_id' => $user->id,
+    //                 'membership_id' => $membership_id,
+    //                 'bv_points' => $bv_points
+    //             ]);
+
+    //             // Update referrer's BV points
+    //             if ($parent_id) {
+    //                 $referrer = User::find($parent_id);
+    //                 if ($referrer) {
+    //                     $referrer->bv_points += $bv_points;
+    //                     $referrer->save();
+
+    //                     Log::info('Referrer BV points updated.', [
+    //                         'referrer_id' => $referrer->id,
+    //                         'new_bv_points' => $referrer->bv_points
+    //                     ]);
+    //                 }
+    //             }
+
+    //             // Create wallet if the Wallet module exists
+    //             if (moduleExists("Wallet")) {
+    //                 Wallet::create([
+    //                     'user_id' => $user->id,
+    //                     'balance' => 0,
+    //                     'remaining_balance' => 0,
+    //                     'withdraw_amount' => 0,
+    //                     'status' => 1,
+    //                 ]);
+    //             }
+
+    //             // Send OTP email if email verification is enabled
+    //             if (!empty(get_static_option('user_email_verify_enable_disable'))) {
+    //                 try {
+    //                     Mail::to($user->email)->send(new BasicMail([
+    //                         'subject' => __('Otp Email'),
+    //                         'message' => __('Your OTP code is: ') . $email_verify_token,
+    //                     ]));
+    //                 } catch (\Exception $e) {
+    //                     Log::error('Failed to send OTP email.', ['error' => $e->getMessage()]);
+    //                 }
+    //             }
+
+    //             // Dispatch job to send registration email
+    //             if ($user) {
+    //                 dispatch(new SendRegisterUserEmailJob($user, $request->password));
+    //             }
+
+    //             // Log in the user
+    //             if (Auth::guard('web')->attempt(['username' => $request->username, 'password' => $request->password])) {
+    //                 return redirect()->route('user.dashboard');
+    //             }
+
+    //         } catch (\Exception $e) {
+    //             Log::error('Error during user registration.', ['error' => $e->getMessage()]);
+    //             return redirect()->back()->withErrors(['error' => __('An error occurred during registration. Please try again.')]);
+    //         }
+    //     }
+
+    //     return view('frontend.user.user-register');
+    // }
+
     public function userRegister(Request $request)
     {
         if ($request->isMethod('POST')) {
             Log::info('User registration request received.', ['request_data' => $request->all()]);
 
             $validationRules = [
-                'first_name' => 'required|max:191',
-                'last_name' => 'required|max:191',
-                'email' => 'required|email|unique:users|max:191',
-                'username' => 'required|unique:users|max:191',
-                'phone' => 'required|max:191',
-                'country_code' => 'nullable|max:10',
-                'password' => 'required|min:6|max:191',
+                'first_name'      => 'required|max:191',
+                'last_name'       => 'required|max:191',
+                'email'           => 'required|email|unique:users|max:191',
+                'username'        => 'required|unique:users|max:191',
+                'phone'           => 'required|max:191',
+                'country_code'    => 'nullable|max:10',
+                'password'        => 'required|min:6|max:191',
                 'confirm_password' => 'required|same:password',
-                'partner_id' => 'nullable|exists:users,partner_id',
+                'partner_id'      => 'nullable|exists:users,partner_id',
             ];
 
             if (get_static_option('site_google_captcha_enable') == 'on') {
@@ -196,6 +351,7 @@ class RegisterController extends Controller
                     return redirect()->back()->withErrors(['phone' => __('Phone number is already taken')]);
                 }
 
+                // Generate a unique partner ID
                 do {
                     $partnerId = 'EAM' . Str::upper(Str::random(6));
                 } while (User::where('partner_id', $partnerId)->exists());
@@ -203,11 +359,46 @@ class RegisterController extends Controller
                 $partnerName = 'EASYADME-' . strtoupper($request->first_name);
 
                 $parent_id = null;
+                $position = null; // 'left' or 'right'
+
                 if ($request->partner_id) {
                     $partner = User::where('partner_id', $request->partner_id)->first();
                     if ($partner) {
-                        $parent_id = $partner->id;
-                        Log::info('Referred by existing user.', ['referrer_id' => $parent_id]);
+                        // Check direct children count on the partner with respect to binary slots:
+                        // First, try to fill left slot
+                        if (!$partner->children()->where('position', 'left')->exists()) {
+                            $parent_id = $partner->id;
+                            $position = 'left';
+                        }
+                        // Then try right slot
+                        elseif (!$partner->children()->where('position', 'right')->exists()) {
+                            $parent_id = $partner->id;
+                            $position = 'right';
+                        } else {
+                            // Both direct slots are full.
+                            // Now assign spillover: search among partner's children for an available slot.
+                            $placed = false;
+                            foreach ($partner->children as $child) {
+                                if (!$child->children()->where('position', 'left')->exists()) {
+                                    $parent_id = $child->id;
+                                    $position = 'left';
+                                    $placed = true;
+                                    break;
+                                } elseif (!$child->children()->where('position', 'right')->exists()) {
+                                    $parent_id = $child->id;
+                                    $position = 'right';
+                                    $placed = true;
+                                    break;
+                                }
+                            }
+                            // Fallback if none found: use the first child of the partner and set a default position
+                            if (!$placed) {
+                                $firstChild = $partner->children->first();
+                                $parent_id = $firstChild->id;
+                                $position = 'left';
+                            }
+                        }
+                        Log::info('Referred by existing user.', ['referrer_id' => $parent_id, 'position' => $position]);
                     }
                 }
 
@@ -215,35 +406,46 @@ class RegisterController extends Controller
                 $membership_id = $default_membership ? $default_membership->id : 1;
                 $bv_points = $default_membership ? $default_membership->bv_points : 0;
 
-                $user = User::create([
-                    'first_name' => $request->first_name,
-                    'last_name' => $request->last_name,
-                    'email' => $request->email,
-                    'username' => $request->username,
-                    'phone' => $full_phone_number,
-                    'password' => Hash::make($request->password),
+                $user = new User([
+                    'first_name'      => $request->first_name,
+                    'last_name'       => $request->last_name,
+                    'email'           => $request->email,
+                    'username'        => $request->username,
+                    'phone'           => $full_phone_number,
+                    'password'        => Hash::make($request->password),
                     'terms_conditions' => 1,
                     'email_verify_token' => $email_verify_token,
-                    'partner_id' => $partnerId,
-                    'partner_name' => $partnerName,
-                    'parent_id' => $parent_id,
+                    'partner_id'      => $partnerId,
+                    'partner_name'    => $partnerName,
+                    'parent_id'       => $parent_id,
+                    'position'        => $position,
                 ]);
+
+                // Save the user within the nested set structure
+                if ($parent_id) {
+                    $parent = User::find($parent_id);
+                    // appendNode() is assumed to be part of a nested set implementation
+                    $parent->appendNode($user);
+                } else {
+                    $user->saveAsRoot(); // Save the user as a root node if no sponsor exists
+                }
 
                 Log::info('User created successfully.', ['user_id' => $user->id]);
 
                 UsersBv::create([
-                    'user_id' => $user->id,
+                    'user_id'       => $user->id,
                     'membership_id' => $membership_id,
-                    'bv_points' => $bv_points,
-                    'upgrade_time' => now(),
+                    'bv_points'     => $bv_points,
+                    'upgrade_time'  => now(),
                 ]);
 
                 Log::info('User BV points recorded.', [
-                    'user_id' => $user->id,
+                    'user_id'       => $user->id,
                     'membership_id' => $membership_id,
-                    'bv_points' => $bv_points
+                    'bv_points'     => $bv_points
                 ]);
 
+                // Update the referrer's BV points (if any)
                 if ($parent_id) {
                     $referrer = User::find($parent_id);
                     if ($referrer) {
@@ -251,7 +453,7 @@ class RegisterController extends Controller
                         $referrer->save();
 
                         Log::info('Referrer BV points updated.', [
-                            'referrer_id' => $referrer->id,
+                            'referrer_id'   => $referrer->id,
                             'new_bv_points' => $referrer->bv_points
                         ]);
                     }
@@ -259,14 +461,15 @@ class RegisterController extends Controller
 
                 if (moduleExists("Wallet")) {
                     Wallet::create([
-                        'user_id' => $user->id,
-                        'balance' => 0,
+                        'user_id'           => $user->id,
+                        'balance'           => 0,
                         'remaining_balance' => 0,
-                        'withdraw_amount' => 0,
-                        'status' => 1,
+                        'withdraw_amount'   => 0,
+                        'status'            => 1,
                     ]);
                 }
 
+                // Send OTP email if email verification is enabled
                 if (!empty(get_static_option('user_email_verify_enable_disable'))) {
                     try {
                         Mail::to($user->email)->send(new BasicMail([
@@ -282,10 +485,10 @@ class RegisterController extends Controller
                     dispatch(new SendRegisterUserEmailJob($user, $request->password));
                 }
 
+                // Log in the user
                 if (Auth::guard('web')->attempt(['username' => $request->username, 'password' => $request->password])) {
                     return redirect()->route('user.dashboard');
                 }
-
             } catch (\Exception $e) {
                 Log::error('Error during user registration.', ['error' => $e->getMessage()]);
                 return redirect()->back()->withErrors(['error' => __('An error occurred during registration. Please try again.')]);
@@ -399,5 +602,4 @@ class RegisterController extends Controller
 
         return response()->json(['message' => 'User added successfully!', 'user' => $child]);
     }
-
 }

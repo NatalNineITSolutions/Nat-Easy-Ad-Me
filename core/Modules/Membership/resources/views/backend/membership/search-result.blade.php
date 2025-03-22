@@ -12,6 +12,8 @@
         <th>{{__('Type')}}</th>
         <th>{{__('Title')}}</th>
         <th>{{__('Price')}}</th>
+        <th>{{__('BV Points')}}</th>
+        <th>{{__('Profile Limit')}}</th>
         <th>{{__('Listings Limit')}}</th>
         <th>{{__('Images Limit')}}</th>
         <th>{{__('Featured listing Limit')}}</th>
@@ -32,9 +34,11 @@
             <td>{{ $subs->membership_type?->type }}</td>
             <td>{{ $subs->title }}</td>
             <td>{{ float_amount_with_currency_symbol($subs->price) }}</td>
-            <td>{{ $subs->listing_limit  }}</td>
-            <td>{{ $subs->gallery_images  }}</td>
-            <td>{{ $subs->featured_listing  }}</td>
+            <td>{{ $subs->bv_points }}</td>
+            <td>{{ $subs->profile_limit }}</td> 
+            <td>{{ $subs->listing_limit }}</td>
+            <td>{{ $subs->gallery_images }}</td>
+            <td>{{ $subs->featured_listing }}</td>
             <td>{{ $subs->enquiry_form == 1 ? __('Allowed') : __('Not Allowed') }}</td>
             <td>{{ $subs->business_hour == 1 ? __('Allowed') : __('Not Allowed') }}</td>
             <td>{{ $subs->membership_badge == 1 ? __('Allowed') : __('Not Allowed') }}</td>

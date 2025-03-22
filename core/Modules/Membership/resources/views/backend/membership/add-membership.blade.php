@@ -66,14 +66,23 @@
                         :id="'price'" :value="old('price', '')" :placeholder="__('Enter price')" />
                     <x-form.text :title="__('Business Value (BV)')" :required="'required'" :type="__('number')" :name="'bv'"
                         :id="'bv'" :value="old('bv', '')" :placeholder="__('Enter bv')" />
-                    <x-form.text :title="__('Listings Limit')" :required="'required'" :type="__('number')"
-                        :name="'listing_limit'" :id="'listing_limit'" :divClass="'mb-0'" :value="old('listing_limit', '')"
-                        :placeholder="__('Enter listings limit')" />
-                    <x-form.text :title="__('Images Limit')" :required="'required'" :type="__('number')"
-                        :name="'gallery_images'" :id="'gallery_images'" :divClass="'mb-0'" :value="old('gallery_images', '')" :placeholder="__('Enter Gallery Images limit')" />
-                    <x-form.text :title="__('Featured listing Limit')" :required="'required'" :type="__('number')"
-                        :name="'featured_listing'" :id="'featured_listing'" :divClass="'mb-0'"
-                        :value="old('featured_listing', '')" :placeholder="__('Featured listing Limit')" />
+
+                    <div id="listing_fields">
+                        <x-form.text :title="__('Listings Limit')" :required="'required'" :type="__('number')"
+                            :name="'listing_limit'" :id="'listing_limit'" :divClass="'mb-0'" :value="old('listing_limit', '')"
+                            :placeholder="__('Enter listings limit')" />
+                        <x-form.text :title="__('Images Limit')" :required="'required'" :type="__('number')"
+                            :name="'gallery_images'" :id="'gallery_images'" :divClass="'mb-0'" :value="old('gallery_images', '')" :placeholder="__('Enter Gallery Images limit')" />
+                        <x-form.text :title="__('Featured listing Limit')" :required="'required'" :type="__('number')"
+                            :name="'featured_listing'" :id="'featured_listing'" :divClass="'mb-0'"
+                            :value="old('featured_listing', '')" :placeholder="__('Featured listing Limit')" />
+                    </div>
+
+                    <div id="profile_limit_field" style="display: none;">
+                        <x-form.text :title="__('Profile Limit')" :required="'required'" :type="__('number')"
+                            :name="'profile_limit'" :id="'profile_limit'" :divClass="'mb-0'" :value="old('profile_limit', '')"
+                            :placeholder="__('Enter profile limit')" />
+                    </div>
 
                     <div class="form__input__single d-grid">
                         <label
@@ -100,7 +109,6 @@
                             <label></label>
                         </div>
                     </div>
-
 
                     <div class="form__input__single">
                         <div id="features">
@@ -131,4 +139,22 @@
 @section('scripts')
     <x-media.js />
     @include('membership::backend.membership.membership-js')
+    <script>
+        document.getElementById('category').addEventListener('change', function() {
+            var category = this.value;
+            var listingFields = document.getElementById('listing_fields');
+            var profileLimitField = document.getElementById('profile_limit_field');
+
+            if (category == 1) { // Matrimony
+                listingFields.style.display = 'none';
+                profileLimitField.style.display = 'block';
+            } else { // Listing
+                listingFields.style.display = 'block';
+                profileLimitField.style.display = 'none';
+            }
+        });
+
+        // Trigger the change event on page load to set the initial state
+        document.getElementById('category').dispatchEvent(new Event('change'));
+    </script>
 @endsection

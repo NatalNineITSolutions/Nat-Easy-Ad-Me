@@ -36,7 +36,7 @@
                 </div>
             @endif
 
-            <button type="submit" class="red-btn">{{ __('Submit Enquiry') }}</button>
+            <button type="submit" class="red-btn mt-3">{{ __('Submit Enquiry') }}</button>
         </form>
     </div>
 </div>

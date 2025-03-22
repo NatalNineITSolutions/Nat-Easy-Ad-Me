@@ -26,24 +26,18 @@ class EnquiryFormController extends Controller
             // Handle file upload
             $resumePath = null;
             if ($request->hasFile('resume')) {
-                // Define the custom directory path
                 $customDirectory = 'C:/laragon/www/Nat-Easy-Ad-Me/assets/uploads/media-uploader/resume';
             
-                // Ensure the directory exists, create it if it doesn't
                 if (!file_exists($customDirectory)) {
                     mkdir($customDirectory, 0777, true);
                 }
             
-                // Get the uploaded file
                 $file = $request->file('resume');
             
-                // Generate a unique file name
                 $fileName = time() . '_' . $file->getClientOriginalName();
             
-                // Move the file to the custom directory
                 $file->move($customDirectory, $fileName);
             
-                // Set the resume path for database storage
                 $resumePath = 'assets/uploads/media-uploader/resume/' . $fileName;
             }
 
@@ -55,7 +49,7 @@ class EnquiryFormController extends Controller
                 'email' => $request->email,
                 'phone' => $request->phone,
                 'message' => $request->message,
-                'resume' => $resumePath, // Store the file path in the database
+                'resume' => $resumePath, 
             ]);
     
             if ($submit_form) {

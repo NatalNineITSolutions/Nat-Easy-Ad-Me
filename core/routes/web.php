@@ -18,13 +18,15 @@ use App\Http\Controllers\Auth\LoginController;
 use \App\Http\Controllers\Frontend\User\MediaUploadController;
 use \App\Http\Controllers\Frontend\FrontendListingController;
 use \App\Http\Controllers\Frontend\FrontendUserProfileController;
+use App\Http\Controllers\Frontend\User\MLMController;
+use App\Http\Controllers\Frontend\User\UserController;
 
 require_once __DIR__ . '/admin.php';
 require_once __DIR__ . '/user.php';
 
 
-Route::group(['middleware' => ['globalVariable','setlang']], function () {
-    Route::controller(LoginController::class)->group(function(){
+Route::group(['middleware' => ['globalVariable', 'setlang']], function () {
+    Route::controller(LoginController::class)->group(function () {
         Route::get('/admin', 'showLoginForm')->name('admin.login');
         Route::post('/admin',  'adminLogin');
         Route::get('/admin/forget-password', 'showAdminForgetPasswordForm')->name('admin.forget.password');
@@ -34,9 +36,9 @@ Route::group(['middleware' => ['globalVariable','setlang']], function () {
     });
 });
 
-Route::group(['middleware' => ['globalVariable', 'maintains_mode','setlang']], function () {
+Route::group(['middleware' => ['globalVariable', 'maintains_mode', 'setlang']], function () {
     // user login
-    Route::controller(LoginController::class)->group(function(){
+    Route::controller(LoginController::class)->group(function () {
         Route::match(['get', 'post'], 'login', 'userLogin')->name('user.login');
         Route::match(['get', 'post'], 'forget-password', 'forgetPassword')->name('user.forgot.password');
         Route::match(['get', 'post'], 'password-reset-otp', 'passwordResetOtp')->name('user.forgot.password.otp');
@@ -44,37 +46,40 @@ Route::group(['middleware' => ['globalVariable', 'maintains_mode','setlang']], f
     });
 
     // user social login
-    Route::controller(SocialLoginController::class)->group(function(){
+    Route::controller(SocialLoginController::class)->group(function () {
         Route::get('facebook/callback', 'facebook_callback')->name('facebook.callback');
         Route::get('facebook/redirect', 'facebook_redirect')->name('login.facebook.redirect');
         Route::get('google/callback', 'google_callback')->name('google.callback');
         Route::get('google/redirect', 'google_redirect')->name('login.google.redirect');
     });
 
-   // user registration
-    Route::controller(RegisterController::class)->group(function(){
-        Route::post('user-name-availability','userNameAvailability')->name('user.name.availability');
-        Route::post('email-availability','emailAvailability')->name('user.email.availability');
-        Route::post('phone-number-availability','phoneNumberAvailability')->name('user.phone.number.availability');
-        Route::match(['get','post'],'user-register','userRegister')->name('user.register');
+    // user registration
+    Route::controller(RegisterController::class)->group(function () {
+        Route::post('user-name-availability', 'userNameAvailability')->name('user.name.availability');
+        Route::post('email-availability', 'emailAvailability')->name('user.email.availability');
+        Route::post('phone-number-availability', 'phoneNumberAvailability')->name('user.phone.number.availability');
+        Route::match(['get', 'post'], 'user-register', 'userRegister')->name('user.register');
         Route::match(['get', 'post'], 'email-verify', 'emailVerify')->name('email.verify')->middleware('auth:web');
         Route::get('resend-verify-code-again', 'resendCode')->name('resend.verify.code')->middleware('auth:web');
-        Route::get('partner-data-availability','partnerAvailability')->name('partner.data.availability');
-        Route::post('verify-partner-id','partneridAvailability')->name('verify.partner.id');
+        Route::get('partner-data-availability', 'partnerAvailability')->name('partner.data.availability');
+        Route::post('verify-partner-id', 'partneridAvailability')->name('verify.partner.id');
     });
+
+    Route::match(['get', 'post'], 'mlm/register-member', [MLMController::class, 'registerNewMember'])
+        ->name('mlm.registerNewMember');
 
     Route::group(['middleware' => ['setlang', 'globalVariable']], function () {
         // public routes for user and admin
-        Route::controller(\App\Http\Controllers\Common\AdminUserController::class)->group(function(){
-            Route::post('get-state','get_country_state')->name('au.state.all');
-            Route::post('get-city','get_state_city')->name('au.city.all');
-            Route::post('get-subcategory','get_subcategory')->name('au.subcategory.all');
+        Route::controller(\App\Http\Controllers\Common\AdminUserController::class)->group(function () {
+            Route::post('get-state', 'get_country_state')->name('au.state.all');
+            Route::post('get-city', 'get_state_city')->name('au.city.all');
+            Route::post('get-subcategory', 'get_subcategory')->name('au.subcategory.all');
         });
 
         Route::post('/add-new-tag',  [NewTagAddController::class, 'addNewTag'])->name('add.new.tag');
         // get category, subcategory, child category for select
-        Route::post('get-subcategory',[GetCategoryController::class, 'get_sub_category'])->name('get.subcategory');
-        Route::post('get-child-category',[GetCategoryController::class, 'get_child_category'])->name('get.subcategory.with.child.category');
+        Route::post('get-subcategory', [GetCategoryController::class, 'get_sub_category'])->name('get.subcategory');
+        Route::post('get-child-category', [GetCategoryController::class, 'get_child_category'])->name('get.subcategory.with.child.category');
     });
 
 
@@ -85,7 +90,7 @@ Route::group(['middleware' => ['globalVariable', 'maintains_mode','setlang']], f
         Route::post('/store-location', [FrontendListingController::class, 'store']);
 
         // category, subcategory & child wise listing
-        Route::controller(CategoryWiseListingController::class)->group(function(){
+        Route::controller(CategoryWiseListingController::class)->group(function () {
             Route::get('category/{slug?}', 'showListingsByCategory')->name('frontend.show.listing.by.category');
             Route::get('sub-category/{slug?}', 'showListingsBySubCategory')->name('frontend.show.listing.by.subcategory');
             Route::get('child-category/{slug?}', 'showListingsByChildCategory')->name('frontend.show.listing.by.child.category');
@@ -101,16 +106,16 @@ Route::group(['middleware' => ['globalVariable', 'maintains_mode','setlang']], f
     Route::post('submit-custom-form', [\App\Http\Controllers\Frontend\FrontendFormController::class, 'custom_form_builder_message'])->name('frontend.form.builder.custom.submit');
 
     //dynamic single page
-    Route::controller(App\Http\Controllers\Frontend\FrontendController::class)->group(function(){
-        Route::get('/','home_page')->name('homepage');
+    Route::controller(App\Http\Controllers\Frontend\FrontendController::class)->group(function () {
+        Route::get('/', 'home_page')->name('homepage');
         Route::get('/{slug}', 'dynamic_single_page')->name('frontend.dynamic.page');
     });
     // listing favorite
-    Route::post('favorite/listing-add-remove',[ListingFavoriteController::class, 'listingFavoriteAddRemove'])->name('listing.favorite.add.remove');
+    Route::post('favorite/listing-add-remove', [ListingFavoriteController::class, 'listingFavoriteAddRemove'])->name('listing.favorite.add.remove');
     // listing report
-    Route::post('listing/report-add',[ListingReportController::class, 'listingReportAdd'])->name('listing.report.add');
+    Route::post('listing/report-add', [ListingReportController::class, 'listingReportAdd'])->name('listing.report.add');
     // user review
-    Route::post('user/review-add',[UserReviewController::class, 'listingReviewAdd'])->name('user.review.add');
+    Route::post('user/review-add', [UserReviewController::class, 'listingReviewAdd'])->name('user.review.add');
 
     // any listing search in frontend page or other page route
     Route::get('/home-search/listings', [FrontendSearchController::class, 'home_search'])->name('frontend.home.search');
@@ -121,34 +126,34 @@ Route::group(['middleware' => ['globalVariable', 'maintains_mode','setlang']], f
 
     // guest listing add without login
     Route::controller(\App\Http\Controllers\Frontend\GuestListingController::class)->group(function () {
-        Route::group(['prefix'=>'listing'],function(){
-            Route::match(['get','post'],'/guest/add-listing','guestAddListing')->name('guest.add.listing');
-            Route::post('/guest/request-check','guestRequestCheck')->name('guest.request.check');
+        Route::group(['prefix' => 'listing'], function () {
+            Route::match(['get', 'post'], '/guest/add-listing', 'guestAddListing')->name('guest.add.listing');
+            Route::post('/guest/request-check', 'guestRequestCheck')->name('guest.request.check');
         });
     });
 
     // advertisement click and impression count route
-    Route::get('/home/advertisement/click/store',[FrontendAdvertisementController::class, 'home_advertisement_click_store'])->name('frontend.home.advertisement.click.store');
-    Route::get('/home/advertisement/impression/store',[FrontendAdvertisementController::class, 'home_advertisement_impression_store'])->name('frontend.home.advertisement.impression.store');
+    Route::get('/home/advertisement/click/store', [FrontendAdvertisementController::class, 'home_advertisement_click_store'])->name('frontend.home.advertisement.click.store');
+    Route::get('/home/advertisement/impression/store', [FrontendAdvertisementController::class, 'home_advertisement_impression_store'])->name('frontend.home.advertisement.impression.store');
 
     // media upload routes for User
-    Route::group(['middleware'=>['auth','inactiveuser']],function(){
-        Route::group(['namespace'=>'User'],function(){
-            Route::post('/media-upload/all',[MediaUploadController::class, 'allUploadMediaFile'])->name('web.upload.media.file.all');
-            Route::post('/media-upload',[MediaUploadController::class, 'uploadMediaFile'])->name('web.upload.media.file');
-            Route::post('/media-upload/alt',[MediaUploadController::class, 'altChangeUploadMediaFile'])->name('web.upload.media.file.alt.change');
-            Route::post('/media-upload/delete',[MediaUploadController::class, 'deleteUploadMediaFile'])->name('web.upload.media.file.delete');
+    Route::group(['middleware' => ['auth', 'inactiveuser']], function () {
+        Route::group(['namespace' => 'User'], function () {
+            Route::post('/media-upload/all', [MediaUploadController::class, 'allUploadMediaFile'])->name('web.upload.media.file.all');
+            Route::post('/media-upload', [MediaUploadController::class, 'uploadMediaFile'])->name('web.upload.media.file');
+            Route::post('/media-upload/alt', [MediaUploadController::class, 'altChangeUploadMediaFile'])->name('web.upload.media.file.alt.change');
+            Route::post('/media-upload/delete', [MediaUploadController::class, 'deleteUploadMediaFile'])->name('web.upload.media.file.delete');
             Route::post('/media-upload/loadmore', [MediaUploadController::class, 'getImageForLoadmore'])->name('web.upload.media.file.loadmore');
         });
     });
 
-  // guest media upload routes for Guest
-    Route::group(['middleware'=>['guest_media_upload_check']],function(){
-        Route::group(['namespace'=>'Guest'],function(){
-            Route::post('/guest/media-upload/all',[GuestMediaUploadController::class, 'allUploadMediaFile'])->name('web.guest.upload.media.file.all');
-            Route::post('/guest/media-upload',[GuestMediaUploadController::class, 'uploadMediaFile'])->name('web.guest.upload.media.file');
-            Route::post('/guest/media-upload/alt',[GuestMediaUploadController::class, 'altChangeUploadMediaFile'])->name('web.guest.upload.media.file.alt.change');
-            Route::post('/guest/media-upload/delete',[GuestMediaUploadController::class, 'deleteUploadMediaFile'])->name('web.guest.upload.media.file.delete');
+    // guest media upload routes for Guest
+    Route::group(['middleware' => ['guest_media_upload_check']], function () {
+        Route::group(['namespace' => 'Guest'], function () {
+            Route::post('/guest/media-upload/all', [GuestMediaUploadController::class, 'allUploadMediaFile'])->name('web.guest.upload.media.file.all');
+            Route::post('/guest/media-upload', [GuestMediaUploadController::class, 'uploadMediaFile'])->name('web.guest.upload.media.file');
+            Route::post('/guest/media-upload/alt', [GuestMediaUploadController::class, 'altChangeUploadMediaFile'])->name('web.guest.upload.media.file.alt.change');
+            Route::post('/guest/media-upload/delete', [GuestMediaUploadController::class, 'deleteUploadMediaFile'])->name('web.guest.upload.media.file.delete');
             Route::post('/guest/media-upload/loadmore', [GuestMediaUploadController::class, 'getImageForLoadmore'])->name('web.guest.upload.media.file.loadmore');
         });
     });

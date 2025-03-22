@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::rename('matrimony_users', 'matrimony_kyc');
+        
     }
 
     /**
@@ -19,6 +19,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::rename('matrimony_kyc', 'matrimony_users');
+        
     }
 };

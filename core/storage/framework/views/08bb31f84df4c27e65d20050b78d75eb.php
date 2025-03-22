@@ -1,2 +1,0 @@
-<button type="submit" class="<?php echo e($class ?? ''); ?>"><?php echo e($title ?? ''); ?></button>
-<?php /**PATH C:\laragon\www\Nat-Easy-Ad-Me\core\resources\views/components/btn/submit-btn.blade.php ENDPATH**/ ?>

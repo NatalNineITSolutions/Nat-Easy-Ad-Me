@@ -17,6 +17,7 @@ use Modules\CountryManage\app\Models\City;
 use Modules\CountryManage\app\Models\Country;
 use Modules\CountryManage\app\Models\State;
 use Modules\Membership\app\Models\UserMembership;
+use App\Models\UsersBV;
 use Modules\Wallet\app\Models\Wallet;
 use Kalnoy\Nestedset\NodeTrait;
 
@@ -61,8 +62,9 @@ class User extends Authenticatable
         'status',
         'user_code',
         'parent_id',
-        'membership_id', 
-        'bv_points'
+        'membership_id',
+        'bv_points',
+        'position',
     ];
 
     /**
@@ -155,28 +157,43 @@ class User extends Authenticatable
 
     public function children()
     {
-        return $this->hasMany(User::class, 'parent_id'); 
+        return $this->hasMany(User::class, 'parent_id');
     }
 
-    public function getMLMTree($userId) {
-    $user = User::with('children')->find($userId);
-
-    if (!$user) {
-        return null;
+    public function userBvs()
+    {
+        return $this->hasMany(UsersBV::class);
     }
 
-    $tree = [
-        'id' => $user->id,
-        'name' => $user->first_name . ' ' . $user->last_name,
-        'partner_id' => $user->partner_id,
-        'children' => [],
-    ];
+    public function getMLMTree($userId)
+    {
+        $user = User::with('children')->find($userId);
 
-    foreach ($user->children as $child) {
-        $tree['children'][] = $this->getMLMTree($child->id);
+        if (!$user) {
+            return null;
+        }
+
+        $tree = [
+            'id' => $user->id,
+            'name' => $user->first_name . ' ' . $user->last_name,
+            'partner_id' => $user->partner_id,
+            'children' => [],
+        ];
+
+        foreach ($user->children as $child) {
+            $tree['children'][] = $this->getMLMTree($child->id);
+        }
+
+        return $tree;
     }
 
-    return $tree;
-}
+    public function leftChild()
+    {
+        return $this->hasOne(User::class, 'parent_id')->where('position', 'left');
+    }
 
+    public function rightChild()
+    {
+        return $this->hasOne(User::class, 'parent_id')->where('position', 'right');
+    }
 }

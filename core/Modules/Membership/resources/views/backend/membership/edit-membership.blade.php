@@ -38,6 +38,14 @@
                 <x-validation.error/>
                 <form action="{{route('admin.membership.edit',$membership_details->id ?? '')}}" method="POST" enctype="multipart/form-data">
                     @csrf
+                    <div class="form__input__single d-grid mt-2">
+                        <label for="category" class="form__input__single__label">{{ __('Category') }}<span
+                        class="text-danger">*</span></label>
+                        <select name="category" id="category" class="form-control">
+                            <option value="0" {{ old('category', isset($membership) ? $membership->category : 0) == 0 ? 'selected' : '' }}>Listing</option>
+                            <option value="1" {{ old('category', isset($membership) ? $membership->category : 0) == 1 ? 'selected' : '' }}>Matrimony</option>
+                        </select>
+                    </div>
                     <div class="form__input__single">
                         <label class="form__input__single__label">{{ __('membership Type') }}</label>
                         <select name="type" id="type" class="form-control">
@@ -107,4 +115,23 @@
 @section('scripts')
     <x-media.js />
     @include('membership::backend.membership.membership-js')
+
+    <script>
+        document.getElementById('category').addEventListener('change', function() {
+            var category = this.value;
+            var listingFields = document.getElementById('listing_fields');
+            var profileLimitField = document.getElementById('profile_limit_field');
+
+            if (category == 1) { // Matrimony
+                listingFields.style.display = 'none';
+                profileLimitField.style.display = 'block';
+            } else { // Listing
+                listingFields.style.display = 'block';
+                profileLimitField.style.display = 'none';
+            }
+        });
+
+        // Trigger the change event on page load to set the initial state
+        document.getElementById('category').dispatchEvent(new Event('change'));
+    </script>
 @endsection

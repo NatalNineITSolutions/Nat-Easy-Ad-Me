@@ -23,6 +23,30 @@ class UserController extends Controller
         return view('frontend.user.profile.profile-settings');
     }
 
+    public function addUser(Request $request)
+    {
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+            'partner_id' => 'required|string|max:255',
+        ]);
+
+        $user = new User();
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->partner_id = $request->partner_id;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User added successfully',
+        ]);
+    }
+
     //edit profile info
     public function edit_profile(Request $request)
     {

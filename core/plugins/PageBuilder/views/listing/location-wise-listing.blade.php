@@ -28,7 +28,8 @@
 
         <div class="slider-inner-margin">
             <!-- Single -->
-            <x-listings.listing-single-list-view :listings="$listings"/>
+            <x-listings.listing-single-list-view :listings="$listings->reject(function($listing) { return $listing->category_id == 54; })"/>
+
         </div>
     </div>
 </section>

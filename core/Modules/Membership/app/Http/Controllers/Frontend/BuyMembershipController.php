@@ -21,6 +21,7 @@ use Modules\Membership\app\Models\UserMembership;
 use Modules\Wallet\app\Models\Wallet;
 use Modules\Membership\app\Http\Services\MembershipService;
 use App\Models\UsersBV;
+use App\Models\User;
 
 class BuyMembershipController extends Controller
 {
@@ -503,7 +504,7 @@ class BuyMembershipController extends Controller
                                 session()->put('membership_history_id', $new_membership_history->id);
                             }
 
-                            
+
                         }
                     }
 

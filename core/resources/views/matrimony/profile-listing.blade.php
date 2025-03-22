@@ -1,6 +1,5 @@
-@extends('matrimony.layouts.app') 
+@extends('matrimony.layouts.app')
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
 @section('style')
     <style>
@@ -160,113 +159,133 @@
 @endsection
 
 @section('content')
+    <div>
+        @include('matrimony.partials.banner')
+    </div>
+    <div class="profile-container">
+        <div class="container ">
+            <div class="row gx-3">
+                @include('matrimony.partials.sidebar') <!-- Include the sidebar -->
 
-<div>
-    @include('matrimony.partials.banner')
-</div>
-<div class="profile-container">
-    <div class="container ">
-        <div class="row gx-3">
-            @include('matrimony.partials.sidebar') <!-- Include the sidebar -->
-    
-            <main class="col-md-8 col-lg-9 px-md-4">
-                <div class="main">
-                    <h3>Let's showcase the groom's or bride's details</h3>
+                <main class="col-md-8 col-lg-9 px-md-4">
+                    <div class="main">
+                        <h3>Let's showcase the groom's or bride's details</h3>
 
-                    <form id="profileForm" aria-label="Profile Listing Form">
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label for="name" class="form-label">Full Name</label>
-                                <input type="text" id="name" name="name" class="form-control" placeholder="Enter Name" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="age" class="form-label">Age</label>
-                                <input type="number" id="age" name="age" class="form-control" placeholder="Enter Age" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="occupation" class="form-label">Occupation</label>
-                                <input type="text" id="occupation" name="occupation" class="form-control" placeholder="Enter Occupation" required>
-                            </div>
-                        </div>
-                    
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label for="income" class="form-label">Annual Income</label>
-                                <input type="number" id="income" name="annual_income" class="form-control" placeholder="Enter Annual Income" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="caste" class="form-label">Caste</label>
-                                <input type="text" id="caste" name="caste" class="form-control" placeholder="Enter Caste" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="motherTongue" class="form-label">Mother Tongue</label>
-                                <input type="text" id="motherTongue" name="motherTongue" class="form-control" placeholder="Enter Mother Tongue" required>
-                            </div>
-                        </div>
-                    
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label for="country" class="form-label">Country</label>
-                                <input type="text" id="country" name="country" class="form-control" required placeholder="Enter Country">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="state" class="form-label">State</label>
-                                <input type="text" id="state" name="state" class="form-control" required placeholder="Enter State">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="city" class="form-label">City</label>
-                                <input type="text" id="city" name="city" class="form-control" required placeholder="Enter City">
-                            </div>
-                        </div>
-                    
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label class="form-label fw-bold">Upload Image</label>
-                                <p class="text-muted">Please upload files in jpg, jpeg, or png format and make sure the file size is under 25 MB.</p>
-                    
-                                <!-- Upload Box -->
-                                <div class="upload-box text-center p-4">
-                                    <div class="upload-area">
-                                        <img src="/assets/uploads/matrimony/upload.png" alt="Upload Icon" class="upload-icon">
-                                        <p class="upload-text mb-0">Drop file or Browse</p>
-                                        <p class="text-muted mb-0">Format: jpg, jpeg, png & Max file size: 25 MB</p>
-                                        <input type="file" class="file-input" name="image" id="image" accept="image/jpg, image/jpeg, image/png" style="opacity: 0; position: absolute; z-index: -1;">
-                                    </div>
-                    
-                                    <!-- Buttons -->
-                                    <div class="d-flex justify-content-center mt-3">
-                                        <button type="button" class="upload-btn browse-btn">Browse</button>
-                                        <button type="button" class="upload-btn cancel-button">Cancel</button>
-                                    </div>
+                        <div id="profileForm" aria-label="Profile Listing Form">
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="name" class="form-label">Full Name</label>
+                                    <input type="text" id="name" name="name" class="form-control"
+                                        placeholder="Enter Name" required>
                                 </div>
-                    
-                                <!-- Preview Uploaded Images -->
-                                <div class="uploaded-images mt-3"></div>
+                                <div class="col-md-4">
+                                    <label for="age" class="form-label">Age</label>
+                                    <input type="number" id="age" name="age" class="form-control"
+                                        placeholder="Enter Age" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="occupation" class="form-label">Occupation</label>
+                                    <input type="text" id="occupation" name="occupation" class="form-control"
+                                        placeholder="Enter Occupation" required>
+                                </div>
                             </div>
-                        </div>
-                    
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                <label for="description" class="form-label">Description</label>
-                                <textarea id="description" name="description" class="form-control" placeholder="Enter description"></textarea>
+
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="annual_income" class="form-label">Annual Income</label>
+                                    <input type="number" id="annual_income" name="annual_income" class="form-control"
+                                        placeholder="Enter Annual Income" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="caste" class="form-label">Caste</label>
+                                    <input type="text" id="caste" name="caste" class="form-control"
+                                        placeholder="Enter Caste" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="motherTongue" class="form-label">Mother Tongue</label>
+                                    <input type="text" id="motherTongue" name="motherTongue" class="form-control"
+                                        placeholder="Enter Mother Tongue" required>
+                                </div>
                             </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="country" class="form-label">Country</label>
+                                    <input type="text" id="country" name="country" class="form-control" required
+                                        placeholder="Enter Country">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="state" class="form-label">State</label>
+                                    <input type="text" id="state" name="state" class="form-control" required
+                                        placeholder="Enter State">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="city" class="form-label">City</label>
+                                    <input type="text" id="city" name="city" class="form-control" required
+                                        placeholder="Enter City">
+                                </div>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label fw-bold">Upload Image</label>
+                                    <p class="text-muted">Please upload files in jpg, jpeg, or png format and make sure the
+                                        file size is under 25 MB.</p>
+
+                                    <!-- Upload Box -->
+                                    <div class="upload-box text-center p-4">
+                                        <div class="upload-area">
+                                            <img src="/assets/uploads/matrimony/upload.png" alt="Upload Icon"
+                                                class="upload-icon">
+                                            <p class="upload-text mb-0">Drop file or Browse</p>
+                                            <p class="text-muted mb-0">Format: jpg, jpeg, png & Max file size: 25 MB</p>
+                                            <input type="file" class="file-input" name="image" id="image"
+                                                accept="image/jpg, image/jpeg, image/png"
+                                                style="opacity: 0; position: absolute; z-index: -1;">
+                                        </div>
+
+                                        <!-- Buttons -->
+                                        <div class="d-flex justify-content-center mt-3">
+                                            <button type="button" class="upload-btn browse-btn">Browse</button>
+                                            <button type="button" class="upload-btn cancel-button">Cancel</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Preview Uploaded Images -->
+                                    <div class="uploaded-images mt-3"></div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label for="description" class="form-label">Description</label>
+                                    <textarea id="description" name="description" class="form-control" placeholder="Enter description"></textarea>
+                                </div>
+                            </div>
+
+                            @php
+                                if (Auth::check() && Auth::guard('web')->user()) {
+                                    $modalTarget = '#paymentGatewayModal';
+                                }
+                                $buttonText = __('Sumbit');
+                            @endphp
+                            {{-- <button type="submit" class="btn btn-primary w-100">Submit</button> --}}
+                            <button class="cmn-btn-outline1 choose_membership_plan" data-bs-toggle="modal" data-id=""
+                                data-price="{{ get_static_option('matrimony_price') }}"
+                                data-bs-target="{{ $modalTarget }}">
+                                {{ $buttonText }}
+                            </button>
                         </div>
-                    
-                        <button type="submit" class="btn btn-primary w-100">Submit</button>
-                    </form>
-                </div>
-            </main>
+                    </div>
+                </main>
+            </div>
         </div>
     </div>
-</div>
-
 @endsection
 
+@include('matrimony.partials.gateway-markup')
+
 @section('script')
-
-    <!-- Include Toastr JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
     {{-- Toaster initialization --}}
     <script>
         toastr.options = {
@@ -279,7 +298,7 @@
 
     {{-- Upload Image --}}
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const fileInput = document.getElementById("image");
             const browseBtn = document.querySelector(".browse-btn");
             const uploadArea = document.querySelector(".upload-area");
@@ -291,7 +310,7 @@
             });
 
             // Handle file selection
-            fileInput.addEventListener("change", function () {
+            fileInput.addEventListener("change", function() {
                 const files = fileInput.files;
                 if (files.length > 0) {
                     for (let file of files) {
@@ -303,16 +322,16 @@
             });
 
             // Drag and Drop Upload
-            uploadArea.addEventListener("dragover", function (e) {
+            uploadArea.addEventListener("dragover", function(e) {
                 e.preventDefault();
                 uploadArea.style.border = "2px solid #6B21A8";
             });
 
-            uploadArea.addEventListener("dragleave", function () {
+            uploadArea.addEventListener("dragleave", function() {
                 uploadArea.style.border = "2px dashed #90119B";
             });
 
-            uploadArea.addEventListener("drop", function (e) {
+            uploadArea.addEventListener("drop", function(e) {
                 e.preventDefault();
                 uploadArea.style.border = "2px dashed #90119B";
                 const files = e.dataTransfer.files;
@@ -344,7 +363,7 @@
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
 
-                reader.onload = function (e) {
+                reader.onload = function(e) {
                     const imgContainer = document.createElement("div");
                     imgContainer.classList.add("image-container");
 
@@ -355,7 +374,7 @@
                     const deleteBtn = document.createElement("button");
                     deleteBtn.innerHTML = "&#10006;";
                     deleteBtn.classList.add("delete-image-btn");
-                    deleteBtn.addEventListener("click", function () {
+                    deleteBtn.addEventListener("click", function() {
                         imgContainer.remove();
                     });
 
@@ -368,33 +387,62 @@
     </script>
 
     {{-- Store function --}}
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
+    {{-- <script>
+        document.addEventListener("DOMContentLoaded", function() {
             // Get the form element
             const form = document.getElementById('profileForm');
             if (!form) {
                 console.error("Form element with ID 'profileForm' not found!");
                 return;
             }
-    
+
             // Add submit event listener
-            form.addEventListener('submit', function (event) {
+            form.addEventListener('submit', function(event) {
                 event.preventDefault(); // Prevent default form submission
-    
+
                 // Validation logic
-                const fields = [
-                    { id: 'name', name: "Full Name" },
-                    { id: 'age', name: "Age" },
-                    { id: 'occupation', name: "Occupation" },
-                    { id: 'income', name: "Annual Income" }, // Ensure this matches the form field ID
-                    { id: 'caste', name: "Caste" },
-                    { id: 'motherTongue', name: "Mother Tongue" },
-                    { id: 'country', name: "Country" },
-                    { id: 'state', name: "State" },
-                    { id: 'city', name: "City" },
-                    { id: 'description', name: "Description" }
+                const fields = [{
+                        id: 'name',
+                        name: "Full Name"
+                    },
+                    {
+                        id: 'age',
+                        name: "Age"
+                    },
+                    {
+                        id: 'occupation',
+                        name: "Occupation"
+                    },
+                    {
+                        id: 'income',
+                        name: "Annual Income"
+                    }, // Ensure this matches the form field ID
+                    {
+                        id: 'caste',
+                        name: "Caste"
+                    },
+                    {
+                        id: 'motherTongue',
+                        name: "Mother Tongue"
+                    },
+                    {
+                        id: 'country',
+                        name: "Country"
+                    },
+                    {
+                        id: 'state',
+                        name: "State"
+                    },
+                    {
+                        id: 'city',
+                        name: "City"
+                    },
+                    {
+                        id: 'description',
+                        name: "Description"
+                    }
                 ];
-    
+
                 let missingFields = [];
                 fields.forEach(field => {
                     const input = document.getElementById(field.id);
@@ -402,48 +450,107 @@
                         missingFields.push(field.name);
                     }
                 });
-    
+
                 // Check if an image is uploaded
                 const imageInput = document.getElementById('image');
                 if (!imageInput || !imageInput.files || imageInput.files.length === 0) {
                     missingFields.push('Image');
                 }
-    
+
                 if (missingFields.length > 0) {
                     const errorMessage = `${missingFields.join(', ')} is required.`;
                     toastr.error(errorMessage, 'Validation Error');
                     return false; // Stop further execution if validation fails
                 }
-    
+
                 // AJAX submission logic
                 const formData = new FormData(form);
-    
+
                 fetch("{{ route('matrimony.profilelisting.store') }}", {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.errors) {
-                        console.error('Validation Errors:', data.errors);
-                    }
-                    if (data.success) {
-                        toastr.success(data.message);
-                        form.reset();
-                        document.querySelector(".uploaded-images").innerHTML = "";
-                    } else {
-                        toastr.error('Error: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    toastr.error('An unexpected error occurred.');
-                });
-    
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .getAttribute('content')
+                        },
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.errors) {
+                            console.error('Validation Errors:', data.errors);
+                        }
+                        if (data.success) {
+                            toastr.success(data.message);
+                            form.reset();
+                            document.querySelector(".uploaded-images").innerHTML = "";
+                        } else {
+                            toastr.error('Error: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        toastr.error('An unexpected error occurred.');
+                    });
+
                 return false; // Prevent default behavior
+            });
+        });
+    </script> --}}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const profileForm = document.getElementById('profileForm');
+            const chooseMembershipBtn = document.querySelector('.choose_membership_plan');
+
+            chooseMembershipBtn.addEventListener('click', function() {
+                // Validate required fields from the profile form (this can be expanded as needed)
+                const requiredFields = ['name', 'age', 'occupation', 'annual_income', 'caste',
+                    'motherTongue', 'country', 'state', 'city', 'description'
+                ];
+
+                let missingFields = [];
+                requiredFields.forEach(field => {
+                    const input = document.getElementById(field);
+                    if (!input || !input.value.trim()) {
+                        missingFields.push(field);
+                    }
+                });
+
+
+                // Check if an image is uploaded if required
+                const imageInput = document.getElementById('image');
+                if (!imageInput || !imageInput.files || imageInput.files.length === 0) {
+                    missingFields.push('image');
+                }
+
+                // if (missingFields.length > 0) {
+                //     toastr.error(missingFields.join(', ') + ' is required.', 'Validation Error');
+                //     return false;
+                // }
+
+                // Populate hidden fields in the modal form
+                document.getElementById('modal_name').value = document.getElementById('name').value;
+                document.getElementById('modal_age').value = document.getElementById('age').value;
+                document.getElementById('modal_occupation').value = document.getElementById('occupation')
+                    .value;
+                document.getElementById('modal_annual_income').value = document.getElementById(
+                        'annual_income')
+                    .value;
+                document.getElementById('modal_caste').value = document.getElementById('caste').value;
+                document.getElementById('modal_motherTongue').value = document.getElementById(
+                    'motherTongue').value;
+                document.getElementById('modal_country').value = document.getElementById('country').value;
+                document.getElementById('modal_state').value = document.getElementById('state').value;
+                document.getElementById('modal_city').value = document.getElementById('city').value;
+                document.getElementById('modal_description').value = document.getElementById('description')
+                    .value;
+
+                if (imageInput) {
+                    const modalImageContainer = document.getElementById('modal_image_container');
+                    if (modalImageContainer) {
+                        modalImageContainer.appendChild(imageInput);
+                    }
+                }
             });
         });
     </script>

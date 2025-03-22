@@ -32,15 +32,20 @@
         integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <!-- Include jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- Include Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets/frontend/css/main-style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/frontend/css/dynamic-style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/common/css/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/backend/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/backend/css/animate.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/common/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/backend/css/fontawesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/backend/css/fontawesome-iconpicker.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/backend/css/icon.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/common/css/toastr.min.css') }}">
 
-    <!-- Include Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+    @include('frontend.layout.partials.root-style')
+
     <style>
         * {
             padding: 0;
@@ -357,18 +362,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             // Select elements
             const menuToggle = document.querySelector(".menu-toggle");
             const mobileMenu = document.getElementById("mobileMenu");
 
             // Toggle menu on click
-            menuToggle.addEventListener("click", function () {
+            menuToggle.addEventListener("click", function() {
                 mobileMenu.classList.toggle("show");
             });
 
             // Close menu when clicking outside
-            document.addEventListener("click", function (event) {
+            document.addEventListener("click", function(event) {
                 if (!menuToggle.contains(event.target) && !mobileMenu.contains(event.target)) {
                     mobileMenu.classList.remove("show");
                 }
@@ -376,6 +381,9 @@
         });
     </script>
 
+    <script src="{{ asset('assets/common/js/jquery-3.7.1.min.js') }}"></script>
+
+    <x-payment.payment-gateway-js />
     @yield('script') <!-- Custom scripts section -->
 
 </body>

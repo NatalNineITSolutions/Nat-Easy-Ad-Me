@@ -6,6 +6,7 @@ use App\Helpers\PaymentGatewayCredential;
 use App\Http\Controllers\Controller;
 use App\Mail\BasicMail;
 use App\Models\Backend\AdminNotification;
+use App\Models\ProfileListing;
 use App\Models\User;
 use App\Models\UsersBV;
 use App\Services\BVDistributionService;
@@ -152,6 +153,18 @@ class BuyMembershipIPNController extends Controller
     {
         if (isset($payment_data['status']) && $payment_data['status'] === 'complete') {
             $order_id = $payment_data['order_id'];
+
+            // If payment type is 'matrimony', only update the profile listing record and return.
+            if (session('payment_type') === 'matrimony') {
+                $payment_method = $payment_data['payment_method'] ?? 'unknown';
+                $this->update_profile_listing($order_id, $payment_method);
+                session()->forget('payment_type');
+
+                toastr_success(__('Profile On Review'));
+                return redirect()->route('matrimony.profile-listing');
+            }
+
+            // Otherwise, continue with the regular process.
             $user_id = session()->get('user_id');
             $membership_history_id = session()->get('membership_history_id');
             $upgrade_membership_id = session()->get('upgrade_membership_id');
@@ -164,6 +177,7 @@ class BuyMembershipIPNController extends Controller
 
         return $this->cancel_page();
     }
+
 
     public function paystack_common_ipn_data($data)
     {
@@ -206,6 +220,36 @@ class BuyMembershipIPNController extends Controller
             Log::error('Failed to clear session: ' . $e->getMessage());
         }
     }
+
+    private function update_profile_listing($order_id, $payment_method)
+    {
+        // Update the profile listing record
+        $update = ProfileListing::where('id', $order_id)->update([
+            'paid'           => 1,
+            'payment_method' => $payment_method,
+        ]);
+
+        // Retrieve the updated profile listing record
+        $profileListing = ProfileListing::find($order_id);
+        if (!$profileListing) {
+            return $update;
+        }
+
+        // Create a BV record for the user
+        $usersBv = UsersBV::create([
+            'user_id'     => $profileListing->user_id,
+            'bv_points'   => get_static_option('matrimony_bv_points') ?? 0,
+            'upgrade_time' => \Carbon\Carbon::now(),
+        ]);
+
+        $user = User::find($profileListing->user_id);
+        $bvService = new BVDistributionService();
+
+        $bvService->distributeBVPoints($user, $usersBv->bv_points, null, $profileListing->user_id);
+
+        return $update;
+    }
+
 
     private function update_database($last_membership_id, $transaction_id, $membership_history_id, $upgrade_membership_id)
     {

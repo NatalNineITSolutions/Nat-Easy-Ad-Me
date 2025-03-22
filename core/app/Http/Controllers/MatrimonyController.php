@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\PaymentGatewayCredential;
 use App\Http\Controllers\Controller;
 use App\Models\MatrimonyPreference;
 use Illuminate\Http\Request;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Modules\Membership\app\Models\Membership;
 use App\Models\ProfileListing;
+use Illuminate\Support\Str;
 
 class MatrimonyController extends Controller
 {
@@ -123,7 +125,8 @@ class MatrimonyController extends Controller
         }
     }
 
-    public function preference()  {
+    public function preference()
+    {
         return view('matrimony.preference');
     }
 
@@ -169,55 +172,79 @@ class MatrimonyController extends Controller
         ]);
     }
 
-    public function profile() {
+    public function profile()
+    {
         return view('matrimony.main-profile');
     }
 
-    public function profilelisting() {
+    public function profilelisting()
+    {
         return view('matrimony.profile-listing');
     }
 
     public function storeProfileListing(Request $request)
     {
-        // Validate the request data
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'age' => 'required|integer|min:18',
-            'occupation' => 'required|string|max:255',
-            'annual_income' => 'required|numeric|min:0',
-            'caste' => 'required|string|max:255',
-            'motherTongue' => 'required|string|max:255',
-            'country' => 'required|string|max:255',
-            'state' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:25600', // Max 25MB
-            'description' => 'nullable|string|max:1000',
-        ]);
+        \Log::info('Profile listing request data: ' . json_encode($request->all()));
 
-        // Handle file upload
+        // Handle file upload (if provided)
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('profile_images', 'public');
         }
 
-        // Store data in ProfileListing table
-        ProfileListing::create([
-            'user_id' => Auth::id(), 
-            'name' => $validatedData['name'],
-            'age' => $validatedData['age'],
-            'occupation' => $validatedData['occupation'],
-            'annual_income' => $validatedData['annual_income'],
-            'caste' => $validatedData['caste'],
-            'mother_tongue' => $validatedData['motherTongue'],
-            'country' => $validatedData['country'],
-            'state' => $validatedData['state'],
-            'city' => $validatedData['city'],
-            'image' => $imagePath, // Save image path
-            'description' => $validatedData['description'],
+        $profileListing = ProfileListing::create([
+            'user_id'       => Auth::id(),
+            'name'          => $request->name,
+            'age'           => $request->age,
+            'occupation'    => $request->occupation,
+            'annual_income' => $request->annual_income,
+            'caste'         => $request->caste,
+            'mother_tongue' => $request->motherTongue,
+            'country'       => $request->country,
+            'state'         => $request->state,
+            'city'          => $request->city,
+            'image'         => $imagePath,
+            'description'   => $request->description,
+            'paid'          => 0,       // Not paid yet
+            'payment_method' => null,    // Not selected yet
         ]);
 
-        // Log the response for debugging
-        \Log::info('Profile listing saved successfully for user: ' . Auth::id());
+        session()->put('profile_listing_id', $profileListing->id);
+
+        // Process payment if a payment gateway is selected
+        if ($request->filled('selected_payment_gateway')) {
+            $payment_gateway = $request->selected_payment_gateway;
+            \Log::info('Payment gateway selected: ' . $payment_gateway);
+
+            $credential_function = 'get_' . $payment_gateway . '_credential';
+            \Log::info('Credential function: ' . $credential_function);
+
+            // Check if the payment gateway has a custom credential function
+            if (!method_exists((new PaymentGatewayCredential()), $credential_function)) {
+                \Log::info('Using custom payment logic for user: ' . Auth::id());
+
+                // Prepare custom data for payment processing
+                $custom_data = [];
+                $custom_data['request']         = $request->all();
+                $custom_data['total']           = get_static_option('matrimony_price');
+                $custom_data['payment_type']    = "deposit";
+                $custom_data['payment_for']     = "membership";
+                $custom_data['success_url']     = route('user.membership.all');
+
+                // Get the namespace and method for charging the customer
+                $charge_customer_class_namespace = getChargeCustomerMethodNameByPaymentGatewayNameSpace($payment_gateway);
+                $charge_customer_method_name     = getChargeCustomerMethodNameByPaymentGatewayName($payment_gateway);
+
+                $custom_charge_customer_class_object = new $charge_customer_class_namespace;
+                if (class_exists($charge_customer_class_namespace) && method_exists($custom_charge_customer_class_object, $charge_customer_method_name)) {
+                    return $custom_charge_customer_class_object->$charge_customer_method_name($custom_data);
+                } else {
+                    return back()->with(toastr_error('Incorrect Class or Method'));
+                }
+            } else {
+                return $this->payment_with_gateway($payment_gateway);
+            }
+        }
 
         return response()->json([
             'success' => true,
@@ -225,7 +252,50 @@ class MatrimonyController extends Controller
         ]);
     }
 
-    public function profilelists() {
+    public function payment_with_gateway($payment_gateway_name)
+    {
+        try {
+            $gateway_function = 'get_' . $payment_gateway_name . '_credential';
+            $gateway = PaymentGatewayCredential::$gateway_function();
+
+            $redirect_url = $gateway->charge_customer(
+                $this->common_charge_customer_data($payment_gateway_name)
+            );
+            session()->put('payment_type', "matrimony");
+
+            return $redirect_url;
+        } catch (\Exception $e) {
+            return back()->with(['msg' => $e->getMessage(), 'type' => 'danger']);
+        }
+    }
+
+    public function common_charge_customer_data($payment_gateway_name)
+    {
+        $user = Auth::guard('web')->user();
+        $email = $user->email;
+        $name  = $user->fullname;
+
+        $ipn_route = route('user.' . strtolower($payment_gateway_name) . '.ipn.membership');
+
+        \Log::info('IPN Route, matrimony price: ' . get_static_option('matrimony_price'));
+
+        return [
+            'amount'       => get_static_option('matrimony_price'),
+            'title'        => "Profile Listing",
+            'description'  => "Matrimony",
+            'ipn_url'      => $ipn_route,
+            'order_id'     => session('profile_listing_id'), 
+            'track'        => Str::random(36),
+            'success_url'  => route('user.membership.all'),
+            'email'        => $email,
+            'name'         => $name,
+            'payment_type' => 'deposit',
+        ];
+    }
+
+
+    public function profilelists()
+    {
         $profiles = ProfileListing::select('id', 'name', 'age', 'is_verified')->get();
         return view('matrimony.profile-lists', compact('profiles'));
     }

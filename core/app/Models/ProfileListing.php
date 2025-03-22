@@ -21,7 +21,9 @@ class ProfileListing extends Model
         'state',
         'city',
         'image',
-        'description', 
+        'description',
+        'paid',
+        'payment_method',
     ];
 
     public function user()

@@ -45,7 +45,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 20px;
+            padding: 0px 20px;
             background-color: white;
             border-bottom: 1px solid #ddd;
         }

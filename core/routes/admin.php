@@ -34,6 +34,16 @@ Route::middleware(['setlang'])->group(function () {
             Route::get('/getListingData', [AdminDashboardController::class, 'getListingData'])->name('admin.get.listing.graph.data');
         });
 
+        // Matrimony_manage
+        Route::group(['prefix' => 'matrimony'], function () {
+            Route::controller(\App\Http\Controllers\Backend\MatrimonyManageController::class)->group(function () {
+                Route::get('/profile-listing', 'profile_listing')->name('admin.matrimony.profile.listing')->permission('matrimony-profile-list');
+                Route::post('/profile-listing/store', 'storeProfileSettings')->name('admin.matrimony.profile.listing.store')->permission('matrimony-profile-save');
+                Route::get('/profiles', 'profiles')->name('admin.matrimony.profiles')->permission('matrimony-profiles');
+                Route::post('/profiles/{id}/verify', 'verifyProfile')->name('admin.matrimony.profile.verify')->permission('matrimony-profile-verify');
+            });
+        });
+
         // General Settings
         Route::get('/dark-mode-toggle', 'AdminDashboardController@dark_mode_toggle')->name('admin.dark.mode.toggle');
         Route::get('/settings', [AdminDashboardController::class, 'adminSettings'])->name('admin.profile.settings');
@@ -54,6 +64,8 @@ Route::middleware(['setlang'])->group(function () {
             Route::post('unsuspend/{id}','unsuspend')->name('admin.account.unsuspend');
         });
     });
+
+    
 
     // Listing manage
     Route::group(['prefix' => 'listings'],function(){
@@ -113,7 +125,6 @@ Route::middleware(['setlang'])->group(function () {
             Route::get('report/search', 'search_report')->name('admin.listing.report.search');
         });
     });
-
 
 
     //user manage

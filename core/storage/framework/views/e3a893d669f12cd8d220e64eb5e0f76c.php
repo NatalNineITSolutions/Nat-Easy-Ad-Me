@@ -1,3 +1,6 @@
+<head>
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+</head>
 <body>
 <!-- preloader area start -->
 <?php if(!empty(get_static_option('admin_loader_animation'))): ?>

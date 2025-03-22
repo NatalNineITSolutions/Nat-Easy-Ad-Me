@@ -19,5 +19,12 @@ Route::middleware(['web'])->group(function () {
         // Preference
         Route::get('/preference', [MatrimonyController::class, 'preference'])->name('preference');
         Route::post('/preference', [MatrimonyController::class, 'storePreference'])->name('preference.store');
+
+        // Profile
+        Route::get('/profile', [MatrimonyController::class, 'profile'])->name('profile');
+        Route::get('/profile-listing', [MatrimonyController::class, 'profilelisting'])->name('profile-listing');
+        Route::post('/profile-listing/store', [MatrimonyController::class, 'storeProfileListing'])->name('profilelisting.store');
+
+        Route::get('/profile-lists', [MatrimonyController::class, 'profilelists'])->name('profile-lists');
     });
 });

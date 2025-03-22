@@ -63,17 +63,18 @@
                 <?php endif; ?>
 
                 
-                <li  class="dashboard__bottom__list__item has-children <?php if(request()->is('admin/listings/*')): ?> active open show <?php endif; ?>">
+                
+
+                
+                <li class="dashboard__bottom__list__item has-children <?php if(request()->is('admin/matrimony/*')): ?> active open show <?php endif; ?>">
                     <a href="javascript:void(0)"> <i class="las la-th-list"></i> <?php echo e(__('Matrimony Manage')); ?> </a>
                     <ul class="submenu">
-                        <li class="dashboard__bottom__list__item <?php if(request()->is('admin/listings/user-all-listings')): ?> selected <?php endif; ?>">
-                            <a href="#"> <?php echo e(__('Verified Users')); ?> </a>
+                        <li class="dashboard__bottom__list__item <?php if(request()->is('admin/matrimony/profile-listing')): ?> selected <?php endif; ?>">
+                            <a href="<?php echo e(route('admin.matrimony.profile.listing')); ?>"> <?php echo e(__('Matrimony Listing')); ?> </a>
                         </li>
-
-                        <li class="dashboard__bottom__list__item <?php if(request()->is('admin/listings/user-all-listings')): ?> selected <?php endif; ?>">
-                            <a href="#"> <?php echo e(__('Non-Verified Users')); ?> </a>
+                        <li class="dashboard__bottom__list__item <?php if(request()->is('admin/matrimony/profiles')): ?> selected <?php endif; ?>">
+                            <a href="<?php echo e(route('admin.matrimony.profiles')); ?>"> <?php echo e(__('Matrimony Profiles')); ?> </a>
                         </li>
-                        
                     </ul>
                 </li>
 

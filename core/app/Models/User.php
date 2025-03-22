@@ -190,4 +190,9 @@ class User extends Authenticatable
         return $this->hasOne(MatrimonyPreference::class, 'user_id');
     }
 
+    public function profileListings()
+    {
+        return $this->hasMany(ProfileListing::class);
+    }
+
 }

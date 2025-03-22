@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\MatrimonyKyc;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Modules\Membership\app\Models\Membership;
+use App\Models\ProfileListing;
 
 class MatrimonyController extends Controller
 {
@@ -34,7 +36,9 @@ class MatrimonyController extends Controller
 
     public function price()
     {
-        return view('matrimony.price'); // Ensure this view exists
+        $memberships = Membership::where('category', 1)->get();
+
+        return view('matrimony.price', compact('memberships'));
     }
 
 
@@ -161,8 +165,68 @@ class MatrimonyController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Preferences saved successfully!',
-            'redirect_url' => url('/'), // Redirect to home page
+            'redirect_url' => url('/matrimony'),
         ]);
     }
 
+    public function profile() {
+        return view('matrimony.main-profile');
+    }
+
+    public function profilelisting() {
+        return view('matrimony.profile-listing');
+    }
+
+    public function storeProfileListing(Request $request)
+    {
+        // Validate the request data
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'age' => 'required|integer|min:18',
+            'occupation' => 'required|string|max:255',
+            'annual_income' => 'required|numeric|min:0',
+            'caste' => 'required|string|max:255',
+            'motherTongue' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:25600', // Max 25MB
+            'description' => 'nullable|string|max:1000',
+        ]);
+
+        // Handle file upload
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('profile_images', 'public');
+        }
+
+        // Store data in ProfileListing table
+        ProfileListing::create([
+            'user_id' => Auth::id(), 
+            'name' => $validatedData['name'],
+            'age' => $validatedData['age'],
+            'occupation' => $validatedData['occupation'],
+            'annual_income' => $validatedData['annual_income'],
+            'caste' => $validatedData['caste'],
+            'mother_tongue' => $validatedData['motherTongue'],
+            'country' => $validatedData['country'],
+            'state' => $validatedData['state'],
+            'city' => $validatedData['city'],
+            'image' => $imagePath, // Save image path
+            'description' => $validatedData['description'],
+        ]);
+
+        // Log the response for debugging
+        \Log::info('Profile listing saved successfully for user: ' . Auth::id());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Profile Listing Saved Successfully!',
+        ]);
+    }
+
+    public function profilelists() {
+        $profiles = ProfileListing::select('id', 'name', 'age', 'is_verified')->get();
+        return view('matrimony.profile-lists', compact('profiles'));
+    }
 }

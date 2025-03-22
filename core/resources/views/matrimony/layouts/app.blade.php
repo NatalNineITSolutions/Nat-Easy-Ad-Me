@@ -58,7 +58,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 20px;
+            padding: 0px 20px;
             background-color: white;
             border-bottom: 1px solid #ddd;
         }
@@ -134,6 +134,13 @@
             display: block;
         }
 
+        .profile {
+            text-transform: capitalize;
+            text-decoration: none;
+            font-weight: 600;
+            color: black;
+        }
+
         /* Mobile Menu */
         .mobile-menu {
             display: none;
@@ -167,7 +174,8 @@
 
         .auth-buttons {
             display: flex;
-            gap: 10px;
+            gap: 5px;
+            cursor: pointer;
         }
 
         .auth-buttons .btn {

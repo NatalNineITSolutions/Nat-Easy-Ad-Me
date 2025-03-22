@@ -89,30 +89,39 @@ function formatBytes($size, $precision = 2)
 }
 
 
-function set_static_option($key, $value)
-{
-    if (!StaticOption::where('option_name', $key)->first()) {
-        \App\Models\Backend\StaticOption::create([
-            'option_name' => $key,
-            'option_value' => $value
-        ]);
+    function set_static_option($key, $value)
+    {
+        $option = \App\Models\Backend\StaticOption::where('option_name', $key)->first();
+        
+        if ($option) {
+            // Update existing value
+            $option->update(['option_value' => $value]);
+        } else {
+            // Insert new value if not exists
+            \App\Models\Backend\StaticOption::create([
+                'option_name'  => $key,
+                'option_value' => $value
+            ]);
+        }
+
+        // Clear the cache for this key
+        \Illuminate\Support\Facades\Cache::forget($key);
+
         return true;
     }
-    return false;
-}
-function get_static_option($key,$default = null)
-{
-    $option_name = $key;
-    $value = \Illuminate\Support\Facades\Cache::remember($option_name, 600, function () use($option_name) {
-        try {
-            return App\Models\Backend\StaticOption::where('option_name', $option_name)->first();
-        }catch (\Exception $e){
-            return null;
-        }
-    });
+    function get_static_option($key, $default = null)
+    {
+        $option_name = $key;
+        $value = \Illuminate\Support\Facades\Cache::remember($option_name, 60, function () use($option_name) { // Cache for 60 seconds
+            try {
+                return App\Models\Backend\StaticOption::where('option_name', $option_name)->first();
+            } catch (\Exception $e) {
+                return null;
+            }
+        });
 
-    return $value->option_value ?? $default;
-}
+        return $value->option_value ?? $default;
+    }
 
 function get_default_language()
 {

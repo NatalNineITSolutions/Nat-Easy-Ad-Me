@@ -62,9 +62,11 @@ class User extends Authenticatable
         'status',
         'user_code',
         'parent_id',
-        'membership_id',
         'bv_points',
         'position',
+        'membership_id',
+        'bv_points',
+        'profile_completed'
     ];
 
     /**
@@ -195,5 +197,21 @@ class User extends Authenticatable
     public function rightChild()
     {
         return $this->hasOne(User::class, 'parent_id')->where('position', 'right');
+    }
+
+
+    public function kyc()
+    {
+        return $this->hasOne(MatrimonyKyc::class, 'user_id');
+    }
+
+    public function matrimonyPreference()
+    {
+        return $this->hasOne(MatrimonyPreference::class, 'user_id');
+    }
+
+    public function profileListings()
+    {
+        return $this->hasMany(ProfileListing::class);
     }
 }

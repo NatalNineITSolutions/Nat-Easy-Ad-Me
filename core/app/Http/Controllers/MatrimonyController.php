@@ -3,32 +3,42 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\MatrimonyPreference;
 use Illuminate\Http\Request;
 use App\Models\MatrimonyKyc;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Modules\Membership\app\Models\Membership;
+use App\Models\ProfileListing;
 
 class MatrimonyController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
-        return view('matrimony.index', compact('user'));
+        // Check if user is logged in
+        if (!auth()->check()) {
+            return redirect()->route('user.login')->with('error', 'Please log in or register first to access Matrimony');
+        }
+
+        // Get the authenticated user
+        $user = auth()->user();
+
+        // Check if the profile is completed
+        if ($user->profile_completed == 1) {
+            // If profile is completed, allow access to matrimony.index
+            return view('matrimony.index'); // Replace with your actual view for matrimony.index
+        } else {
+            // If profile is not completed, redirect to matrimony.user-details
+            return redirect()->route('matrimony.user-details')->with('info', 'Please complete your profile to proceed.');
+        }
     }
 
-    public function register()
-    {
-        return view('matrimony.register'); 
-    }
 
     public function price()
     {
-        return view('matrimony.price'); // Ensure this view exists
-    }
+        $memberships = Membership::where('category', 1)->get();
 
-    public function showLoginForm()
-    {
-        return view('matrimony.login'); // Ensure you have a `login.blade.php` file
+        return view('matrimony.price', compact('memberships'));
     }
 
 
@@ -37,11 +47,6 @@ class MatrimonyController extends Controller
         $user = Auth::user();
         return view('matrimony.profile-details');
     }
-
-    public function otp() {
-        return view ('matrimony.otp');
-    }
-
     public function userdetails()
     {
         return view('matrimony.user-details');
@@ -50,6 +55,14 @@ class MatrimonyController extends Controller
     public function storeUserDetails(Request $request)
     {
         try {
+            // Ensure the user is logged in
+            if (!auth()->check()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'User must be logged in to submit details.'
+                ], 401);
+            }
+
             // Log the incoming request data
             \Log::info('Incoming request data:', $request->all());
 
@@ -74,22 +87,16 @@ class MatrimonyController extends Controller
                 'state' => 'required|string',
                 'city' => 'required|string',
                 'about' => 'required|string',
-                'name' => 'nullable|string',
-                'email' => 'nullable|email',
-                'password' => 'nullable|string',
-                'mobile' => 'nullable|string',
             ]);
 
             // Convert marital_status to lowercase (to match ENUM values in DB)
             $validatedData['marital_status'] = strtolower($validatedData['marital_status']);
 
-            // Hash the password before saving
-            if (!empty($validatedData['password'])) {
-                $validatedData['password'] = bcrypt($validatedData['password']);
-            }
+            // Assign the logged-in user's ID
+            $validatedData['user_id'] = auth()->id();
 
             // Log validated data
-            \Log::info('Validated data:', $validatedData);
+            \Log::info('Validated data with user_id:', $validatedData);
 
             // Store Data in MatrimonyKyc table
             $matrimonyKyc = MatrimonyKyc::create($validatedData);
@@ -116,4 +123,110 @@ class MatrimonyController extends Controller
         }
     }
 
+    public function preference()  {
+        return view('matrimony.preference');
+    }
+
+    public function storePreference(Request $request)
+    {
+        // Validate the request data
+        $validatedData = $request->validate([
+            'partner_age' => 'required|integer|min:18|max:100',
+            'mother_tongue' => 'required|string',
+            'religion' => 'required|string',
+            'caste' => 'required|string',
+            'height' => 'required|string',
+            'weight' => 'required|string',
+            'occupation' => 'required|string',
+            'location' => 'required|string',
+            'income' => 'required|string',
+        ]);
+
+        // Get the authenticated user
+        $user = auth()->user();
+
+        // Assign the user_id
+        $validatedData['user_id'] = $user->id;
+
+        // Store data in the MatrimonyPreference table
+        MatrimonyPreference::updateOrCreate(
+            ['user_id' => $user->id], // Ensure only one record per user
+            $validatedData
+        );
+
+        // Check if both forms are completed
+        if ($user->kyc && $user->matrimonyPreference) {
+            $user->update(['profile_completed' => 1]); // Update profile completion status
+        }
+
+        // Log the response for debugging
+        \Log::info('Preferences saved successfully for user: ' . $user->id);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Preferences saved successfully!',
+            'redirect_url' => url('/matrimony'),
+        ]);
+    }
+
+    public function profile() {
+        return view('matrimony.main-profile');
+    }
+
+    public function profilelisting() {
+        return view('matrimony.profile-listing');
+    }
+
+    public function storeProfileListing(Request $request)
+    {
+        // Validate the request data
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'age' => 'required|integer|min:18',
+            'occupation' => 'required|string|max:255',
+            'annual_income' => 'required|numeric|min:0',
+            'caste' => 'required|string|max:255',
+            'motherTongue' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:25600', // Max 25MB
+            'description' => 'nullable|string|max:1000',
+        ]);
+
+        // Handle file upload
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('profile_images', 'public');
+        }
+
+        // Store data in ProfileListing table
+        ProfileListing::create([
+            'user_id' => Auth::id(), 
+            'name' => $validatedData['name'],
+            'age' => $validatedData['age'],
+            'occupation' => $validatedData['occupation'],
+            'annual_income' => $validatedData['annual_income'],
+            'caste' => $validatedData['caste'],
+            'mother_tongue' => $validatedData['motherTongue'],
+            'country' => $validatedData['country'],
+            'state' => $validatedData['state'],
+            'city' => $validatedData['city'],
+            'image' => $imagePath, // Save image path
+            'description' => $validatedData['description'],
+        ]);
+
+        // Log the response for debugging
+        \Log::info('Profile listing saved successfully for user: ' . Auth::id());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Profile Listing Saved Successfully!',
+        ]);
+    }
+
+    public function profilelists() {
+        $profiles = ProfileListing::select('id', 'name', 'age', 'is_verified')->get();
+        return view('matrimony.profile-lists', compact('profiles'));
+    }
 }

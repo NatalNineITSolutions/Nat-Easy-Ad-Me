@@ -17,15 +17,29 @@
         </nav>
 
         <!-- Right Side: Login/Register -->
-        <div class="auth-buttons">
-        
-            @if(isset($user) && $user)
-                <a href="#" class="btn profile">Profile</a>
-            @else
-                <a href="{{ route('matrimony.login') }}" class="btn login">Login</a>
-                <a href="{{ route('matrimony.register') }}" class="btn register">Register</a>
+        <div class="auth-buttons d-flex align-items-center position-relative">
+            @if(auth()->check())
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle d-flex align-items-center border-0 bg-transparent" 
+                            type="button" 
+                            id="authDropdown" 
+                            data-bs-toggle="dropdown" 
+                            aria-expanded="false">
+                        <img src="{{ auth()->user()->profile_image ?? '/assets/uploads/matrimony/avatar.png' }}" 
+                             alt="Profile Image" 
+                             class="rounded-circle" 
+                             width="40" height="40">
+                        <p class="profile mb-0 ms-2">{{ auth()->user()->username }}</p>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="authDropdown">
+                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li>
+                            <a class="dropdown-item" href="#">Logout</a>
+                        </li>
+                    </ul>
+                </div>
             @endif
-        </div>  
+        </div>
 
         <!-- Mobile Menu Toggle -->
         <div class="menu-toggle">

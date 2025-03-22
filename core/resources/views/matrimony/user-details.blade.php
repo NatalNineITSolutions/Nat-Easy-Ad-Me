@@ -1,13 +1,52 @@
-@extends('matrimony.layouts.app')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Matrimony - User Details</title>
 
-@section('title', 'Matrimony Login')
+    {{-- Bootstrap --}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-@section('style')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+    {{-- Google Fonts --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    {{-- Font awesome --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <style>
+
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: "Montserrat", sans-serif;
+        } 
+
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #dee2e6;
+        }
+
+        .form-select {
+            cursor: pointer;
+        }
+
+        .form-select:focus {
+            box-shadow: none;
+            border-color: #dee2e6;
+        }
+
         .login-container {
             /* background: url('bg-pattern.png') repeat; */
             background-image: url('/assets/uploads/media-uploader/bg.png');
-            height: 120vh;
+            height: 100vh;
             padding: 50px 0;
             display: flex;
             align-items: center;
@@ -288,16 +327,14 @@
             }
         }
     </style>
-@endsection
-
-@section('content')
+</head>
+<body>
     <div class="login-container">
         <div class="container d-flex">
             <div class="left"></div>
             <div class="right">
                <div class="user-detail-form">
-                    <h3>Matrimony</h3>
-                    <p>Join South India's fastest growing matrimonial site</p>
+                    <h3>Join South India's fastest growing matrimonial site</h3>
 
                     <form class="user-form section-1">
                         <div class="row g-3">
@@ -323,18 +360,18 @@
                                 <label class="form-label">Family Status</label>
                                 <div class="badge-select">
                                     <span class="badge" onclick="toggleBadge(this, 'Middle Class', 'family_status')">
-                                        <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
                                         Middle Class
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Rich/Affluent', 'family_status')">
-                                        <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
                                         Rich/Affluent
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Upper Middle Class', 'family_status')">
-                                        <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
                                         Upper Middle Class
                                     </span>
                                 </div>
@@ -346,23 +383,23 @@
                                 <label class="form-label">Family Values</label>
                                 <div class="badge-select">
                                     <span class="badge" onclick="toggleBadge(this, 'Orthodox', 'family_values')">
-                                        <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
                                         Orthodox
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Traditional', 'family_values')">
-                                        <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
                                         Traditional
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Moderate', 'family_values')">
-                                        <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
                                         Moderate
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Liberal', 'family_values')">
-                                        <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
                                         Liberal
                                     </span>
                                 </div>
@@ -483,33 +520,33 @@
                                 <label class="form-label">Employed In</label>
                                 <div class="badge-select">
                                     <span class="badge" onclick="toggleBadge(this, 'Government', 'employed_in')">
-                                        <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
                                         Government
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Private', 'employed_in')">
-                                        <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
                                         Private
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Defense', 'employed_in')">
-                                        <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
                                         Defense
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Business', 'employed_in')">
-                                        <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
                                         Business
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Self-employed', 'employed_in')">
-                                        <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
                                         Self-employed
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Not working', 'employed_in')">
-                                        <img src="/assets/uploads/media-uploader/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/media-uploader/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
                                         Not working
                                     </span>
                                 </div>
@@ -569,7 +606,7 @@
                     
                             <!-- Submit Button -->
                             <div class="col-12 text-end">
-                                <button type="submit" id="submit-btn" class="submit-button">Submit</button>
+                                <button type="submit" id="submit-btn" class="next-button">Submit</button>
                             </div>
                         </div>
                     </form>
@@ -611,7 +648,7 @@
                         <div class="row g-3 justify-content-center">
                             <!-- Success Image -->
                             <div class="col-12">
-                                <img src="/assets/uploads/media-uploader/successfull.png" alt="Success Image" class="success-img">
+                                <img src="/assets/uploads/matrimony/successfull.png" alt="Success Image" class="success-img">
                             </div>
                     
                             <!-- Success Message -->
@@ -622,7 +659,9 @@
                     
                             <!-- Button -->
                             <div class="col-12">
-                                <button type="button" class="preference-button">Let's Get a Preference</button>
+                                <a href="/matrimony/preference" class="btn-link">
+                                    <button type="button" class="preference-button">Let's Get a Preference</button>
+                                </a>
                             </div>
                         </div>
                     </form>
@@ -630,9 +669,15 @@
             </div>
         </div>
     </div>
-@endsection
 
-@section('script')
+    {{-- Bootstrap --}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Include jQuery (required for Toastr) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Include Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
     {{-- Toaster initialization --}}
     <script>
@@ -786,10 +831,14 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    showSection(6); // Directly show section 6 on successful submission
+                    toastr.success('KYC submitted successfully! Please fill preferences to complete your profile.');
+
+                    showSection(6); 
+                    
+                    // Update UI to reflect user ID if needed
                     document.querySelector('.user-id strong').textContent = data.user_id;
                 } else {
-                    alert('Error: ' + data.message);
+                    toastr.error('Error: ' + data.message);
                 }
             })
             .catch(error => {
@@ -806,5 +855,5 @@
             validateSection(event, 4); 
         });
     </script>
-
-@endsection
+</body>
+</html>

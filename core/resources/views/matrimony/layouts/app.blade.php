@@ -362,18 +362,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             // Select elements
             const menuToggle = document.querySelector(".menu-toggle");
             const mobileMenu = document.getElementById("mobileMenu");
 
             // Toggle menu on click
-            menuToggle.addEventListener("click", function() {
+            menuToggle.addEventListener("click", function () {
                 mobileMenu.classList.toggle("show");
             });
 
             // Close menu when clicking outside
-            document.addEventListener("click", function(event) {
+            document.addEventListener("click", function (event) {
                 if (!menuToggle.contains(event.target) && !mobileMenu.contains(event.target)) {
                     mobileMenu.classList.remove("show");
                 }

@@ -19,7 +19,7 @@
         <div class="container-1440">
             <div class="row g-4 grid">
                 @foreach($all_blogs as $blog)
-                    <div class="col-lg-3 col-md-4 col-sm-6 catagory catagory{{$blog->category->id}}">
+                    <div class="col-lg-3 col-md-4 col-sm-6 catagory catagory{{$blog->category->id ?? 0}}">
                         <div class="blog-card">
                             <a href="{{ route('frontend.blog.single', $blog->slug ?? 'x') }}">
                                 <div class="img">

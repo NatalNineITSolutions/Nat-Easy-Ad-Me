@@ -46,42 +46,50 @@
                             <div class="col-lg-6 col-md-12">
                                 <label class="infoTitle">{{ __('Sponsor Id') }}</label>
                                 <div class="input-group" style="height: 40px;">
-                                    <input type="text" class="form-control" name="sponsor_id" value="{{ $sponsor->partner_id }}" id="sponsor_id" placeholder="{{ __('Sponsor Id') }}" style="height: 40px; border-radius: 8px;" readonly>
+                                    <input type="text" class="form-control" value="{{ $sponsor->partner_id }}"
+                                        id="sponsor_id_display" placeholder="{{ __('Sponsor Id') }}"
+                                        style="height: 40px; border-radius: 8px;" readonly>
                                 </div>
                             </div>
 
                             <div class="col-lg-6 col-md-12">
                                 <label class="infoTitle">{{ __('Sponsor Name') }}</label>
                                 <div class="input-form input-form2" style="padding-top: 5px;">
-                                    <input type="text" class="ps-3 form-control" name="sponsor_name" id="sponsor_name" value="{{ $sponsor->partner_name }}" placeholder="{{ __('Sponsor Name') }}" readonly style="height: 40px;">
+                                    <input type="text" class="ps-3 form-control" name="sponsor_name" id="sponsor_name"
+                                        value="{{ $sponsor->partner_name }}" placeholder="{{ __('Sponsor Name') }}" readonly
+                                        style="height: 40px;">
                                 </div>
                             </div>
 
                             <div class="col-lg-6 col-md-12">
                                 <label class="infoTitle">{{ __('Username') }}</label>
                                 <div class="input-form input-form2">
-                                    <input type="text" class="ps-3" name="username" id="username" placeholder="{{ __('Type Username') }}" required>
+                                    <input type="text" class="ps-3" name="username" id="username"
+                                        placeholder="{{ __('Type Username') }}" required>
                                 </div>
                             </div>
 
                             <div class="col-lg-6 col-md-12">
                                 <label class="infoTitle">{{ __('First Name') }}</label>
                                 <div class="input-form input-form2">
-                                    <input type="text" class="ps-3" name="first_name" id="first_name" placeholder="{{ __('First Name') }}" required>
+                                    <input type="text" class="ps-3" name="first_name" id="first_name"
+                                        placeholder="{{ __('First Name') }}" required>
                                 </div>
                             </div>
 
                             <div class="col-lg-6 col-md-12">
                                 <label class="infoTitle">{{ __('Last Name') }}</label>
                                 <div class="input-form input-form2">
-                                    <input type="text" class="ps-3" name="last_name" id="last_name" placeholder="{{ __('Last Name') }}" required>
+                                    <input type="text" class="ps-3" name="last_name" id="last_name"
+                                        placeholder="{{ __('Last Name') }}" required>
                                 </div>
                             </div>
 
                             <div class="col-lg-6 col-md-12">
                                 <label class="infoTitle">{{ __('Email') }}</label>
                                 <div class="input-form input-form2">
-                                    <input type="email" name="email" id="email" placeholder="{{ __('Type Email') }}" required>
+                                    <input type="email" name="email" id="email" placeholder="{{ __('Type Email') }}"
+                                        required>
                                     <div class="icon">
                                         <i class="lar la-envelope icon"></i>
                                     </div>
@@ -100,7 +108,8 @@
                             <div class="col-lg-6 col-md-12">
                                 <label class="infoTitle">{{ __('Password') }}</label>
                                 <div class="input-form">
-                                    <input type="password" name="password" id="password" placeholder="{{ __('Type Password') }}" required>
+                                    <input type="password" name="password" id="password"
+                                        placeholder="{{ __('Type Password') }}" required>
                                     <div class="icon"> <i class="las la-lock icon"></i></div>
                                     <div class="icon toggle-password">
                                         <i class="las la-eye"></i>
@@ -111,7 +120,8 @@
                             <div class="col-lg-6 col-md-12 mt-3">
                                 <label class="infoTitle">{{ __('Confirm Password') }}</label>
                                 <div class="input-form">
-                                    <input type="password" name="confirm_password" id="confirm_password" placeholder="{{ __('Confirm Password') }}" required>
+                                    <input type="password" name="confirm_password" id="confirm_password"
+                                        placeholder="{{ __('Confirm Password') }}" required>
                                     <div class="icon"> <i class="las la-lock icon"></i></div>
                                     <div class="icon toggle-password">
                                         <i class="las la-eye"></i>
@@ -124,15 +134,18 @@
                             <!-- Terms and Conditions -->
                             <div class="col-lg-12 col-md-12">
                                 <label class="checkWrap2 terms-conditions"> {{ __('I agree with the') }}
-                                    <a href="{{ url('/' . get_static_option('select_terms_condition_page')) }}" target="_blank" class="text-primary"> {{ __('Terms and Conditions') }} </a>
-                                    <input class="effectBorder check-input" type="checkbox" name="terms_conditions" id="terms_conditions" value="1">
+                                    <a href="{{ url('/' . get_static_option('select_terms_condition_page')) }}"
+                                        target="_blank" class="text-primary"> {{ __('Terms and Conditions') }} </a>
+                                    <input class="effectBorder check-input" type="checkbox" name="terms_conditions"
+                                        id="terms_conditions" value="1">
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
 
                             <div class="col-sm-12 mt-2">
                                 <div class="btn-wrapper text-center">
-                                    <button type="submit" class="cmn-btn4 w-100 user-register-form sign_up_now_button">{{ __('Register') }}
+                                    <button type="submit"
+                                        class="cmn-btn4 w-100 user-register-form sign_up_now_button">{{ __('Register') }}
                                         <span id="user_register_load_spinner"></span>
                                     </button>
                                 </div>

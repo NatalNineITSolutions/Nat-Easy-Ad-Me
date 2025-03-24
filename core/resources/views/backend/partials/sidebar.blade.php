@@ -9,11 +9,13 @@
             </div>
         </div>
 
+
         <div class="dashboard__bottom mt-5">
             <div class="dashboard__bottom__search mb-3">
                 <input class="form--control  w-100" type="text" placeholder="{{ __('Search here') }}" id="search_sidebarList">
             </div>
             <ul class="dashboard__bottom__list dashboard-list">
+
 
                 @can('admin-dashboard')
                     <li class="dashboard__bottom__list__item @if(request()->is('admin/dashboard')) active @endif">
@@ -22,6 +24,7 @@
                         </a>
                     </li>
                 @endcan
+
 
                 <!--Admin listing manage -->
                 @canany(['user-listing-list', 'guest-listing-list', 'admin-listing-list', 'report-reason-list', 'listing-report-list'])
@@ -34,6 +37,7 @@
                             </li>
                             @endcan
 
+
                             @if(!empty(get_static_option('guest_listing_allowed_disallowed')))
                                @can('guest-listing-list')
                                 <li class="dashboard__bottom__list__item @if (request()->is('admin/listings/guest/all-listings')) selected @endif">
@@ -41,6 +45,7 @@
                                 </li>
                                @endcan
                             @endif
+
 
                             @can('admin-listing-list')
                             <li class="dashboard__bottom__list__item @if (request()->is('admin/listings/all') || request()->is('admin/listings/add') || request()->is('admin/listings/admin-edit-listing/*')) selected @endif">
@@ -85,6 +90,19 @@
                     </ul>
                 </li>
 
+                {{-- Payout manage --}}
+                <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/payout/*')) active open show @endif">
+                    <a href="javascript:void(0)"> <i class="las la-th-list"></i>{{ __('Payout Manage') }}</a>
+                        <ul class="submenu">
+                                <li class="dashboard__bottom__list__item @if(request()->is('admin/payout/user-bv-referrals')) selected @endif">
+                                    <a href="{{ route('user.bv.referrals') }}">{{ __('User Payout Details') }}</a>
+                                </li>
+                                <li class="dashboard__bottom__list__item @if(request()->is('admin/payout/settings')) selected @endif">
+                                    <a href="{{ route('payout.settings') }}">{{ __('Payout Settings') }}</a>
+                                </li>
+                        </ul>
+                </li>
+
                 <!--Admin advertisement manage -->
                 @if(get_static_option('google_adsense_status') == 'on')
                     @canany(['advertisement-list', 'advertisement-add'])
@@ -105,6 +123,8 @@
                         </li>
                      @endcanany
                 @endif
+
+
 
 
                @canany(['user-list', 'user-deactivated-list', 'user-verify-status', 'user-add'])
@@ -140,6 +160,7 @@
                 </li>
                @endcanany
 
+
                @canany(['category-list', 'category-add'])
                 <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/category/*')) active open @endif">
                     <a href="javascript:void(0)"><i class="las la-th-list"></i>
@@ -160,6 +181,7 @@
                 </li>
                @endcanany
 
+
               @canany(['subcategory-list', 'subcategory-add'])
                 <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/subcategory/*')) active open @endif">
                     <a href="javascript:void(0)"><i class="las la-th-list"></i>
@@ -179,6 +201,7 @@
                     </ul>
                   </li>
                 @endcanany
+
 
                     <!-- Child Categories Manage -->
                     @canany(['child-category-list', 'child-category-add'])
@@ -202,6 +225,7 @@
                         </li>
                     @endcanany
 
+
                     <!-- Pages Manage -->
                     @canany(['dynamic-page-list', 'dynamic-page-add'])
                         <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/dynamic-page*')) active open @endif">
@@ -224,9 +248,8 @@
                         </li>
                     @endcanany
 
-
+                    
                     @include('backend.partials.module-list')
-
 
                 @can('notifications-list')
                     <li class="dashboard__bottom__list__item @if(request()->is('admin/notification/*')) active @endif">
@@ -234,17 +257,20 @@
                     </li>
                 @endcan
 
+
                 @can('notice-list')
                 <li class="dashboard__bottom__list__item @if(request()->is('admin/notice/*')) active @endif">
                     <a href="{{ route('admin.all.notice') }}"><i class="las la-bell"></i>{{ __('Notice Settings') }}</a>
                 </li>
                 @endcan
 
+
               @can('google-map-settings')
                 <li class="dashboard__bottom__list__item @if(request()->is('admin/map-settings/*')) active @endif">
                     <a href="{{ route('admin.map.settings.page') }}"><i class="las la-map"></i>{{ __('Google Map Settings') }}</a>
                 </li>
                @endcan
+
 
                     <!-- Appearance Settings -->
                     @canany([
@@ -314,6 +340,7 @@
                         </li>
                     @endcanany
 
+
                     @canany([
                             'login-register-page-settings', 'listing-create-page-settings', 'listing-details-page-settings',
                             'listing-guest-page-settings', 'user-public-profile-page-settings'
@@ -358,6 +385,7 @@
                         </li>
                     @endcanany
 
+
                     @canany(['smtp-settings'])
                     <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/email-settings/*')) active open @endif">
                     <a href="javascript:void(0)"><i class="las la-envelope"></i>
@@ -373,6 +401,7 @@
                         </ul>
                     </li>
                     @endcanany
+
 
                  @canany(['reading-settings', 'site-identity-settings', 'basic-settings', 'seo-settings', 'scripts-settings', 'custom-css-settings',
                           'custom-js-settings', 'sitemap-settings', 'gdpr-settings', 'license-setting', 'software-update-setting', 'cache-settings', 'database-upgrade-setting'
@@ -451,11 +480,13 @@
                 </li>
                @endcanany
 
+
                 @can('languages-list')
                     <li class="dashboard__bottom__list__item @if(request()->is('admin/languages/*') || request()->is('admin/languages')) active @endif">
                         <a href="{{ route('admin.languages') }}"><i class="las la-language"></i> <span class="icon_title">{{ __('Languages') }}</span></a>
                     </li>
                 @endcan
+
 
                 <li class="dashboard__bottom__list__item">
                     <a href="{{ route('admin.logout') }}"> <i class="las la-sign-out-alt"></i> <span class="icon_title">{{ __('Log Out') }}</span></a>
@@ -464,10 +495,3 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-
-

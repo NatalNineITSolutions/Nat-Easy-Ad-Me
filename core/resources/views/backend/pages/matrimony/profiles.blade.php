@@ -8,7 +8,8 @@
          table {
             width: 100%;
             border-collapse: collapse;
-        }
+        } 
+
         th, td {
             border: 1px solid #ccc;
             padding: 10px;
@@ -54,6 +55,10 @@
             color: white;
         }
 
+        .fa-eye {
+            margin-right: 15px;
+        }
+
         .btn-reject:hover {
             background-color: red;
             color: white;
@@ -70,9 +75,7 @@
                     <tr>
                         <th>Sno</th>
                         <th>Name</th>
-                        <th>Occupation</th>
-                        <th>Annual Income</th>
-                        <th>Verified</th>
+                        <th>Action</th> <!-- New Action Column -->
                     </tr>
                 </thead>
                 <tbody>
@@ -80,48 +83,20 @@
                     <tr id="profile-{{ $profile->id }}">
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $profile->name }}</td>
-                        <td>{{ $profile->occupation }}</td>
-                        <td>₹{{ number_format($profile->annual_income, 2) }}</td>
-                        <td class="buttons">
-                            @if($profile->is_verified == 1)
-                                <span class="text-success">Verified</span>
-                            @elseif($profile->is_verified == 2)
-                                <span class="text-danger">Rejected</span>
-                            @else
-                                <button class="btn btn-accept" onclick="updateStatus({{ $profile->id }}, 1)">Accept</button>
-                                <button class="btn btn-reject" onclick="updateStatus({{ $profile->id }}, 2)">Reject</button>
-                            @endif
+                        <td class="action">
+                            <!-- Eye Icon to view profile -->
+                            <a href="{{ route('profile.show', $profile->id) }}" title="View Profile">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            {{-- <a href="{{ route('profile.verify', $profile->id) }}" title="Verify Profile">
+                                <i class="fas fa-check"></i>
+                            </a>             --}}
                         </td>
                     </tr>
                     @endforeach
                 </tbody>
-            </table>
+            </table>     
+                      
         </div> 
     </div>
-@endsection
-
-<script>
-    function updateStatus(profileId, status) {
-        fetch(`/matrimony/profiles/${profileId}/verify`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content') // CSRF Token
-            },
-            body: JSON.stringify({ status: status })
-        })
-        .then(response => response.json()) // Ensure JSON response
-        .then(data => {
-            if (data.success) {
-                let row = document.getElementById("profile-" + profileId);
-                let statusCell = row.querySelector(".buttons");
-                statusCell.innerHTML = status === 1 
-                    ? '<span class="text-success">Verified</span>' 
-                    : '<span class="text-danger">Rejected</span>';
-            } else {
-                alert("Failed to update status!");
-            }
-        })
-        .catch(error => console.error("Fetch error:", error));
-    }
-</script>  
+@endsection 

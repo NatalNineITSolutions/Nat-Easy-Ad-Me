@@ -11,23 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('membership_id');
-        });
+        // Schema::table('users', function (Blueprint $table) {
+        //     $table->dropColumn('membership_id');
+        // });
 
-        Schema::table('users_bvs', function (Blueprint $table) {
-            $table->dropColumn('membership_id');
-        });
+        // Schema::table('users_bvs', function (Blueprint $table) {
+        //     $table->dropColumn('membership_id');
+        // });
     }
 
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->unsignedBigInteger('membership_id')->nullable();
-        });
+        // Schema::table('users', function (Blueprint $table) {
+        //     $table->unsignedBigInteger('membership_id')->nullable();
+        // });
 
-        Schema::table('users_bvs', function (Blueprint $table) {
-            $table->unsignedBigInteger('membership_id')->nullable();
-        });
+        // Schema::table('users_bvs', function (Blueprint $table) {
+        //     $table->unsignedBigInteger('membership_id')->nullable();
+        // });
     }
 };

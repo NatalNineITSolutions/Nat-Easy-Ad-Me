@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Schema::table('profile_listings', function (Blueprint $table) {
-        //     $table->text('description')->nullable()->after('image');
-        // });
+        Schema::create('doshams', function (Blueprint $table) {
+            $table->id();
+            $table->string('dosham'); // Adding the dosham column
+            $table->timestamps();
+        });
     }
 
     /**
@@ -21,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Schema::table('profile_listings', function (Blueprint $table) {
-        //     $table->dropColumn('description');
-        // });
+        Schema::dropIfExists('doshams');
     }
 };

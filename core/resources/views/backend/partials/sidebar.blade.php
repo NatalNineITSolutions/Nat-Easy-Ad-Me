@@ -81,11 +81,23 @@
                 <li class="dashboard__bottom__list__item has-children @if (request()->is('admin/matrimony/*')) active open show @endif">
                     <a href="javascript:void(0)"> <i class="las la-th-list"></i> {{ __('Matrimony Manage') }} </a>
                     <ul class="submenu">
-                        <li class="dashboard__bottom__list__item @if (request()->is('admin/matrimony/profile-listing')) selected @endif">
-                            <a href="{{ route('admin.matrimony.profile.listing') }}"> {{ __('Matrimony Listing') }} </a>
+                        <li class="dashboard__bottom__list__item @if (request()->is('admin/matrimony/profile-settings')) selected @endif">
+                            <a href="{{ route('admin.matrimony.profile.listing') }}"> {{ __('Matrimony Settings') }} </a>
                         </li>
                         <li class="dashboard__bottom__list__item @if (request()->is('admin/matrimony/profiles')) selected @endif">
                             <a href="{{ route('admin.matrimony.profiles') }}"> {{ __('Matrimony Profiles') }} </a>
+                        </li>
+                        <li class="dashboard__bottom__list__item @if (request()->is('admin/matrimony/castes')) selected @endif">
+                            <a href="{{ route('admin.matrimony.castes') }}"> {{ __('Castes') }} </a>
+                        </li>
+                        <li class="dashboard__bottom__list__item @if (request()->is('admin/matrimony/doshams')) selected @endif">
+                            <a href="{{ route('admin.matrimony.doshams') }}"> {{ __('Dosham') }} </a>
+                        </li>
+                        <li class="dashboard__bottom__list__item @if (request()->is('admin/matrimony/gothrams')) selected @endif">
+                            <a href="{{ route('admin.matrimony.gothrams') }}"> {{ __('Gothram') }} </a>
+                        </li>
+                        <li class="dashboard__bottom__list__item @if (request()->is('admin/matrimony/mother-tongues')) selected @endif">
+                            <a href="{{ route('admin.matrimony.mother-tongues') }}"> {{ __('Mother Tongue') }} </a>
                         </li>
                     </ul>
                 </li>

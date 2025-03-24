@@ -29,6 +29,15 @@
             font-family: "Montserrat", sans-serif;
         } 
 
+        .form-select {
+            cursor: pointer;
+        }
+
+        .form-select:focus {
+            box-shadow: none;
+            border-color: #dee2e6;
+        }
+
         .form-control:focus {
             box-shadow: none;
             border-color: #dee2e6;
@@ -339,7 +348,12 @@
                             <!-- Mother Tongue -->
                             <div class="col-md-6">
                                 <label class="form-label">Mother Tongue</label>
-                                <input type="text" class="form-control" name="mother_tongue" id="mother_tongue" placeholder="Enter Mother Tongue">
+                                <select class="form-select" name="mother_tongue" id="mother_tongue">
+                                    <option value="" selected>Choose Mother Tongue</option>
+                                    @foreach($motherTongues as $tongue)
+                                        <option value="{{ $tongue->id }}">{{ $tongue->mother_tongue }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                 
                             <!-- Religion -->
@@ -351,7 +365,12 @@
                             <!-- Caste -->
                             <div class="col-md-6">
                                 <label class="form-label">Caste</label>
-                                <input type="text" class="form-control" name="caste" id="caste" placeholder="Enter Caste">
+                                <select class="form-select" name="caste" id="caste">
+                                    <option value="" selected>Choose Caste</option>
+                                    @foreach($castes as $caste)
+                                        <option value="{{ $caste->id }}">{{ $caste->caste }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                 
                             <!-- Height -->

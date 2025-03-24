@@ -32,7 +32,7 @@
                         <p class="profile mb-0 ms-2">{{ auth()->user()->username }}</p>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="authDropdown">
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li><a class="dropdown-item" href="/matrimony/profile">Profile</a></li>
                         <li>
                             <a class="dropdown-item" href="#">Logout</a>
                         </li>

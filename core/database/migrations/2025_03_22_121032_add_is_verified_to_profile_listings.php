@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('profile_listings', function (Blueprint $table) {
-            $table->boolean('is_verified')->default(0)->after('description'); // Replace 'column_name' with the correct column after which you want to add 'is_verified'
-        });
+        // Schema::table('profile_listings', function (Blueprint $table) {
+        //     $table->boolean('is_verified')->default(0)->after('description'); // Replace 'column_name' with the correct column after which you want to add 'is_verified'
+        // });
     }
 
     /**
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('profile_listings', function (Blueprint $table) {
-            $table->dropColumn('is_verified');
-        });
+        // Schema::table('profile_listings', function (Blueprint $table) {
+        //     $table->dropColumn('is_verified');
+        // });
     }
 };

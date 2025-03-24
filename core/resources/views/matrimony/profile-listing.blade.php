@@ -1,11 +1,14 @@
 @extends('matrimony.layouts.app')
 
-
 @section('style')
     <style>
         .profile-container {
             background-color: #FFFBEE;
             padding-top: 45px;
+        }
+
+        #profileForm {
+            margin-top: 35px;
         }
 
         .main {
@@ -155,6 +158,17 @@
             font-size: 13px;
             font-weight: 600;
         }
+
+        .form-select {
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .form-select:focus {
+            box-shadow: none;
+            border-color: #dee2e6;
+        }
     </style>
 @endsection
 
@@ -197,32 +211,49 @@
                                         placeholder="Enter Annual Income" required>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="caste" class="form-label">Caste</label>
-                                    <input type="text" id="caste" name="caste" class="form-control"
-                                        placeholder="Enter Caste" required>
+                                    <label class="form-label">Caste</label>
+                                    <select class="form-select" name="caste" id="caste">
+                                        <option value="" selected>Choose Caste</option>
+                                        @foreach($castes as $caste)
+                                            <option value="{{ $caste->id }}">{{ $caste->caste }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="motherTongue" class="form-label">Mother Tongue</label>
-                                    <input type="text" id="motherTongue" name="motherTongue" class="form-control"
-                                        placeholder="Enter Mother Tongue" required>
-                                </div>
+                                    <select class="form-select" id="motherTongue" name="motherTongue" required>
+                                        <option value="" selected>Choose Mother Tongue</option>
+                                        @foreach($motherTongues as $tongue)
+                                            <option value="{{ $tongue->mother_tongue }}">{{ $tongue->mother_tongue }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>                                
                             </div>
 
                             <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label for="country" class="form-label">Country</label>
-                                    <input type="text" id="country" name="country" class="form-control" required
-                                        placeholder="Enter Country">
+                                    <select class="form-select" id="country" name="country" required>
+                                        <option value="" selected>Choose Country</option>
+                                        @foreach($countries as $country)
+                                            <option value="{{ $country->id }}">{{ $country->country }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="state" class="form-label">State</label>
-                                    <input type="text" id="state" name="state" class="form-control" required
-                                        placeholder="Enter State">
+                                    <select class="form-select" id="state" name="state" required>
+                                        <option value="" selected>Choose State</option>
+                                        @foreach($states as $state)
+                                            <option value="{{ $state->id }}">{{ $state->state }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="city" class="form-label">City</label>
-                                    <input type="text" id="city" name="city" class="form-control" required
-                                        placeholder="Enter City">
+                                    <select class="form-select" id="city" name="city" required>
+                                        <option value="" selected>Choose City</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -270,7 +301,7 @@
                                 $buttonText = __('Sumbit');
                             @endphp
                             {{-- <button type="submit" class="btn btn-primary w-100">Submit</button> --}}
-                            <button class="cmn-btn-outline1 choose_membership_plan" data-bs-toggle="modal" data-id=""
+                            <button class="cmn-btn-outline1 choose_membership_plan btn btn-primary" data-bs-toggle="modal" data-id=""
                                 data-price="{{ get_static_option('matrimony_price') }}"
                                 data-bs-target="{{ $modalTarget }}">
                                 {{ $buttonText }}
@@ -552,6 +583,73 @@
                     }
                 }
             });
+        });
+    </script>
+
+    {{-- Fetch country --}}
+    <script>
+        // When the country dropdown changes, get the states
+        document.getElementById('country').addEventListener('change', function() {
+            const countryId = this.value;
+            
+            // Reset the state and city dropdowns
+            const stateSelect = document.getElementById('state');
+            const citySelect = document.getElementById('city');
+            stateSelect.innerHTML = '<option value="" selected>Choose State</option>';
+            citySelect.innerHTML = '<option value="" selected>Choose City</option>';
+
+            if (countryId) {
+                // Fetch states based on selected country
+                fetch(`/matrimony/get-states/${countryId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data); // Log the response to verify the data structure
+                        if (data.states && data.states.length > 0) {
+                            data.states.forEach(state => {
+                                const option = document.createElement('option');
+                                option.value = state.id;
+                                option.textContent = state.state;
+                                stateSelect.appendChild(option);
+                            });
+                        } else {
+                            console.log('No states found for this country.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching states:', error);
+                    });
+            }
+        });
+
+        // When the state dropdown changes, get the cities
+        document.getElementById('state').addEventListener('change', function() {
+            const stateId = this.value;
+            
+            // Reset the city dropdown
+            const citySelect = document.getElementById('city');
+            citySelect.innerHTML = '<option value="" selected>Choose City</option>';
+
+            if (stateId) {
+                // Fetch cities based on selected state
+                fetch(`/matrimony/get-cities/${stateId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data); // Log the response to verify the data structure
+                        if (data.cities && data.cities.length > 0) {
+                            data.cities.forEach(city => {
+                                const option = document.createElement('option');
+                                option.value = city.id;
+                                option.textContent = city.city;
+                                citySelect.appendChild(option);
+                            });
+                        } else {
+                            console.log('No cities found for this state.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching cities:', error);
+                    });
+            }
         });
     </script>
 @endsection

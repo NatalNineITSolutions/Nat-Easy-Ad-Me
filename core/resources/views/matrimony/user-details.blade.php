@@ -20,7 +20,11 @@
     {{-- Font awesome --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+    {{-- Select 2 --}}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+
     <style>
+
 
         * {
             padding: 0;
@@ -452,29 +456,31 @@
                                 <label class="form-label">Caste</label>
                                 <select class="form-select" name="caste" id="caste">
                                     <option value="" selected>Choose caste</option> <!-- Empty value -->
-                                    <option value="Mudaliyar">Mudaliyar</option>
-                                    <option value="Chettiyar">Chettiyar</option>
-                                    <option value="24manai devanga chettiyar">24manai devanga chettiyar</option>
+                                    @foreach($castes as $caste)
+                                        <option value="{{ $caste->id }}">{{ $caste->caste }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                     
-                            <!-- Dosham -->
-                            <div class="col-md-6">
-                                <label class="form-label">Dosham</label>
-                                <select class="form-select" name="dosham" id="dosham">
-                                    <option value="" selected>Choose Dosham</option> <!-- Empty value -->
-                                    <option value="No">No</option>
-                                    <option value="Yes">Yes</option>
-                                </select>
-                            </div>
-                    
-                            <!-- Gothram -->
-                            <div class="col-md-6">
+                           <!-- Gothram Dropdown -->
+                            <div class="col-md-12">
                                 <label class="form-label">Gothram</label>
                                 <select class="form-select" name="gothram" id="gothram">
-                                    <option value="" selected>Select one</option> <!-- Empty value -->
-                                    <option value="Viswamithrar">Viswamithrar</option>
-                                    <option value="Valmiki Maharshi">Valmiki Maharshi</option>
+                                    <option value="" selected>Choose gothram</option>
+                                    @foreach($gothrams as $gothram)
+                                        <option value="{{ $gothram->id }}">{{ $gothram->gothram }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                    
+                            <!-- Dosham Dropdown -->
+                            <div class="col-md-12">
+                                <label class="form-label">Dosham</label>
+                                <select class="form-select" name="dosham" id="dosham">
+                                    <option value="" selected>Choose dosham</option>
+                                    @foreach($doshams as $dosham)
+                                        <option value="{{ $dosham->id }}">{{ $dosham->dosham }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                     
@@ -554,33 +560,31 @@
                             </div>
                     
                             <!-- Country, State, and City Fields -->
-                            <div class="col-md-4 country-state-city">
+                            <div class="col-md-4">
                                 <label class="form-label">Country</label>
                                 <select class="form-select" name="country" id="country">
-                                    <option value="" selected>Select Country</option>
-                                    <option value="India">India</option>
-                                    <option value="Africa">Africa</option>
-                                    <option value="America">America</option>
+                                    <option value="" selected>Choose country</option>
+                                    @foreach($countries as $country)
+                                        <option value="{{ $country->id }}">{{ $country->country }}</option>
+                                    @endforeach
                                 </select>
                             </div>
+
+                            {{-- <div class="col-md-4">
+                                <x-form.country-dropdown :title="__('Select Your Country')" :id="'country_id'" :required="true"/>
+                            </div> --}}
                     
-                            <div class="col-md-4 country-state-city">
+                            <div class="col-md-4">
                                 <label class="form-label">State</label>
                                 <select class="form-select" name="state" id="state">
-                                    <option value="" selected>Select State</option>
-                                    <option value="Andhra Pradesh">Andhra Pradesh</option>
-                                    <option value="Tamil Nadu">Tamil Nadu</option>
-                                    <option value="Karnataka">Karnataka</option>
+                                    <option value="" selected>Choose state</option>
                                 </select>
                             </div>
-                    
-                            <div class="col-md-4 country-state-city">
+                            
+                            <div class="col-md-4">
                                 <label class="form-label">City</label>
                                 <select class="form-select" name="city" id="city">
-                                    <option value="" selected>Select City</option>
-                                    <option value="Anakapalli">Anakapalli</option>
-                                    <option value="Coimbatore">Coimbatore</option>
-                                    <option value="Bengaluru">Bengaluru</option>
+                                    <option value="" selected>Choose city</option>
                                 </select>
                             </div>
                     
@@ -678,6 +682,47 @@
 
     <!-- Include Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    {{-- Country, state, city --}}
+    <script>
+        $('#country').on('change', function () {
+            var country_id = $(this).val();
+            if (country_id) {
+                $.ajax({
+                    url: '{{ route("matrimony.get-states", ":id") }}'.replace(':id', country_id),
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        $('#state').empty().append('<option value="">Choose state</option>');
+                        $.each(data, function (key, value) {
+                            $('#state').append('<option value="' + value.id + '">' + value.state + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#state').empty().append('<option value="">Choose state</option>');
+            }
+        });
+
+        $('#state').on('change', function () {
+            var state_id = $(this).val();
+            if (state_id) {
+                $.ajax({
+                    url: '{{ route("matrimony.get-cities", ":id") }}'.replace(':id', state_id),
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        $('#city').empty().append('<option value="">Choose city</option>');
+                        $.each(data, function (key, value) {
+                            $('#city').append('<option value="' + value.id + '">' + value.city + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#city').empty().append('<option value="">Choose city</option>');
+            }
+        });
+    </script>
 
     {{-- Toaster initialization --}}
     <script>

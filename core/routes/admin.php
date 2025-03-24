@@ -37,10 +37,52 @@ Route::middleware(['setlang'])->group(function () {
         // Matrimony_manage
         Route::group(['prefix' => 'matrimony'], function () {
             Route::controller(\App\Http\Controllers\Backend\MatrimonyManageController::class)->group(function () {
-                Route::get('/profile-listing', 'profile_listing')->name('admin.matrimony.profile.listing')->permission('matrimony-profile-list');
+                Route::get('/profile-settings', 'profile_listing')->name('admin.matrimony.profile.listing')->permission('matrimony-profile-list');
                 Route::post('/profile-listing/store', 'storeProfileSettings')->name('admin.matrimony.profile.listing.store')->permission('matrimony-profile-save');
                 Route::get('/profiles', 'profiles')->name('admin.matrimony.profiles')->permission('matrimony-profiles');
+                // To show profile detail
+                Route::get('/profile/{id}', 'show')->name('profile.show')->middleware('permission:matrimony-view-profile');
+
+                
                 Route::post('/profiles/{id}/verify', 'verifyProfile')->name('admin.matrimony.profile.verify')->permission('matrimony-profile-verify');
+
+                // Caste
+                Route::get('/castes', 'castes')->name('admin.matrimony.castes')->permission('matrimony-castes');
+                Route::get('/add-caste', 'addcaste')->name('admin.matrimony.add-caste')->permission('matrimony-add-caste');
+                // Edit caste
+                Route::get('/add-caste/{id?}', 'editcaste')->name('admin.matrimony.add-caste');
+                Route::put('/update-caste/{id}', 'updateCaste')->name('admin.matrimony.update-caste');
+                Route::post('/store-caste', 'storecaste')->name('admin.matrimony.store-caste')->permission('matrimony-store-caste');
+                Route::delete('/delete-caste/{id}', 'deleteCaste')->name('admin.matrimony.delete-caste');
+
+                // Mother Tongue
+                Route::get('/mother-tongues', 'motherTongues')->name('admin.matrimony.mother-tongues')->permission('matrimony-mother-tongues');
+                Route::get('/add-mother-tongue', 'addMotherTongue')->name('admin.matrimony.add-mother-tongue')->permission('matrimony-add-mother-tongue');
+                // Store
+                Route::post('/store-mother-tongue', 'storeMotherTongue')->name('admin.matrimony.store-mother-tongue')->permission('matrimony-store-mother-tongue');
+                // Delete
+                Route::delete('/delete-mother-tongue/{id}', 'deleteMotherTongue')->name('admin.matrimony.delete-mother-tongue');
+                // Edit and Update
+                Route::get('/edit-mother-tongue/{id?}', 'editMotherTongue')->name('admin.matrimony.add-mother-tongue');
+                Route::post('/update-mother-tongue/{id}', 'updateMotherTongue')->name('admin.matrimony.update-mother-tongue');
+
+                // Dosham Routes
+                Route::get('/doshams', 'doshams')->name('admin.matrimony.doshams')->permission('matrimony-doshams');
+                Route::get('/add-dosham', 'addDosham')->name('admin.matrimony.add-dosham')->permission('matrimony-add-dosham');
+                Route::post('/store-dosham', 'storeDosham')->name('admin.matrimony.store-dosham')->permission('matrimony-store-dosham');
+                // Edit Dosham
+                Route::get('/add-dosham/{id?}', 'editDosham')->name('admin.matrimony.add-dosham');
+                Route::put('/update-dosham/{id}', 'updateDosham')->name('admin.matrimony.update-dosham');
+                Route::delete('/delete-dosham/{id}', 'deleteDosham')->name('admin.matrimony.delete-dosham');
+
+                // Gothram Routes
+                Route::get('/gothrams', 'gothrams')->name('admin.matrimony.gothrams')->permission('matrimony-gothrams');
+                Route::get('/add-gothram', 'addGothram')->name('admin.matrimony.add-gothram')->permission('matrimony-add-gothram');
+                Route::post('/store-gothram', 'storeGothram')->name('admin.matrimony.store-gothram')->permission('matrimony-store-gothram');
+                // Edit Gothram
+                Route::get('/add-gothram/{id?}', 'editGothram')->name('admin.matrimony.add-gothram');
+                Route::put('/update-gothram/{id}', 'updateGothram')->name('admin.matrimony.update-gothram');
+                Route::delete('/delete-gothram/{id}', 'deleteGothram')->name('admin.matrimony.delete-gothram');
             });
         });
 

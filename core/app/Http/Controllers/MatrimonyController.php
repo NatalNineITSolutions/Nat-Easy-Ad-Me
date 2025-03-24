@@ -12,6 +12,14 @@ use Illuminate\Support\Facades\Hash;
 use Modules\Membership\app\Models\Membership;
 use App\Models\ProfileListing;
 use Illuminate\Support\Str;
+use App\Models\Gothram;
+use App\Models\Caste;
+use App\Models\MotherTongue;
+use App\Models\Dosham;
+use Modules\CountryManage\app\Models\City;
+use Modules\CountryManage\app\Models\State;
+use Modules\CountryManage\app\Models\Country;
+use Illuminate\Support\Facades\Log;
 
 class MatrimonyController extends Controller
 {
@@ -51,7 +59,26 @@ class MatrimonyController extends Controller
     }
     public function userdetails()
     {
-        return view('matrimony.user-details');
+        $castes = Caste::all();
+        $gothrams = Gothram::all();
+        $doshams = Dosham::all();
+        $countries = Country::all();
+        $states = State::all(); 
+        $cities = City::all();  
+
+        return view('matrimony.user-details', compact('castes', 'gothrams', 'doshams', 'countries', 'states', 'cities'));
+    }
+
+    public function getStates($country_id)
+    {
+        $states = State::where('country_id', $country_id)->get(['id', 'state']); // Select only necessary fields
+        return response()->json(['states' => $states]); // Return the states data
+    }
+
+    public function getCities($state_id)
+    {
+        $cities = City::where('state_id', $state_id)->get(['id', 'city']);
+        return response()->json(['cities' => $cities]);
     }
 
     public function storeUserDetails(Request $request)
@@ -127,7 +154,10 @@ class MatrimonyController extends Controller
 
     public function preference()
     {
-        return view('matrimony.preference');
+        $motherTongues = MotherTongue::all(); 
+        $castes = Caste::all();
+
+        return view('matrimony.preference', compact('motherTongues','castes' ));
     }
 
     public function storePreference(Request $request)
@@ -179,7 +209,15 @@ class MatrimonyController extends Controller
 
     public function profilelisting()
     {
-        return view('matrimony.profile-listing');
+        $castes = Caste::all(); 
+        $motherTongues = MotherTongue::all(); 
+        $countries = Country::all(); 
+        $states = State::all(); 
+        $cities = City::all();
+
+        \Log::info('Mother Tongues:', ['data' => $motherTongues]);
+
+        return view('matrimony.profile-listing', compact('castes', 'motherTongues', 'countries', 'states', 'cities'));
     }
 
     public function storeProfileListing(Request $request)

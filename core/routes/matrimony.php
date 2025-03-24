@@ -26,5 +26,10 @@ Route::middleware(['web'])->group(function () {
         Route::post('/profile-listing/store', [MatrimonyController::class, 'storeProfileListing'])->name('profilelisting.store');
 
         Route::get('/profile-lists', [MatrimonyController::class, 'profilelists'])->name('profile-lists');
+
+        // Fetch state and cities
+        Route::get('/get-states/{country_id}', [MatrimonyController::class, 'getStates'])->name('get-states');
+
+        Route::get('/get-cities/{state_id}', [MatrimonyController::class, 'getCities'])->name('get-cities');
     });
 });

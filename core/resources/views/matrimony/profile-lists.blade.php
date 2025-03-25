@@ -64,7 +64,7 @@
                                 <th>Sno</th>
                                 <th>Name</th>
                                 <th>Age</th>
-                                <th>Verified</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -74,14 +74,41 @@
                                     <td>{{ $profile->name }}</td>
                                     <td>{{ $profile->age }}</td>
                                     <td>
-                                        <span style="color: {{ $profile->is_verified ? 'green' : 'red' }};">
-                                            {{ $profile->is_verified ? 'Verified' : 'Pending' }}
+                                        @php
+                                            $statusText = 'Pending';
+                                            $statusColor = 'red';
+                                            $rejectionReason = '';
+                    
+                                            if ($profile->is_verified == 1) {
+                                                $statusText = 'Verified';
+                                                $statusColor = 'green';
+                                            } elseif ($profile->is_verified == 2) {
+                                                $statusText = 'Rejected';
+                                                $statusColor = 'gray';
+                                                $rejectionReason = $profile->rejection_reason;
+                                            }
+                                        @endphp
+                    
+                                        <span style="color: {{ $statusColor }};">
+                                            {{ $statusText }}
                                         </span>
+                    
+                                        @if($profile->is_verified == 2 && $rejectionReason)
+                                            <br>
+                                            <small class="text-muted">Reason: {{ $rejectionReason }}</small>
+                                            <br>
+                                            <!-- Refill Form Button -->
+                                            <a href="/matrimony/update-profile/{{ $profile->id ?? '' }}" class="btn btn-sm btn-primary mt-2">
+                                                Refill Form
+                                            </a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
-                    </table>                    
+                    </table>
+                    
+                    
                 </div>
             </main>
         </div>

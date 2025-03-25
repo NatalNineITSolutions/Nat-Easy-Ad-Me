@@ -20,6 +20,7 @@ use Modules\CountryManage\app\Models\City;
 use Modules\CountryManage\app\Models\State;
 use Modules\CountryManage\app\Models\Country;
 use Illuminate\Support\Facades\Log;
+use App\Models\User;
 
 class MatrimonyController extends Controller
 {
@@ -34,13 +35,19 @@ class MatrimonyController extends Controller
         $user = auth()->user();
 
         // Check if the profile is completed
-        if ($user->profile_completed == 1) {
-            // If profile is completed, allow access to matrimony.index
-            return view('matrimony.index'); // Replace with your actual view for matrimony.index
-        } else {
-            // If profile is not completed, redirect to matrimony.user-details
+        if ($user->profile_completed != 1) {
             return redirect()->route('matrimony.user-details')->with('info', 'Please complete your profile to proceed.');
         }
+
+        // Get verified profiles with only needed fields
+        $profiles = ProfileListing::where('is_verified', 1)
+                    ->where('id', '!=', $user->id)
+                    ->select('id', 'name', 'age', 'occupation', 'city', 'image') // Only select needed fields
+                    ->inRandomOrder()
+                    ->limit(7)
+                    ->get();
+
+        return view('matrimony.index', compact('profiles'));
     }
 
 
@@ -207,7 +214,18 @@ class MatrimonyController extends Controller
         return view('matrimony.main-profile');
     }
 
-    public function profilelisting()
+    // public function profilelisting()
+    // {
+    //     $castes = Caste::all(); 
+    //     $motherTongues = MotherTongue::all(); 
+    //     $countries = Country::all(); 
+    //     $states = State::all(); 
+    //     $cities = City::all();
+
+    //     return view('matrimony.profile-listing', compact('castes', 'motherTongues', 'countries', 'states', 'cities'));
+    // }
+
+    public function profilelisting(Request $request)
     {
         $castes = Caste::all(); 
         $motherTongues = MotherTongue::all(); 
@@ -215,9 +233,44 @@ class MatrimonyController extends Controller
         $states = State::all(); 
         $cities = City::all();
 
-        \Log::info('Mother Tongues:', ['data' => $motherTongues]);
+        $profile = null;
 
-        return view('matrimony.profile-listing', compact('castes', 'motherTongues', 'countries', 'states', 'cities'));
+        if ($request->has('profile_id')) {
+            $profile = ProfileListing::find($request->profile_id);
+        }
+
+        return view('matrimony.profile-listing', compact('castes', 'motherTongues', 'countries', 'states', 'cities', 'profile'));
+    }
+
+    // Update Profile Listing
+    public function updateProfile(Request $request, $profile_id = null)
+    {
+        $castes = Caste::all();
+        $motherTongues = MotherTongue::all();
+        $countries = Country::all();
+        $states = State::all();
+        $cities = City::all();
+
+        // Find the profile if profile_id is provided
+        $profile = $profile_id ? ProfileListing::find($profile_id) : null;
+
+        return view('matrimony.update-profile-listing', compact('castes', 'motherTongues', 'countries', 'states', 'cities', 'profile'));
+    }
+
+    public function submitUpdateProfile(Request $request, $profile_id)
+    {
+        $profile = ProfileListing::findOrFail($profile_id);
+        
+        // First update regular fields
+        $profile->update($request->all());
+        
+        // Then force is_verified update
+        \DB::table('profile_listings')
+        ->where('id', $profile_id)
+        ->update(['is_verified' => 0]);
+        
+        return redirect('/matrimony/profile-lists')
+            ->with('success', 'Profile updated successfully.');
     }
 
     public function storeProfileListing(Request $request)
@@ -334,7 +387,8 @@ class MatrimonyController extends Controller
 
     public function profilelists()
     {
-        $profiles = ProfileListing::select('id', 'name', 'age', 'is_verified')->get();
+        $profiles = ProfileListing::select('id', 'name', 'age', 'is_verified', 'rejection_reason')->get();
         return view('matrimony.profile-lists', compact('profiles'));
     }
+
 }

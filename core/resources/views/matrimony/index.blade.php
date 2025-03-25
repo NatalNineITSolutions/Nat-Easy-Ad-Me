@@ -155,10 +155,6 @@
             color: black;
         }
         
-        .slick-slide {
-            padding: 0 10px;
-        }
-        
         .card {
             position: relative;
             display: flex !important;
@@ -392,6 +388,243 @@
             text-decoration: none;
         }
 
+        /* Main container */
+        .profile-container {
+            margin: 30px auto 60px;
+            max-width: 1200px;
+            padding: 0 20px;
+        }
+
+        /* Card slider container */
+        .card-slider-container {
+            width: 100%;
+            margin: 30px auto 0;
+            position: relative;
+        }
+
+        /* Card slider styles */
+        .card-slider {
+            margin: 0 auto;
+            max-width: 1000px;
+            padding: 20px 0;
+        }
+
+        /* Individual card styling */
+        .card {
+            position: relative;
+            display: flex !important;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(0,0,0,.1);
+            background-color: white;
+            color: rgba(0,0,0,.9);
+            transition: all 0.3s ease;
+            margin: 0 15px; /* Space between cards */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            height: 100%;
+        }
+
+        .card h2 {
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            margin: 15px 0 10px;
+            color: #333;
+        }
+
+        .card p {
+            font-size: 14px;
+            font-weight: 500;
+            margin: 5px 0;
+            text-align: center;
+            color: #555;
+        }
+
+        .card-profile {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #f8f8f8;
+        }
+
+        /* Slick slider customizations */
+        .slick-slide {
+            padding: 0 15px; /* This creates the space between cards */
+        }
+
+        .slick-list {
+            margin: 0 -5px; /* Compensate for slide padding */
+            padding: 20px 0;
+        }
+
+        .slick-track {
+            display: flex;
+            align-items: stretch; /* Make cards equal height */
+        }
+
+        /* Navigation arrows */
+        .slick-prev, 
+        .slick-next {
+            width: 40px;
+            height: 40px;
+            background: #C48C46;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .slick-prev {
+            left: -50px;
+        }
+
+        .slick-next {
+            right: -50px;
+        }
+
+        .slick-prev:before, 
+        .slick-next:before {
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            color: white;
+            font-size: 20px;
+        }
+
+        .slick-prev:before {
+            content: '\f104';
+        }
+
+        .slick-next:before {
+            content: '\f105';
+        }
+
+        /* Button styles */
+        .btn-profile {
+            display: inline-block;
+            padding: 8px 20px;
+            margin-top: 15px;
+            background-color: #FF166C;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-profile:hover {
+            background-color: #e0105c;
+        }
+
+    /* Responsive adjustments */
+    @media (max-width: 1024px) {
+        .card-slider {
+            max-width: 800px;
+        }
+        
+        .slick-prev {
+            left: -30px;
+        }
+        
+        .slick-next {
+            right: -30px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .card {
+            margin: 0 10px;
+            padding: 15px;
+        }
+        
+        .card h2 {
+            font-size: 16px;
+        }
+        
+        .card p {
+            font-size: 13px;
+        }
+        
+        .card-profile {
+            width: 70px;
+            height: 70px;
+        }
+    }
+
+        @media (max-width: 576px) {
+            .card-slider {
+                max-width: 300px;
+            }
+            
+            .card {
+                margin: 0 5px;
+            }
+            
+            .slick-prev, 
+            .slick-next {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .slick-prev {
+                left: -15px;
+            }
+            
+            .slick-next {
+                right: -15px;
+            }
+        }
+
+        /* Force display of single card */
+        .card-slider .slick-track {
+            display: flex !important;
+            gap: 15px;
+        }
+
+        .card-slider .slick-slide {
+            float: none !important;
+            height: auto !important;
+        }
+
+        /* Center single card */
+        .card-slider .slick-list {
+            overflow: visible;
+            text-align: center;
+        }
+
+        .card-slider .card {
+            margin: 0 auto;
+            display: inline-block !important;
+        }
+
+        /* Fallback style when only one card exists */
+        .single-card-fallback {
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        
+        .single-card-fallback .card {
+            width: 100% !important;
+            float: none !important;
+        }
+
+        .card-slider .slick-slide {
+            min-width: 280px !important; /* Your card's natural width */
+            width: auto !important;
+        }
+
+        /* Fix for hidden initialization */
+        .card-slider.slick-initialized {
+            visibility: visible !important;
+        }
+
+        /* Container constraints */
+        .card-slider {
+            overflow: visible;
+        }
+
         /* Perfect match */
         .perfect-match-banner {
             position: relative;
@@ -575,55 +808,26 @@
             </div>
             <img class="profile-container-section-img" src="/assets/uploads/media-uploader/profile-design.png" alt="">
         </div>
-        <div class="card-slider">
-            <div class="card">
-                <img class="card-profile" src="/assets/uploads/media-uploader/profile.png" alt="Profile Image">
-                <h2>Nikitha</h2>
-                <p>📅 20 Years &nbsp; 🏋️‍♀️ 5ft, 2in</p>
-                <p>📍 Chennai &nbsp; 🎓 UG</p>
-                <a href="#" class="btn-profile">View Profile</a>
-            </div>
-            <div class="card">
-                <img class="card-profile" src="/assets/uploads/media-uploader/profile.png" alt="Profile Image">
-                <h2>Nikitha</h2>
-                <p>📅 20 Years &nbsp; 🏋️‍♀️ 5ft, 2in</p>
-                <p>📍 Chennai &nbsp; 🎓 UG</p>
-                <a href="#" class="btn-profile">View Profile</a>
-            </div>
-            <div class="card">
-                <img class="card-profile" src="/assets/uploads/media-uploader/profile.png" alt="Profile Image">
-                <h2>Nikitha</h2>
-                <p>📅 20 Years &nbsp; 🏋️‍♀️ 5ft, 2in</p>
-                <p>📍 Chennai &nbsp; 🎓 UG</p>
-                <a href="#" class="btn-profile">View Profile</a>
-            </div>
-            <div class="card">
-                <img class="card-profile" src="/assets/uploads/media-uploader/profile.png" alt="Profile Image">
-                <h2>Nikitha</h2>
-                <p>📅 20 Years &nbsp; 🏋️‍♀️ 5ft, 2in</p>
-                <p>📍 Chennai &nbsp; 🎓 UG</p>
-                <a href="#" class="btn-profile">View Profile</a>
-            </div>
-            <div class="card">
-                <img class="card-profile" src="/assets/uploads/media-uploader/profile.png" alt="Profile Image">
-                <h2>Nikitha</h2>
-                <p>📅 20 Years &nbsp; 🏋️‍♀️ 5ft, 2in</p>
-                <p>📍 Chennai &nbsp; 🎓 UG</p>
-                <a href="#" class="btn-profile">View Profile</a>
-            </div>
-            <div class="card">
-                <img class="card-profile" src="/assets/uploads/media-uploader/profile.png" alt="Profile Image">
-                <h2>Nikitha</h2>
-                <p>📅 20 Years &nbsp; 🏋️‍♀️ 5ft, 2in</p>
-                <p>📍 Chennai &nbsp; 🎓 UG</p>
-                <a href="#" class="btn-profile">View Profile</a>
-            </div>
-            <div class="card">
-                <img class="card-profile" src="/assets/uploads/media-uploader/profile.png" alt="Profile Image">
-                <h2>Nikitha</h2>
-                <p>📅 20 Years &nbsp; 🏋️‍♀️ 5ft, 2in</p>
-                <p>📍 Chennai &nbsp; 🎓 UG</p>
-                <a href="#" class="btn-profile">View Profile</a>
+        <div class="card-slider-container">
+            <div class="card-slider">
+                @forelse($profiles as $profile)
+                    <div class="card">
+                        {{-- <img class="card-profile" 
+                             src="{{ $profile->image ? asset('storage/'.$profile->image) : '/assets/uploads/media-uploader/profile.png' }}" 
+                             alt="{{ $profile->name }}"> --}}
+                        <h2>{{ $profile->name }}</h2>
+                        <p>📅 {{ $profile->age }} Years</p>
+                        <p>💼 {{ $profile->occupation ?? 'Not specified' }}</p>
+                        <p>📍 {{ $profile->city ?? 'Location not specified' }}</p>
+                        <a href="#" class="btn-profile">View Profile</a>
+                    </div>
+                @empty
+                    <div class="card">
+                        <img class="card-profile" src="/assets/uploads/media-uploader/profile.png" alt="Default Profile">
+                        <h2>No Profiles Available</h2>
+                        <p>Check back later for new matches</p>
+                    </div>
+                @endforelse
             </div>
         </div>
     </div>

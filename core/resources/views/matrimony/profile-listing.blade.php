@@ -169,7 +169,53 @@
             box-shadow: none;
             border-color: #dee2e6;
         }
+
+        /* Media Upload Modal Styles */
+        .media-upload-btn-wrapper .img-wrap {
+            position: relative;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        
+        .media-upload-btn-wrapper .img-wrap .rmv-span {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: red;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .new_image_add_listing .attachment-preview {
+            width: 200px;
+            height: 200px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .new_image_add_listing .attachment-preview .thumbnail .centered img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            transform: translate(-50%, -50%);
+        }
+        
+        .btn-info.media_upload_form_btn {
+            background-color: rgb(239,246,255);
+            border: none;
+            color: rgb(59,130,246);
+            outline: none;
+            box-shadow: none;
+            margin: auto;
+        }
     </style>
+    <x-media.css/>
 @endsection
 
 @section('content')
@@ -263,27 +309,50 @@
                                     <p class="text-muted">Please upload files in jpg, jpeg, or png format and make sure the
                                         file size is under 25 MB.</p>
 
-                                    <!-- Upload Box -->
-                                    <div class="upload-box text-center p-4">
-                                        <div class="upload-area">
-                                            <img src="/assets/uploads/matrimony/upload.png" alt="Upload Icon"
-                                                class="upload-icon">
-                                            <p class="upload-text mb-0">Drop file or Browse</p>
-                                            <p class="text-muted mb-0">Format: jpg, jpeg, png & Max file size: 25 MB</p>
-                                            <input type="file" class="file-input" name="image" id="image"
-                                                accept="image/jpg, image/jpeg, image/png"
-                                                style="opacity: 0; position: absolute; z-index: -1;">
-                                        </div>
-
-                                        <!-- Buttons -->
-                                        <div class="d-flex justify-content-center mt-3">
-                                            <button type="button" class="upload-btn browse-btn">Browse</button>
-                                            <button type="button" class="upload-btn cancel-button">Cancel</button>
+                                    <!-- Modified Upload Section -->
+                                    <div class="upload-img text-center">
+                                        <div class="media-upload-btn-wrapper">
+                                            <div class="img-wrap new_image_add_listing">
+                                                <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}" alt="images" class="w-100">
+                                            </div>
+                                            <input type="hidden" name="image" id="image_input">
+                                            <button type="button" class="btn btn-info media_upload_form_btn"
+                                                    data-btntitle="{{__('Select Image')}}"
+                                                    data-modaltitle="{{__('Upload Image')}}"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#media_upload_modal">
+                                                {{ __('Click to Upload Profile Image') }}
+                                            </button>
+                                            <small>{{ __('image format: jpg,jpeg,png,gif,webp')}}</small> <br>
+                                            <small>{{ __('recommended size 810x450') }}</small>
                                         </div>
                                     </div>
 
-                                    <!-- Preview Uploaded Images -->
-                                    <div class="uploaded-images mt-3"></div>
+                                    <!-- Gallery Images Section -->
+                                    <div class="picture mt-3">
+                                        <div class="row g-3">
+                                            <div class="col-12">
+                                                <div class="upload-img text-center">
+                                                    <div class="media-upload-btn-wrapper">
+                                                        <div class="img-wrap new_image_gallery_add_listing">
+                                                            <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}" alt="images" class="w-100">
+                                                        </div>
+                                                        <input type="hidden" name="gallery_images" id="gallery_images_input">
+                                                        <button type="button" class="btn btn-info media_upload_form_btn"
+                                                                data-btntitle="{{__('Select Image')}}"
+                                                                data-modaltitle="{{__('Upload Image')}}"
+                                                                data-mulitple="true"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#media_upload_modal">
+                                                            {{__('Click to Upload Gallery Images')}}
+                                                        </button>
+                                                        <small>{{ __('image format: jpg,jpeg,png,gif,webp')}}</small> <br>
+                                                        <small>{{ __('recommended size 810x450') }}</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -300,7 +369,6 @@
                                 }
                                 $buttonText = __('Sumbit');
                             @endphp
-                            {{-- <button type="submit" class="btn btn-primary w-100">Submit</button> --}}
                             <button class="cmn-btn-outline1 choose_membership_plan btn btn-primary" data-bs-toggle="modal" data-id=""
                                 data-price="{{ get_static_option('matrimony_price') }}"
                                 data-bs-target="{{ $modalTarget }}">
@@ -315,6 +383,7 @@
 @endsection
 
 @include('matrimony.partials.gateway-markup')
+<x-media.markup :type="'web'"/>
 
 @section('script')
     {{-- Toaster initialization --}}
@@ -327,214 +396,76 @@
         };
     </script>
 
-    {{-- Upload Image --}}
+    {{-- Media Upload Script --}}
+    <x-media.js :type="'web'"/>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const fileInput = document.getElementById("image");
-            const browseBtn = document.querySelector(".browse-btn");
-            const uploadArea = document.querySelector(".upload-area");
-            const uploadedImagesContainer = document.querySelector(".uploaded-images");
-
-            // Browse button click triggers file input
-            browseBtn.addEventListener("click", () => {
-                fileInput.click();
+        (function($){
+            "use strict";
+            
+            // Handle featured image selection
+            $(document).on('click', '.new_image_add_listing', function(e) {
+                e.preventDefault();
+                let selector = $(this).closest('.media-upload-btn-wrapper').find('.media_upload_form_btn');
+                selector.trigger('click');
             });
 
-            // Handle file selection
-            fileInput.addEventListener("change", function() {
-                const files = fileInput.files;
-                if (files.length > 0) {
-                    for (let file of files) {
-                        if (validateImage(file)) {
-                            displayImage(file);
-                        }
+            // Handle gallery images selection
+            $(document).on('click', '.new_image_gallery_add_listing', function(e) {
+                e.preventDefault();
+                let selector = $(this).closest('.media-upload-btn-wrapper').find('.media_upload_form_btn');
+                selector.trigger('click');
+            });
+
+            // After selecting media from modal
+            $(document).on('media_upload_selected', function(e, data) {
+                if(data.trigger_button.hasClass('media_upload_form_btn')) {
+                    let wrapper = data.trigger_button.closest('.media-upload-btn-wrapper');
+                    
+                    if(data.trigger_button.attr('data-mulitple') === 'true') {
+                        // For gallery images
+                        let galleryInput = wrapper.find('input[name="gallery_images"]');
+                        let currentValue = galleryInput.val() ? galleryInput.val().split(',') : [];
+                        currentValue.push(data.id);
+                        galleryInput.val(currentValue.join(','));
+                        
+                        // Update preview
+                        wrapper.find('.new_image_gallery_add_listing').html(`
+                            <div class="attachment-preview">
+                                <div class="thumbnail">
+                                    <div class="centered">
+                                        <img src="${data.url}" alt="${data.name}">
+                                    </div>
+                                </div>
+                            </div>
+                        `);
+                    } else {
+                        // For featured image
+                        wrapper.find('input[name="image"]').val(data.id);
+                        
+                        // Update preview
+                        wrapper.find('.new_image_add_listing').html(`
+                            <div class="attachment-preview">
+                                <div class="thumbnail">
+                                    <div class="centered">
+                                        <img src="${data.url}" alt="${data.name}">
+                                    </div>
+                                </div>
+                            </div>
+                        `);
                     }
                 }
             });
-
-            // Drag and Drop Upload
-            uploadArea.addEventListener("dragover", function(e) {
-                e.preventDefault();
-                uploadArea.style.border = "2px solid #6B21A8";
-            });
-
-            uploadArea.addEventListener("dragleave", function() {
-                uploadArea.style.border = "2px dashed #90119B";
-            });
-
-            uploadArea.addEventListener("drop", function(e) {
-                e.preventDefault();
-                uploadArea.style.border = "2px dashed #90119B";
-                const files = e.dataTransfer.files;
-                if (files.length > 0) {
-                    for (let file of files) {
-                        if (validateImage(file)) {
-                            displayImage(file);
-                        }
-                    }
-                }
-            });
-
-            // Validate Image
-            function validateImage(file) {
-                const allowedExtensions = ["image/jpeg", "image/png", "image/jpg"];
-                if (!allowedExtensions.includes(file.type)) {
-                    alert("Only JPG, JPEG, and PNG formats are allowed.");
-                    return false;
-                }
-                if (file.size > 25 * 1024 * 1024) {
-                    alert("File size should be under 25MB.");
-                    return false;
-                }
-                return true;
-            }
-
-            // Display Uploaded Image
-            function displayImage(file) {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-
-                reader.onload = function(e) {
-                    const imgContainer = document.createElement("div");
-                    imgContainer.classList.add("image-container");
-
-                    const img = document.createElement("img");
-                    img.src = e.target.result;
-                    img.classList.add("uploaded-image");
-
-                    const deleteBtn = document.createElement("button");
-                    deleteBtn.innerHTML = "&#10006;";
-                    deleteBtn.classList.add("delete-image-btn");
-                    deleteBtn.addEventListener("click", function() {
-                        imgContainer.remove();
-                    });
-
-                    imgContainer.appendChild(img);
-                    imgContainer.appendChild(deleteBtn);
-                    uploadedImagesContainer.appendChild(imgContainer);
-                };
-            }
-        });
+        })(jQuery);
     </script>
 
     {{-- Store function --}}
-    {{-- <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Get the form element
-            const form = document.getElementById('profileForm');
-            if (!form) {
-                console.error("Form element with ID 'profileForm' not found!");
-                return;
-            }
-
-            // Add submit event listener
-            form.addEventListener('submit', function(event) {
-                event.preventDefault(); // Prevent default form submission
-
-                // Validation logic
-                const fields = [{
-                        id: 'name',
-                        name: "Full Name"
-                    },
-                    {
-                        id: 'age',
-                        name: "Age"
-                    },
-                    {
-                        id: 'occupation',
-                        name: "Occupation"
-                    },
-                    {
-                        id: 'income',
-                        name: "Annual Income"
-                    }, // Ensure this matches the form field ID
-                    {
-                        id: 'caste',
-                        name: "Caste"
-                    },
-                    {
-                        id: 'motherTongue',
-                        name: "Mother Tongue"
-                    },
-                    {
-                        id: 'country',
-                        name: "Country"
-                    },
-                    {
-                        id: 'state',
-                        name: "State"
-                    },
-                    {
-                        id: 'city',
-                        name: "City"
-                    },
-                    {
-                        id: 'description',
-                        name: "Description"
-                    }
-                ];
-
-                let missingFields = [];
-                fields.forEach(field => {
-                    const input = document.getElementById(field.id);
-                    if (!input || !input.value.trim()) {
-                        missingFields.push(field.name);
-                    }
-                });
-
-                // Check if an image is uploaded
-                const imageInput = document.getElementById('image');
-                if (!imageInput || !imageInput.files || imageInput.files.length === 0) {
-                    missingFields.push('Image');
-                }
-
-                if (missingFields.length > 0) {
-                    const errorMessage = `${missingFields.join(', ')} is required.`;
-                    toastr.error(errorMessage, 'Validation Error');
-                    return false; // Stop further execution if validation fails
-                }
-
-                // AJAX submission logic
-                const formData = new FormData(form);
-
-                fetch("{{ route('matrimony.profilelisting.store') }}", {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                .getAttribute('content')
-                        },
-                        body: formData
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.errors) {
-                            console.error('Validation Errors:', data.errors);
-                        }
-                        if (data.success) {
-                            toastr.success(data.message);
-                            form.reset();
-                            document.querySelector(".uploaded-images").innerHTML = "";
-                        } else {
-                            toastr.error('Error: ' + data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        toastr.error('An unexpected error occurred.');
-                    });
-
-                return false; // Prevent default behavior
-            });
-        });
-    </script> --}}
-
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const profileForm = document.getElementById('profileForm');
             const chooseMembershipBtn = document.querySelector('.choose_membership_plan');
 
             chooseMembershipBtn.addEventListener('click', function() {
-                // Validate required fields from the profile form (this can be expanded as needed)
+                // Validate required fields from the profile form
                 const requiredFields = ['name', 'age', 'occupation', 'annual_income', 'caste',
                     'motherTongue', 'country', 'state', 'city', 'description'
                 ];
@@ -547,41 +478,30 @@
                     }
                 });
 
-
-                // Check if an image is uploaded if required
-                const imageInput = document.getElementById('image');
-                if (!imageInput || !imageInput.files || imageInput.files.length === 0) {
+                // Check if an image is uploaded
+                const imageInput = document.getElementById('image_input');
+                if (!imageInput || !imageInput.value) {
                     missingFields.push('image');
                 }
 
-                // if (missingFields.length > 0) {
-                //     toastr.error(missingFields.join(', ') + ' is required.', 'Validation Error');
-                //     return false;
-                // }
+                if (missingFields.length > 0) {
+                    toastr.error('Please fill all required fields including image upload.', 'Validation Error');
+                    return false;
+                }
 
                 // Populate hidden fields in the modal form
                 document.getElementById('modal_name').value = document.getElementById('name').value;
                 document.getElementById('modal_age').value = document.getElementById('age').value;
-                document.getElementById('modal_occupation').value = document.getElementById('occupation')
-                    .value;
-                document.getElementById('modal_annual_income').value = document.getElementById(
-                        'annual_income')
-                    .value;
+                document.getElementById('modal_occupation').value = document.getElementById('occupation').value;
+                document.getElementById('modal_annual_income').value = document.getElementById('annual_income').value;
                 document.getElementById('modal_caste').value = document.getElementById('caste').value;
-                document.getElementById('modal_motherTongue').value = document.getElementById(
-                    'motherTongue').value;
+                document.getElementById('modal_motherTongue').value = document.getElementById('motherTongue').value;
                 document.getElementById('modal_country').value = document.getElementById('country').value;
                 document.getElementById('modal_state').value = document.getElementById('state').value;
                 document.getElementById('modal_city').value = document.getElementById('city').value;
-                document.getElementById('modal_description').value = document.getElementById('description')
-                    .value;
-
-                if (imageInput) {
-                    const modalImageContainer = document.getElementById('modal_image_container');
-                    if (modalImageContainer) {
-                        modalImageContainer.appendChild(imageInput);
-                    }
-                }
+                document.getElementById('modal_description').value = document.getElementById('description').value;
+                document.getElementById('modal_image').value = document.getElementById('image_input').value;
+                document.getElementById('modal_gallery_images').value = document.getElementById('gallery_images_input').value;
             });
         });
     </script>

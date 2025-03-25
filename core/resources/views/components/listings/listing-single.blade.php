@@ -11,7 +11,7 @@
                 <div class="card-body-top">
                     <h4>
                         <a href="{{ route('frontend.listing.details', $listing->slug ?? '#') }}"
-                           class="featureTittle head4 twoLine">
+                            class="featureTittle head4 twoLine">
                             {{ $listing->title ?? __('No Title') }}
                         </a>
                     </h4>
@@ -30,7 +30,9 @@
                 </div>
 
                 <span class="featurePricing d-flex justify-content-between align-items-center">
-                    <span class="money">{{ amount_with_currency_symbol($listing->price ?? 0) }}</span>
+                    @if($listing->category_id != 54)
+                        <span class="money">{{ amount_with_currency_symbol($listing->price) }}</span>
+                    @endif
                     <span class="date">
                         @if(!empty($listing->published_at))
                             {{ \Carbon\Carbon::parse($listing->published_at)->diffForHumans() }}

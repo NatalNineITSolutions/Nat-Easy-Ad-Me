@@ -37,6 +37,12 @@ class BrowseCategoryOne extends PageBuilderBase
             'value' => $widget_saved_values['title'] ?? null,
         ]);
 
+        $output .= Text::get([
+            'name' => 'search_button_title',
+            'label' => __('Search Button Title'),
+            'value' => $widget_saved_values['search_button_title'] ?? null,
+        ]);
+
         $output .= Select::get([
             'name' => 'order_by',
             'label' => __('Order By'),

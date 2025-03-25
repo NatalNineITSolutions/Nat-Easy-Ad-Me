@@ -44,8 +44,6 @@ class MLMController extends Controller
             return redirect()->back()->withErrors(['error' => __('The selected position is already occupied.')]);
         }
 
-        // Return a view with a form to add a new member.
-        // Pass along the sponsor and position so the form can automatically set these values.
         return view('frontend.user.genology.add-member', compact('sponsor', 'position'));
     }
 
@@ -81,7 +79,6 @@ class MLMController extends Controller
                 $full_phone_number = $country_code . ' - ' . $phone_number;
 
                 if (!empty($full_phone_number) && User::where('phone', $full_phone_number)->exists()) {
-                    Log::warning('Phone number already taken.', ['phone' => $full_phone_number]);
                     return redirect()->back()->withErrors(['phone' => __('Phone number is already taken')]);
                 }
 
@@ -91,7 +88,6 @@ class MLMController extends Controller
 
                 $partnerName = 'EASYADME-' . strtoupper($request->first_name);
 
-                // The sponsor_id and position are passed as hidden fields from the form.
                 $parent_id = $request->input('sponsor_id');
                 $position = $request->input('position');
 
@@ -101,7 +97,6 @@ class MLMController extends Controller
                 $membership_id = $default_membership ? $default_membership->id : 1;
                 $bv_points = $default_membership ? $default_membership->bv_points : 0;
 
-                // Create the new user record
                 $user = new User([
                     'first_name' => $request->first_name,
                     'last_name' => $request->last_name,
@@ -117,18 +112,13 @@ class MLMController extends Controller
                     'position' => $position,
                 ]);
 
-                // Save the user within the nested set structure
                 if ($parent_id) {
                     $parent = User::find($parent_id);
-                    // appendNode() is used if you're implementing a nested set structure
                     $parent->appendNode($user);
                 } else {
-                    $user->saveAsRoot(); // If no sponsor, save as root
+                    $user->saveAsRoot(); 
                 }
 
-                Log::info('New MLM member created successfully.', ['user_id' => $user->id]);
-
-                // Assign BV points
                 UsersBv::create([
                     'user_id' => $user->id,
                     'membership_id' => $membership_id,
@@ -142,15 +132,6 @@ class MLMController extends Controller
                     'bv_points' => $bv_points
                 ]);
 
-                // Distribute BV points to the parent users
-                if ($parent_id) {
-                    $referrer = User::find($parent_id);
-                    if ($referrer) {
-                        $this->distributeBVPoints($referrer, $bv_points);
-                    }
-                }
-
-                // Create wallet if needed
                 if (moduleExists("Wallet")) {
                     Wallet::create([
                         'user_id' => $user->id,
@@ -161,42 +142,17 @@ class MLMController extends Controller
                     ]);
                 }
 
-                // Dispatch job to send registration email
                 if ($user) {
                     dispatch(new SendRegisterUserEmailJob($user, $request->password));
                 }
 
-                // Redirect back to the genealogy page with a success message
-                return redirect()->route('genealogy.page')->with('success', __('New member registered successfully!'));
+                return redirect()->route('user.genology')->with('success', __('New member registered successfully!'));
             } catch (\Exception $e) {
                 Log::error('Error during MLM member registration.', ['error' => $e->getMessage()]);
                 return redirect()->back()->withErrors(['error' => __('An error occurred during registration. Please try again.')]);
             }
         }
 
-        // For GET requests, show the registration form
         return view('frontend.user.genology.add-member');
     }
-
-    // private function distributeBVPoints($user, $bvPoints)
-    // {
-    //     if (!$user) {
-    //         return;
-    //     }
-
-    //     // Update the current user's BV points
-    //     $user->bv_points += $bvPoints;
-    //     $user->save();
-
-    //     Log::info('Distributed BV points to user:', [
-    //         'user_id' => $user->id,
-    //         'bv_points' => $user->bv_points,
-    //     ]);
-
-    //     // Recursively distribute BV points to the parent user
-    //     if ($user->parent_id) {
-    //         $parentUser = User::find($user->parent_id);
-    //         $this->distributeBVPoints($parentUser, $bvPoints);
-    //     }
-    // }
 }

@@ -65,10 +65,11 @@ class PayoutController extends Controller
 
         $users = User::whereIn('id', $eligibleParents)
             ->select('id', 'first_name', 'last_name', 'partner_id')
-            ->withCount(['referrals as referrals_count'])
+            ->with('descendants') 
             ->get()
             ->map(function ($user) use ($payoutMethod, $payoutValue, $selectedDate) {
-                // Get BV points - sum all records for the selected date or all-time
+                $user->total_referrals = $this->countTotalReferrals($user);
+
                 $bvQuery = UsersBv::where('user_id', $user->id);
 
                 if ($selectedDate) {
@@ -77,7 +78,6 @@ class PayoutController extends Controller
 
                 $user->bv_points = $bvQuery->sum('bv_points');
 
-                // Calculate payout based on method
                 if ($payoutMethod === 'amount') {
                     $user->payout = $user->bv_points * $payoutValue;
                 } else {
@@ -86,7 +86,6 @@ class PayoutController extends Controller
 
                 return $user;
             })
-            // Filter out users with zero bv_points when a date is selected
             ->when($selectedDate, function ($collection) {
                 return $collection->filter(function ($user) {
                     return $user->bv_points > 0;
@@ -96,8 +95,17 @@ class PayoutController extends Controller
         return view('backend.pages.payout-manage.payout-listing', compact('users', 'selectedDate'));
     }
 
-    private function countTotalReferrals($user)
+    /**
+     * Recursively count all descendants of a user
+     */
+    private function countTotalReferrals(User $user)
     {
-        return $user->referrals->sum(fn($child) => 1 + $this->countTotalReferrals($child));
+        $count = $user->children()->count();
+
+        foreach ($user->children as $child) {
+            $count += $this->countTotalReferrals($child);
+        }
+
+        return $count;
     }
 }

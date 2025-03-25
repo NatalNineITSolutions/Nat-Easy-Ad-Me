@@ -23,7 +23,9 @@
                 </div>
 
                 <span class="featurePricing d-flex justify-content-between align-items-center">
-                <span class="money">{{ amount_with_currency_symbol($listing->price) }}</span>
+                @if($listing->category_id != 54)
+                    <span class="money">{{ amount_with_currency_symbol($listing->price) }}</span>
+                @endif
                 <span class="date">
                     @if(!empty($listing->published_at))
                         {{ \Carbon\Carbon::parse($listing->published_at)->diffForHumans() }}

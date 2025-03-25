@@ -38,7 +38,7 @@
                 <h1 class="banner-main-head text-center"> {{ $title }} </h1>
                 <p class="text text-center">{{$subtitle}}</p>
             </div>
-            <div class="banner-form">
+            <!-- <div class="banner-form">
                 <form  action="{{get_static_option('listing_filter_page_url') ?? '/listings'}}" class="d-flex align-items-center banner-search-location" method="get">
                     <div class="banner-form-wraper align-items-center">
                         @if(!empty(get_static_option('google_map_settings_on_off')))
@@ -59,7 +59,7 @@
                         <button type="submit" class="new-cmn-btn rounded-red-btn setLocation_btn border-0">{{ get_static_option('search_button_title') ?? __('Search') }} </button>
                     </div>
                 </form>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>

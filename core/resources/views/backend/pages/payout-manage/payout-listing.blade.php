@@ -85,7 +85,7 @@
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ $user->first_name }} {{ $user->last_name }}</td>
                                     <td>{{ $user->partner_id }}</td>
-                                    <td>{{ $user->referrals_count }}</td>
+                                    <td>{{ $user->total_referrals }}</td>
                                     <td>{{ $user->bv_points }}</td>
                                     <td>{{ number_format($user->payout, 2) }}</td>
                                     <td>

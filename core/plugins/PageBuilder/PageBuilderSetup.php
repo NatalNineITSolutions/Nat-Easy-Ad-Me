@@ -22,6 +22,7 @@ class PageBuilderSetup
             \plugins\PageBuilder\Addons\Contact\ContactMessage::class,
             \plugins\PageBuilder\Addons\About\AboutUsOne::class,
             \plugins\PageBuilder\Addons\Header\HeaderStyleOne::class,
+            \plugins\PageBuilder\Addons\Header\BannerSlider::class,
             \plugins\PageBuilder\Addons\Faq\FaqOne::class,
             \plugins\PageBuilder\Addons\Common\RawHTML::class,
             \plugins\PageBuilder\Addons\Common\TextEditor::class,

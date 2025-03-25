@@ -468,7 +468,7 @@
                             <a href="{{ route('admin.general.gdpr.settings') }}">{{ __('Gdpr Settings') }}</a>
                         </li>
                      @endcan
-                      @can('license-settings')
+                      {{-- @can('license-settings')
                         <li class="dashboard__bottom__list__item @if(request()->is('admin/general-settings/license-setting')) selected @endif">
                             <a href="{{ route('admin.general.license.settings') }}">{{ __('Licence Settings') }}</a>
                         </li>
@@ -477,7 +477,7 @@
                         <li class="dashboard__bottom__list__item @if(request()->is('admin/general-settings/software-update-setting')) selected @endif">
                             <a href="{{ route('admin.general.software.update.settings') }}">{{ __('Check Update') }}</a>
                         </li>
-                     @endcan
+                     @endcan --}}
                      @can('cache-settings')
                         <li class="dashboard__bottom__list__item @if(request()->is('admin/general-settings/cache-settings')) selected @endif">
                             <a href="{{ route('admin.general.cache.settings') }}">{{ __('Cache Settings') }}</a>

@@ -39,13 +39,19 @@ Route::middleware(['setlang'])->group(function () {
     Route::group(['prefix' => 'matrimony'], function () {
         Route::controller(\App\Http\Controllers\Backend\MatrimonyManageController::class)->group(function () {
             Route::get('/profile-settings', 'profile_listing')->name('admin.matrimony.profile.listing')->permission('matrimony-profile-list');
+
             Route::post('/profile-listing/store', 'storeProfileSettings')->name('admin.matrimony.profile.listing.store')->permission('matrimony-profile-save');
+
             Route::get('/profiles', 'profiles')->name('admin.matrimony.profiles')->permission('matrimony-profiles');
+
+            // Verify Profile
+            Route::post('/profile/verify', 'verifyProfile')->name('profile.verify');
+
+            // Reject Profile
+            Route::post('/profile/reject', 'rejectProfile')->name('profile.reject');
+
             // To show profile detail
             Route::get('/profile/{id}', 'show')->name('profile.show')->middleware('permission:matrimony-view-profile');
-
-
-            Route::post('/profiles/{id}/verify', 'verifyProfile')->name('admin.matrimony.profile.verify')->permission('matrimony-profile-verify');
 
             // Caste
             Route::get('/castes', 'castes')->name('admin.matrimony.castes')->permission('matrimony-castes');

@@ -59,6 +59,47 @@ class MatrimonyManageController extends Controller
         return view('backend.pages.matrimony.profile-show', compact('profile'));
     }
 
+    public function verifyProfile(Request $request)
+    {
+        $profile = ProfileListing::find($request->id);
+
+        if ($profile) {
+            $profile->is_verified = 1;
+            $profile->save();
+
+            Log::info("Profile ID {$profile->id} verified successfully.");
+
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false]);
+    }
+
+    public function rejectProfile(Request $request)
+    {
+        try {
+            Log::info("Reject Profile Request Received", $request->all());
+
+            $profile = ProfileListing::find($request->id);
+
+            if (!$profile) {
+                Log::error("Profile not found: ID " . $request->id);
+                return response()->json(['success' => false, 'message' => 'Profile not found'], 404);
+            }
+
+            $profile->is_verified = 2;
+            $profile->rejection_reason = $request->reason; // Ensure this column exists in DB
+            $profile->save();
+
+            Log::info("Profile ID {$profile->id} rejected successfully.");
+            return response()->json(['success' => true]);
+
+        } catch (\Exception $e) {
+            Log::error("Error rejecting profile: " . $e->getMessage());
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
     public function castes()
     {
         $castes = Caste::paginate(10); 

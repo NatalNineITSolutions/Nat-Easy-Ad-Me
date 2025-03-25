@@ -24,6 +24,7 @@ class ProfileListing extends Model
         'description',
         'paid',
         'payment_method',
+        'is_verified',
     ];
 
     public function user()

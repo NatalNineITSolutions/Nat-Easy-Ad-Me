@@ -1464,7 +1464,7 @@ h4,
 h5,
 h6 {
   font-family: var(--heading-font1);
-  color: var(--heading-color);
+  /* color: var(--heading-color); */
   margin-bottom: 0px;
   font-weight: 500;
 }
@@ -1479,7 +1479,7 @@ h6 a {
 }
 
 p {
-  color: var(--paragraph-color);
+  /* color: var(--paragraph-color); */
   font-family: var(--body-font);
   -ms-hyphens: auto;
   hyphens: auto;

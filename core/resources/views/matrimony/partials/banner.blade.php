@@ -2,7 +2,7 @@
     /* Gradient Background */
     .pricing-section {
             background: linear-gradient(to right, #6d0f7b, #e44042); /* Adjusted Gradient Colors */
-            color: white;
+            color: white !important;
             text-align: center;
             padding: 80px 20px;
             position: relative;

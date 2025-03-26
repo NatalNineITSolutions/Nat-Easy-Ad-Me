@@ -467,10 +467,10 @@
                     missingFields.push('image');
                 }
 
-                if (missingFields.length > 0) {
-                    toastr.error('Please fill all required fields including at least one image.', 'Validation Error');
-                    return false;
-                }
+                // if (missingFields.length > 0) {
+                //     toastr.error('Please fill all required fields including at least one image.', 'Validation Error');
+                //     return false;
+                // }
 
                 // Debug: Log image IDs before setting modal value
                 console.log("Image IDs before submitting: ", imagesInput.value);

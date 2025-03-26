@@ -288,21 +288,21 @@ class MatrimonyController extends Controller
         }
 
         // Handle gallery images (IDs from media library)
-        $galleryImageIds = null;
-        if ($request->filled('images')) {
-            $images = $request->input('images');
+        // $galleryImageIds = null;
+        // if ($request->filled('images')) {
+        //     $images = $request->input('images');
 
-            if (is_array($images)) {
-                \Log::info('Gallery images received as array: ' . json_encode($images));
-                $galleryImageIds = implode('|', array_filter($images, 'is_numeric'));
-            } elseif (is_string($images)) {
-                \Log::info('Gallery images received as string: ' . $images);
-                $imageIds = array_filter(explode('|', $images), 'is_numeric');
-                $galleryImageIds = !empty($imageIds) ? implode('|', $imageIds) : null;
-            }
+        //     if (is_array($images)) {
+        //         \Log::info('Gallery images received as array: ' . json_encode($images));
+        //         $galleryImageIds = implode('|', array_filter($images, 'is_numeric'));
+        //     } elseif (is_string($images)) {
+        //         \Log::info('Gallery images received as string: ' . $images);
+        //         $imageIds = array_filter(explode('|', $images), 'is_numeric');
+        //         $galleryImageIds = !empty($imageIds) ? implode('|', $imageIds) : null;
+        //     }
 
-            \Log::info('Processed gallery images for storage: ' . ($galleryImageIds ?? 'None'));
-        }
+        //     \Log::info('Processed gallery images for storage: ' . ($galleryImageIds ?? 'None'));
+        // }
 
         // Store profile listing - using 'image' column for both single image and gallery IDs
         $profileListing = ProfileListing::create([
@@ -316,7 +316,7 @@ class MatrimonyController extends Controller
             'country' => $request->country,
             'state' => $request->state,
             'city' => $request->city,
-            'image' => $galleryImageIds, // Storing the pipe-separated IDs in 'image' column
+            'image' => $request->images, // Storing the pipe-separated IDs in 'image' column
             'description' => $request->description,
             'paid' => 0,
             'payment_method' => null,

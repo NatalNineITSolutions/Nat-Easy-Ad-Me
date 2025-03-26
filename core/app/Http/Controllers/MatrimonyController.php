@@ -41,11 +41,11 @@ class MatrimonyController extends Controller
 
         // Get verified profiles with only needed fields
         $profiles = ProfileListing::where('is_verified', 1)
-                    ->where('id', '!=', $user->id)
-                    ->select('id', 'name', 'age', 'occupation', 'city', 'image') // Only select needed fields
-                    ->inRandomOrder()
-                    ->limit(7)
-                    ->get();
+            ->where('id', '!=', $user->id)
+            ->select('id', 'name', 'age', 'occupation', 'city', 'image') // Only select needed fields
+            ->inRandomOrder()
+            ->limit(7)
+            ->get();
 
         return view('matrimony.index', compact('profiles'));
     }
@@ -70,8 +70,8 @@ class MatrimonyController extends Controller
         $gothrams = Gothram::all();
         $doshams = Dosham::all();
         $countries = Country::all();
-        $states = State::all(); 
-        $cities = City::all();  
+        $states = State::all();
+        $cities = City::all();
 
         return view('matrimony.user-details', compact('castes', 'gothrams', 'doshams', 'countries', 'states', 'cities'));
     }
@@ -161,14 +161,16 @@ class MatrimonyController extends Controller
 
     public function preference()
     {
-        $motherTongues = MotherTongue::all(); 
+        $motherTongues = MotherTongue::all();
         $castes = Caste::all();
 
-        return view('matrimony.preference', compact('motherTongues','castes' ));
+        return view('matrimony.preference', compact('motherTongues', 'castes'));
     }
 
     public function storePreference(Request $request)
     {
+        \Log::info('Request data:', $request->all());
+
         // Validate the request data
         $validatedData = $request->validate([
             'partner_age' => 'required|integer|min:18|max:100',
@@ -180,6 +182,7 @@ class MatrimonyController extends Controller
             'occupation' => 'required|string',
             'location' => 'required|string',
             'income' => 'required|string',
+            'images' => 'required|string',
         ]);
 
         // Get the authenticated user
@@ -227,10 +230,10 @@ class MatrimonyController extends Controller
 
     public function profilelisting(Request $request)
     {
-        $castes = Caste::all(); 
-        $motherTongues = MotherTongue::all(); 
-        $countries = Country::all(); 
-        $states = State::all(); 
+        $castes = Caste::all();
+        $motherTongues = MotherTongue::all();
+        $countries = Country::all();
+        $states = State::all();
         $cities = City::all();
 
         $profile = null;
@@ -260,15 +263,15 @@ class MatrimonyController extends Controller
     public function submitUpdateProfile(Request $request, $profile_id)
     {
         $profile = ProfileListing::findOrFail($profile_id);
-        
+
         // First update regular fields
         $profile->update($request->all());
-        
+
         // Then force is_verified update
         \DB::table('profile_listings')
-        ->where('id', $profile_id)
-        ->update(['is_verified' => 0]);
-        
+            ->where('id', $profile_id)
+            ->update(['is_verified' => 0]);
+
         return redirect('/matrimony/profile-lists')
             ->with('success', 'Profile updated successfully.');
     }
@@ -277,32 +280,53 @@ class MatrimonyController extends Controller
     {
         \Log::info('Profile listing request data: ' . json_encode($request->all()));
 
-        // Handle file upload (if provided)
+        // Handle single profile image (file upload)
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('profile_images', 'public');
+            \Log::info('Uploaded profile image path: ' . $imagePath);
         }
 
+        // Handle gallery images (IDs from media library)
+        $galleryImageIds = null;
+        if ($request->filled('images')) {
+            $images = $request->input('images');
+
+            if (is_array($images)) {
+                \Log::info('Gallery images received as array: ' . json_encode($images));
+                $galleryImageIds = implode('|', array_filter($images, 'is_numeric'));
+            } elseif (is_string($images)) {
+                \Log::info('Gallery images received as string: ' . $images);
+                $imageIds = array_filter(explode('|', $images), 'is_numeric');
+                $galleryImageIds = !empty($imageIds) ? implode('|', $imageIds) : null;
+            }
+
+            \Log::info('Processed gallery images for storage: ' . ($galleryImageIds ?? 'None'));
+        }
+
+        // Store profile listing - using 'image' column for both single image and gallery IDs
         $profileListing = ProfileListing::create([
-            'user_id'       => Auth::id(),
-            'name'          => $request->name,
-            'age'           => $request->age,
-            'occupation'    => $request->occupation,
+            'user_id' => Auth::id(),
+            'name' => $request->name,
+            'age' => $request->age,
+            'occupation' => $request->occupation,
             'annual_income' => $request->annual_income,
-            'caste'         => $request->caste,
+            'caste' => $request->caste,
             'mother_tongue' => $request->motherTongue,
-            'country'       => $request->country,
-            'state'         => $request->state,
-            'city'          => $request->city,
-            'image'         => $imagePath,
-            'description'   => $request->description,
-            'paid'          => 0,       // Not paid yet
-            'payment_method' => null,    // Not selected yet
+            'country' => $request->country,
+            'state' => $request->state,
+            'city' => $request->city,
+            'image' => $galleryImageIds, // Storing the pipe-separated IDs in 'image' column
+            'description' => $request->description,
+            'paid' => 0,
+            'payment_method' => null,
+            // 'images' column removed since we're using 'image'
         ]);
 
+        \Log::info('Profile listing created with ID: ' . $profileListing->id);
         session()->put('profile_listing_id', $profileListing->id);
 
-        // Process payment if a payment gateway is selected
+        // Handle payment gateway if selected
         if ($request->filled('selected_payment_gateway')) {
             $payment_gateway = $request->selected_payment_gateway;
             \Log::info('Payment gateway selected: ' . $payment_gateway);
@@ -310,21 +334,19 @@ class MatrimonyController extends Controller
             $credential_function = 'get_' . $payment_gateway . '_credential';
             \Log::info('Credential function: ' . $credential_function);
 
-            // Check if the payment gateway has a custom credential function
             if (!method_exists((new PaymentGatewayCredential()), $credential_function)) {
                 \Log::info('Using custom payment logic for user: ' . Auth::id());
 
-                // Prepare custom data for payment processing
-                $custom_data = [];
-                $custom_data['request']         = $request->all();
-                $custom_data['total']           = get_static_option('matrimony_price');
-                $custom_data['payment_type']    = "deposit";
-                $custom_data['payment_for']     = "membership";
-                $custom_data['success_url']     = route('user.membership.all');
+                $custom_data = [
+                    'request' => $request->all(),
+                    'total' => get_static_option('matrimony_price'),
+                    'payment_type' => "deposit",
+                    'payment_for' => "membership",
+                    'success_url' => route('user.membership.all')
+                ];
 
-                // Get the namespace and method for charging the customer
                 $charge_customer_class_namespace = getChargeCustomerMethodNameByPaymentGatewayNameSpace($payment_gateway);
-                $charge_customer_method_name     = getChargeCustomerMethodNameByPaymentGatewayName($payment_gateway);
+                $charge_customer_method_name = getChargeCustomerMethodNameByPaymentGatewayName($payment_gateway);
 
                 $custom_charge_customer_class_object = new $charge_customer_class_namespace;
                 if (class_exists($charge_customer_class_namespace) && method_exists($custom_charge_customer_class_object, $charge_customer_method_name)) {
@@ -364,22 +386,22 @@ class MatrimonyController extends Controller
     {
         $user = Auth::guard('web')->user();
         $email = $user->email;
-        $name  = $user->fullname;
+        $name = $user->fullname;
 
         $ipn_route = route('user.' . strtolower($payment_gateway_name) . '.ipn.membership');
 
         \Log::info('IPN Route, matrimony price: ' . get_static_option('matrimony_price'));
 
         return [
-            'amount'       => get_static_option('matrimony_price'),
-            'title'        => "Profile Listing",
-            'description'  => "Matrimony",
-            'ipn_url'      => $ipn_route,
-            'order_id'     => session('profile_listing_id'), 
-            'track'        => Str::random(36),
-            'success_url'  => route('user.membership.all'),
-            'email'        => $email,
-            'name'         => $name,
+            'amount' => get_static_option('matrimony_price'),
+            'title' => "Profile Listing",
+            'description' => "Matrimony",
+            'ipn_url' => $ipn_route,
+            'order_id' => session('profile_listing_id'),
+            'track' => Str::random(36),
+            'success_url' => route('user.membership.all'),
+            'email' => $email,
+            'name' => $name,
             'payment_type' => 'deposit',
         ];
     }

@@ -16,6 +16,24 @@
         .noUi-connect {
             background: gray;
         }
+        
+        /* Mobile-specific styles */
+        @media (max-width: 767px) {
+            .listing-single-list {
+                width: 48%; /* Slightly less than 50% to account for margins */
+                margin-right: 4%; /* Space between items */
+                float: left; /* Float them side by side */
+                margin-bottom: 20px; /* Space between rows */
+            }
+            
+            .listing-single-list:nth-child(2n) {
+                margin-right: 0; /* Remove margin for every second item */
+            }
+            
+            .slider-inner-margin {
+                overflow: hidden; /* Clear the float */
+            }
+        }
     </style>
 @endsection
 
@@ -23,13 +41,11 @@
     <div class="container-1440">
         <div class="titleWithBtn d-flex justify-content-between align-items-center mb-40">
             <h2 class="head3">{{ $section_title ?? 'Location Listing' }}</h2>
-          
         </div>
 
         <div class="slider-inner-margin">
             <!-- Single -->
             <x-listings.listing-single-list-view :listings="$listings->reject(function($listing) { return $listing->category_id == 54; })"/>
-
         </div>
     </div>
 </section>

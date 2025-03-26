@@ -176,7 +176,7 @@
             display: inline-block;
             margin-right: 10px;
         }
-        
+
         .media-upload-btn-wrapper .img-wrap .rmv-span {
             position: absolute;
             top: -10px;
@@ -191,31 +191,31 @@
             cursor: pointer;
             font-size: 12px;
         }
-        
+
         .new_image_add_listing .attachment-preview {
             width: 200px;
             height: 200px;
             border-radius: 6px;
             overflow: hidden;
         }
-        
+
         .new_image_add_listing .attachment-preview .thumbnail .centered img {
             height: 100%;
             width: 100%;
             object-fit: cover;
             transform: translate(-50%, -50%);
         }
-        
+
         .btn-info.media_upload_form_btn {
-            background-color: rgb(239,246,255);
+            background-color: rgb(239, 246, 255);
             border: none;
-            color: rgb(59,130,246);
+            color: rgb(59, 130, 246);
             outline: none;
             box-shadow: none;
             margin: auto;
         }
     </style>
-    <x-media.css/>
+    <x-media.css />
 @endsection
 
 @section('content')
@@ -235,13 +235,13 @@
                             <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label for="name" class="form-label">Full Name</label>
-                                    <input type="text" id="name" name="name" class="form-control"
-                                        placeholder="Enter Name" required>
+                                    <input type="text" id="name" name="name" class="form-control" placeholder="Enter Name"
+                                        required>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="age" class="form-label">Age</label>
-                                    <input type="number" id="age" name="age" class="form-control"
-                                        placeholder="Enter Age" required>
+                                    <input type="number" id="age" name="age" class="form-control" placeholder="Enter Age"
+                                        required>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="occupation" class="form-label">Occupation</label>
@@ -273,7 +273,7 @@
                                             <option value="{{ $tongue->mother_tongue }}">{{ $tongue->mother_tongue }}</option>
                                         @endforeach
                                     </select>
-                                </div>                                
+                                </div>
                             </div>
 
                             <div class="row mb-3">
@@ -305,52 +305,29 @@
 
                             <div class="row g-3">
                                 <div class="col-12">
-                                    <label class="form-label fw-bold">Upload Image</label>
+                                    <label class="form-label fw-bold">Upload Images</label>
                                     <p class="text-muted">Please upload files in jpg, jpeg, or png format and make sure the
-                                        file size is under 25 MB.</p>
+                                        file size is under 25 MB. You can upload multiple images.</p>
 
-                                    <!-- Modified Upload Section -->
+                                    <!-- Single Upload Section for Multiple Images -->
                                     <div class="upload-img text-center">
                                         <div class="media-upload-btn-wrapper">
                                             <div class="img-wrap new_image_add_listing">
-                                                <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}" alt="images" class="w-100">
+                                                <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}"
+                                                    alt="images" class="w-100">
                                             </div>
-                                            <input type="hidden" name="image" id="image_input">
+                                            <input name="image" id="images_input">
                                             <button type="button" class="btn btn-info media_upload_form_btn"
-                                                    data-btntitle="{{__('Select Image')}}"
-                                                    data-modaltitle="{{__('Upload Image')}}"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#media_upload_modal">
-                                                {{ __('Click to Upload Profile Image') }}
+                                                data-btntitle="{{__('Select Images')}}"
+                                                data-modaltitle="{{__('Upload Images')}}" data-mulitple="true"
+                                                data-bs-toggle="modal" data-bs-target="#media_upload_modal">
+                                                {{ __('Click to Upload Images') }}
                                             </button>
                                             <small>{{ __('image format: jpg,jpeg,png,gif,webp')}}</small> <br>
                                             <small>{{ __('recommended size 810x450') }}</small>
                                         </div>
-                                    </div>
-
-                                    <!-- Gallery Images Section -->
-                                    <div class="picture mt-3">
-                                        <div class="row g-3">
-                                            <div class="col-12">
-                                                <div class="upload-img text-center">
-                                                    <div class="media-upload-btn-wrapper">
-                                                        <div class="img-wrap new_image_gallery_add_listing">
-                                                            <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}" alt="images" class="w-100">
-                                                        </div>
-                                                        <input type="hidden" name="gallery_images" id="gallery_images_input">
-                                                        <button type="button" class="btn btn-info media_upload_form_btn"
-                                                                data-btntitle="{{__('Select Image')}}"
-                                                                data-modaltitle="{{__('Upload Image')}}"
-                                                                data-mulitple="true"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#media_upload_modal">
-                                                            {{__('Click to Upload Gallery Images')}}
-                                                        </button>
-                                                        <small>{{ __('image format: jpg,jpeg,png,gif,webp')}}</small> <br>
-                                                        <small>{{ __('recommended size 810x450') }}</small>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <div class="uploaded-images mt-3" id="uploaded-images-container">
+                                            <!-- Preview of uploaded images will appear here -->
                                         </div>
                                     </div>
                                 </div>
@@ -359,7 +336,8 @@
                             <div class="row mb-3">
                                 <div class="col-md-12">
                                     <label for="description" class="form-label">Description</label>
-                                    <textarea id="description" name="description" class="form-control" placeholder="Enter description"></textarea>
+                                    <textarea id="description" name="description" class="form-control"
+                                        placeholder="Enter description"></textarea>
                                 </div>
                             </div>
 
@@ -369,8 +347,8 @@
                                 }
                                 $buttonText = __('Sumbit');
                             @endphp
-                            <button class="cmn-btn-outline1 choose_membership_plan btn btn-primary" data-bs-toggle="modal" data-id=""
-                                data-price="{{ get_static_option('matrimony_price') }}"
+                            <button class="cmn-btn-outline1 choose_membership_plan btn btn-primary" data-bs-toggle="modal"
+                                data-id="" data-price="{{ get_static_option('matrimony_price') }}"
                                 data-bs-target="{{ $modalTarget }}">
                                 {{ $buttonText }}
                             </button>
@@ -383,7 +361,7 @@
 @endsection
 
 @include('matrimony.partials.gateway-markup')
-<x-media.markup :type="'web'"/>
+<x-media.markup :type="'web'" />
 
 @section('script')
     {{-- Toaster initialization --}}
@@ -397,52 +375,36 @@
     </script>
 
     {{-- Media Upload Script --}}
-    <x-media.js :type="'web'"/>
+    <x-media.js :type="'web'" />
     <script>
-        (function($){
-            "use strict";
-            
-            // Handle featured image selection
-            $(document).on('click', '.new_image_add_listing', function(e) {
-                e.preventDefault();
-                let selector = $(this).closest('.media-upload-btn-wrapper').find('.media_upload_form_btn');
-                selector.trigger('click');
-            });
+        $(document).on('media_upload_selected', function (e, data) {
+            if (data.trigger_button.hasClass('media_upload_form_btn')) {
+                let wrapper = data.trigger_button.closest('.media-upload-btn-wrapper');
+                let imagesInput = wrapper.find('input[name="image"]');
 
-            // Handle gallery images selection
-            $(document).on('click', '.new_image_gallery_add_listing', function(e) {
-                e.preventDefault();
-                let selector = $(this).closest('.media-upload-btn-wrapper').find('.media_upload_form_btn');
-                selector.trigger('click');
-            });
+                // Get current value as array (or empty array if no value)
+                let currentValue = imagesInput.val() ? imagesInput.val().split('|') : [];
 
-            // After selecting media from modal
-            $(document).on('media_upload_selected', function(e, data) {
-                if(data.trigger_button.hasClass('media_upload_form_btn')) {
-                    let wrapper = data.trigger_button.closest('.media-upload-btn-wrapper');
-                    
-                    if(data.trigger_button.attr('data-mulitple') === 'true') {
-                        // For gallery images
-                        let galleryInput = wrapper.find('input[name="gallery_images"]');
-                        let currentValue = galleryInput.val() ? galleryInput.val().split(',') : [];
-                        currentValue.push(data.id);
-                        galleryInput.val(currentValue.join(','));
-                        
-                        // Update preview
-                        wrapper.find('.new_image_gallery_add_listing').html(`
-                            <div class="attachment-preview">
-                                <div class="thumbnail">
-                                    <div class="centered">
-                                        <img src="${data.url}" alt="${data.name}">
-                                    </div>
-                                </div>
-                            </div>
-                        `);
-                    } else {
-                        // For featured image
-                        wrapper.find('input[name="image"]').val(data.id);
-                        
-                        // Update preview
+                // Add new image ID if not already present
+                if (!currentValue.includes(data.id.toString())) {
+                    currentValue.push(data.id);
+                    imagesInput.val(currentValue.join('|'));
+
+                    // Update preview container
+                    let previewContainer = $('#uploaded-images-container');
+
+                    // Create new image preview
+                    let newImage = $(`
+                        <div class="image-container">
+                            <img src="${data.url}" class="uploaded-image" alt="${data.name}">
+                            <button type="button" class="delete-image-btn" data-id="${data.id}">×</button>
+                        </div>
+                    `);
+
+                    previewContainer.append(newImage);
+
+                    // Update main preview to show the first image
+                    if (currentValue.length === 1) {
                         wrapper.find('.new_image_add_listing').html(`
                             <div class="attachment-preview">
                                 <div class="thumbnail">
@@ -454,20 +416,41 @@
                         `);
                     }
                 }
-            });
-        })(jQuery);
+            }
+        });
+
+        // Handle image deletion
+        $(document).on('click', '.delete-image-btn', function () {
+            let imageId = $(this).data('id');
+            let wrapper = $(this).closest('.media-upload-btn-wrapper');
+            let imagesInput = wrapper.find('input[name="image"]');
+            let currentValue = imagesInput.val() ? imagesInput.val().split('|') : [];
+
+            // Remove the image ID
+            currentValue = currentValue.filter(id => id != imageId);
+            imagesInput.val(currentValue.join('|'));
+
+            // Remove the preview
+            $(this).parent().remove();
+
+            // Update main preview if needed
+            if (currentValue.length === 0) {
+                wrapper.find('.new_image_add_listing').html(`
+                    <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}" alt="images" class="w-100">
+                `);
+            }
+        });
     </script>
 
     {{-- Store function --}}
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const profileForm = document.getElementById('profileForm');
             const chooseMembershipBtn = document.querySelector('.choose_membership_plan');
 
-            chooseMembershipBtn.addEventListener('click', function() {
-                // Validate required fields from the profile form
+            chooseMembershipBtn.addEventListener('click', function () {
                 const requiredFields = ['name', 'age', 'occupation', 'annual_income', 'caste',
-                    'motherTongue', 'country', 'state', 'city', 'description'
+                    'motherTongue', 'country', 'state', 'city', 'description',
                 ];
 
                 let missingFields = [];
@@ -478,16 +461,19 @@
                     }
                 });
 
-                // Check if an image is uploaded
-                const imageInput = document.getElementById('image_input');
-                if (!imageInput || !imageInput.value) {
+                // Check if at least one image is uploaded
+                const imagesInput = document.getElementById('images_input');
+                if (!imagesInput || !imagesInput.value) {
                     missingFields.push('image');
                 }
 
                 if (missingFields.length > 0) {
-                    toastr.error('Please fill all required fields including image upload.', 'Validation Error');
+                    toastr.error('Please fill all required fields including at least one image.', 'Validation Error');
                     return false;
                 }
+
+                // Debug: Log image IDs before setting modal value
+                console.log("Image IDs before submitting: ", imagesInput.value);
 
                 // Populate hidden fields in the modal form
                 document.getElementById('modal_name').value = document.getElementById('name').value;
@@ -500,8 +486,7 @@
                 document.getElementById('modal_state').value = document.getElementById('state').value;
                 document.getElementById('modal_city').value = document.getElementById('city').value;
                 document.getElementById('modal_description').value = document.getElementById('description').value;
-                document.getElementById('modal_image').value = document.getElementById('image_input').value;
-                document.getElementById('modal_gallery_images').value = document.getElementById('gallery_images_input').value;
+                document.getElementById('modal_images').value = imagesInput.value;
             });
         });
     </script>
@@ -509,9 +494,9 @@
     {{-- Fetch country --}}
     <script>
         // When the country dropdown changes, get the states
-        document.getElementById('country').addEventListener('change', function() {
+        document.getElementById('country').addEventListener('change', function () {
             const countryId = this.value;
-            
+
             // Reset the state and city dropdowns
             const stateSelect = document.getElementById('state');
             const citySelect = document.getElementById('city');
@@ -542,9 +527,9 @@
         });
 
         // When the state dropdown changes, get the cities
-        document.getElementById('state').addEventListener('change', function() {
+        document.getElementById('state').addEventListener('change', function () {
             const stateId = this.value;
-            
+
             // Reset the city dropdown
             const citySelect = document.getElementById('city');
             citySelect.innerHTML = '<option value="" selected>Choose City</option>';

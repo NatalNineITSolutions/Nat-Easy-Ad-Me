@@ -2,8 +2,8 @@
 
 @section('title', 'Matrimony Home')
 
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
 
 @section('style')
 
@@ -34,7 +34,8 @@
             color: #fff;
             text-align: center;
             padding: 20px;
-            overflow: hidden; /* Prevents horizontal scroll */
+            overflow: hidden;
+            /* Prevents horizontal scroll */
         }
 
         .banner-bg {
@@ -53,8 +54,10 @@
             from {
                 transform: scale(1);
             }
+
             to {
-                transform: scale(1.1); /* Slight zoom-in effect */
+                transform: scale(1.1);
+                /* Slight zoom-in effect */
             }
         }
 
@@ -69,14 +72,16 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5); /* Dark overlay for better text visibility */
+            background: rgba(0, 0, 0, 0.5);
+            /* Dark overlay for better text visibility */
             z-index: 1;
         }
 
         .banner-content {
             width: 100%;
             position: relative;
-            z-index: 2; /* Ensures content stays above background */
+            z-index: 2;
+            /* Ensures content stays above background */
         }
 
         .search-container {
@@ -107,14 +112,16 @@
             .search-container {
                 display: flex;
                 flex-wrap: wrap;
-                gap: 10px; /* Space between elements */
+                gap: 10px;
+                /* Space between elements */
                 justify-content: space-between;
             }
 
             /* Default: 2 items per row for tablets */
-            .search-container select, 
+            .search-container select,
             .search-container button {
-                flex: 1 1 calc(50% - 10px); /* 50% width for 2 items per row */
+                flex: 1 1 calc(50% - 10px);
+                /* 50% width for 2 items per row */
                 padding: 8px;
                 font-size: 14px;
             }
@@ -145,165 +152,166 @@
         .card-slider {
             max-width: 960px;
             margin: 0 auto;
-            
+
             @media screen and (max-width: 1024px) {
                 width: 80%;
-        }
-            
-        .slick-prev-icon,
-        .slick-next-icon {
-            color: black;
-        }
-        
-        .card {
-            position: relative;
-            display: flex !important;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
-            border-radius: 3px;
-            border: 1px solid rgba(0,0,0,.2);
-            background-color: white;
-            text-decoration: none;
-            color: rgba(0,0,0,.9);
-            transition: all .1s linear;
-            @media screen and (max-width: 600px) {
-            height: auto;
             }
-        }
 
-        .card h2 {
-        font-size: 15px;
-        font-weight: 600;
-        text-align: center;
-        margin-top: 15px;
-        margin-bottom: 15px;
-        }
+            .slick-prev-icon,
+            .slick-next-icon {
+                color: black;
+            }
 
-        .card p {
-        font-size: 12px;
-        font-weight: 600;
-        }
+            .card {
+                position: relative;
+                display: flex !important;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 15px;
+                border-radius: 3px;
+                border: 1px solid rgba(0, 0, 0, .2);
+                background-color: white;
+                text-decoration: none;
+                color: rgba(0, 0, 0, .9);
+                transition: all .1s linear;
 
-        /** Product title */
-        .card .title {
-        color: #000;
-        margin: 0;
-        padding: 10px 10px 5px 10px;
-        font-size: 16px;
-        font-weight: bold;
-        }
+                @media screen and (max-width: 600px) {
+                    height: auto;
+                }
+            }
 
-        .card .title:hover {
-            text-decoration: underline;
-        }
+            .card h2 {
+                font-size: 15px;
+                font-weight: 600;
+                text-align: center;
+                margin-top: 15px;
+                margin-bottom: 15px;
+            }
 
-        /** Product image */
-        .card .image {
-        /** Visually place the image above all other content (like the heading) in the parent flex container (.card). */
-        order: -1;
+            .card p {
+                font-size: 12px;
+                font-weight: 600;
+            }
 
-        position: relative;
-        height: 100px;
-        padding: 2px;
-        overflow: hidden;
+            /** Product title */
+            .card .title {
+                color: #000;
+                margin: 0;
+                padding: 10px 10px 5px 10px;
+                font-size: 16px;
+                font-weight: bold;
+            }
 
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        }
+            .card .title:hover {
+                text-decoration: underline;
+            }
 
-        .card .image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: grayscale(.5);
-            transition: all .3s ease-in-out;
-        }
+            /** Product image */
+            .card .image {
+                /** Visually place the image above all other content (like the heading) in the parent flex container (.card). */
+                order: -1;
+
+                position: relative;
+                height: 100px;
+                padding: 2px;
+                overflow: hidden;
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .card .image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                filter: grayscale(.5);
+                transition: all .3s ease-in-out;
+            }
 
             .card .image:hover img {
-            width: 110%;
-            height: 110%;
+                width: 110%;
+                height: 110%;
             }
 
-        /** Product description */
-        .card .description {
-        margin: 7px 10px 15px 10px;
-        font-size: 14px;
-        opacity: .8;
-        }
+            /** Product description */
+            .card .description {
+                margin: 7px 10px 15px 10px;
+                font-size: 14px;
+                opacity: .8;
+            }
 
-        /** Floating "sale" badge */
-        .card .badge {
-        position: absolute;
-        top: 2px;
-        right: 2px;
-        z-index: 1;
+            /** Floating "sale" badge */
+            .card .badge {
+                position: absolute;
+                top: 2px;
+                right: 2px;
+                z-index: 1;
 
-        padding: 5px 10px;
+                padding: 5px 10px;
 
-        font-size: 12px;
-        font-weight: bold;
-        text-transform: uppercase;
-        color: white;
-        background-color: rgb(200,0,0);
-        }
+                font-size: 12px;
+                font-weight: bold;
+                text-transform: uppercase;
+                color: white;
+                background-color: rgb(200, 0, 0);
+            }
 
-        /** Price */
-        .card .price {
-        padding-left: 10px;
-        }
+            /** Price */
+            .card .price {
+                padding-left: 10px;
+            }
 
-        .card .price .new-price {
-            font-weight: bold;
-        }
+            .card .price .new-price {
+                font-weight: bold;
+            }
 
-        .card .price .original-price {
-            margin-left: 5px;
-            font-size: 14px;
-            font-style: italic;
-            opacity: .5;
-            text-decoration: line-through;
-        }
+            .card .price .original-price {
+                margin-left: 5px;
+                font-size: 14px;
+                font-style: italic;
+                opacity: .5;
+                text-decoration: line-through;
+            }
 
-        /** Rating */
-        .card .rating {
-        margin: 10px 0 15px 10px;
-        color: orange;
-        font-size: 12px;
-        }
+            /** Rating */
+            .card .rating {
+                margin: 10px 0 15px 10px;
+                color: orange;
+                font-size: 12px;
+            }
 
-        /** "30 reviews" link next to stars */
-        .card .rating .reviews-link {
-            color: rgba(0,0,0,.6);
-            margin-left: 5px;
-        }
+            /** "30 reviews" link next to stars */
+            .card .rating .reviews-link {
+                color: rgba(0, 0, 0, .6);
+                margin-left: 5px;
+            }
 
             .card .rating .reviews-link:hover {
-            color: black;
+                color: black;
             }
 
             .card .rating .reviews-link:focus {
-            color: royalblue;
-            outline: 3px dotted royalblue;
-            outline-offset: 2px;
+                color: royalblue;
+                outline: 3px dotted royalblue;
+                outline-offset: 2px;
             }
 
-        /** Hover state = add box shadow, underline the title */
-        .card:hover {
-        border-color: rgba(0,0,0,.4);
-        box-shadow: 0 0 10px 0 rgba(0,0,0,.15);
-        }
+            /** Hover state = add box shadow, underline the title */
+            .card:hover {
+                border-color: rgba(0, 0, 0, .4);
+                box-shadow: 0 0 10px 0 rgba(0, 0, 0, .15);
+            }
 
-        .card:hover .image img,
-        .card:focus .image img {
-            filter: grayscale(0);
-        }
+            .card:hover .image img,
+            .card:focus .image img {
+                filter: grayscale(0);
+            }
 
-        .card a:focus {
-            outline: none;
-        }
+            .card a:focus {
+                outline: none;
+            }
         }
 
         .slick-next,
@@ -314,7 +322,7 @@
         .slick-next:hover,
         .slick-prev:hover {
             background-color: black;
-        } 
+        }
 
         .profile-container {
             margin-top: 30px;
@@ -349,7 +357,8 @@
         .profile-container-section {
             display: flex;
             align-items: center;
-            gap: 20px;;
+            gap: 20px;
+            ;
         }
 
         .profile-container-section-img {
@@ -374,7 +383,7 @@
 
         .slick-slide {
             margin: 0 5px;
-        } 
+        }
 
         .btn-profile {
             padding: 10px 15px;
@@ -418,12 +427,13 @@
             justify-content: center;
             padding: 20px;
             border-radius: 8px;
-            border: 1px solid rgba(0,0,0,.1);
+            border: 1px solid rgba(0, 0, 0, .1);
             background-color: white;
-            color: rgba(0,0,0,.9);
+            color: rgba(0, 0, 0, .9);
             transition: all 0.3s ease;
-            margin: 0 15px; /* Space between cards */
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin: 0 15px;
+            /* Space between cards */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
             height: 100%;
         }
 
@@ -453,21 +463,24 @@
 
         /* Slick slider customizations */
         .slick-slide {
-            padding: 0 15px; /* This creates the space between cards */
+            padding: 0 15px;
+            /* This creates the space between cards */
         }
 
         .slick-list {
-            margin: 0 -5px; /* Compensate for slide padding */
+            margin: 0 -5px;
+            /* Compensate for slide padding */
             padding: 20px 0;
         }
 
         .slick-track {
             display: flex;
-            align-items: stretch; /* Make cards equal height */
+            align-items: stretch;
+            /* Make cards equal height */
         }
 
         /* Navigation arrows */
-        .slick-prev, 
+        .slick-prev,
         .slick-next {
             width: 40px;
             height: 40px;
@@ -484,7 +497,7 @@
             right: -50px;
         }
 
-        .slick-prev:before, 
+        .slick-prev:before,
         .slick-next:before {
             font-family: 'Font Awesome 5 Free';
             font-weight: 900;
@@ -518,60 +531,60 @@
             background-color: #e0105c;
         }
 
-    /* Responsive adjustments */
-    @media (max-width: 1024px) {
-        .card-slider {
-            max-width: 800px;
-        }
-        
-        .slick-prev {
-            left: -30px;
-        }
-        
-        .slick-next {
-            right: -30px;
-        }
-    }
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .card-slider {
+                max-width: 800px;
+            }
 
-    @media (max-width: 768px) {
-        .card {
-            margin: 0 10px;
-            padding: 15px;
+            .slick-prev {
+                left: -30px;
+            }
+
+            .slick-next {
+                right: -30px;
+            }
         }
-        
-        .card h2 {
-            font-size: 16px;
+
+        @media (max-width: 768px) {
+            .card {
+                margin: 0 10px;
+                padding: 15px;
+            }
+
+            .card h2 {
+                font-size: 16px;
+            }
+
+            .card p {
+                font-size: 13px;
+            }
+
+            .card-profile {
+                width: 70px;
+                height: 70px;
+            }
         }
-        
-        .card p {
-            font-size: 13px;
-        }
-        
-        .card-profile {
-            width: 70px;
-            height: 70px;
-        }
-    }
 
         @media (max-width: 576px) {
             .card-slider {
                 max-width: 300px;
             }
-            
+
             .card {
                 margin: 0 5px;
             }
-            
-            .slick-prev, 
+
+            .slick-prev,
             .slick-next {
                 width: 30px;
                 height: 30px;
             }
-            
+
             .slick-prev {
                 left: -15px;
             }
-            
+
             .slick-next {
                 right: -15px;
             }
@@ -604,14 +617,15 @@
             max-width: 300px;
             margin: 0 auto;
         }
-        
+
         .single-card-fallback .card {
             width: 100% !important;
             float: none !important;
         }
 
         .card-slider .slick-slide {
-            min-width: 280px !important; /* Your card's natural width */
+            min-width: 280px !important;
+            /* Your card's natural width */
             width: auto !important;
         }
 
@@ -644,7 +658,7 @@
             font-family: "Prociono", serif;
             color: #4a382f;
             font-size: 28px;
-            font-weight:600;
+            font-weight: 600;
             margin-bottom: 10px;
         }
 
@@ -698,14 +712,19 @@
         }
 
         .illustration-container {
-            overflow: hidden;     /* Ensures the image stays inside the box */
-            position: relative;   /* Needed for proper positioning */
-            width: 100%;          /* Container width */
-            height: auto;         /* Auto height */
+            overflow: hidden;
+            /* Ensures the image stays inside the box */
+            position: relative;
+            /* Needed for proper positioning */
+            width: 100%;
+            /* Container width */
+            height: auto;
+            /* Auto height */
         }
 
         .illustration {
-            width: 150%;          /* Reduce image width for better fit */
+            width: 150%;
+            /* Reduce image width for better fit */
             animation: scrollAnimation 15s linear infinite;
         }
 
@@ -713,8 +732,10 @@
             from {
                 transform: translateX(0);
             }
+
             to {
-                transform: translateX(-50%); /* Moves half of the extended width */
+                transform: translateX(-50%);
+                /* Moves half of the extended width */
             }
         }
 
@@ -746,6 +767,29 @@
             .profile-container-section {
                 gap: 5px;
             }
+        }
+
+        .details {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        } 
+
+        .profile-detail {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: black;
         }
     </style>
 @endsection
@@ -789,8 +833,8 @@
                 <button class="btn btn-primary">Search</button>
             </div>
         </div>
-    </div> 
-    
+    </div>
+
     <img class="grass-border" src="/assets/uploads/media-uploader/grass-border.png" alt="">
 
     <div class="container profile-container">
@@ -812,14 +856,16 @@
             <div class="card-slider">
                 @forelse($profiles as $profile)
                     <div class="card">
-                        {{-- <img class="card-profile" 
-                             src="{{ $profile->image ? asset('storage/'.$profile->image) : '/assets/uploads/media-uploader/profile.png' }}" 
-                             alt="{{ $profile->name }}"> --}}
+                        @if(Str::startsWith($profile->first_image_url, '<img'))
+                            {!! $profile->first_image_url !!}
+                        @else
+                            <img class="card-profile" src="{{ $profile->first_image_url }}" alt="{{ $profile->name }}">
+                        @endif
                         <h2>{{ $profile->name }}</h2>
                         <p>📅 {{ $profile->age }} Years</p>
                         <p>💼 {{ $profile->occupation ?? 'Not specified' }}</p>
                         <p>📍 {{ $profile->city ?? 'Location not specified' }}</p>
-                        <a href="#" class="btn-profile">View Profile</a>
+                        <a href="{{ route('matrimony.profile-details', ['id' => $profile->id]) }}" class="btn-profile">View Profile</a>
                     </div>
                 @empty
                     <div class="card">
@@ -837,7 +883,8 @@
     <div class="container">
         <div class="perfect-match-banner">
             <h1>Find your perfect Match now</h1>
-            <p>Discover your soulmate and build a beautiful future together. Start your journey today and find your perfect match with us!</p>
+            <p>Discover your soulmate and build a beautiful future together. Start your journey today and find your perfect
+                match with us!</p>
             <div class="buttons">
                 <a href="/matrimony/register" class="register-link">
                     <button class="register-now">REGISTER NOW</button>
@@ -847,17 +894,17 @@
             <img class="perfect-match-banner-img" src="/assets/uploads/media-uploader/perfect-match-banner.png" alt="">
         </div>
     </div>
-      
+
 @endsection
 
 @section('script')
-    
+
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('.card-slider').slick({
                 dots: false,
                 arrows: true,

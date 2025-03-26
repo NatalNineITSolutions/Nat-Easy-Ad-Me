@@ -316,7 +316,7 @@
                                                 <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}"
                                                     alt="images" class="w-100">
                                             </div>
-                                            <input name="image" id="images_input">
+                                            <input type="hidden" name="image" id="images_input">
                                             <button type="button" class="btn btn-info media_upload_form_btn"
                                                 data-btntitle="{{__('Select Images')}}"
                                                 data-modaltitle="{{__('Upload Images')}}" data-mulitple="true"

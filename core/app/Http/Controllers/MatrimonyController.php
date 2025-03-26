@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\PaymentGatewayCredential;
 use App\Http\Controllers\Controller;
 use App\Models\MatrimonyPreference;
+use DB;
 use Illuminate\Http\Request;
 use App\Models\MatrimonyKyc;
 use Illuminate\Support\Facades\Auth;
@@ -26,30 +27,40 @@ class MatrimonyController extends Controller
 {
     public function index()
     {
-        // Check if user is logged in
         if (!auth()->check()) {
             return redirect()->route('user.login')->with('error', 'Please log in or register first to access Matrimony');
         }
 
-        // Get the authenticated user
         $user = auth()->user();
 
-        // Check if the profile is completed
         if ($user->profile_completed != 1) {
             return redirect()->route('matrimony.user-details')->with('info', 'Please complete your profile to proceed.');
         }
 
-        // Get verified profiles with only needed fields
         $profiles = ProfileListing::where('is_verified', 1)
             ->where('id', '!=', $user->id)
-            ->select('id', 'name', 'age', 'occupation', 'city', 'image') // Only select needed fields
+            ->select('id', 'name', 'age', 'occupation', 'city', 'image', 'mother_tongue')
             ->inRandomOrder()
             ->limit(7)
-            ->get();
+            ->get()
+            ->map(function ($profile) {
+                // Extract first image ID from pipe-separated string
+                $firstImageId = null;
+                if (!empty($profile->image)) {
+                    $imageIds = explode('|', $profile->image);
+                    $firstImageId = trim($imageIds[0]) ?? null;
+                }
+
+                // Add first_image_url to each profile
+                $profile->first_image_url = $firstImageId
+                    ? render_image_markup_by_attachment_id($firstImageId)
+                    : '/assets/uploads/media-uploader/profile.png';
+
+                return $profile;
+            });
 
         return view('matrimony.index', compact('profiles'));
     }
-
 
     public function price()
     {
@@ -58,12 +69,80 @@ class MatrimonyController extends Controller
         return view('matrimony.price', compact('memberships'));
     }
 
-
     public function profiledetails()
     {
         $user = Auth::user();
-        return view('matrimony.profile-details');
+        $profile = DB::table('profile_listings')
+            ->where('user_id', $user->id)
+            ->first();
+
+        $mainImageHtml = null;
+        $galleryImagesHtml = [];
+
+        if ($profile && !empty($profile->image)) {
+            $imageIds = array_filter(
+                preg_split('/[|,]/', $profile->image),
+                fn($id) => !empty(trim($id))
+            );
+
+            if (!empty($imageIds)) {
+                $mainImageHtml = render_image_markup_by_attachment_id(trim($imageIds[0]));
+
+                foreach ($imageIds as $imageId) {
+                    $galleryImagesHtml[] = render_image_markup_by_attachment_id(trim($imageId));
+                }
+            }
+        }
+
+        return view('matrimony.profile-details', [
+            'mainImageHtml' => $mainImageHtml,
+            'galleryImagesHtml' => $galleryImagesHtml,
+            'profile' => $profile
+        ]);
     }
+
+
+    // public function profiledetails($id = null)
+    // {
+    //     $user = Auth::user();
+
+    //     if ($id) {
+    //         $profile = ProfileListing::find($id); // Fetch profile by ID
+    //     } else {
+    //         $profile = DB::table('profile_listings')
+    //             ->where('user_id', $user->id)
+    //             ->first();
+    //     }
+
+    //     if (!$profile) {
+    //         return redirect()->route('matrimony.index')->with('error', 'Profile not found.');
+    //     }
+
+    //     $mainImageHtml = null;
+    //     $galleryImagesHtml = [];
+
+    //     if (!empty($profile->image)) {
+    //         $imageIds = array_filter(
+    //             preg_split('/[|,]/', $profile->image),
+    //             fn($id) => !empty(trim($id))
+    //         );
+
+    //         if (!empty($imageIds)) {
+    //             $mainImageHtml = render_image_markup_by_attachment_id(trim($imageIds[0]));
+
+    //             foreach ($imageIds as $imageId) {
+    //                 $galleryImagesHtml[] = render_image_markup_by_attachment_id(trim($imageId));
+    //             }
+    //         }
+    //     }
+
+    //     return view('matrimony.profile-details', [
+    //         'mainImageHtml' => $mainImageHtml,
+    //         'galleryImagesHtml' => $galleryImagesHtml,
+    //         'profile' => $profile
+    //     ]);
+    // }
+
     public function userdetails()
     {
         $castes = Caste::all();
@@ -169,8 +248,6 @@ class MatrimonyController extends Controller
 
     public function storePreference(Request $request)
     {
-        \Log::info('Request data:', $request->all());
-
         // Validate the request data
         $validatedData = $request->validate([
             'partner_age' => 'required|integer|min:18|max:100',
@@ -182,7 +259,6 @@ class MatrimonyController extends Controller
             'occupation' => 'required|string',
             'location' => 'required|string',
             'income' => 'required|string',
-            'images' => 'required|string',
         ]);
 
         // Get the authenticated user
@@ -280,31 +356,12 @@ class MatrimonyController extends Controller
     {
         \Log::info('Profile listing request data: ' . json_encode($request->all()));
 
-        // Handle single profile image (file upload)
+        // Handle file upload (if provided)
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('profile_images', 'public');
-            \Log::info('Uploaded profile image path: ' . $imagePath);
         }
 
-        // Handle gallery images (IDs from media library)
-        // $galleryImageIds = null;
-        // if ($request->filled('images')) {
-        //     $images = $request->input('images');
-
-        //     if (is_array($images)) {
-        //         \Log::info('Gallery images received as array: ' . json_encode($images));
-        //         $galleryImageIds = implode('|', array_filter($images, 'is_numeric'));
-        //     } elseif (is_string($images)) {
-        //         \Log::info('Gallery images received as string: ' . $images);
-        //         $imageIds = array_filter(explode('|', $images), 'is_numeric');
-        //         $galleryImageIds = !empty($imageIds) ? implode('|', $imageIds) : null;
-        //     }
-
-        //     \Log::info('Processed gallery images for storage: ' . ($galleryImageIds ?? 'None'));
-        // }
-
-        // Store profile listing - using 'image' column for both single image and gallery IDs
         $profileListing = ProfileListing::create([
             'user_id' => Auth::id(),
             'name' => $request->name,
@@ -316,17 +373,15 @@ class MatrimonyController extends Controller
             'country' => $request->country,
             'state' => $request->state,
             'city' => $request->city,
-            'image' => $request->images, // Storing the pipe-separated IDs in 'image' column
+            'image' => $imagePath,
             'description' => $request->description,
-            'paid' => 0,
-            'payment_method' => null,
-            // 'images' column removed since we're using 'image'
+            'paid' => 0,       // Not paid yet
+            'payment_method' => null,    // Not selected yet
         ]);
 
-        \Log::info('Profile listing created with ID: ' . $profileListing->id);
         session()->put('profile_listing_id', $profileListing->id);
 
-        // Handle payment gateway if selected
+        // Process payment if a payment gateway is selected
         if ($request->filled('selected_payment_gateway')) {
             $payment_gateway = $request->selected_payment_gateway;
             \Log::info('Payment gateway selected: ' . $payment_gateway);
@@ -334,17 +389,19 @@ class MatrimonyController extends Controller
             $credential_function = 'get_' . $payment_gateway . '_credential';
             \Log::info('Credential function: ' . $credential_function);
 
+            // Check if the payment gateway has a custom credential function
             if (!method_exists((new PaymentGatewayCredential()), $credential_function)) {
                 \Log::info('Using custom payment logic for user: ' . Auth::id());
 
-                $custom_data = [
-                    'request' => $request->all(),
-                    'total' => get_static_option('matrimony_price'),
-                    'payment_type' => "deposit",
-                    'payment_for' => "membership",
-                    'success_url' => route('user.membership.all')
-                ];
+                // Prepare custom data for payment processing
+                $custom_data = [];
+                $custom_data['request'] = $request->all();
+                $custom_data['total'] = get_static_option('matrimony_price');
+                $custom_data['payment_type'] = "deposit";
+                $custom_data['payment_for'] = "membership";
+                $custom_data['success_url'] = route('user.membership.all');
 
+                // Get the namespace and method for charging the customer
                 $charge_customer_class_namespace = getChargeCustomerMethodNameByPaymentGatewayNameSpace($payment_gateway);
                 $charge_customer_method_name = getChargeCustomerMethodNameByPaymentGatewayName($payment_gateway);
 
@@ -411,6 +468,26 @@ class MatrimonyController extends Controller
     {
         $profiles = ProfileListing::select('id', 'name', 'age', 'is_verified', 'rejection_reason')->get();
         return view('matrimony.profile-lists', compact('profiles'));
+    }
+
+    public function checkSubscription()
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['status' => 'error', 'message' => 'User not logged in'], 401);
+        }
+
+        // Fetch is_subscribed from user_memberships table
+        $isSubscribed = DB::table('user_memberships')
+            ->where('user_id', $user->id)
+            ->value('is_subscribed');
+
+        if ($isSubscribed) {
+            return response()->json(['status' => 'success']);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'Please subscribe to see the profile']);
+        }
     }
 
 }

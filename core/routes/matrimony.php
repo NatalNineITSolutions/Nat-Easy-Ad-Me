@@ -9,7 +9,8 @@ Route::middleware(['web'])->group(function () {
     ], function () {
         Route::get('/', [MatrimonyController::class, 'index'])->name('index');
         Route::get('/pricing', [MatrimonyController::class, 'price'])->name('price');
-        Route::get('/profile-details', [MatrimonyController::class, 'profiledetails'])->name('profile-details');
+        // Route::get('/profile-details', [MatrimonyController::class, 'profiledetails'])->name('profile-details');
+        Route::get('/profile-details/{id}', [MatrimonyController::class, 'profiledetails'])->name('profile-details');
         Route::get('/otp', [MatrimonyController::class, 'otp'])->name('otp');
 
         // KYC
@@ -36,5 +37,7 @@ Route::middleware(['web'])->group(function () {
         Route::get('/get-states/{country_id}', [MatrimonyController::class, 'getStates'])->name('get-states');
 
         Route::get('/get-cities/{state_id}', [MatrimonyController::class, 'getCities'])->name('get-cities');
+
+        Route::get('/check-subscription', [MatrimonyController::class, 'checkSubscription'])->name('check.subscription');
     });
 });

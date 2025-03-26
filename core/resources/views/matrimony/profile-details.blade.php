@@ -6,7 +6,8 @@
     <style>
         /* Gradient Background */
         .pricing-section {
-            background: linear-gradient(to right, #6d0f7b, #e44042); /* Adjusted Gradient Colors */
+            background: linear-gradient(to right, #6d0f7b, #e44042);
+            /* Adjusted Gradient Colors */
             color: white;
             text-align: center;
             padding: 80px 20px;
@@ -14,7 +15,8 @@
         }
 
         /* Small Decorative Circles */
-        .pricing-section::before, .pricing-section::after {
+        .pricing-section::before,
+        .pricing-section::after {
             content: "";
             position: absolute;
             width: 100px;
@@ -97,7 +99,8 @@
         .profile-container-section {
             display: flex;
             align-items: center;
-            gap: 20px;;
+            gap: 20px;
+            ;
         }
 
         .profile-container-section-img {
@@ -159,13 +162,16 @@
             text-align: left;
             color: #66451C;
         }
+
         .profile-info h3 {
             color: gray;
             font-size: 16px;
         }
+
         .details {
             text-align: left;
         }
+
         .details p {
             margin: 5px 0;
             font-size: 14px;
@@ -174,10 +180,12 @@
         .details span {
             font-weight: 600;
         }
+
         .connect-btn {
             margin-top: 20px;
             text-align: center;
         }
+
         .connect a {
             display: inline-block;
             padding: 10px 20px;
@@ -194,8 +202,10 @@
 
         .profile-tabs {
             border-bottom: 1px solid #E5E5E5;
-            overflow-x: auto; /* Allow horizontal scrolling on small screens */
-            white-space: nowrap; /* Prevent tabs from wrapping */
+            overflow-x: auto;
+            /* Allow horizontal scrolling on small screens */
+            white-space: nowrap;
+            /* Prevent tabs from wrapping */
         }
 
         .tab-link {
@@ -205,7 +215,8 @@
             cursor: pointer;
             font-size: 16px;
             font-weight: bold;
-            display: inline-block; /* Ensure tabs are in a single line */
+            display: inline-block;
+            /* Ensure tabs are in a single line */
         }
 
         .tab-link.active {
@@ -235,7 +246,8 @@
         }
 
         .gallery-grid img:first-child {
-            grid-column: span 2; /* First image takes 2 columns */
+            grid-column: span 2;
+            /* First image takes 2 columns */
         }
 
         .gallery-grid img:nth-child(4) {
@@ -246,6 +258,7 @@
             .gallery-grid {
                 grid-template-columns: 1fr;
             }
+
             .gallery-grid img:first-child {
                 grid-column: span 1;
             }
@@ -264,25 +277,29 @@
         .download-btn:hover {
             background-color: #d81b60;
         }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .pricing-section h2 {
                 font-size: 2rem;
             }
+
             .pricing-section h3 {
                 font-size: 1.5rem;
             }
 
             .profile-tabs {
                 display: flex;
-                flex-direction: column; /* Stack tabs vertically on small screens */
+                flex-direction: column;
+                /* Stack tabs vertically on small screens */
                 border-bottom: none;
             }
 
             .tab-link {
                 text-align: left;
                 border-bottom: 1px solid #E5E5E5;
-                width: 100%; /* Full width for vertical tabs */
+                width: 100%;
+                /* Full width for vertical tabs */
             }
 
             .tab-link.active {
@@ -305,8 +322,6 @@
                 align-self: flex-start;
             }
         }
-
-        
     </style>
 
 @endsection
@@ -317,7 +332,8 @@
         <h3>PROFILE DETAILS</h3>
         <h2>Get to Know</h2>
         <h3>Explore the Perfect Match</h3>
-        <p>Discover detailed profiles and find a compatible partner. View preferences, interests, and essential details to make the right choice!</p>        
+        <p>Discover detailed profiles and find a compatible partner. View preferences, interests, and essential details to
+            make the right choice!</p>
         {{-- <a href="#" class="pricing-btn">See Available Pricing Plans</a> --}}
     </section>
 
@@ -341,44 +357,63 @@
 
         <div class="profile-wrapper container">
             <div class="profile-wrapper-section">
-                <div class="profile-pic">
-                    <img src="/assets/uploads/media-uploader/profile-detail.png" alt="Profile Picture" class="profile-img">
+                <div class="profile-images-container">
+                    @if($mainImageHtml)
+                        <!-- Only show the first/main profile image -->
+                        <div class="main-profile-image">
+                            {!! $mainImageHtml !!}
+                        </div>
+                    @else
+                        <!-- Default fallback -->
+                        <div class="main-profile-image">
+                            <img src="/assets/uploads/media-uploader/profile-detail.png" alt="Default Profile">
+                        </div>
+                    @endif
                 </div>
+
                 <div class="profile-info">
                     <div>
-                        <h2>Priya <span>👑</span></h2>
+                        <h2>{{ $profile->name ?? 'User' }} <span>👑</span></h2>
                     </div>
                     <div class="details">
-                        <p><span>Education:</span> MSc</p>
-                        <p><span>ID Number:</span> 90892</p>
-                        <p><span>Address:</span> Your Address Here</p>
-                        <p><span>Age & Religion:</span> 25, Hindu</p>
-                        <p><span>Occupation:</span> Teacher</p>
+                        <p><span>Education:</span> {{ $profile->education ?? 'Not specified' }}</p>
+                        <p><span>ID Number:</span> {{ $profile->id_number ?? 'N/A' }}</p>
+                        <p><span>Address:</span> {{ $profile->address ?? 'Not specified' }}</p>
+                        <p><span>Age & Religion:</span> {{ $profile->age ?? '' }}, {{ $profile->religion ?? '' }}</p>
+                        <p><span>Occupation:</span> {{ $profile->occupation ?? 'Not specified' }}</p>
                     </div>
                     <div class="connect">
-                        <a href="#">Connect</a>
+                        <a href="javascript:void(0);" onclick="showProfileDetails()">Unlock full details</a>
                     </div>
                 </div>
             </div>
-            
-            <div class="profile-bottom">
+
+            <div class="profile-bottom" style="display: none;">
                 <div class="profile-tabs">
-                    <button class="tab-link active" data-tab="description" onclick="openTab(event, 'description')">Descriptions</button>
+                    <button class="tab-link active" data-tab="description"
+                        onclick="openTab(event, 'description')">Descriptions</button>
                     <button class="tab-link" data-tab="gallery" onclick="openTab(event, 'gallery')">Gallery</button>
                     <button class="tab-link" data-tab="jothagam" onclick="openTab(event, 'jothagam')">Jathagam</button>
                 </div>
-            
+
                 <div class="tab-content active" id="description">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vitae felis auctor.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                 </div>
+
                 <div class="tab-content" id="gallery">
                     <div class="gallery-grid">
-                        <img src="/assets/uploads/media-uploader/grid_5.jpeg" alt="Gallery Image 1">
-                        <img src="/assets/uploads/media-uploader/grid_2.jpeg" alt="Gallery Image 2">
-                        <img src="/assets/uploads/media-uploader/grid_3.jpeg" alt="Gallery Image 3">
-                        <img src="/assets/uploads/media-uploader/grid_4.jpeg" alt="Gallery Image 4">
+                        @if(count($galleryImagesHtml) > 0)
+                            @foreach($galleryImagesHtml as $imageHtml)
+                                <div class="gallery-item">
+                                    {!! $imageHtml !!}
+                                </div>
+                            @endforeach
+                        @else
+                            <p>No gallery images available</p>
+                        @endif
                     </div>
                 </div>
+
                 <div id="jothagam" class="tab-content">
                     <p>Download the Jothagam PDF file:</p>
                     <a href="path/to/yourfile.pdf" download class="download-btn">Download PDF</a>
@@ -390,31 +425,56 @@
 @endsection
 
 @section('script')
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-    const tabLinks = document.querySelectorAll(".tab-link");
-    const tabContents = document.querySelectorAll(".tab-content");
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const tabLinks = document.querySelectorAll(".tab-link");
+            const tabContents = document.querySelectorAll(".tab-content");
 
-    function openTab(event, tabName) {
-        tabContents.forEach(tab => {
-            tab.classList.remove("active");
+            function openTab(event, tabName) {
+                tabContents.forEach(tab => {
+                    tab.classList.remove("active");
+                });
+
+                tabLinks.forEach(btn => {
+                    btn.classList.remove("active");
+                });
+
+                document.getElementById(tabName).classList.add("active");
+                event.currentTarget.classList.add("active");
+            }
+
+            // Add event listeners to buttons
+            tabLinks.forEach(tab => {
+                tab.addEventListener("click", function () {
+                    const tabName = this.getAttribute("data-tab");
+                    openTab(event, tabName);
+                });
+            });
         });
+    </script>
 
-        tabLinks.forEach(btn => {
-            btn.classList.remove("active");
-        });
+    <script>
+        function showProfileDetails() {
+            fetch("{{ route('matrimony.check.subscription') }}")
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Response Data:", data); // Debugging line
 
-        document.getElementById(tabName).classList.add("active");
-        event.currentTarget.classList.add("active");
-    }
+                    if (data.status === "success") {
+                        document.querySelector('.profile-bottom').style.display = 'block';
+                    } else {
+                        toastr.error(data.message); // Show toast message
 
-    // Add event listeners to buttons
-    tabLinks.forEach(tab => {
-        tab.addEventListener("click", function () {
-            const tabName = this.getAttribute("data-tab");
-            openTab(event, tabName);
-        });
-    });
-});
-</script>
+                        // Redirect to the pricing page after a short delay
+                        setTimeout(() => {
+                            window.location.href = "/matrimony/pricing";
+                        }, 2000); // Redirect after 2 seconds
+                    }
+                })
+                .catch(error => {
+                    console.error("Fetch Error:", error);
+                    toastr.error("Something went wrong. Please try again.");
+                });
+        }
+    </script>
 @endsection

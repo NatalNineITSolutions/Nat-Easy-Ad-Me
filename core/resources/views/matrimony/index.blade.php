@@ -609,7 +609,6 @@
 
         .card-slider .card {
             margin: 0 auto;
-            display: inline-block !important;
         }
 
         /* Fallback style when only one card exists */
@@ -776,7 +775,7 @@
             align-items: center;
             justify-content: space-between;
             gap: 15px;
-        } 
+        }
 
         .profile-detail {
             width: 100%;
@@ -790,6 +789,10 @@
             align-items: center;
             gap: 8px;
             color: black;
+        }
+
+        .card-profile {
+            filter: blur(3px);
         }
     </style>
 @endsection
@@ -839,7 +842,8 @@
 
     <div class="container profile-container">
         <div class="profile-container-section">
-            <img class="profile-container-section-img" src="/assets/uploads/media-uploader/profile-design.png" alt="">
+            <img class="profile-container-section-img" src="/assets/uploads/media-uploader/profile-design.png"
+                alt="">
             <div class="trusted-profiles">
                 <div>
                     <h2>TRUSTED PROFILES</h2>
@@ -850,13 +854,14 @@
                     <img src="/assets/uploads/media-uploader/divider.png" alt="">
                 </div>
             </div>
-            <img class="profile-container-section-img" src="/assets/uploads/media-uploader/profile-design.png" alt="">
+            <img class="profile-container-section-img" src="/assets/uploads/media-uploader/profile-design.png"
+                alt="">
         </div>
         <div class="card-slider-container">
             <div class="card-slider">
                 @forelse($profiles as $profile)
                     <div class="card">
-                        @if(Str::startsWith($profile->first_image_url, '<img'))
+                        @if (Str::startsWith($profile->first_image_url, '<img'))
                             {!! $profile->first_image_url !!}
                         @else
                             <img class="card-profile" src="{{ $profile->first_image_url }}" alt="{{ $profile->name }}">
@@ -865,11 +870,11 @@
                         <p>📅 {{ $profile->age }} Years</p>
                         <p>💼 {{ $profile->occupation ?? 'Not specified' }}</p>
                         <p>📍 {{ $profile->city ?? 'Location not specified' }}</p>
-                        <a href="{{ route('matrimony.profile-details', ['id' => $profile->id]) }}" class="btn-profile">View Profile</a>
+                        <a href="{{ route('matrimony.profile-details', ['id' => $profile->id]) }}" class="btn-profile">View
+                            Profile</a>
                     </div>
                 @empty
                     <div class="card">
-                        <img class="card-profile" src="/assets/uploads/media-uploader/profile.png" alt="Default Profile">
                         <h2>No Profiles Available</h2>
                         <p>Check back later for new matches</p>
                     </div>
@@ -891,7 +896,8 @@
                 </a>
                 <button class="support">HELP & SUPPORT</button>
             </div>
-            <img class="perfect-match-banner-img" src="/assets/uploads/media-uploader/perfect-match-banner.png" alt="">
+            <img class="perfect-match-banner-img" src="/assets/uploads/media-uploader/perfect-match-banner.png"
+                alt="">
         </div>
     </div>
 
@@ -904,14 +910,13 @@
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('.card-slider').slick({
                 dots: false,
                 arrows: true,
                 slidesToShow: 4,
                 infinite: false,
-                responsive: [
-                    {
+                responsive: [{
                         breakpoint: 1024,
                         settings: {
                             slidesToShow: 3
@@ -936,7 +941,7 @@
 
     <script>
         history.pushState(null, null, location.href);
-        window.onpopstate = function () {
+        window.onpopstate = function() {
             history.pushState(null, null, location.href);
         };
     </script>

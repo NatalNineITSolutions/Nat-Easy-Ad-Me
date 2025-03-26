@@ -322,6 +322,10 @@
                 align-self: flex-start;
             }
         }
+
+        .card-profile {
+            filter: blur(3px);
+        }
     </style>
 
 @endsection
@@ -340,7 +344,8 @@
     <div class="profile-details">
         <div class="container profile-container">
             <div class="profile-container-section">
-                <img class="profile-container-section-img" src="/assets/uploads/media-uploader/profile-design.png" alt="">
+                <img class="profile-container-section-img " src="/assets/uploads/media-uploader/profile-design.png"
+                    alt="">
                 <div class="trusted-profiles">
                     <div>
                         <h2>TRUSTED PROFILES</h2>
@@ -351,14 +356,15 @@
                         <img src="/assets/uploads/media-uploader/divider.png" alt="">
                     </div>
                 </div>
-                <img class="profile-container-section-img" src="/assets/uploads/media-uploader/profile-design.png" alt="">
+                <img class="profile-container-section-img " src="/assets/uploads/media-uploader/profile-design.png"
+                    alt="">
             </div>
         </div>
 
         <div class="profile-wrapper container">
             <div class="profile-wrapper-section">
                 <div class="profile-images-container">
-                    @if($mainImageHtml)
+                    @if ($mainImageHtml)
                         <!-- Only show the first/main profile image -->
                         <div class="main-profile-image">
                             {!! $mainImageHtml !!}
@@ -366,7 +372,7 @@
                     @else
                         <!-- Default fallback -->
                         <div class="main-profile-image">
-                            <img src="/assets/uploads/media-uploader/profile-detail.png" alt="Default Profile">
+                            <img src="/assets/uploads/media-uploader/profile-detail.png" class="card-profile" alt="Default Profile">
                         </div>
                     @endif
                 </div>
@@ -402,8 +408,8 @@
 
                 <div class="tab-content" id="gallery">
                     <div class="gallery-grid">
-                        @if(count($galleryImagesHtml) > 0)
-                            @foreach($galleryImagesHtml as $imageHtml)
+                        @if (count($galleryImagesHtml) > 0)
+                            @foreach ($galleryImagesHtml as $imageHtml)
                                 <div class="gallery-item">
                                     {!! $imageHtml !!}
                                 </div>
@@ -426,7 +432,7 @@
 
 @section('script')
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const tabLinks = document.querySelectorAll(".tab-link");
             const tabContents = document.querySelectorAll(".tab-content");
 
@@ -445,7 +451,7 @@
 
             // Add event listeners to buttons
             tabLinks.forEach(tab => {
-                tab.addEventListener("click", function () {
+                tab.addEventListener("click", function() {
                     const tabName = this.getAttribute("data-tab");
                     openTab(event, tabName);
                 });

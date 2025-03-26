@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,23 +16,24 @@
     {{-- Google Fonts --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
 
     {{-- Font awesome --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     {{-- Select 2 --}}
     <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
 
     <style>
-
-
         * {
             padding: 0;
             margin: 0;
             box-sizing: border-box;
             font-family: "Montserrat", sans-serif;
-        } 
+        }
 
         .form-control:focus {
             box-shadow: none;
@@ -136,7 +138,8 @@
             background-color: #e6ffe6;
         }
 
-        .delete, .tick {
+        .delete,
+        .tick {
             width: 16px;
             height: 16px;
             vertical-align: middle;
@@ -144,26 +147,31 @@
         }
 
         .badge .delete {
-            display: inline; /* Show delete icon by default */
+            display: inline;
+            /* Show delete icon by default */
         }
 
         .badge .tick {
-            display: none; /* Hide tick icon by default */
+            display: none;
+            /* Hide tick icon by default */
         }
 
         .badge.selected .delete {
-            display: none; /* Hide delete icon when selected */
+            display: none;
+            /* Hide delete icon when selected */
         }
 
         .badge.selected .tick {
-            display: inline; /* Show tick icon when selected */
+            display: inline;
+            /* Show tick icon when selected */
         }
 
         .next-button {
-            background-color: #FF0066; /* Pink */
+            background-color: #FF0066;
+            /* Pink */
             color: white;
             font-size: 13px;
-            font-weight: 600;   
+            font-weight: 600;
             padding: 8px 15px;
             border: none;
             cursor: pointer;
@@ -172,7 +180,8 @@
         }
 
         .next-button:hover {
-            background-color: #E6005C; /* Slightly darker pink */
+            background-color: #E6005C;
+            /* Slightly darker pink */
         }
 
         .text {
@@ -332,12 +341,13 @@
         }
     </style>
 </head>
+
 <body>
     <div class="login-container">
         <div class="container d-flex">
             <div class="left"></div>
             <div class="right">
-               <div class="user-detail-form">
+                <div class="user-detail-form">
                     <h3>Join South India's fastest growing matrimonial site</h3>
 
                     <form class="user-form section-1">
@@ -352,64 +362,66 @@
                                     <option value="Divorce">Divorce</option>
                                 </select>
                             </div>
-                    
+
                             <!-- DOB -->
                             <div class="col-md-6">
                                 <label class="form-label">DOB</label>
                                 <input type="date" class="form-control" name="dob" id="dob">
                             </div>
-                    
+
                             <!-- Family Status -->
                             <div class="col-md-6">
                                 <label class="form-label">Family Status</label>
                                 <div class="badge-select">
                                     <span class="badge" onclick="toggleBadge(this, 'Middle Class', 'family_status')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete">
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
                                         Middle Class
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Rich/Affluent', 'family_status')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete">
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
                                         Rich/Affluent
                                     </span>
-                                    <span class="badge" onclick="toggleBadge(this, 'Upper Middle Class', 'family_status')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
+                                    <span class="badge"
+                                        onclick="toggleBadge(this, 'Upper Middle Class', 'family_status')">
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete">
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
                                         Upper Middle Class
                                     </span>
                                 </div>
                                 <input type="hidden" name="family_status" id="family_status">
                             </div>
-                    
+
                             <!-- Family Values -->
                             <div class="col-md-6">
                                 <label class="form-label">Family Values</label>
                                 <div class="badge-select">
                                     <span class="badge" onclick="toggleBadge(this, 'Orthodox', 'family_values')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete">
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
                                         Orthodox
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Traditional', 'family_values')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete">
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
                                         Traditional
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Moderate', 'family_values')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete">
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
                                         Moderate
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Liberal', 'family_values')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete"
+                                            alt="Delete">
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
                                         Liberal
                                     </span>
                                 </div>
                                 <input type="hidden" name="family_values" id="family_values">
                             </div>
-                    
+
                             <!-- Family Type -->
                             <div class="col-md-6">
                                 <label class="form-label">Family Type</label>
@@ -420,7 +432,7 @@
                                     <option value="Extended">Extended</option>
                                 </select>
                             </div>
-                    
+
                             <!-- Any Disability -->
                             <div class="col-md-6">
                                 <label class="form-label">Any Disability</label>
@@ -430,21 +442,24 @@
                                     <option value="Yes">Yes</option>
                                 </select>
                             </div>
-                    
+
                             <!-- Height -->
                             <div class="col-md-6">
                                 <label class="form-label">Height (in cm)</label>
-                                <input type="number" class="form-control" name="height" id="height" step="0.1" min="50" max="250">
+                                <input type="number" class="form-control" name="height" id="height"
+                                    step="0.1" min="50" max="250">
                             </div>
-                    
+
                             <!-- Weight -->
                             <div class="col-md-6">
                                 <label class="form-label">Weight</label>
-                                <input type="text" class="form-control" name="weight" id="weight" placeholder="56kg">
+                                <input type="text" class="form-control" name="weight" id="weight"
+                                    placeholder="56kg">
                             </div>
-                    
+
                             <div class="col-12 text-end">
-                                <button type="submit" class="next-button" onclick="validateSection(event, 1)">Next</button>
+                                <button type="submit" class="next-button"
+                                    onclick="validateSection(event, 1)">Next</button>
                             </div>
                         </div>
                     </form>
@@ -456,37 +471,38 @@
                                 <label class="form-label">Caste</label>
                                 <select class="form-select" name="caste" id="caste">
                                     <option value="" selected>Choose caste</option> <!-- Empty value -->
-                                    @foreach($castes as $caste)
+                                    @foreach ($castes as $caste)
                                         <option value="{{ $caste->id }}">{{ $caste->caste }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                    
-                           <!-- Gothram Dropdown -->
+
+                            <!-- Gothram Dropdown -->
                             <div class="col-md-12">
                                 <label class="form-label">Gothram</label>
                                 <select class="form-select" name="gothram" id="gothram">
                                     <option value="" selected>Choose gothram</option>
-                                    @foreach($gothrams as $gothram)
+                                    @foreach ($gothrams as $gothram)
                                         <option value="{{ $gothram->id }}">{{ $gothram->gothram }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                    
+
                             <!-- Dosham Dropdown -->
                             <div class="col-md-12">
                                 <label class="form-label">Dosham</label>
                                 <select class="form-select" name="dosham" id="dosham">
                                     <option value="" selected>Choose dosham</option>
-                                    @foreach($doshams as $dosham)
+                                    @foreach ($doshams as $dosham)
                                         <option value="{{ $dosham->id }}">{{ $dosham->dosham }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                    
+
                             <!-- Next Button -->
                             <div class="col-12 text-end">
-                                <button type="submit" class="next-button" onclick="validateSection(event, 2)">Next</button>
+                                <button type="submit" class="next-button"
+                                    onclick="validateSection(event, 2)">Next</button>
                             </div>
                         </div>
                     </form>
@@ -503,7 +519,7 @@
                                     <option value="MBBS">MBBS</option>
                                 </select>
                             </div>
-                    
+
                             <!-- Occupation -->
                             <div class="col-md-4">
                                 <label class="form-label">Occupation</label>
@@ -514,57 +530,64 @@
                                     <option value="Developer">Developer</option>
                                 </select>
                             </div>
-                    
+
                             <!-- Annual Income -->
                             <div class="col-md-4">
                                 <label class="form-label">Annual Income</label>
-                                <input type="text" class="form-control" name="annual_income" id="annual_income" placeholder="Annual income">
+                                <input type="text" class="form-control" name="annual_income" id="annual_income"
+                                    placeholder="Annual income">
                             </div>
-                    
+
                             <!-- Employed In -->
                             <div class="col-md-12">
                                 <label class="form-label">Employed In</label>
                                 <div class="badge-select">
                                     <span class="badge" onclick="toggleBadge(this, 'Government', 'employed_in')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete"
+                                            alt="Delete">
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
                                         Government
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Private', 'employed_in')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete"
+                                            alt="Delete">
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
                                         Private
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Defense', 'employed_in')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete"
+                                            alt="Delete">
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
                                         Defense
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Business', 'employed_in')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete"
+                                            alt="Delete">
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
                                         Business
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Self-employed', 'employed_in')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete"
+                                            alt="Delete">
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
                                         Self-employed
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Not working', 'employed_in')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete"> 
-                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick"> 
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete"
+                                            alt="Delete">
+                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
                                         Not working
                                     </span>
                                 </div>
                                 <input type="hidden" name="employed_in" id="employed_in">
                             </div>
-                    
+
                             <!-- Country, State, and City Fields -->
                             <div class="col-md-4">
                                 <label class="form-label">Country</label>
                                 <select class="form-select" name="country" id="country">
                                     <option value="" selected>Choose country</option>
-                                    @foreach($countries as $country)
+                                    @foreach ($countries as $country)
                                         <option value="{{ $country->id }}">{{ $country->country }}</option>
                                     @endforeach
                                 </select>
@@ -573,24 +596,25 @@
                             {{-- <div class="col-md-4">
                                 <x-form.country-dropdown :title="__('Select Your Country')" :id="'country_id'" :required="true"/>
                             </div> --}}
-                    
+
                             <div class="col-md-4">
                                 <label class="form-label">State</label>
                                 <select class="form-select" name="state" id="state">
                                     <option value="" selected>Choose state</option>
                                 </select>
                             </div>
-                            
+
                             <div class="col-md-4">
                                 <label class="form-label">City</label>
                                 <select class="form-select" name="city" id="city">
                                     <option value="" selected>Choose city</option>
                                 </select>
                             </div>
-                    
+
                             <!-- Next Button -->
                             <div class="col-12 text-end">
-                                <button type="submit" class="next-button" onclick="validateSection(event, 3)">Next</button>
+                                <button type="submit" class="next-button"
+                                    onclick="validateSection(event, 3)">Next</button>
                             </div>
                         </div>
                     </form>
@@ -602,12 +626,12 @@
                                 <label class="form-label">About You</label>
                                 <textarea class="form-control" name="about" id="about_you" rows="4" placeholder="Enter about yourself"></textarea>
                             </div>
-                    
+
                             <!-- Description -->
                             <div class="col-md-4 d-flex align-items-center">
                                 <p class="text">Write a few words to get to know you better</p>
                             </div>
-                    
+
                             <!-- Submit Button -->
                             <div class="col-12 text-end">
                                 <button type="submit" id="submit-btn" class="next-button">Submit</button>
@@ -652,15 +676,16 @@
                         <div class="row g-3 justify-content-center">
                             <!-- Success Image -->
                             <div class="col-12">
-                                <img src="/assets/uploads/matrimony/successfull.png" alt="Success Image" class="success-img">
+                                <img src="/assets/uploads/matrimony/successfull.png" alt="Success Image"
+                                    class="success-img">
                             </div>
-                    
+
                             <!-- Success Message -->
                             <div class="col-12">
                                 <p class="success-text">Successfully Registered with Easyadmy Matrimony</p>
                                 <p class="user-id">Your ID is <strong>A83027374</strong></p>
                             </div>
-                    
+
                             <!-- Button -->
                             <div class="col-12">
                                 <a href="/matrimony/preference" class="btn-link">
@@ -669,7 +694,7 @@
                             </div>
                         </div>
                     </form>
-               </div>
+                </div>
             </div>
         </div>
     </div>
@@ -685,18 +710,22 @@
 
     {{-- Country, state, city --}}
     <script>
-        $('#country').on('change', function () {
+        $('#country').on('change', function() {
             var country_id = $(this).val();
             if (country_id) {
                 $.ajax({
-                    url: '{{ route("matrimony.get-states", ":id") }}'.replace(':id', country_id),
+                    url: '{{ route('matrimony.get-states', ':id') }}'.replace(':id', country_id),
                     type: "GET",
                     dataType: "json",
-                    success: function (data) {
+                    success: function(data) {
                         $('#state').empty().append('<option value="">Choose state</option>');
-                        $.each(data, function (key, value) {
-                            $('#state').append('<option value="' + value.id + '">' + value.state + '</option>');
+                        $.each(data.states, function(key, value) { 
+                            $('#state').append('<option value="' + value.id + '">' + value
+                                .state + '</option>');
                         });
+                    },
+                    error: function() {
+                        alert("Error fetching states. Please try again.");
                     }
                 });
             } else {
@@ -704,18 +733,22 @@
             }
         });
 
-        $('#state').on('change', function () {
+        $('#state').on('change', function() {
             var state_id = $(this).val();
             if (state_id) {
                 $.ajax({
-                    url: '{{ route("matrimony.get-cities", ":id") }}'.replace(':id', state_id),
+                    url: '{{ route('matrimony.get-cities', ':id') }}'.replace(':id', state_id),
                     type: "GET",
                     dataType: "json",
-                    success: function (data) {
+                    success: function(data) {
                         $('#city').empty().append('<option value="">Choose city</option>');
-                        $.each(data, function (key, value) {
-                            $('#city').append('<option value="' + value.id + '">' + value.city + '</option>');
+                        $.each(data.cities, function(key, value) { 
+                            $('#city').append('<option value="' + value.id + '">' + value.city +
+                                '</option>');
                         });
+                    },
+                    error: function() {
+                        alert("Error fetching cities. Please try again.");
                     }
                 });
             } else {
@@ -723,7 +756,6 @@
             }
         });
     </script>
-
     {{-- Toaster initialization --}}
     <script>
         toastr.options = {
@@ -779,33 +811,85 @@
             event.preventDefault(); // Prevent form submission
 
             const sectionFields = {
-                1: [
-                    { id: 'marital_status', name: 'Marital Status' },
-                    { id: 'dob', name: 'Date of Birth' },
-                    { id: 'family_status', name: 'Family Status' },
-                    { id: 'family_values', name: 'Family Values' },
-                    { id: 'family_type', name: 'Family Type' },
-                    { id: 'disability', name: 'Disability' },
-                    { id: 'height', name: 'Height' },
-                    { id: 'weight', name: 'Weight' }
+                1: [{
+                        id: 'marital_status',
+                        name: 'Marital Status'
+                    },
+                    {
+                        id: 'dob',
+                        name: 'Date of Birth'
+                    },
+                    {
+                        id: 'family_status',
+                        name: 'Family Status'
+                    },
+                    {
+                        id: 'family_values',
+                        name: 'Family Values'
+                    },
+                    {
+                        id: 'family_type',
+                        name: 'Family Type'
+                    },
+                    {
+                        id: 'disability',
+                        name: 'Disability'
+                    },
+                    {
+                        id: 'height',
+                        name: 'Height'
+                    },
+                    {
+                        id: 'weight',
+                        name: 'Weight'
+                    }
                 ],
-                2: [
-                    { id: 'caste', name: 'Caste' },
-                    { id: 'dosham', name: 'Dosham' },
-                    { id: 'gothram', name: 'Gothram' }
+                2: [{
+                        id: 'caste',
+                        name: 'Caste'
+                    },
+                    {
+                        id: 'dosham',
+                        name: 'Dosham'
+                    },
+                    {
+                        id: 'gothram',
+                        name: 'Gothram'
+                    }
                 ],
-                3: [
-                    { id: 'education', name: 'Higher Education' },
-                    { id: 'occupation', name: 'Occupation' },
-                    { id: 'annual_income', name: 'Annual Income' },
-                    { id: 'employed_in', name: 'Employed In' },
-                    { id: 'country', name: 'Country' },
-                    { id: 'state', name: 'State' },
-                    { id: 'city', name: 'City' }
+                3: [{
+                        id: 'education',
+                        name: 'Higher Education'
+                    },
+                    {
+                        id: 'occupation',
+                        name: 'Occupation'
+                    },
+                    {
+                        id: 'annual_income',
+                        name: 'Annual Income'
+                    },
+                    {
+                        id: 'employed_in',
+                        name: 'Employed In'
+                    },
+                    {
+                        id: 'country',
+                        name: 'Country'
+                    },
+                    {
+                        id: 'state',
+                        name: 'State'
+                    },
+                    {
+                        id: 'city',
+                        name: 'City'
+                    }
                 ],
-                4: [
-                    { id: 'about_you', name: 'About You' }
-                ],
+                4: [{
+                    id: 'about_you',
+                    name: 'About You'
+                }],
                 5: [] // Removed 'image' field
             };
 
@@ -867,29 +951,29 @@
             }
 
             fetch('/matrimony/user-details', {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    toastr.success('KYC submitted successfully! Please fill preferences to complete your profile.');
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        toastr.success('KYC submitted successfully! Please fill preferences to complete your profile.');
 
-                    showSection(6); 
-                    
-                    // Update UI to reflect user ID if needed
-                    document.querySelector('.user-id strong').textContent = data.user_id;
-                } else {
-                    toastr.error('Error: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                toastr.error(error.message || 'An unexpected error occurred.');
-            });
+                        showSection(6);
+
+                        // Update UI to reflect user ID if needed
+                        document.querySelector('.user-id strong').textContent = data.user_id;
+                    } else {
+                        toastr.error('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    toastr.error(error.message || 'An unexpected error occurred.');
+                });
         }
     </script>
 
@@ -897,8 +981,9 @@
     <script>
         document.getElementById('submit-btn').addEventListener('click', function(event) {
             event.preventDefault();
-            validateSection(event, 4); 
+            validateSection(event, 4);
         });
     </script>
 </body>
+
 </html>

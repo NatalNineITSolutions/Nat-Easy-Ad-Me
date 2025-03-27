@@ -20,11 +20,12 @@
                 @else
                     <div class="col-lg-12 mt-1">
                         <div class="alert alert-info d-flex justify-content-between">
-                            <p>{{__('Your Membership Package:')}}
-                                <strong class="text-success"> {{$user->membershipUser->membership->title}}</strong> {{__('Expire Date:')}}
+                            <p>{{__('Your Current Membership Package:')}}
+                                <strong class="text-success"> {{$user->membershipUser->membership->title}}</strong> 
+                                <!-- {{__('Expire Date:')}}
                                 <strong class="text-danger">
                                     {{ optional(auth('web')->user()->membershipUser)->expire_date ? \Carbon\Carbon::parse(auth('web')->user()->membershipUser->expire_date)->format('d M Y') : '' }}
-                                </strong>
+                                </strong> -->
                             </p>
                         </div>
                     </div>

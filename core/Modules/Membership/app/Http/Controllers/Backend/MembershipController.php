@@ -26,8 +26,12 @@ class MembershipController extends Controller
     {
         if ($request->isMethod('post')) {
             $request->validate([
-                'type' => 'required',
-                'title' => ['required', Rule::unique('memberships')->where(fn($query) => $query->where('membership_type_id', request()->type)), 'max:191'],
+                'type' => ['nullable'], // Changed to always nullable
+                'title' => [
+                    'required',
+                    Rule::unique('memberships')->where(fn($query) => $query->where('category', request()->category)),
+                    'max:191'
+                ],
                 'price' => 'required',
                 'bv' => 'required|numeric',
                 'category' => 'required|in:0,1',
@@ -35,14 +39,13 @@ class MembershipController extends Controller
                 'status' => 'nullable|array',
             ]);
 
-            // Additional validation based on category
-            if ($request->category == 0) { // Listing
+            if ($request->category == 0) {
                 $request->validate([
                     'listing_limit' => 'required|gt:0',
                     'gallery_images' => 'required|gt:0',
                     'featured_listing' => 'required|gt:0',
                 ]);
-            } else { // Matrimony
+            } else {
                 $request->validate([
                     'profile_limit' => 'required|gt:0',
                 ]);
@@ -57,7 +60,7 @@ class MembershipController extends Controller
 
             try {
                 $subscription = Membership::create([
-                    'membership_type_id' => $request->type,
+                    'membership_type_id' => $request->type, // Always use the provided type, can be null
                     'title' => $request->title,
                     'price' => $request->price,
                     'image' => $request->image ?? '',
@@ -104,25 +107,31 @@ class MembershipController extends Controller
     {
         if ($request->isMethod('post')) {
             $request->validate([
-                'title' => ['required', Rule::unique('memberships')->where(fn($query) => $query->where('membership_type_id', request()->type))->ignore($id), 'max:191'],
-                'type' => 'required',
+                'title' => [
+                    'required',
+                    Rule::unique('memberships')
+                        ->where(fn($query) => $query->where('category', $request->category))
+                        ->ignore($id),
+                    'max:191'
+                ],
+                'type' => ['nullable'], // Changed to always nullable
                 'price' => 'required',
                 'bv' => 'required|numeric',
                 'category' => 'required|in:0,1',
                 'feature' => 'required|array',
                 'status' => 'nullable|array',
             ], [
-                'title.unique' => __('Title already exists for this membership type')
+                'title.unique' => __('Title already exists for this membership category')
             ]);
 
             // Additional validation based on category
-            if ($request->category == 0) { // Listing
+            if ($request->category == 0) {
                 $request->validate([
                     'listing_limit' => 'required|gt:0',
                     'gallery_images' => 'required|gt:0',
                     'featured_listing' => 'required|gt:0',
                 ]);
-            } else { // Matrimony
+            } else {
                 $request->validate([
                     'profile_limit' => 'required|gt:0',
                 ]);
@@ -133,21 +142,23 @@ class MembershipController extends Controller
             $enquiry_form = isset($request->enquiry_form) ? 1 : 0;
             $business_hour = isset($request->business_hour) ? 1 : 0;
             $membership_badge = isset($request->membership_badge) ? 1 : 0;
+            $category = $request->category;
 
             try {
                 Membership::where('id', $id)->update([
-                    'membership_type_id' => $request->type,
+                    'membership_type_id' => $request->type, // Always use the provided type, can be null
                     'title' => $request->title,
                     'price' => $request->price,
                     'image' => $request->image ?? '',
-                    'listing_limit' => $request->category == 0 ? $request->listing_limit : null,
-                    'gallery_images' => $request->category == 0 ? $request->gallery_images : null,
-                    'featured_listing' => $request->category == 0 ? $request->featured_listing : null,
+                    'listing_limit' => $category == 0 ? $request->listing_limit : null,
+                    'gallery_images' => $category == 0 ? $request->gallery_images : null,
+                    'featured_listing' => $category == 0 ? $request->featured_listing : null,
                     'enquiry_form' => $enquiry_form,
                     'business_hour' => $business_hour,
                     'membership_badge' => $membership_badge,
                     'bv_points' => $request->bv,
-                    'profile_limit' => $request->category == 1 ? $request->profile_limit : null,
+                    'category' => $category,
+                    'profile_limit' => $category == 1 ? $request->profile_limit : null,
                 ]);
 
                 MembershipFeature::where('membership_id', $id)->delete();
@@ -182,6 +193,7 @@ class MembershipController extends Controller
             ? view('membership::backend.membership.edit-membership', compact('all_types', 'membership_details'))
             : back();
     }
+
     // search category
     public function search_membership(Request $request)
     {

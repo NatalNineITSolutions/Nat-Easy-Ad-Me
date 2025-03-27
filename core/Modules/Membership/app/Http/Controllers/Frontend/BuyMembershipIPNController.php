@@ -177,8 +177,7 @@ class BuyMembershipIPNController extends Controller
 
         return $this->cancel_page();
     }
-
-
+    
     public function paystack_common_ipn_data($data)
     {
         return $this->common_ipn_data($data);

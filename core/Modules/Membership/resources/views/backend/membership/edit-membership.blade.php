@@ -31,7 +31,7 @@
                 <div class="dashboard__inner__header">
                     <div class="dashboard__inner__header__flex">
                         <div class="dashboard__inner__header__left">
-                            <h4 class="dashboard__inner__header__title">{{ __('Add New Membership') }}</h4>
+                            <h4 class="dashboard__inner__header__title">{{ __('Edit Membership') }}</h4>
                         </div>
                     </div>
                 </div>
@@ -42,27 +42,34 @@
                         <label for="category" class="form__input__single__label">{{ __('Category') }}<span
                         class="text-danger">*</span></label>
                         <select name="category" id="category" class="form-control">
-                            <option value="0" {{ old('category', isset($membership) ? $membership->category : 0) == 0 ? 'selected' : '' }}>Listing</option>
-                            <option value="1" {{ old('category', isset($membership) ? $membership->category : 0) == 1 ? 'selected' : '' }}>Matrimony</option>
+                            <option value="0" {{ old('category', $membership_details->category ?? 0) == 0 ? 'selected' : '' }}>Listing</option>
+                            <option value="1" {{ old('category', $membership_details->category ?? 0) == 1 ? 'selected' : '' }}>Matrimony</option>
                         </select>
                     </div>
-                    <div class="form__input__single">
-                        <label class="form__input__single__label">{{ __('membership Type') }}</label>
+                    
+                    <!-- <div class="form__input__single" id="type_field">
+                        <label class="form__input__single__label">{{ __('Membership Type') }}</label>
                         <select name="type" id="type" class="form-control">
                             <option value="">{{ __('Select Type') }}</option>
                             @foreach($all_types as $type)
                                 <option value="{{ $type->id }}" {{ $membership_details->membership_type_id == $type->id ? 'selected' : '' }}>{{ $type->type }}</option>
                             @endforeach
                         </select>
-                    </div>
+                    </div> -->
 
                     <x-form.text :title="__('Title')" :required="'required'"  :type="__('text')" :name="'title'" :id="'title'" :value="$membership_details->title ?? ''" :placeholder="__('Enter title')"/>
                     <x-form.text :title="__('Price')" :required="'required'"  :type="__('number')" :name="'price'" :id="'price'" :value="$membership_details->price ?? ''" :placeholder="__('Enter price')"/>
                     <x-form.text :title="__('Business Value (BV)')" :required="'required'" :type="__('number')" :name="'bv'" :id="'bv'" :value="old('bv', $membership_details->bv_points ?? '')" :placeholder="__('Enter BV')"/>
-                    <x-form.text :title="__('Listings Limit')" :required="'required'"  :type="__('number')" :name="'listing_limit'" :id="'listing_limit'" :divClass="'mb-0'" :value="$membership_details->listing_limit ?? ''" :placeholder="__('Enter listings limit')"/>
-                    <x-form.text :title="__('Images Limit')" :required="'required'"  :type="__('number')" :name="'gallery_images'" :id="'gallery_images'" :divClass="'mb-0'" :value="$membership_details->gallery_images ?? ''" :placeholder="__('Enter Gallery Images limit')"/>
-                    <x-form.text :title="__('Featured listing Limit')" :required="'required'"  :type="__('number')" :name="'featured_listing'" :id="'featured_listing'" :divClass="'mb-0'" :value="$membership_details->featured_listing ?? ''" :placeholder="__('Featured listing Limit')"/>
 
+                    <div id="listing_fields">
+                        <x-form.text :title="__('Listings Limit')" :required="'required'"  :type="__('number')" :name="'listing_limit'" :id="'listing_limit'" :divClass="'mb-0'" :value="$membership_details->listing_limit ?? ''" :placeholder="__('Enter listings limit')"/>
+                        <x-form.text :title="__('Images Limit')" :required="'required'"  :type="__('number')" :name="'gallery_images'" :id="'gallery_images'" :divClass="'mb-0'" :value="$membership_details->gallery_images ?? ''" :placeholder="__('Enter Gallery Images limit')"/>
+                        <x-form.text :title="__('Featured listing Limit')" :required="'required'"  :type="__('number')" :name="'featured_listing'" :id="'featured_listing'" :divClass="'mb-0'" :value="$membership_details->featured_listing ?? ''" :placeholder="__('Featured listing Limit')"/>
+                    </div>
+
+                    <div id="profile_limit_field" style="display: none;">
+                        <x-form.text :title="__('Profile Limit')" :required="'required'"  :type="__('number')" :name="'profile_limit'" :id="'profile_limit'" :divClass="'mb-0'" :value="$membership_details->profile_limit ?? ''" :placeholder="__('Enter profile limit')"/>
+                    </div>
 
                     <div class="form__input__single d-grid">
                         <label for="user_otp_verify_enable_disable"><strong>{{ __('Enquiry Form (Allowed/Not Allowed)') }}</strong></label>
@@ -100,9 +107,9 @@
                                 </div>
                             @endforeach
                         </div>
+                        <a href="javascript:void(0)" type="button" class="cmn_btn btn_small radius-5 add_new_row_for_edit mt-3">{{ __('Add Features') }}</a>
                     </div>
 
-                    <a href="javascript:void(0)" type="button" class="cmn_btn btn_small radius-5 add_new_row_for_edit mt-3">{{ __('Add Features') }}</a>
                     <div class="btn_wrapper mt-4">
                         <button type="submit" id="update" class="cmnBtn btn_5 btn_bg_blue radius-5 validate_membership_type">{{ __('Update') }}</button>
                     </div>
@@ -117,21 +124,32 @@
     @include('membership::backend.membership.membership-js')
 
     <script>
-        document.getElementById('category').addEventListener('change', function() {
-            var category = this.value;
+        document.addEventListener('DOMContentLoaded', function() {
+            var category = document.getElementById('category').value;
             var listingFields = document.getElementById('listing_fields');
             var profileLimitField = document.getElementById('profile_limit_field');
 
-            if (category == 1) { // Matrimony
+            if (category == 1) { 
                 listingFields.style.display = 'none';
                 profileLimitField.style.display = 'block';
-            } else { // Listing
+            } else { 
                 listingFields.style.display = 'block';
                 profileLimitField.style.display = 'none';
             }
-        });
 
-        // Trigger the change event on page load to set the initial state
-        document.getElementById('category').dispatchEvent(new Event('change'));
+            document.getElementById('category').addEventListener('change', function() {
+                var category = this.value;
+                
+                if (category == 1) { 
+                    listingFields.style.display = 'none';
+                    profileLimitField.style.display = 'block';
+                    typeField.style.display = 'none';
+                } else { 
+                    listingFields.style.display = 'block';
+                    profileLimitField.style.display = 'none';
+                    typeField.style.display = 'block';
+                }
+            });
+        });
     </script>
 @endsection

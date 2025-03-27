@@ -32,8 +32,7 @@
                                         @php
                                              $page_url = \App\Models\Backend\Page::find(get_static_option('membership_plan_page'));
                                         @endphp
-                                        <a href="@if($page_url) {{ url('/' . $page_url->slug) }}@endif">{{ __('See All Plans') }} <i class="fa-solid fa-angle-right"></i> </a>
-
+                                        <a href="@if($page_url) {{ url('/' . $page_url->slug) }}@endif">{{ __('See All Plans') }} <i class="fa-solid fa-angle-right"></i></a>
                                     </div>
                                 </div>
 
@@ -41,8 +40,7 @@
 
                                 @if(!empty($user_membership))
                                   <!--Membership section start -->
-                                    <div class="memberShipCart mt-3">
-                                        <!-- Single -->
+                                    <!-- <div class="memberShipCart mt-3">
                                         <div class="singleMember mb-24 box-shadow1">
                                             <div class="memberDetails">
                                                 <div class="d-flex align-items-center gap-3 justify-content-between mb-4">
@@ -66,7 +64,6 @@
                                                         @endif
                                                     </h4>
 
-                                                    <!--Current Membership modal button -->
                                                     <div class="btn-wrapper">
                                                         <a href="#" class="red-btn view-details-btn"
                                                            data-bs-toggle="modal"
@@ -75,7 +72,6 @@
                                                             {{  get_static_option('current_membership_button_title') ?? __('View') }}
                                                         </a>
 
-                                                        <!--renew button -->
                                                         @if(!empty($user_membership))
                                                             @if($user_membership->price != 0)
                                                                 @php
@@ -87,7 +83,6 @@
 
                                                                  <a href="@if($page_url) {{ url('/' . $page_url->slug) }}@endif"  class="red-global-btn"> {{__('Upgrade') }}</a>
 
-                                                                <!-- If not expired, payment status is complete, and within 7 days, show the renewal button -->
                                                                 @if($user_membership->payment_status == 'complete' && $expireDate >= $today &&
                                                                     ($daysUntilExpiration <= $renew_expire_days ||
                                                                     $user_membership->listing_limit == 0 ||
@@ -123,7 +118,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <!-- /END -->
 
                                     <div class="paymentTable mt-4">

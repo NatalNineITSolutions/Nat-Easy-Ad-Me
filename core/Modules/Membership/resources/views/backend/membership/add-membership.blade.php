@@ -49,7 +49,7 @@
                             <option value="1" {{ old('category', isset($membership) ? $membership->category : 0) == 1 ? 'selected' : '' }}>Matrimony</option>
                         </select>
                     </div>
-                    <div class="form__input__single">
+                    <!-- <div class="form__input__single" id="type_field">
                         <label class="form__input__single__label">{{ __('Membership Type') }} <span
                                 class="text-danger">*</span></label>
                         <select name="type" id="type" class="form__control select2_activation">
@@ -58,7 +58,7 @@
                                 <option value="{{ $type->id }}">{{ $type->type }}</option>
                             @endforeach
                         </select>
-                    </div>
+                    </div> -->
 
                     <x-form.text :title="__('Title')" :required="'required'" :type="__('text')" :name="'title'"
                         :id="'title'" :value="old('title', '')" :placeholder="__('Enter title')" />
@@ -145,16 +145,15 @@
             var listingFields = document.getElementById('listing_fields');
             var profileLimitField = document.getElementById('profile_limit_field');
 
-            if (category == 1) { // Matrimony
+            if (category == 1) { 
                 listingFields.style.display = 'none';
                 profileLimitField.style.display = 'block';
-            } else { // Listing
+            } else { 
                 listingFields.style.display = 'block';
                 profileLimitField.style.display = 'none';
             }
         });
 
-        // Trigger the change event on page load to set the initial state
         document.getElementById('category').dispatchEvent(new Event('change'));
     </script>
 @endsection

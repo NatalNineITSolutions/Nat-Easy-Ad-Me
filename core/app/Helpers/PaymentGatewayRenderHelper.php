@@ -14,7 +14,6 @@ class PaymentGatewayRenderHelper
         $payment_gateway_list = PaymentGateway::active();
         $payment_gateway_list = $payment_gateway_list->select(['name', 'image'])->get();
         $payment_gateway_list = !empty($payment_gateway_list) ? $payment_gateway_list->toArray() : $payment_gateway_list;
-        // append payment gateway name from modules
         $modules_payment_gateway = getAllPaymentGatewayListWithImage();
         return !empty($modules_payment_gateway) ? array_merge($payment_gateway_list, $modules_payment_gateway) : $payment_gateway_list;
     }

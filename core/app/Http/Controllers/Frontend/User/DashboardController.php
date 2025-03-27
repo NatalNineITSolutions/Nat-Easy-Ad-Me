@@ -11,15 +11,54 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
+    // public function dashboard()
+    // {
+    //     $user_id = Auth::guard('web')->user()->id;
+    //     $user = User::with('listings', 'reviews', 'user_country', 'user_state')->findOrFail($user_id);
+
+    //     $user_ads_posted = $user->listings->count();
+    //     $user_active_listings = $user->listings->where('is_published', 1)->where('status', 1)->count();
+    //     $user_deactivated_ads = $user->listings->where('is_published', 0)->where('status', 0)->count();
+    //     $user_favorite_ads = ListingFavorite::where('user_id', $user_id)->count();
+
+    //     $averageRating = $user->reviews?->avg('rating');
+    //     $user_review_count = $user->reviews?->count();
+
+    //     $user_given_reviews = Review::where('reviewer_id', $user_id)->take(500)->get();
+
+    //     return view('frontend.user.dashboard.dashboard', [
+    //         'user' => $user,
+    //         'user_ads_posted' => $user_ads_posted,
+    //         'user_active_listings' => $user_active_listings,
+    //         'user_deactivated_ads' => $user_deactivated_ads,
+    //         'user_favorite_ads' => $user_favorite_ads,
+    //         'averageRating' => $averageRating,
+    //         'user_review_count' => $user_review_count,
+    //         'user_given_reviews' => $user_given_reviews,
+    //     ]);
+    // }
+
+
     public function dashboard()
     {
         $user_id = Auth::guard('web')->user()->id;
-        $user = User::with('listings', 'reviews', 'user_country', 'user_state')->findOrFail($user_id);
+        $user = User::with(['listings', 'reviews', 'user_country', 'user_state', 'membershipUser', 'membershipHistory'])
+            ->findOrFail($user_id);
 
         $user_ads_posted = $user->listings->count();
         $user_active_listings = $user->listings->where('is_published', 1)->where('status', 1)->count();
-        $user_deactivated_ads = $user->listings->where('is_published', 0)->where('status', 0)->count();
+        $user_deactivated_ads = $user->listings->filter(function ($listing) {
+            return $listing->is_published == 0 || $listing->status == 0;
+        })->count();
+
         $user_favorite_ads = ListingFavorite::where('user_id', $user_id)->count();
+
+        // Get remaining listings from membership history
+        $remaining_listings = optional($user->membershipHistory)->listing_limit - $user_ads_posted ?? 0;
+        $listing_limit = optional($user->membershipUser)->listing_limit ?? 0;
+
+        // Calculate if upgrade should be shown
+        $show_upgrade = ($listing_limit > 0 && $remaining_listings === 0);
 
         $averageRating = $user->reviews?->avg('rating');
         $user_review_count = $user->reviews?->count();
@@ -35,6 +74,9 @@ class DashboardController extends Controller
             'averageRating' => $averageRating,
             'user_review_count' => $user_review_count,
             'user_given_reviews' => $user_given_reviews,
+            'remaining_listings' => $remaining_listings === 0 ? 0 : $remaining_listings, // Ensure no negative numbers
+            'listing_limit' => $listing_limit,
+            'show_upgrade' => $show_upgrade
         ]);
     }
 

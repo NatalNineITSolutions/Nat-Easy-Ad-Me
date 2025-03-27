@@ -323,7 +323,7 @@
             }
         }
 
-        .card-profile {
+        .main-profile-image {
             filter: blur(3px);
         }
     </style>

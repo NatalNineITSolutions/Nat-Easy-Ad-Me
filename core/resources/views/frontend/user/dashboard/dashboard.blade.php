@@ -110,6 +110,20 @@
                                             </div>
                                         </div>
                                         <div class="col-md-3 col-md-3 col-6">
+                                            <div class="list-state active-posted">
+                                                <h4 class="list-head">
+                                                    @if($remaining_listings === 0 && ($listing_limit ?? 0) > 0)
+                                                        0
+                                                    @elseif(($listing_limit ?? 0) === 0)
+                                                        {{ __('Unlimited') }}
+                                                    @else
+                                                        {{ $remaining_listings }}
+                                                    @endif
+                                                </h4>
+                                                <p class="post-state">{{ __('Remaining Listings') }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-md-3 col-6">
                                             <div class="list-state deactivated-posted">
                                                 <h4 class="list-head">{{  $user_deactivated_ads }}</h4>
                                                 <p class="post-state">{{ __('Deactive Ads') }}</p>

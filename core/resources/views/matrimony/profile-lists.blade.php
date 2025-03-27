@@ -41,6 +41,34 @@
             font-weight: 600;
         }
         
+        .listing-cards {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .listing-card {
+            flex: 1;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .listing-card h4 {
+            color: #66451C;
+            margin-top: 0;
+            font-size: 16px;
+        }
+        
+        .listing-card p {
+            font-size: 24px;
+            font-weight: bold;
+            color: #66451C;
+            margin-bottom: 0;
+        }
+        
     </style>
 @endsection
 
@@ -57,6 +85,18 @@
             <main class="col-md-8 col-lg-9 px-md-4">
                 <div class="main">
                     <h3>Profile Lists</h3>
+                    
+                    <!-- Listing Status Cards -->
+                    <div class="listing-cards mt-4">
+                        <div class="listing-card">
+                            <h4>Active Listings</h4>
+                            <p>11</p>
+                        </div>
+                        <div class="listing-card">
+                            <h4>Remaining Listings</h4>
+                            <p>20</p>
+                        </div>
+                    </div>
 
                     <table>
                         <thead>
@@ -107,7 +147,6 @@
                             @endforeach
                         </tbody>
                     </table>
-                    
                     
                 </div>
             </main>

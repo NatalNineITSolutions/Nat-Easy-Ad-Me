@@ -16,10 +16,12 @@ use Modules\Chat\app\Models\LiveChatMessage;
 use Modules\CountryManage\app\Models\City;
 use Modules\CountryManage\app\Models\Country;
 use Modules\CountryManage\app\Models\State;
+use Modules\Membership\app\Models\MembershipHistory;
 use Modules\Membership\app\Models\UserMembership;
 use App\Models\UsersBV;
 use Modules\Wallet\app\Models\Wallet;
 use Kalnoy\Nestedset\NodeTrait;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable
 {
@@ -223,5 +225,10 @@ class User extends Authenticatable
     public function profileListings()
     {
         return $this->hasMany(ProfileListing::class);
+    }
+
+    public function membershipHistory(): HasOne
+    {
+        return $this->hasOne(MembershipHistory::class)->latest();
     }
 }

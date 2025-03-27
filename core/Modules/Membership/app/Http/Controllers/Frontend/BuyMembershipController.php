@@ -45,6 +45,8 @@ class BuyMembershipController extends Controller
     //buy membership
     public function buy_membership(Request $request)
     {
+        // dd($request->all());
+        
         if (isset($request->membership_id)) {
 
             if (!Auth::guard('web')->check()) {
@@ -439,7 +441,7 @@ class BuyMembershipController extends Controller
                                 'user_id' => Auth::guard('web')->user()->id,
                                 'payment_status' => '',
                                 'payment_gateway' => $request->selected_payment_gateway,
-                                'expire_date' => $expire_date_for_user_exits_membership,
+                                // 'expire_date' => $expire_date_for_user_exits_membership,
                                 'listing_limit' => $membership_details->listing_limit,
                                 'gallery_images' => $membership_details->gallery_images,
                                 'featured_listing' => $membership_details->featured_listing,

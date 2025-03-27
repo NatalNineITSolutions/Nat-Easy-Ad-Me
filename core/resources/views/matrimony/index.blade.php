@@ -842,8 +842,7 @@
 
     <div class="container profile-container">
         <div class="profile-container-section">
-            <img class="profile-container-section-img" src="/assets/uploads/media-uploader/profile-design.png"
-                alt="">
+            <img class="profile-container-section-img" src="/assets/uploads/media-uploader/profile-design.png" alt="">
             <div class="trusted-profiles">
                 <div>
                     <h2>TRUSTED PROFILES</h2>
@@ -854,15 +853,14 @@
                     <img src="/assets/uploads/media-uploader/divider.png" alt="">
                 </div>
             </div>
-            <img class="profile-container-section-img" src="/assets/uploads/media-uploader/profile-design.png"
-                alt="">
+            <img class="profile-container-section-img" src="/assets/uploads/media-uploader/profile-design.png" alt="">
         </div>
         <div class="card-slider-container">
             <div class="card-slider">
                 @forelse($profiles as $profile)
                     <div class="card">
                         @if (Str::startsWith($profile->first_image_url, '<img'))
-                            {!! $profile->first_image_url !!}
+                            <div class="card-profile">{!! $profile->first_image_url !!}</div>
                         @else
                             <img class="card-profile" src="{{ $profile->first_image_url }}" alt="{{ $profile->name }}">
                         @endif
@@ -896,8 +894,7 @@
                 </a>
                 <button class="support">HELP & SUPPORT</button>
             </div>
-            <img class="perfect-match-banner-img" src="/assets/uploads/media-uploader/perfect-match-banner.png"
-                alt="">
+            <img class="perfect-match-banner-img" src="/assets/uploads/media-uploader/perfect-match-banner.png" alt="">
         </div>
     </div>
 
@@ -910,30 +907,30 @@
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('.card-slider').slick({
                 dots: false,
                 arrows: true,
                 slidesToShow: 4,
                 infinite: false,
                 responsive: [{
-                        breakpoint: 1024,
-                        settings: {
-                            slidesToShow: 3
-                        }
-                    },
-                    {
-                        breakpoint: 800,
-                        settings: {
-                            slidesToShow: 2
-                        }
-                    },
-                    {
-                        breakpoint: 600,
-                        settings: {
-                            slidesToShow: 1
-                        }
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 3
                     }
+                },
+                {
+                    breakpoint: 800,
+                    settings: {
+                        slidesToShow: 2
+                    }
+                },
+                {
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: 1
+                    }
+                }
                 ]
             });
         });
@@ -941,7 +938,7 @@
 
     <script>
         history.pushState(null, null, location.href);
-        window.onpopstate = function() {
+        window.onpopstate = function () {
             history.pushState(null, null, location.href);
         };
     </script>

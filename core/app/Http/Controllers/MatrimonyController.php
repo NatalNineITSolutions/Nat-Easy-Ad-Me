@@ -69,59 +69,17 @@ class MatrimonyController extends Controller
         return view('matrimony.price', compact('memberships'));
     }
 
-    public function profiledetails()
-    {
-        $user = Auth::user();
-        $profile = DB::table('profile_listings')
-            ->where('user_id', $user->id)
-            ->first();
-
-        $mainImageHtml = null;
-        $galleryImagesHtml = [];
-
-        if ($profile && !empty($profile->image)) {
-            $imageIds = array_filter(
-                preg_split('/[|,]/', $profile->image),
-                fn($id) => !empty(trim($id))
-            );
-
-            if (!empty($imageIds)) {
-                $mainImageHtml = render_image_markup_by_attachment_id(trim($imageIds[0]));
-
-                foreach ($imageIds as $imageId) {
-                    $galleryImagesHtml[] = render_image_markup_by_attachment_id(trim($imageId));
-                }
-            }
-        }
-
-        return view('matrimony.profile-details', [
-            'mainImageHtml' => $mainImageHtml,
-            'galleryImagesHtml' => $galleryImagesHtml,
-            'profile' => $profile
-        ]);
-    }
-
-
-    // public function profiledetails($id = null)
+    // public function profiledetails()
     // {
     //     $user = Auth::user();
-
-    //     if ($id) {
-    //         $profile = ProfileListing::find($id); // Fetch profile by ID
-    //     } else {
-    //         $profile = DB::table('profile_listings')
-    //             ->where('user_id', $user->id)
-    //             ->first();
-    //     }
-
-    //     if (!$profile) {
-    //         return redirect()->route('matrimony.index')->with('error', 'Profile not found.');
-    //     }
+    //     $profile = DB::table('profile_listings')
+    //         ->where('user_id', $user->id)
+    //         ->first();
 
     //     $mainImageHtml = null;
     //     $galleryImagesHtml = [];
 
-    //     if (!empty($profile->image)) {
+    //     if ($profile && !empty($profile->image)) {
     //         $imageIds = array_filter(
     //             preg_split('/[|,]/', $profile->image),
     //             fn($id) => !empty(trim($id))
@@ -142,6 +100,48 @@ class MatrimonyController extends Controller
     //         'profile' => $profile
     //     ]);
     // }
+
+
+    public function profiledetails($id = null)
+    {
+        $user = Auth::user();
+
+        if ($id) {
+            $profile = ProfileListing::find($id); // Fetch profile by ID
+        } else {
+            $profile = DB::table('profile_listings')
+                ->where('user_id', $user->id)
+                ->first();
+        }
+
+        if (!$profile) {
+            return redirect()->route('matrimony.index')->with('error', 'Profile not found.');
+        }
+
+        $mainImageHtml = null;
+        $galleryImagesHtml = [];
+
+        if (!empty($profile->image)) {
+            $imageIds = array_filter(
+                preg_split('/[|,]/', $profile->image),
+                fn($id) => !empty(trim($id))
+            );
+
+            if (!empty($imageIds)) {
+                $mainImageHtml = render_image_markup_by_attachment_id(trim($imageIds[0]));
+
+                foreach ($imageIds as $imageId) {
+                    $galleryImagesHtml[] = render_image_markup_by_attachment_id(trim($imageId));
+                }
+            }
+        }
+
+        return view('matrimony.profile-details', [
+            'mainImageHtml' => $mainImageHtml,
+            'galleryImagesHtml' => $galleryImagesHtml,
+            'profile' => $profile
+        ]);
+    }
 
     public function userdetails()
     {
@@ -354,12 +354,11 @@ class MatrimonyController extends Controller
 
     public function storeProfileListing(Request $request)
     {
-        \Log::info('Profile listing request data: ' . json_encode($request->all()));
 
-        // Handle file upload (if provided)
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('profile_images', 'public');
+            \Log::info('Uploaded profile image path: ' . $imagePath);
         }
 
         $profileListing = ProfileListing::create([
@@ -373,35 +372,30 @@ class MatrimonyController extends Controller
             'country' => $request->country,
             'state' => $request->state,
             'city' => $request->city,
-            'image' => $imagePath,
+            'image' => $request->images, 
             'description' => $request->description,
-            'paid' => 0,       // Not paid yet
-            'payment_method' => null,    // Not selected yet
+            'paid' => 0,
+            'payment_method' => null,
         ]);
 
         session()->put('profile_listing_id', $profileListing->id);
 
-        // Process payment if a payment gateway is selected
+        // Handle payment gateway if selected
         if ($request->filled('selected_payment_gateway')) {
             $payment_gateway = $request->selected_payment_gateway;
-            \Log::info('Payment gateway selected: ' . $payment_gateway);
 
             $credential_function = 'get_' . $payment_gateway . '_credential';
-            \Log::info('Credential function: ' . $credential_function);
 
-            // Check if the payment gateway has a custom credential function
             if (!method_exists((new PaymentGatewayCredential()), $credential_function)) {
-                \Log::info('Using custom payment logic for user: ' . Auth::id());
 
-                // Prepare custom data for payment processing
-                $custom_data = [];
-                $custom_data['request'] = $request->all();
-                $custom_data['total'] = get_static_option('matrimony_price');
-                $custom_data['payment_type'] = "deposit";
-                $custom_data['payment_for'] = "membership";
-                $custom_data['success_url'] = route('user.membership.all');
+                $custom_data = [
+                    'request' => $request->all(),
+                    'total' => get_static_option('matrimony_price'),
+                    'payment_type' => "deposit",
+                    'payment_for' => "membership",
+                    'success_url' => route('user.membership.all')
+                ];
 
-                // Get the namespace and method for charging the customer
                 $charge_customer_class_namespace = getChargeCustomerMethodNameByPaymentGatewayNameSpace($payment_gateway);
                 $charge_customer_method_name = getChargeCustomerMethodNameByPaymentGatewayName($payment_gateway);
 

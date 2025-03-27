@@ -13,7 +13,7 @@
             <input type="hidden" name="state" id="modal_state">
             <input type="hidden" name="city" id="modal_city">
             <input type="hidden" name="description" id="modal_description">
-
+            
             <input type="hidden" name="images" id="modal_images">
 
             <!-- Optionally add image file handling if needed -->

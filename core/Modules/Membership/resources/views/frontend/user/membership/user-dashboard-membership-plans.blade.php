@@ -18,9 +18,8 @@
                     class="singlePrice @if(!empty($user_current_membership) && $user_current_membership->membership_id === $membership->id) active @endif">
                     <h4 class="priceTittle">{{ $membership->title }}</h4>
 
-                    <span class="price">{{ float_amount_with_currency_symbol($membership->price) }}
-                        <span class="subTittle">{{ $membership->membership_type?->type }}</span>
-                    </span>
+                    <span class="price">{{ float_amount_with_currency_symbol($membership->price) }}</span>
+                        <!-- <span class="subTittle">{{ $membership->membership_type?->type }}</span> -->
 
                     <div class="btn-wrapper">
                         @if($membership->price == 0)

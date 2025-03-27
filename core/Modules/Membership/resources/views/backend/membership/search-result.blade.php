@@ -9,7 +9,6 @@
             </th>
         @endcan
         <th>{{__('ID')}}</th>
-        <th>{{__('Type')}}</th>
         <th>{{__('Title')}}</th>
         <th>{{__('Price')}}</th>
         <th>{{__('BV Points')}}</th>
@@ -31,7 +30,6 @@
                 <td> <x-bulk-action.bulk-delete-checkbox :id="$subs->id"/> </td>
             @endcan
             <td>{{ $subs->id }}</td>
-            <td>{{ $subs->membership_type?->type }}</td>
             <td>{{ $subs->title }}</td>
             <td>{{ float_amount_with_currency_symbol($subs->price) }}</td>
             <td>{{ $subs->bv_points }}</td>

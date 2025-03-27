@@ -7,82 +7,92 @@
                 ->take(3)
                 ->get();
 
-            $user_current_membership = \Modules\Membership\app\Models\UserMembership::where('user_id', auth()->guard('web')->user()->id)
+            $user_current_membership = \Modules\Membership\app\Models\UserMembership::where(
+                'user_id',
+                auth()->guard('web')->user()->id,
+            )
+                ->whereHas('membership', function ($query) {
+                    $query->where('category', 0);
+                })
                 ->whereDate('expire_date', '>', now())
                 ->latest()
                 ->first();
+
         @endphp
-        @foreach($memberships as $membership)
+        @foreach ($memberships as $membership)
             <div class="col-lg-4 col-sm-6">
-                <div
-                    class="singlePrice @if(!empty($user_current_membership) && $user_current_membership->membership_id === $membership->id) active @endif">
+                <div class="singlePrice @if (!empty($user_current_membership) && $user_current_membership->membership_id === $membership->id) active @endif">
                     <h4 class="priceTittle">{{ $membership->title }}</h4>
 
                     <span class="price">{{ float_amount_with_currency_symbol($membership->price) }}</span>
-                        <!-- <span class="subTittle">{{ $membership->membership_type?->type }}</span> -->
+                    <!-- <span class="subTittle">{{ $membership->membership_type?->type }}</span> -->
 
                     <div class="btn-wrapper">
-                        @if($membership->price == 0)
-                                        <!-- Free Membership Plan -->
-                                        @php
-                                            $buttonText = __('Get Started');
-                                            $buttonUrl = url('/user-register');
-                                        @endphp
+                        @if ($membership->price == 0)
+                            <!-- Free Membership Plan -->
+                            @php
+                                $buttonText = __('Get Started');
+                                $buttonUrl = url('/user-register');
+                            @endphp
 
-                                        @if(!empty($user_current_membership) && $user_current_membership->membership_id === $membership->id)
-                                                    @php
-                                                        $buttonText = __('Current Plan');
-                                                        $buttonUrl = null;
-                                                    @endphp
-                                        @endif
+                            @if (!empty($user_current_membership) && $user_current_membership->membership_id === $membership->id)
+                                @php
+                                    $buttonText = __('Current Plan');
+                                    $buttonUrl = null;
+                                @endphp
+                            @endif
 
-                                        <!--if user membership empty buy free membership -->
-                                        @if(empty($user_current_membership))
-                                            <!--free membership form start -->
-                                            <form action="{{route('user.membership.buy')}}" method="post">
-                                                @csrf
-                                                <input type="hidden" name="membership_id" class="membership_id" value="{{ $membership->id }}">
-                                                <input type="hidden" name="price" value="{{$membership->price}}">
-                                                <input type="hidden" name="selected_payment_gateway" class="selected_payment_gateway"
-                                                    value="Trial">
-                                                <button type="submit" class="cmn-btn-outline1">{{ $buttonText }}</button>
-                                            </form>
-                                            <!--free membership form end -->
-                                        @else
-                                            <a href="{{ $buttonUrl }}">
-                                                <button class="cmn-btn-outline1">{{ $buttonText }}</button>
-                                            </a>
-                                        @endif
+                            <!--if user membership empty buy free membership -->
+                            @if (empty($user_current_membership))
+                                <!--free membership form start -->
+                                <form action="{{ route('user.membership.buy') }}" method="post">
+                                    @csrf
+                                    <input type="hidden" name="membership_id" class="membership_id"
+                                        value="{{ $membership->id }}">
+                                    <input type="hidden" name="price" value="{{ $membership->price }}">
+                                    <input type="hidden" name="selected_payment_gateway"
+                                        class="selected_payment_gateway" value="Trial">
+                                    <button type="submit" class="cmn-btn-outline1">{{ $buttonText }}</button>
+                                </form>
+                                <!--free membership form end -->
+                            @else
+                                <a href="{{ $buttonUrl }}">
+                                    <button class="cmn-btn-outline1">{{ $buttonText }}</button>
+                                </a>
+                            @endif
                         @else
-                                        <!-- Paid Membership Plan -->
-                                        @php
-                                            if (empty($user_current_membership)) {
-                                                $buttonText = __('Buy Now');
-                                            } else {
-                                                $buttonText = __('Upgrade Now');
-                                            }
+                            <!-- Paid Membership Plan -->
+                            @php
+                                if (empty($user_current_membership)) {
+                                    $buttonText = __('Buy Now');
+                                } else {
+                                    $buttonText = __('Upgrade Now');
+                                }
 
-                                            $modalTarget = '#loginModal';
+                                $modalTarget = '#loginModal';
 
-                                            if (Auth::check() && Auth::guard('web')->user()) {
-                                                $modalTarget = '#paymentGatewayModal';
-                                            }
-                                            if (!empty($user_current_membership) && $user_current_membership->membership_id === $membership->id) {
-                                                $buttonText = __('Current Plan');
-                                                $modalTarget = null;
-                                            }
-                                        @endphp
-                                        <button class="cmn-btn-outline1 choose_membership_plan" data-bs-toggle="modal"
-                                            data-id="{{ $membership->id }}" data-price="{{ $membership->price }}"
-                                            data-bs-target="{{ $modalTarget }}">
-                                            {{ $buttonText }}
-                                        </button>
+                                if (Auth::check() && Auth::guard('web')->user()) {
+                                    $modalTarget = '#paymentGatewayModal';
+                                }
+                                if (
+                                    !empty($user_current_membership) &&
+                                    $user_current_membership->membership_id === $membership->id
+                                ) {
+                                    $buttonText = __('Current Plan');
+                                    $modalTarget = null;
+                                }
+                            @endphp
+                            <button class="cmn-btn-outline1 choose_membership_plan" data-bs-toggle="modal"
+                                data-id="{{ $membership->id }}" data-price="{{ $membership->price }}"
+                                data-bs-target="{{ $modalTarget }}">
+                                {{ $buttonText }}
+                            </button>
                         @endif
                     </div>
 
 
                     <ul class="listing">
-                        @foreach($membership->features as $feature)
+                        @foreach ($membership->features as $feature)
                             @if ($feature->status == 'on')
                                 <li class="listItem check">
                                     <div class="checkicon me-2">

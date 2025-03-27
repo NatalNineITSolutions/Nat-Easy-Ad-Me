@@ -148,71 +148,74 @@
         <div class="row justify-content-center">
             @foreach ($memberships as $membership)
                 <div class="col-md-4 d-flex">
-                    <div
-                        class="pricing-card w-100 h-100 d-flex flex-column @if(!empty($user_current_membership) && $user_current_membership->membership_id === $membership->id) active @endif">
+                    <div class="pricing-card w-100 h-100 d-flex flex-column @if (!empty($user_current_membership) && $user_current_membership->membership_id === $membership->id) active @endif">
                         <h4>{{ $membership->title }}</h4>
                         <p>{{ $membership->description ?? 'No description available.' }}</p>
                         <h3 class="mt-3">₹{{ $membership->price }}</h3>
 
                         <div class="btn-wrapper">
-                            @if($membership->price == 0)
-                                            <!-- Free Membership Plan -->
-                                            @php
-                                                $buttonText = __('Get Started');
-                                                $buttonUrl = url('/user-register');
-                                            @endphp
+                            @if ($membership->price == 0)
+                                <!-- Free Membership Plan -->
+                                @php
+                                    $buttonText = __('Get Started');
+                                    $buttonUrl = url('/user-register');
+                                @endphp
 
-                                            @if(!empty($user_current_membership) && $user_current_membership->membership_id === $membership->id)
-                                                        @php
-                                                            $buttonText = __('Current Plan');
-                                                            $buttonUrl = null;
-                                                        @endphp
-                                            @endif
+                                @if (!empty($user_current_membership) && $user_current_membership->membership_id === $membership->id)
+                                    @php
+                                        $buttonText = __('Current Plan');
+                                        $buttonUrl = null;
+                                    @endphp
+                                @endif
 
-                                            @if(empty($user_current_membership))
-                                                <!--free membership form start -->
-                                                <form action="{{route('user.membership.buy')}}" method="post">
-                                                    @csrf
-                                                    <input type="hidden" name="membership_id" class="membership_id" value="{{ $membership->id }}">
-                                                    <input type="hidden" name="price" value="{{$membership->price}}">
-                                                    <input type="hidden" name="selected_payment_gateway" class="selected_payment_gateway"
-                                                        value="Trial">
-                                                    <button type="submit" class="btn btn-light">{{ $buttonText }}</button>
-                                                </form>
-                                                <!--free membership form end -->
-                                            @else
-                                                <a href="{{ $buttonUrl }}">
-                                                    <button class="btn btn-light">{{ $buttonText }}</button>
-                                                </a>
-                                            @endif
+                                @if (empty($user_current_membership))
+                                    <!--free membership form start -->
+                                    <form action="{{ route('user.membership.buy') }}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="membership_id" class="membership_id"
+                                            value="{{ $membership->id }}">
+                                        <input type="hidden" name="price" value="{{ $membership->price }}">
+                                        <input type="hidden" name="selected_payment_gateway"
+                                            class="selected_payment_gateway" value="Trial">
+                                        <button type="submit" class="btn btn-light">{{ $buttonText }}</button>
+                                    </form>
+                                    <!--free membership form end -->
+                                @else
+                                    <a href="{{ $buttonUrl }}">
+                                        <button class="btn btn-light">{{ $buttonText }}</button>
+                                    </a>
+                                @endif
                             @else
-                                            <!-- Paid Membership Plan -->
-                                            @php
-                                                if (empty($user_current_membership)) {
-                                                    $buttonText = __('Buy Now');
-                                                } else {
-                                                    $buttonText = __('Upgrade Now');
-                                                }
+                                <!-- Paid Membership Plan -->
+                                @php
+                                    if (empty($user_current_membership)) {
+                                        $buttonText = __('Buy Now');
+                                    } else {
+                                        $buttonText = __('Upgrade Now');
+                                    }
 
-                                                $modalTarget = '#loginModal';
+                                    $modalTarget = '#loginModal';
 
-                                                if (Auth::check() && Auth::guard('web')->user()) {
-                                                    $modalTarget = '#paymentGatewayModal';
-                                                }
-                                                if (!empty($user_current_membership) && $user_current_membership->membership_id === $membership->id) {
-                                                    $buttonText = __('Current Plan');
-                                                    $modalTarget = null;
-                                                }
-                                            @endphp
-                                            <button class="btn btn-light choose_membership_plan" data-bs-toggle="modal"
-                                                data-id="{{ $membership->id }}" data-price="{{ $membership->price }}"
-                                                data-bs-target="{{ $modalTarget }}">
-                                                {{ $buttonText }}
-                                            </button>
+                                    if (Auth::check() && Auth::guard('web')->user()) {
+                                        $modalTarget = '#paymentGatewayModal';
+                                    }
+                                    if (
+                                        !empty($user_current_membership) &&
+                                        $user_current_membership->membership_id === $membership->id
+                                    ) {
+                                        $buttonText = __('Current Plan');
+                                        $modalTarget = null;
+                                    }
+                                @endphp
+                                <button class="btn btn-light choose_membership_plan" data-bs-toggle="modal"
+                                    data-id="{{ $membership->id }}" data-price="{{ $membership->price }}"
+                                    data-bs-target="{{ $modalTarget }}">
+                                    {{ $buttonText }}
+                                </button>
                             @endif
                         </div>
                         <ul class="list-unstyled mt-3 flex-grow-1 box-list">
-                            @foreach($membership->features as $feature)
+                            @foreach ($membership->features as $feature)
                                 @if ($feature->status == 'on')
                                     <li>✅ {{ $feature->feature }}</li>
                                 @else
@@ -234,9 +237,9 @@
 @endif
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll(".choose_membership_plan").forEach((button) => {
-            button.addEventListener("click", function () {
+            button.addEventListener("click", function() {
                 const membershipId = this.getAttribute("data-id");
                 const price = this.getAttribute("data-price");
 
@@ -252,7 +255,7 @@
                 }
 
                 // Select input fields inside modal
-                const membershipInput = modal.querySelector("#modal_membership_id");
+                const membershipInput = modal.querySelector("#membership_id");
                 const priceInput = modal.querySelector("#modal_membership_price");
 
                 if (membershipInput && priceInput) {
@@ -269,8 +272,8 @@
         });
 
         // Validate values on form submission
-        document.querySelector("#paymentGatewayModal form").addEventListener("submit", function (event) {
-            const membershipInput = document.querySelector("#modal_membership_id");
+        document.querySelector("#paymentGatewayModal form").addEventListener("submit", function(event) {
+            const membershipInput = document.querySelector("#membership_id");
             const priceInput = document.querySelector("#modal_membership_price");
 
             if (!membershipInput || !priceInput || !membershipInput.value || !priceInput.value) {

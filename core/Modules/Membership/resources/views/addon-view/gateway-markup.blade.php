@@ -2,9 +2,10 @@
     aria-hidden="true">
     <div class="modal-dialog">
         <form action="{{ route('user.membership.buy') }}" method="post" enctype="multipart/form-data">
-            @csrf
-            <input type="hidden" name="membership_id" id="modal_membership_id">
+            <input type="hidden" name="membership_id" id="membership_id">
             <input type="hidden" name="price" id="modal_membership_price">
+
+            @csrf
             <div class="modal-content">
                 <div class="modal-header">
                     @if(Auth::guard('web')->check())

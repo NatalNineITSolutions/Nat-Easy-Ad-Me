@@ -76,26 +76,31 @@ class AppServiceProvider extends ServiceProvider
         View::composer('*', function ($view) {
             $user = Auth::user();
             $view->with('user', $user);
-            $user_ads_posted = $user->listings->count();
             
+            if ($user) {
+                $user_ads_posted = $user->listings->count();
+            } else {
+                $user_ads_posted = 0;
+            }
+
             if ($user) {
                 $userWithData = User::with(['membershipUser', 'membershipHistory'])
                     ->withCount('listings')
                     ->find($user->id);
-                
+
                 // Get remaining listings from membership history
                 $remaining_listings = optional($userWithData->membershipHistory)->listing_limit - $user_ads_posted ?? 0;
                 $listing_limit = optional($userWithData->membershipUser)->listing_limit ?? 0;
                 $user_ads_posted = $userWithData->listings_count;
-                
+
                 // Only show upgrade when exactly 0 remaining
                 $show_upgrade = ($listing_limit > 0 && $remaining_listings === 0);
-                
+
                 $view->with([
                     'global_reached_limit' => $show_upgrade,
                     'global_listing_limit' => $listing_limit,
                     'global_user_ads_posted' => $user_ads_posted,
-                    'global_remaining_listings' => $remaining_listings === 0 ? 0 : $remaining_listings 
+                    'global_remaining_listings' => $remaining_listings === 0 ? 0 : $remaining_listings
                 ]);
             }
         });

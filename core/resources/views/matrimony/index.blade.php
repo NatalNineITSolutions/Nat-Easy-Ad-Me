@@ -791,8 +791,14 @@
             color: black;
         }
 
-        .card-profile {
+        /* .card-profile {
             filter: blur(3px);
+        } */
+
+        .blurred {
+            filter: blur(8px);
+            -webkit-filter: blur(8px);
+            transition: filter 0.3s ease;
         }
     </style>
 @endsection

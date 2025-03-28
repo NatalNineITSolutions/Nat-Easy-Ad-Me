@@ -46,7 +46,7 @@ class BuyMembershipController extends Controller
     public function buy_membership(Request $request)
     {
         // dd($request->all());
-        
+
         if (isset($request->membership_id)) {
 
             if (!Auth::guard('web')->check()) {
@@ -112,6 +112,7 @@ class BuyMembershipController extends Controller
 
             // initialized value for if exits user current membership
             $user_current_listing_limit = 0;
+            $user_current_profile_limit = 0;
             $user_current_gallery_images = 0;
             $user_current_featured_listing = 0;
             $user_current_enquiry_form = 0;
@@ -124,6 +125,7 @@ class BuyMembershipController extends Controller
                     // Check if the membership has not expired
                     if ($user_membership_exits->expire_date > now()) {
                         $user_current_listing_limit = $user_membership_exits->listing_limit;
+                        $user_current_profile_limit = $user_membership_exits->profile_limit; // Add this line
                         $user_current_gallery_images = $user_membership_exits->gallery_images;
                         $user_current_featured_listing = $user_membership_exits->featured_listing;
                         $user_current_enquiry_form = $user_membership_exits->enquiry_form;
@@ -154,8 +156,16 @@ class BuyMembershipController extends Controller
 
                 // Calculate the new limits and features by adding the current user's limits and features
                 $listing_limit = $membership_details->listing_limit + $user_current_listing_limit;
+                $profile_limit = $membership_details->profile_limit + $user_current_profile_limit;
                 $gallery_images = $membership_details->gallery_images + $user_current_gallery_images;
                 $featured_listing = $membership_details->featured_listing + $user_current_featured_listing;
+
+                // Debug statements
+                \Log::debug('Profile Limit Calculation:', [
+                    'membership_profile_limit' => $membership_details->profile_limit,
+                    'user_current_profile_limit' => $user_current_profile_limit,
+                    'calculated_profile_limit' => $profile_limit
+                ]);
 
                 $enquiry_form = ($membership_details->enquiry_form || $user_current_enquiry_form) ? 1 : 0;
                 $business_hour = ($membership_details->business_hour || $user_current_business_hour) ? 1 : 0;
@@ -200,6 +210,12 @@ class BuyMembershipController extends Controller
                             // for user membership update
                             if (!empty($user_membership_exits)) {
                                 // Create membership history
+                                \Log::debug('Creating MembershipHistory for manual payment:', [
+                                    'profile_limit' => $membership_details->profile_limit,
+                                    'membership_id' => $membership_details->id,
+                                    'user_id' => $user->id
+                                ]);
+
                                 $new_membership_history = MembershipHistory::create([
                                     'membership_id' => $membership_details->id,
                                     'user_id' => $user->id,
@@ -209,6 +225,7 @@ class BuyMembershipController extends Controller
                                     'manual_payment_image' => $manual_payment_image_name,
                                     'expire_date' => $expire_date_for_manual_payment,
                                     'listing_limit' => $membership_details->listing_limit,
+                                    'profile_limit' => $membership_details->profile_limit, // Make sure this is included
                                     'gallery_images' => $membership_details->gallery_images,
                                     'featured_listing' => $membership_details->featured_listing,
                                     'enquiry_form' => $membership_details->enquiry_form,
@@ -217,6 +234,9 @@ class BuyMembershipController extends Controller
                                     'price' => $this->total,
                                     'status' => $status,
                                 ]);
+
+                                // Debug after creation
+                                \Log::debug('Created MembershipHistory record:', $new_membership_history->toArray());
 
                                 // membership history ID in session
                                 if ($new_membership_history) {
@@ -259,15 +279,20 @@ class BuyMembershipController extends Controller
                                 if ($buy_membership) {
                                     $user_membership = $buy_membership;
                                     // Create membership history
+                                    \Log::debug('Creating MembershipHistory for wallet payment:', [
+                                        'profile_limit' => $user_membership->profile_limit,
+                                        'membership_id' => $user_membership->membership_id,
+                                        'user_id' => $user_membership->user_id
+                                    ]);
+
                                     $new_membership_history = MembershipHistory::create([
                                         'membership_id' => $user_membership->membership_id,
                                         'user_id' => $user_membership->user_id,
                                         'payment_status' => $user_membership->payment_status,
                                         'payment_gateway' => $user_membership->payment_gateway,
-                                        'transaction_id' => $user_membership->transaction_id,
-                                        'manual_payment_image' => $manual_payment_image_name,
                                         'expire_date' => $user_membership->expire_date,
                                         'listing_limit' => $user_membership->listing_limit,
+                                        'profile_limit' => $user_membership->profile_limit, // Make sure this is included
                                         'gallery_images' => $user_membership->gallery_images,
                                         'featured_listing' => $user_membership->featured_listing,
                                         'enquiry_form' => $user_membership->enquiry_form,
@@ -276,6 +301,9 @@ class BuyMembershipController extends Controller
                                         'price' => $this->total,
                                         'status' => $status,
                                     ]);
+
+                                    // Debug after creation
+                                    \Log::debug('Created MembershipHistory record:', $new_membership_history->toArray());
 
                                     // membership history ID in session
                                     if ($new_membership_history) {
@@ -326,21 +354,30 @@ class BuyMembershipController extends Controller
                             if ($user_membership_updated) {
                                 $user_membership = UserMembership::find($user_membership_exits->id);
                                 // Create membership history
+                                \Log::debug('Creating MembershipHistory for other payment gateways:', [
+                                    'profile_limit' => $membership_details->profile_limit,
+                                    'membership_id' => $membership_details->id,
+                                    'user_id' => Auth::guard('web')->user()->id
+                                ]);
+
                                 $new_membership_history = MembershipHistory::create([
-                                    'membership_id' => $user_membership->membership_id,
-                                    'user_id' => $user_membership->user_id,
-                                    'payment_status' => $user_membership->payment_status,
-                                    'payment_gateway' => $user_membership->payment_gateway,
-                                    'expire_date' => $user_membership->expire_date,
-                                    'listing_limit' => $user_membership->listing_limit,
-                                    'gallery_images' => $user_membership->gallery_images,
-                                    'featured_listing' => $user_membership->featured_listing,
-                                    'enquiry_form' => $user_membership->enquiry_form,
-                                    'business_hour' => $user_membership->business_hour,
-                                    'membership_badge' => $user_membership->membership_badge,
+                                    'membership_id' => $membership_details->id,
+                                    'user_id' => Auth::guard('web')->user()->id,
+                                    'payment_status' => '',
+                                    'payment_gateway' => $request->selected_payment_gateway,
+                                    'listing_limit' => $membership_details->listing_limit,
+                                    'profile_limit' => $membership_details->profile_limit, // Make sure this is included
+                                    'gallery_images' => $membership_details->gallery_images,
+                                    'featured_listing' => $membership_details->featured_listing,
+                                    'enquiry_form' => $membership_details->enquiry_form,
+                                    'business_hour' => $membership_details->business_hour,
+                                    'membership_badge' => $membership_details->membership_badge,
                                     'price' => $this->total,
                                     'status' => $status,
                                 ]);
+
+                                // Debug after creation
+                                \Log::debug('Created MembershipHistory record:', $new_membership_history->toArray());
 
                                 // membership history ID in session
                                 if ($new_membership_history) {
@@ -363,12 +400,14 @@ class BuyMembershipController extends Controller
                                 'membership_id' => $membership_details->id,
                                 'price' => $this->total,
                                 'initial_listing_limit' => $listing_limit,
+                                'initial_profile_limit' => $profile_limit,
                                 'initial_gallery_images' => $gallery_images,
                                 'initial_featured_listing' => $featured_listing,
                                 'initial_enquiry_form' => $enquiry_form,
                                 'initial_business_hour' => $business_hour,
                                 'initial_membership_badge' => $membership_badge,
                                 'listing_limit' => $listing_limit,
+                                'profile_limit' => $profile_limit,
                                 'gallery_images' => $gallery_images,
                                 'featured_listing' => $featured_listing,
                                 'enquiry_form' => $enquiry_form,
@@ -376,6 +415,8 @@ class BuyMembershipController extends Controller
                                 'membership_badge' => $membership_badge,
                                 'expire_date' => $expire_date,
                                 'payment_gateway' => $request->selected_payment_gateway,
+                                'transaction_id' => $request->trasaction_id,
+                                'manual_payment_image' => $manual_payment_image_name,
                                 'payment_status' => $payment_status,
                                 'status' => $status,
                             ]);

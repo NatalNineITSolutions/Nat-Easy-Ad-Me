@@ -86,18 +86,6 @@
                 <div class="main">
                     <h3>Profile Lists</h3>
                     
-                    <!-- Listing Status Cards -->
-                    <div class="listing-cards mt-4">
-                        <div class="listing-card">
-                            <h4>Active Listings</h4>
-                            <p>11</p>
-                        </div>
-                        <div class="listing-card">
-                            <h4>Remaining Listings</h4>
-                            <p>20</p>
-                        </div>
-                    </div>
-
                     <table>
                         <thead>
                             <tr>

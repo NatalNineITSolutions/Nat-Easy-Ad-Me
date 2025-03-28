@@ -2029,6 +2029,16 @@ function get_attachment_url_by_id($id,$size=null){
     return $return_val['image_id'] ?? '';
 }
 
+function get_attachment_url_by_ids($id, $size = null) {
+    $imageData = get_attachment_image_by_id($id, $size);
+
+    if (!empty($imageData['img_url'])) {
+        return $imageData['img_url']; 
+    }
+
+    return null; 
+}
+
 function get_image_url_id_wise($id,$size=null){
     $return_val =  get_attachment_image_by_id($id,$size);
     return $return_val['img_url'] ?? '';
@@ -2880,3 +2890,10 @@ function getYoutubeEmbedUrl($url)
     }
     return $youtube_id;
 }
+
+function getProfileImageHtml($imagePath, $shouldBlur)
+{
+    $blurClass = $shouldBlur ? 'blurred' : '';
+    return '<img src="'.asset($imagePath).'" class="'.$blurClass.'" alt="Profile Image">';
+}
+

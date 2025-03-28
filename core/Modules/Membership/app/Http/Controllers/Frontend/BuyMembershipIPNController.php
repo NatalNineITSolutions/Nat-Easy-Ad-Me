@@ -240,7 +240,7 @@ class BuyMembershipIPNController extends Controller
     {
         // Update the profile listing record
         $update = ProfileListing::where('id', $order_id)->update([
-            'paid'           => 1,
+            'paid' => 1,
             'payment_method' => $payment_method,
         ]);
 
@@ -252,8 +252,8 @@ class BuyMembershipIPNController extends Controller
 
         // Create a BV record for the user
         $usersBv = UsersBV::create([
-            'user_id'     => $profileListing->user_id,
-            'bv_points'   => get_static_option('matrimony_bv_points') ?? 0,
+            'user_id' => $profileListing->user_id,
+            'bv_points' => get_static_option('matrimony_bv_points') ?? 0,
             'upgrade_time' => \Carbon\Carbon::now(),
         ]);
 
@@ -279,64 +279,59 @@ class BuyMembershipIPNController extends Controller
                 throw new \Exception("Membership not found for ID: $last_membership_id");
             }
 
+            // Get the new membership details to access profile_limit
+            $new_membership = Membership::find($upgrade_membership_id);
+            if (!$new_membership) {
+                throw new \Exception("New membership not found for ID: $upgrade_membership_id");
+            }
+
             // Update the original membership record status & transaction
+            $updateData = [
+                'payment_status' => 'complete',
+                'status' => 1,
+                'transaction_id' => $transaction_id,
+                'profile_limit' => $new_membership->profile_limit, // Add this line
+            ];
+
             UserMembership::where('id', $last_membership_id)
                 ->where('user_id', $membership_details->user_id)
-                ->update([
-                    'payment_status' => 'complete',
-                    'status'         => 1,
-                    'transaction_id' => $transaction_id,
-                ]);
+                ->update($updateData);
 
             // Update membership history record
             MembershipHistory::where('id', $membership_history_id)
                 ->where('user_id', $membership_details->user_id)
                 ->update([
                     'payment_status' => 'complete',
-                    'status'         => 1,
+                    'status' => 1,
                     'transaction_id' => $transaction_id,
+                    'profile_limit' => $new_membership->profile_limit, // Add this line
                 ]);
 
-            Log::info('data to user:', [
-                'last_membership_id'   => $last_membership_id,
-                'membership_history_id' => $membership_history_id,
-                "upgrade_membership_id" => $upgrade_membership_id
-            ]);
+            if ($new_membership->category == 1) {
+                $expire_date = Carbon::now()->addDays(30);
 
-            $membership = Membership::find($upgrade_membership_id);
-
-            if ($membership && $membership->category == 1) {
-                // Check if a UserMembership record already exists for this user and upgrade membership
                 $existingRecord = UserMembership::where('user_id', $membership_details->user_id)
                     ->whereHas('membership', function ($query) {
                         $query->where('category', 1);
                     })
                     ->first();
 
-                $expire_date = Carbon::now()->addDays(30); 
+                $updateData = [
+                    'membership_id' => $upgrade_membership_id,
+                    'payment_status' => 'complete',
+                    'status' => 1,
+                    'transaction_id' => $transaction_id,
+                    'expire_date' => $expire_date,
+                    'profile_limit' => $new_membership->profile_limit, // Add this line
+                ];
 
                 if ($existingRecord) {
-                    $existingRecord->update([
-                        // If you want to change the membership_id to the new one,
-                        // you can update it here. Otherwise, leave it as is.
-                        'membership_id'  => $upgrade_membership_id,
-                        'payment_status' => 'complete',
-                        'status'         => 1,
-                        'transaction_id' => $transaction_id,
-                        'expire_date'    => $expire_date,
-                    ]);
+                    $existingRecord->update($updateData);
                 } else {
-                    UserMembership::create([
-                        'user_id'        => $membership_details->user_id,
-                        'membership_id'  => $upgrade_membership_id,
-                        'payment_status' => 'complete',
-                        'status'         => 1,
-                        'transaction_id' => $transaction_id,
-                        'expire_date'    => $expire_date,
-                    ]);
+                    $updateData['user_id'] = $membership_details->user_id;
+                    UserMembership::create($updateData);
                 }
             } else {
-                // For non-category-1 memberships, check current membership and update
                 $check_user_current_membership = UserMembership::where('id', $last_membership_id)
                     ->where('user_id', $membership_details->user_id)
                     ->where('payment_status', 'complete')
@@ -347,33 +342,31 @@ class BuyMembershipIPNController extends Controller
                 if ($membership_history && $check_user_current_membership) {
                     $expire_date = Carbon::now()->addDays(
                         Carbon::parse($membership_details->expire_date)->diffInDays(Carbon::now()) +
-                            Carbon::parse($membership_history->expire_date)->diffInDays(Carbon::now())
+                        Carbon::parse($membership_history->expire_date)->diffInDays(Carbon::now())
                     );
 
                     UserMembership::where('id', $last_membership_id)
                         ->where('user_id', $membership_details->user_id)
                         ->update([
-                            'membership_id'  => $upgrade_membership_id,
+                            'membership_id' => $upgrade_membership_id,
                             'payment_status' => 'complete',
-                            'status'         => 1,
+                            'status' => 1,
                             'transaction_id' => $transaction_id,
-                            'expire_date'    => $expire_date,
+                            'expire_date' => $expire_date,
+                            'profile_limit' => $new_membership->profile_limit, // Add this line
                         ]);
                 }
             }
 
-
-            // Fetch the new membership details for BV points distribution
-            $new_membership = Membership::find($upgrade_membership_id);
+            // Rest of your BV points distribution code remains the same
             if ($new_membership) {
                 $usersBv = UsersBV::create([
-                    'user_id'       => $membership_details->user_id,
+                    'user_id' => $membership_details->user_id,
                     'membership_id' => $upgrade_membership_id,
-                    'bv_points'     => $new_membership->bv_points ?? 0,
-                    'upgrade_time'  => Carbon::now(),
+                    'bv_points' => $new_membership->bv_points ?? 0,
+                    'upgrade_time' => Carbon::now(),
                 ]);
 
-                // Distribute BV points to the parent user
                 $user = User::find($membership_details->user_id);
                 $bvService = new BVDistributionService();
                 $bvService->distributeBVPoints($user, $usersBv->bv_points, $upgrade_membership_id, $membership_details->user_id);
@@ -381,9 +374,9 @@ class BuyMembershipIPNController extends Controller
 
             AdminNotification::create([
                 'identity' => $last_membership_id,
-                'user_id'  => $membership_details->user_id,
-                'type'     => __('Buy Membership'),
-                'message'  => __('User membership purchase'),
+                'user_id' => $membership_details->user_id,
+                'type' => __('Buy Membership'),
+                'message' => __('User membership purchase'),
             ]);
 
             session()->forget(['order_id', 'membership_history_id', 'upgrade_membership_id']);
@@ -391,62 +384,4 @@ class BuyMembershipIPNController extends Controller
             Log::error('Failed to update membership: ' . $e->getMessage());
         }
     }
-
-
-    // private function distributeBVPoints($user, $bvPoints, $upgradeMembershipId, $originalUserId)
-    // {
-    //     if (!$user) {
-    //         return;
-    //     }
-    //     Log::info('Distributed BV points to user:', [
-    //         'user_id' => $user->id,
-    //         'bv_points' => $bvPoints,
-    //         'left' => $user->left_parent_id,
-    //         'right' => $user->right_parent_id,
-    //     ]);
-
-
-    //     // Skip the original user (sameeksha) to avoid duplicate entries
-    //     if ($user->id === $originalUserId) {
-    //         // Recursively distribute BV points to the left and right parents
-    //         if ($user->left_parent_id) {
-    //             $leftParentUser = User::find($user->left_parent_id);
-    //             $this->distributeBVPoints($leftParentUser, $bvPoints, $upgradeMembershipId, $originalUserId);
-    //         }
-    //         if ($user->right_parent_id) {
-    //             $rightParentUser = User::find($user->right_parent_id);
-    //             $this->distributeBVPoints($rightParentUser, $bvPoints, $upgradeMembershipId, $originalUserId);
-    //         }
-    //         return;
-    //     }
-
-    //     // Update the current user's BV points in the Users table
-    //     $user->bv_points += $bvPoints;
-    //     $user->save();
-
-    //     // Create a new entry in the user_bvs table for the distributed BV points
-    //     UsersBV::create([
-    //         'user_id' => $user->id,
-    //         'membership_id' => $upgradeMembershipId, // The upgraded membership ID
-    //         'bv_points' => $bvPoints, // The distributed BV points
-    //         'upgrade_time' => Carbon::now(), // Timestamp of distribution
-    //     ]);
-
-    //     Log::info('Distributed BV points to user:', [
-    //         'user_id' => $user->id,
-    //         'bv_points' => $bvPoints,
-    //         'left' => $user->left_parent_id,
-    //         'right' => $user->right_parent_id,
-    //     ]);
-
-    //     // Recursively distribute BV points to the left and right parents
-    //     if ($user->left_parent_id) {
-    //         $leftParentUser = User::find($user->left_parent_id);
-    //         $this->distributeBVPoints($leftParentUser, $bvPoints, $upgradeMembershipId, $originalUserId);
-    //     }
-    //     if ($user->right_parent_id) {
-    //         $rightParentUser = User::find($user->right_parent_id);
-    //         $this->distributeBVPoints($rightParentUser, $bvPoints, $upgradeMembershipId, $originalUserId);
-    //     }
-    // }
 }

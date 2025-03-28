@@ -10,7 +10,9 @@ use Illuminate\Http\Request;
 use App\Models\MatrimonyKyc;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\UnlockedProfile;
 use Modules\Membership\app\Models\Membership;
+use Modules\Membership\app\Models\MembershipHistory;
 use App\Models\ProfileListing;
 use Illuminate\Support\Str;
 use App\Models\Gothram;
@@ -37,24 +39,46 @@ class MatrimonyController extends Controller
             return redirect()->route('matrimony.user-details')->with('info', 'Please complete your profile to proceed.');
         }
 
+        $unlockedProfileIds = UnlockedProfile::where('user_id', $user->id)
+            ->pluck('profile_id')
+            ->toArray();
+
         $profiles = ProfileListing::where('is_verified', 1)
             ->where('id', '!=', $user->id)
             ->select('id', 'name', 'age', 'occupation', 'city', 'image', 'mother_tongue')
             ->inRandomOrder()
             ->limit(7)
             ->get()
-            ->map(function ($profile) {
-                // Extract first image ID from pipe-separated string
+            ->map(function ($profile) use ($unlockedProfileIds) {
+                $isUnlocked = in_array($profile->id, $unlockedProfileIds);
+
                 $firstImageId = null;
                 if (!empty($profile->image)) {
                     $imageIds = explode('|', $profile->image);
                     $firstImageId = trim($imageIds[0]) ?? null;
                 }
 
-                // Add first_image_url to each profile
-                $profile->first_image_url = $firstImageId
-                    ? render_image_markup_by_attachment_id($firstImageId)
-                    : '/assets/uploads/media-uploader/profile.png';
+                Log::info("Profile ID: {$profile->id}, First Image ID: {$firstImageId}, Unlocked: " . ($isUnlocked ? 'Yes' : 'No'));
+
+                if ($firstImageId) {
+                    if ($isUnlocked) {
+                        $profile->first_image_url = render_image_markup_by_attachment_id($firstImageId); // Returns full <img> tag
+                    } else {
+                        $imageUrl = get_attachment_url_by_ids($firstImageId);
+
+                        Log::info("Generated Image URL for Profile ID: {$profile->id}, URL: {$imageUrl}");
+
+                        if ($imageUrl) {
+                            $profile->first_image_url = "<img src=\"{$imageUrl}\" class=\"blurred\" alt=\"Profile Image\">";
+                        } else {
+                            $profile->first_image_url = "<img src=\"/assets/uploads/media-uploader/profile.png\" class=\"blurred\" alt=\"Profile Image\">";
+                        }
+                    }
+                } else {
+                    $blurClass = $isUnlocked ? '' : 'class="blurred"';
+                    $profile->first_image_url = "<img src=\"/assets/uploads/media-uploader/profile.png\" {$blurClass} alt=\"Profile Image\">";
+                }
+
 
                 return $profile;
             });
@@ -69,54 +93,26 @@ class MatrimonyController extends Controller
         return view('matrimony.price', compact('memberships'));
     }
 
-    // public function profiledetails()
-    // {
-    //     $user = Auth::user();
-    //     $profile = DB::table('profile_listings')
-    //         ->where('user_id', $user->id)
-    //         ->first();
-
-    //     $mainImageHtml = null;
-    //     $galleryImagesHtml = [];
-
-    //     if ($profile && !empty($profile->image)) {
-    //         $imageIds = array_filter(
-    //             preg_split('/[|,]/', $profile->image),
-    //             fn($id) => !empty(trim($id))
-    //         );
-
-    //         if (!empty($imageIds)) {
-    //             $mainImageHtml = render_image_markup_by_attachment_id(trim($imageIds[0]));
-
-    //             foreach ($imageIds as $imageId) {
-    //                 $galleryImagesHtml[] = render_image_markup_by_attachment_id(trim($imageId));
-    //             }
-    //         }
-    //     }
-
-    //     return view('matrimony.profile-details', [
-    //         'mainImageHtml' => $mainImageHtml,
-    //         'galleryImagesHtml' => $galleryImagesHtml,
-    //         'profile' => $profile
-    //     ]);
-    // }
-
-
-    public function profiledetails($id = null)
+    public function profileDetails($id)
     {
         $user = Auth::user();
 
-        if ($id) {
-            $profile = ProfileListing::find($id); // Fetch profile by ID
-        } else {
-            $profile = DB::table('profile_listings')
-                ->where('user_id', $user->id)
-                ->first();
+        if (!$user) {
+            return redirect()->route('user.login')->with('error', 'Please log in to view profile details');
         }
 
-        if (!$profile) {
-            return redirect()->route('matrimony.index')->with('error', 'Profile not found.');
-        }
+        $profile = ProfileListing::with('user') // Eager load the user relationship
+            ->findOrFail($id);
+
+        $isUnlocked = UnlockedProfile::where('user_id', $user->id)
+            ->where('profile_id', $id)
+            ->exists();
+
+        $hasRemainingViews = MembershipHistory::where('user_id', $user->id)
+            ->where('profile_limit', '>', 0)
+            ->exists();
+
+        $shouldBlur = !$isUnlocked && !$hasRemainingViews;
 
         $mainImageHtml = null;
         $galleryImagesHtml = [];
@@ -128,18 +124,29 @@ class MatrimonyController extends Controller
             );
 
             if (!empty($imageIds)) {
-                $mainImageHtml = render_image_markup_by_attachment_id(trim($imageIds[0]));
+                $galleryImagesHtml = [];
+
+                $mainImageHtml = $shouldBlur
+                    ? '<img src="' . get_attachment_url_by_id(trim($imageIds[0])) . '" class="blurred" alt="Profile Image">'
+                    : render_image_markup_by_attachment_id(trim($imageIds[0]));
 
                 foreach ($imageIds as $imageId) {
-                    $galleryImagesHtml[] = render_image_markup_by_attachment_id(trim($imageId));
+                    $galleryImagesHtml[] = $shouldBlur
+                        ? '<img src="' . get_attachment_url_by_id(trim($imageId)) . '" class="blurred" alt="Gallery Image">'
+                        : render_image_markup_by_attachment_id(trim($imageId));
                 }
             }
         }
 
         return view('matrimony.profile-details', [
+            'profile' => $profile,
             'mainImageHtml' => $mainImageHtml,
             'galleryImagesHtml' => $galleryImagesHtml,
-            'profile' => $profile
+            'isUnlocked' => $isUnlocked,
+            'hasRemainingViews' => $hasRemainingViews,
+            'shouldBlur' => $shouldBlur,
+            'userEmail' => $profile->user->email ?? null,  
+            'userPhone' => $profile->user->phone ?? null   
         ]);
     }
 
@@ -372,7 +379,7 @@ class MatrimonyController extends Controller
             'country' => $request->country,
             'state' => $request->state,
             'city' => $request->city,
-            'image' => $request->images, 
+            'image' => $request->images,
             'description' => $request->description,
             'paid' => 0,
             'payment_method' => null,
@@ -457,31 +464,118 @@ class MatrimonyController extends Controller
         ];
     }
 
-
     public function profilelists()
     {
         $profiles = ProfileListing::select('id', 'name', 'age', 'is_verified', 'rejection_reason')->get();
         return view('matrimony.profile-lists', compact('profiles'));
     }
 
-    public function checkSubscription()
+    // public function checkSubscription()
+    // {
+    //     $user = Auth::user();
+
+    //     if (!$user) {
+    //         return response()->json(['status' => 'error', 'message' => 'User not logged in'], 401);
+    //     }
+
+    //     $membership = DB::table('membership_histories')
+    //         ->where('user_id', $user->id)
+    //         ->where('profile_limit', '>', 0)
+    //         ->first();
+
+    //     if ($membership) {
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'remaining_profiles' => $membership->profile_limit
+    //         ]);
+    //     } else {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Please subscribe to view full details'
+    //         ], 403);
+    //     }
+    // }
+
+    public function decrementProfileCount()
     {
         $user = Auth::user();
 
         if (!$user) {
-            return response()->json(['status' => 'error', 'message' => 'User not logged in'], 401);
+            return response()->json(['status' => 'error', 'message' => 'Unauthorized'], 401);
         }
 
-        // Fetch is_subscribed from user_memberships table
-        $isSubscribed = DB::table('user_memberships')
+        $updated = DB::table('membership_histories')
             ->where('user_id', $user->id)
-            ->value('is_subscribed');
+            ->where('profile_limit', '>', 0)
+            ->decrement('profile_limit');
 
-        if ($isSubscribed) {
+        if ($updated) {
             return response()->json(['status' => 'success']);
-        } else {
-            return response()->json(['status' => 'error', 'message' => 'Please subscribe to see the profile']);
         }
+
+        return response()->json(['status' => 'error', 'message' => 'No profiles remaining']);
     }
 
+    public function unlockProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Please login to unlock profiles',
+                'redirect' => route('user.login')
+            ], 401);
+        }
+
+        $request->validate([
+            'profile_id' => 'required|exists:profile_listings,id'
+        ]);
+
+        return DB::transaction(function () use ($user, $request) {
+            // Check if already unlocked
+            $alreadyUnlocked = UnlockedProfile::where('user_id', $user->id)
+                ->where('profile_id', $request->profile_id)
+                ->exists();
+
+            if ($alreadyUnlocked) {
+                return response()->json(['status' => 'success']);
+            }
+
+            // Check membership
+            $membership = MembershipHistory::where('user_id', $user->id)
+                ->where('profile_limit', '>', 0)
+                ->first();
+
+            if (!$membership) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'No profile views remaining. Please upgrade your membership.',
+                    'redirect' => route('matrimony.price')
+                ], 403);
+            }
+
+            try {
+                // Record unlock
+                UnlockedProfile::create([
+                    'user_id' => $user->id,
+                    'profile_id' => $request->profile_id
+                ]);
+
+                // Deduct from limit
+                $membership->decrement('profile_limit');
+
+                return response()->json([
+                    'status' => 'success',
+                    'remaining_views' => $membership->profile_limit - 1
+                ]);
+
+            } catch (\Exception $e) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Failed to unlock profile: ' . $e->getMessage()
+                ], 500);
+            }
+        });
+    }
 }

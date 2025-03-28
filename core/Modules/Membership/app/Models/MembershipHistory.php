@@ -17,6 +17,8 @@ class MembershipHistory extends Model
         'membership_id',
         'price',
         'listing_limit',
+        'profile_limit',
+        'profiles_viewed',
         'gallery_images',
         'featured_listing',
         'enquiry_form',

@@ -37,7 +37,9 @@ Route::middleware(['web'])->group(function () {
         Route::get('/get-states/{country_id}', [MatrimonyController::class, 'getStates'])->name('get-states');
 
         Route::get('/get-cities/{state_id}', [MatrimonyController::class, 'getCities'])->name('get-cities');
-
         Route::get('/check-subscription', [MatrimonyController::class, 'checkSubscription'])->name('check.subscription');
     });
 });
+
+Route::post('/decrement-profile', [MatrimonyController::class, 'decrementProfileCount'])->name('decrement.profile');
+Route::post('/unlock-profile', [MatrimonyController::class, 'unlockProfile'])->name('matrimony.unlock.profile');

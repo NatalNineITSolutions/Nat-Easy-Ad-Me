@@ -323,8 +323,22 @@
             }
         }
 
-        .main-profile-image {
-            filter: blur(3px);
+        .profile-bottom {
+            transition: all 0.3s ease;
+        }
+
+        .blurred {
+            filter: blur(8px);
+            transition: filter 0.3s ease;
+        }
+
+        .btn-profile {
+            transition: all 0.3s ease;
+        }
+
+        .btn-profile:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
         }
     </style>
 
@@ -344,8 +358,7 @@
     <div class="profile-details">
         <div class="container profile-container">
             <div class="profile-container-section">
-                <img class="profile-container-section-img " src="/assets/uploads/media-uploader/profile-design.png"
-                    alt="">
+                <img class="profile-container-section-img " src="/assets/uploads/media-uploader/profile-design.png" alt="">
                 <div class="trusted-profiles">
                     <div>
                         <h2>TRUSTED PROFILES</h2>
@@ -356,75 +369,91 @@
                         <img src="/assets/uploads/media-uploader/divider.png" alt="">
                     </div>
                 </div>
-                <img class="profile-container-section-img " src="/assets/uploads/media-uploader/profile-design.png"
-                    alt="">
+                <img class="profile-container-section-img " src="/assets/uploads/media-uploader/profile-design.png" alt="">
             </div>
         </div>
 
         <div class="profile-wrapper container">
             <div class="profile-wrapper-section">
                 <div class="profile-images-container">
-                    @if ($mainImageHtml)
-                        <!-- Only show the first/main profile image -->
-                        <div class="main-profile-image">
-                            {!! $mainImageHtml !!}
-                        </div>
-                    @else
-                        <!-- Default fallback -->
-                        <div class="main-profile-image">
-                            <img src="/assets/uploads/media-uploader/profile-detail.png" class="card-profile" alt="Default Profile">
-                        </div>
-                    @endif
+                    <!-- Main profile image - blurred if shouldBlur is true -->
+                    <div class="main-profile-image">
+                        {!! $mainImageHtml !!}
+                    </div>
                 </div>
-
                 <div class="profile-info">
                     <div>
                         <h2>{{ $profile->name ?? 'User' }} <span>👑</span></h2>
                     </div>
                     <div class="details">
                         <p><span>Education:</span> {{ $profile->education ?? 'Not specified' }}</p>
-                        <p><span>ID Number:</span> {{ $profile->id_number ?? 'N/A' }}</p>
-                        <p><span>Address:</span> {{ $profile->address ?? 'Not specified' }}</p>
                         <p><span>Age & Religion:</span> {{ $profile->age ?? '' }}, {{ $profile->religion ?? '' }}</p>
                         <p><span>Occupation:</span> {{ $profile->occupation ?? 'Not specified' }}</p>
                     </div>
-                    <div class="connect">
-                        <a href="javascript:void(0);" onclick="showProfileDetails()">Unlock full details</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="profile-bottom" style="display: none;">
-                <div class="profile-tabs">
-                    <button class="tab-link active" data-tab="description"
-                        onclick="openTab(event, 'description')">Descriptions</button>
-                    <button class="tab-link" data-tab="gallery" onclick="openTab(event, 'gallery')">Gallery</button>
-                    <button class="tab-link" data-tab="jothagam" onclick="openTab(event, 'jothagam')">Jathagam</button>
-                </div>
-
-                <div class="tab-content active" id="description">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </div>
-
-                <div class="tab-content" id="gallery">
-                    <div class="gallery-grid">
-                        @if (count($galleryImagesHtml) > 0)
-                            @foreach ($galleryImagesHtml as $imageHtml)
-                                <div class="gallery-item">
-                                    {!! $imageHtml !!}
-                                </div>
-                            @endforeach
-                        @else
-                            <p>No gallery images available</p>
+                    <div class="profile-info">
+                        <!-- ... profile info ... -->
+                        @if(!$isUnlocked)
+                            <div class="connect">
+                                <a href="javascript:void(0);" onclick="unlockProfile()" class="btn-profile">Unlock full
+                                    details</a>
+                            </div>
                         @endif
                     </div>
                 </div>
-
-                <div id="jothagam" class="tab-content">
-                    <p>Download the Jothagam PDF file:</p>
-                    <a href="path/to/yourfile.pdf" download class="download-btn">Download PDF</a>
-                </div>
             </div>
+
+            @if(!$shouldBlur)
+                <div class="profile-bottom" id="profileTabs" style="{{ $isUnlocked ? '' : 'display: none;' }}">
+                    <div class="profile-tabs">
+                        <button class="tab-link active" data-tab="description"
+                            onclick="openTab(event, 'description')">Descriptions</button>
+                        <button class="tab-link" data-tab="gallery" onclick="openTab(event, 'photos')">Photos</button>
+                        <button class="tab-link" data-tab="contact" onclick="openTab(event, 'contact')">Contact</button>
+                        <!-- <button class="tab-link" data-tab="jothagam" onclick="openTab(event, 'jothagam')">Jathagam</button> -->
+                    </div>
+
+                    <div class="tab-content active" id="description">
+                        <p>{{ $profile->description ?? 'No description available' }}</p>
+                    </div>
+
+                    <div class="tab-content" id="contact">
+                        @if($isUnlocked || !$shouldBlur)
+                            <p><i class="fas fa-envelope"></i> {{ $userEmail ?? 'No email available' }}</p>
+                            <p><i class="fas fa-phone"></i> {{ $userPhone ?? 'No phone available' }}</p>
+                        @else
+                            <div class="locked-contact-info">
+                                <p><i class="fas fa-lock"></i> Contact information is locked</p>
+                                <button onclick="unlockProfile()" class="btn btn-primary">
+                                    Unlock Profile to View Contact Info
+                                </button>
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="tab-content" id="gallery">
+                        <div class="gallery-grid">
+                            @if (count($galleryImagesHtml) > 0)
+                                @foreach ($galleryImagesHtml as $imageHtml)
+                                    <div class="gallery-item">
+                                        {!! $imageHtml !!}
+                                    </div>
+                                @endforeach
+                            @else
+                                <p>No gallery images available</p>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- <div id="jothagam" class="tab-content">
+                                        @if($profile->jothagam_path)
+                                            <p>Download the Jothagam PDF file:</p>
+                                            <a href="{{ asset($profile->jothagam_path) }}" download class="download-btn">Download PDF</a>
+                                        @else
+                                            <p>No Jothagam available</p>
+                                        @endif
+                                    </div> -->
+                </div>
+            @endif
         </div>
     </div>
 
@@ -432,7 +461,7 @@
 
 @section('script')
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const tabLinks = document.querySelectorAll(".tab-link");
             const tabContents = document.querySelectorAll(".tab-content");
 
@@ -451,7 +480,7 @@
 
             // Add event listeners to buttons
             tabLinks.forEach(tab => {
-                tab.addEventListener("click", function() {
+                tab.addEventListener("click", function () {
                     const tabName = this.getAttribute("data-tab");
                     openTab(event, tabName);
                 });
@@ -459,28 +488,84 @@
         });
     </script>
 
+    @section('scripts')
+
+    @endsection
     <script>
-        function showProfileDetails() {
-            fetch("{{ route('matrimony.check.subscription') }}")
-                .then(response => response.json())
+        function unlockProfile() {
+            const profileId = {{ $profile->id }};
+            const unlockButton = document.querySelector('.btn-profile');
+
+            // Disable button to prevent multiple clicks
+            unlockButton.disabled = true;
+            unlockButton.textContent = 'Processing...';
+
+            fetch("{{ route('matrimony.unlock.profile') }}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ profile_id: profileId })
+            })
+                .then(response => {
+                    if (response.redirected) {
+                        // Handle redirect to pricing page
+                        window.location.href = response.url;
+                        return;
+                    }
+                    return response.json();
+                })
                 .then(data => {
-                    console.log("Response Data:", data); // Debugging line
+                    if (!data) return;
 
                     if (data.status === "success") {
-                        document.querySelector('.profile-bottom').style.display = 'block';
-                    } else {
-                        toastr.error(data.message); // Show toast message
+                        // Show the tabs section
+                        document.getElementById('profileTabs').style.display = 'block';
 
-                        // Redirect to the pricing page after a short delay
+                        // Remove blur from images
+                        document.querySelectorAll('.blurred').forEach(img => {
+                            img.classList.remove('blurred');
+                        });
+
+                        // Change button text or hide it
+                        unlockButton.textContent = 'Unlocked';
                         setTimeout(() => {
-                            window.location.href = "/matrimony/pricing";
-                        }, 2000); // Redirect after 2 seconds
+                            unlockButton.style.display = 'none';
+                        }, 1500);
+
+                        // Reload the page after a short delay to ensure all changes are applied
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        unlockButton.disabled = false;
+                        unlockButton.textContent = 'Unlock full details';
+                        toastr.error(data.message || 'Failed to unlock profile');
+
+                        if (data.redirect) {
+                            setTimeout(() => {
+                                window.location.href = data.redirect;
+                            }, 1500);
+                        }
                     }
                 })
                 .catch(error => {
-                    console.error("Fetch Error:", error);
+                    unlockButton.disabled = false;
+                    unlockButton.textContent = 'Unlock full details';
                     toastr.error("Something went wrong. Please try again.");
+                    console.error("Error:", error);
                 });
+        }
+
+        function decrementProfileCount() {
+            fetch("{{ route('decrement.profile') }}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                }
+            });
         }
     </script>
 @endsection

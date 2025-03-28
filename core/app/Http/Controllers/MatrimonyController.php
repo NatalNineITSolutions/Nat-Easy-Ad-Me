@@ -93,7 +93,7 @@ class MatrimonyController extends Controller
         return view('matrimony.price', compact('memberships'));
     }
 
-    public function profileDetails($id)
+    public function profiledetails($id = null)
     {
         $user = Auth::user();
 
@@ -145,8 +145,8 @@ class MatrimonyController extends Controller
             'isUnlocked' => $isUnlocked,
             'hasRemainingViews' => $hasRemainingViews,
             'shouldBlur' => $shouldBlur,
-            'userEmail' => $profile->user->email ?? null,  
-            'userPhone' => $profile->user->phone ?? null   
+            'userEmail' => $profile->user->email ?? null,
+            'userPhone' => $profile->user->phone ?? null
         ]);
     }
 
@@ -294,22 +294,52 @@ class MatrimonyController extends Controller
             'redirect_url' => url('/matrimony'),
         ]);
     }
-
     public function profile()
     {
-        return view('matrimony.main-profile');
+        $userId = auth()->id();
+        Log::info("Fetching profile for user ID: {$userId}");
+
+        $kycRecords = DB::table('matrimony_kyc')
+            ->leftJoin('users', 'matrimony_kyc.user_id', '=', 'users.id')
+            ->select(
+                'matrimony_kyc.*',
+                'users.username'
+            )
+            ->get();
+
+        Log::info("MatrimonyKYC Data:", $kycRecords->toArray());
+
+        return view('matrimony.main-profile', ['kycRecords' => $kycRecords]);
     }
 
-    // public function profilelisting()
-    // {
-    //     $castes = Caste::all(); 
-    //     $motherTongues = MotherTongue::all(); 
-    //     $countries = Country::all(); 
-    //     $states = State::all(); 
-    //     $cities = City::all();
+    public function editProfile($id)
+    {
+        $userProfile = DB::table('matrimony_kyc')
+            ->leftJoin('users', 'matrimony_kyc.user_id', '=', 'users.id')
+            ->select(
+                'matrimony_kyc.*',
+                'users.username'
+            )
+            ->where('matrimony_kyc.user_id', $id)
+            ->first();
 
-    //     return view('matrimony.profile-listing', compact('castes', 'motherTongues', 'countries', 'states', 'cities'));
-    // }
+        return view('matrimony.edit-main-profile', compact('userProfile'));
+    }
+
+    public function updateMainProfile(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'education' => 'nullable|string|max:255',
+            'occupation' => 'nullable|string|max:255',
+            'annual_income' => 'nullable|numeric',
+        ]);
+
+        DB::table('matrimony_kyc')
+            ->where('user_id', $id)
+            ->update($validatedData);
+
+        return redirect()->route('matrimony.edit-profile', $id)->with('success', 'Profile updated successfully!');
+    }
 
     public function profilelisting(Request $request)
     {
@@ -466,7 +496,14 @@ class MatrimonyController extends Controller
 
     public function profilelists()
     {
-        $profiles = ProfileListing::select('id', 'name', 'age', 'is_verified', 'rejection_reason')->get();
+        // Get the current authenticated user's ID
+        $userId = auth()->id();
+
+        // Only get profiles that belong to this user
+        $profiles = ProfileListing::where('user_id', $userId)
+            ->select('id', 'name', 'age', 'is_verified', 'rejection_reason')
+            ->get();
+
         return view('matrimony.profile-lists', compact('profiles'));
     }
 
@@ -569,7 +606,6 @@ class MatrimonyController extends Controller
                     'status' => 'success',
                     'remaining_views' => $membership->profile_limit - 1
                 ]);
-
             } catch (\Exception $e) {
                 return response()->json([
                     'status' => 'error',
@@ -577,5 +613,37 @@ class MatrimonyController extends Controller
                 ], 500);
             }
         });
+    }
+
+
+    public function dashboard()
+    {
+        // Get the authenticated user's ID
+        $userId = auth()->id();
+
+        // Get the user's preferences
+        $userPreferences = MatrimonyPreference::where('user_id', $userId)->first();
+
+        // Start building the query for potential matches - only verified users
+        $matchesQuery = ProfileListing::where('user_id', '!=', $userId)
+            ->where('is_verified', 1); // Only verified profiles
+
+        if ($userPreferences && $userPreferences->occupation) {
+            // Occupation matching (exact match)
+            $matchesQuery->where('occupation', $userPreferences->occupation);
+        }
+
+        // Get the matches (limit to 4 for the dashboard)
+        $matches = $matchesQuery->inRandomOrder()->limit(4)->get();
+
+        // Add first image URL to each profile
+        $matches->each(function ($profile) {
+            $firstImageId = $profile->image; // Assuming you have image_id field
+            $profile->first_image_url = $firstImageId
+                ? render_image_markup_by_attachment_id($firstImageId)
+                : '/assets/uploads/media-uploader/profile.png';
+        });
+
+        return view('matrimony.dashboard', compact('matches'));
     }
 }

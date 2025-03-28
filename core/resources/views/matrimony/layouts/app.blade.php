@@ -337,6 +337,10 @@
         .join-btn:hover {
             background-color: #3e4d54;
         }
+
+        .username {
+            font-weight: 600;
+        }
     </style>
 
     @yield('style')

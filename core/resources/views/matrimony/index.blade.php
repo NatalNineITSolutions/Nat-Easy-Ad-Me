@@ -528,7 +528,8 @@
         }
 
         .btn-profile:hover {
-            background-color: #e0105c;
+            background-color: #FF166C;
+            color: white;
         }
 
         /* Responsive adjustments */

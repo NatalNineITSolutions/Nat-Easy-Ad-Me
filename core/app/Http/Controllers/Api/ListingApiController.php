@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use App\Models\Backend\Listing;
 use App\Models\Backend\MediaUpload;
+use App\Models\Frontend\ListingAttribute;
 
 class ListingApiController extends Controller
 {

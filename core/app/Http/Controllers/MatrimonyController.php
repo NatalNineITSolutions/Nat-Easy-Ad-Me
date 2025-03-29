@@ -24,6 +24,7 @@ use Modules\CountryManage\app\Models\State;
 use Modules\CountryManage\app\Models\Country;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
+use App\Models\ProfileRequest;
 
 class MatrimonyController extends Controller
 {
@@ -93,6 +94,63 @@ class MatrimonyController extends Controller
         return view('matrimony.price', compact('memberships'));
     }
 
+    // public function profileDetails($id)
+    // {
+    //     $user = Auth::user();
+
+    //     if (!$user) {
+    //         return redirect()->route('user.login')->with('error', 'Please log in to view profile details');
+    //     }
+
+    //     $profile = ProfileListing::with('user') 
+    //         ->findOrFail($id);
+
+    //     $isUnlocked = UnlockedProfile::where('user_id', $user->id)
+    //         ->where('profile_id', $id)
+    //         ->exists();
+
+    //     $hasRemainingViews = MembershipHistory::where('user_id', $user->id)
+    //         ->where('profile_limit', '>', 0)
+    //         ->exists();
+
+    //     $shouldBlur = !$isUnlocked && !$hasRemainingViews;
+
+    //     $mainImageHtml = null;
+    //     $galleryImagesHtml = [];
+
+    //     if (!empty($profile->image)) {
+    //         $imageIds = array_filter(
+    //             preg_split('/[|,]/', $profile->image),
+    //             fn($id) => !empty(trim($id))
+    //         );
+
+    //         if (!empty($imageIds)) {
+    //             $galleryImagesHtml = [];
+
+    //             $mainImageHtml = $shouldBlur
+    //                 ? '<img src="' . get_attachment_url_by_id(trim($imageIds[0])) . '" class="blurred" alt="Profile Image">'
+    //                 : render_image_markup_by_attachment_id(trim($imageIds[0]));
+
+    //             foreach ($imageIds as $imageId) {
+    //                 $galleryImagesHtml[] = $shouldBlur
+    //                     ? '<img src="' . get_attachment_url_by_id(trim($imageId)) . '" class="blurred" alt="Gallery Image">'
+    //                     : render_image_markup_by_attachment_id(trim($imageId));
+    //             }
+    //         }
+    //     }
+
+    //     return view('matrimony.profile-details', [
+    //         'profile' => $profile,
+    //         'mainImageHtml' => $mainImageHtml,
+    //         'galleryImagesHtml' => $galleryImagesHtml,
+    //         'isUnlocked' => $isUnlocked,
+    //         'hasRemainingViews' => $hasRemainingViews,
+    //         'shouldBlur' => $shouldBlur,
+    //         'userEmail' => $profile->user->email ?? null,  
+    //         'userPhone' => $profile->user->phone ?? null   
+    //     ]);
+    // }
+
     public function profileDetails($id)
     {
         $user = Auth::user();
@@ -101,8 +159,10 @@ class MatrimonyController extends Controller
             return redirect()->route('user.login')->with('error', 'Please log in to view profile details');
         }
 
-        $profile = ProfileListing::with('user') // Eager load the user relationship
+        $profile = ProfileListing::with('user') 
             ->findOrFail($id);
+
+        $isOwnProfile = $profile->user_id === $user->id; // Add this line to check if it's the user's own profile
 
         $isUnlocked = UnlockedProfile::where('user_id', $user->id)
             ->where('profile_id', $id)
@@ -146,10 +206,71 @@ class MatrimonyController extends Controller
             'hasRemainingViews' => $hasRemainingViews,
             'shouldBlur' => $shouldBlur,
             'userEmail' => $profile->user->email ?? null,  
-            'userPhone' => $profile->user->phone ?? null   
+            'userPhone' => $profile->user->phone ?? null,
+            'isOwnProfile' => $isOwnProfile // Add this to the view data
         ]);
     }
 
+    // In ProfileController.php
+    // public function sendRequest(Request $request, ProfileListing $profile)
+    // {
+    //     // Verify the user isn't sending to themselves
+    //     if ($profile->user_id === auth()->id()) {
+    //         return response()->json([
+    //             'message' => 'Cannot send request to your own profile'
+    //         ], 403);
+    //     }
+
+    //     // Check for existing request
+    //     if (ProfileRequest::where('sender_id', auth()->id())
+    //                     ->where('profile_id', $profile->id)
+    //                     ->exists()) {
+    //         return response()->json([
+    //             'message' => 'You already sent a request to this profile'
+    //         ], 422);
+    //     }
+
+    //     // Create the request
+    //     ProfileRequest::create([
+    //         'sender_id' => auth()->id(),
+    //         'profile_id' => $profile->id,
+    //         'status' => 'pending'
+    //     ]);
+
+    //     return response()->json([
+    //         'message' => 'Request sent successfully'
+    //     ]);
+    // }
+
+    public function sendRequest(Request $request, ProfileListing $profile)
+    {
+        // Verify the user isn't sending to themselves
+        if ($profile->user_id === auth()->id()) {
+            return response()->json([
+                'message' => 'You cannot send a request to your own profile'
+            ], 403);
+        }
+
+        // Check for existing request
+        if (ProfileRequest::where('sender_id', auth()->id())
+                        ->where('profile_id', $profile->id)
+                        ->exists()) {
+            return response()->json([
+                'message' => 'You have already sent a request to this profile'
+            ], 422);
+        }
+
+        // Create the request
+        ProfileRequest::create([
+            'sender_id' => auth()->id(),
+            'profile_id' => $profile->id,
+            'status' => 'pending'
+        ]);
+
+        return response()->json([
+            'message' => 'Profile request sent successfully!'
+        ]);
+    }
     public function userdetails()
     {
         $castes = Caste::all();
@@ -314,17 +435,6 @@ class MatrimonyController extends Controller
         return view('matrimony.main-profile', ['kycRecord' => $kycRecord]);
     }
 
-    // public function profilelisting()
-    // {
-    //     $castes = Caste::all(); 
-    //     $motherTongues = MotherTongue::all(); 
-    //     $countries = Country::all(); 
-    //     $states = State::all(); 
-    //     $cities = City::all();
-
-    //     return view('matrimony.profile-listing', compact('castes', 'motherTongues', 'countries', 'states', 'cities'));
-    // }
-
     public function profilelisting(Request $request)
     {
         $castes = Caste::all();
@@ -453,7 +563,6 @@ class MatrimonyController extends Controller
             return back()->with(['msg' => $e->getMessage(), 'type' => 'danger']);
         }
     }
-
     public function common_charge_customer_data($payment_gateway_name)
     {
         $user = Auth::guard('web')->user();
@@ -484,32 +593,6 @@ class MatrimonyController extends Controller
         return view('matrimony.profile-lists', compact('profiles'));
     }
 
-    // public function checkSubscription()
-    // {
-    //     $user = Auth::user();
-
-    //     if (!$user) {
-    //         return response()->json(['status' => 'error', 'message' => 'User not logged in'], 401);
-    //     }
-
-    //     $membership = DB::table('membership_histories')
-    //         ->where('user_id', $user->id)
-    //         ->where('profile_limit', '>', 0)
-    //         ->first();
-
-    //     if ($membership) {
-    //         return response()->json([
-    //             'status' => 'success',
-    //             'remaining_profiles' => $membership->profile_limit
-    //         ]);
-    //     } else {
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'message' => 'Please subscribe to view full details'
-    //         ], 403);
-    //     }
-    // }
-
     public function decrementProfileCount()
     {
         $user = Auth::user();
@@ -529,7 +612,6 @@ class MatrimonyController extends Controller
 
         return response()->json(['status' => 'error', 'message' => 'No profiles remaining']);
     }
-
     public function unlockProfile(Request $request)
     {
         $user = Auth::user();
@@ -592,35 +674,120 @@ class MatrimonyController extends Controller
             }
         });
     }
-
+    
     public function dashboard()
     {
-        // Get the authenticated user's ID
         $userId = auth()->id();
-
-        // Get the user's preferences
+    
+        // Get user preferences
         $userPreferences = MatrimonyPreference::where('user_id', $userId)->first();
-
-        // Start building the query for potential matches - only verified users
+    
+        // Get potential matches (only verified users)
         $matchesQuery = ProfileListing::where('user_id', '!=', $userId)
-                        ->where('is_verified', 1); // Only verified profiles
-
+                        ->where('is_verified', 1);
+    
         if ($userPreferences && $userPreferences->occupation) {
-            // Occupation matching (exact match)
             $matchesQuery->where('occupation', $userPreferences->occupation);
         }
-
-        // Get the matches (limit to 4 for the dashboard)
+    
         $matches = $matchesQuery->inRandomOrder()->limit(4)->get();
-
+    
         // Add first image URL to each profile
         $matches->each(function ($profile) {
-            $firstImageId = $profile->image; // Assuming you have image_id field
+            $firstImageId = $profile->image;
             $profile->first_image_url = $firstImageId
                 ? render_image_markup_by_attachment_id($firstImageId)
                 : '/assets/uploads/media-uploader/profile.png';
         });
+    
+        // Get all requests for current user's profiles
+        $receivedRequests = ProfileRequest::with(['sender', 'profile'])
+            ->whereHas('profile', function($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
+            ->where('status', 'pending')
+            ->latest()
+            ->get();
+    
+        $acceptedRequests = ProfileRequest::with(['sender', 'profile'])
+            ->whereHas('profile', function($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
+            ->where('status', 'accepted')
+            ->latest()
+            ->get();
+    
+        $rejectedRequests = ProfileRequest::with(['sender', 'profile'])
+            ->whereHas('profile', function($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
+            ->where('status', 'rejected')
+            ->latest()
+            ->get();
+    
+        // Get the most recently created membership
+        $latestMembership = MembershipHistory::with('membership')
+        ->where('user_id', $userId)
+        ->latest('created_at') // Get the most recently created plan
+        ->first();
 
-        return view('matrimony.dashboard', compact('matches'));
+        $membershipInfo = null;
+        if ($latestMembership && $latestMembership->membership) {
+            $membershipInfo = [
+                'title' => $latestMembership->membership->title,
+                'profile_limit' => $latestMembership->membership->profile_limit
+            ];
+        }
+
+        return view('matrimony.dashboard', compact(
+            'matches',
+            'receivedRequests',
+            'acceptedRequests',
+            'rejectedRequests',
+            'membershipInfo'
+        ));
     }
+
+    public function accept(Request $request)
+    {
+        $requestModel = ProfileRequest::find($request->id);
+        $requestModel->status = 'accepted';
+        $requestModel->save();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function deny(Request $request)
+    {
+        try {
+            $requestModel = ProfileRequest::findOrFail($request->id);
+            $requestModel->status = 'rejected';
+            $requestModel->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Request has been denied successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error denying request: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function requestlists()
+    {
+        $userId = auth()->id();
+        
+        $requests = ProfileRequest::with(['sender', 'profile'])
+            ->whereHas('profile', function($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        return view('matrimony.requests-lists', compact('requests'));
+    }
+
 }

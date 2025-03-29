@@ -32,4 +32,9 @@ class ProfileListing extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function requests()
+    {
+        return $this->hasMany(ProfileRequest::class, 'profile_id');
+    }
 }

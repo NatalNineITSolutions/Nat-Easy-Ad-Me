@@ -26,6 +26,15 @@ Route::middleware(['web'])->group(function () {
         // Profile
         Route::get('/profile', [MatrimonyController::class, 'profile'])->name('profile');
 
+        // Send profile request
+        Route::post('/profile/send-request/{profile}', [MatrimonyController::class, 'sendRequest'])
+        ->name('profile.send-request')
+        ->middleware('auth');
+
+        // Accept and deny requests
+        Route::post('/request/accept', [MatrimonyController::class, 'accept'])->name('request.accept');
+        Route::post('/request/deny', [MatrimonyController::class, 'deny'])->name('request.deny')->middleware('auth');
+
         // Edit profile
         Route::get('/edit-profile/{id}', [MatrimonyController::class, 'editProfile'])->name('edit-profile');
         Route::put('/update-profile/{id}', [MatrimonyController::class, 'updateMainProfile'])->name('update-profile');
@@ -39,6 +48,8 @@ Route::middleware(['web'])->group(function () {
         Route::put('/submit-update-profile/{profile_id}', [MatrimonyController::class, 'submitUpdateProfile'])->name('submit-update-profile');
 
         Route::get('/profile-lists', [MatrimonyController::class, 'profilelists'])->name('profile-lists');
+
+        Route::get('/requests-lists', [MatrimonyController::class, 'requestlists'])->name('requests-lists');
 
         // Fetch state and cities
         Route::get('/get-states/{country_id}', [MatrimonyController::class, 'getStates'])->name('get-states');

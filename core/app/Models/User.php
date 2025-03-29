@@ -231,4 +231,21 @@ class User extends Authenticatable
     {
         return $this->hasOne(MembershipHistory::class)->latest();
     }
+
+    public function sentRequests()
+    {
+        return $this->hasMany(ProfileRequest::class, 'sender_id');
+    }
+
+    public function receivedRequests()
+    {
+        return $this->hasManyThrough(
+            ProfileRequest::class,
+            ProfileListing::class,
+            'user_id', // Foreign key on profile_listings table
+            'profile_id', // Foreign key on profile_requests table
+            'id', // Local key on users table
+            'id' // Local key on profile_listings table
+        );
+    }
 }

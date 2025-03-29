@@ -91,7 +91,15 @@ class MatrimonyController extends Controller
     {
         $memberships = Membership::where('category', 1)->get();
 
-        return view('matrimony.price', compact('memberships'));
+        // Get the user's most recent membership if logged in
+        $user_current_membership = null;
+        if (Auth::check()) {
+            $user_current_membership = Auth::user()->membershipHistory()
+                ->latest()
+                ->first();
+        }
+
+        return view('matrimony.price', compact('memberships', 'user_current_membership'));
     }
 
     // public function profileDetails($id)
@@ -424,7 +432,7 @@ class MatrimonyController extends Controller
         $kycRecord = DB::table('matrimony_kyc')
             ->leftJoin('users', 'matrimony_kyc.user_id', '=', 'users.id')
             ->select(
-                'matrimony_kyc.*', 
+                'matrimony_kyc.*',
                 'users.username'
             )
             ->where('matrimony_kyc.user_id', $userId) // Filter for logged-in user

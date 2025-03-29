@@ -63,13 +63,22 @@
             <h5 class="">{{ auth()->user()->username }}</h5>
         </div>
         <ul class="nav flex-column">
-            <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li class="nav-item">
+                <a class="nav-link {{ Route::is('matrimony.dashboard') ? 'active' : '' }}" href="{{ route('matrimony.dashboard') }}">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#profileDropdown" id="profileToggle">
-                    <span><i class="fas fa-user"></i> Profile</span>
+                    <span><i class="fas fa-user"></i>Profile Manage</span>
                     <i class="fas fa-chevron-down"></i> 
                 </a>
                 <ul id="profileDropdown" class="collapse list-unstyled ms-4">
+                    <li>
+                        <a class="nav-link {{ Route::is('matrimony.profile') ? 'active' : '' }}" href="{{ route('matrimony.profile') }}">
+                            <i class="fas fa-user"></i>Profile
+                        </a>
+                    </li>
                     <li>
                         <a class="nav-link {{ Route::is('matrimony.profile-lists') ? 'active' : '' }}" href="{{ route('matrimony.profile-lists') }}">
                             <i class="fas fa-list"></i> Profile Lists

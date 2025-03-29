@@ -9,9 +9,11 @@ Route::middleware(['web'])->group(function () {
     ], function () {
         Route::get('/', [MatrimonyController::class, 'index'])->name('index');
         Route::get('/pricing', [MatrimonyController::class, 'price'])->name('price');
-        // Route::get('/profile-details', [MatrimonyController::class, 'profiledetails'])->name('profile-details');
         Route::get('/profile-details/{id}', [MatrimonyController::class, 'profiledetails'])->name('profile-details');
         Route::get('/otp', [MatrimonyController::class, 'otp'])->name('otp');
+
+        // Dashboard
+        Route::get('/dashboard', [MatrimonyController::class, 'dashboard'])->name('dashboard');
 
         // KYC
         Route::get('/user-details', [MatrimonyController::class, 'userdetails'])->name('user-details');
@@ -23,6 +25,11 @@ Route::middleware(['web'])->group(function () {
 
         // Profile
         Route::get('/profile', [MatrimonyController::class, 'profile'])->name('profile');
+
+        // Edit profile
+        Route::get('/edit-profile/{id}', [MatrimonyController::class, 'editProfile'])->name('edit-profile');
+        Route::put('/update-profile/{id}', [MatrimonyController::class, 'updateMainProfile'])->name('update-profile');
+
         Route::get('/profile-listing', [MatrimonyController::class, 'profilelisting'])->name('profile-listing');
         Route::post('/profile-listing/store', [MatrimonyController::class, 'storeProfileListing'])->name('profilelisting.store');
 

@@ -1,4 +1,4 @@
-@extends('matrimony.layouts.app') <!-- Extend main layout -->
+@extends('matrimony.layouts.app') 
 
 @section('style')
     <style>
@@ -18,7 +18,94 @@
         .main {
             border: 1px solid #F0F0F0;
             border-radius: 20px;
-            padding: 0px 20px;
+            padding: 20px 20px;
+        }
+
+        .account-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(240, 240, 240, 1);
+        }
+
+        .account-heading h5 {
+            padding-bottom: 0px;
+        }
+
+        .btn-outline-primary {
+            border-radius: 25px;
+            padding: 6px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-outline-primary i {
+            margin-right: 5px;
+        }
+
+        tbody {
+            color: rgba(102, 69, 28, 1);
+        }
+
+        .table td {
+            padding: 12px 0;
+            border-bottom: 2px solid rgba(240, 240, 240, 1);
+            font-size: 12px;
+        }
+
+        .table-borderless tr:last-child td {
+            border-bottom: none;
+        }
+
+        .label {
+            color: #7b6148;
+            font-weight: 500;
+        }
+
+        .value {
+            color: #3d2b1f;
+            font-weight: 500;
+            text-align: left;
+        }
+
+        .main h2 {
+            font-size: 16px;
+            font-weight: 600;
+            padding-bottom: 13px;
+            border-bottom: 2px solid rgba(240, 240, 240, 1);
+        }
+
+        .profile-card {
+            margin: 15px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+
+        .profile-card p {
+            font-size: 12px;
+            font-weight: 600;
+        } 
+
+        .profile-setting {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .form-select {
+            background-color: rgba(240, 240, 240, 1);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .profile-setting p {
+            font-size: 12px;
+            font-weight: 600;
         }
     </style>
 @endsection
@@ -34,32 +121,32 @@
     
             <main class="col-md-8 col-lg-9 px-md-4">
                 <div class="main">
-                    <h2 class="mt-4">Profile Settings</h2>
+                    <h2 class="mb-0">Profile Settings</h2>
     
                     <!-- Profile Info -->
-                    <div class="profile-card d-flex align-items-center p-3">
-                        {{-- <img src="{{ auth()->user()->profile_image ?? '/assets/uploads/matrimony/avatar.png' }}" alt="Profile" class="rounded-circle"> --}}
-                        <div class="ms-3">
-                            <h5>{{ auth()->user()->name }}</h5>
-                            <p class="text-muted">Premium User | 1 Month</p>
-                        </div>
-                        <button class="btn btn-danger ms-auto">Sign Out</button>
+                    <div class="profile-card">
+                        <h5> {{ $kycRecords->where('user_id', auth()->id())->first()->username ?? auth()->user()->name }} </h5>
+                        <p class="text-muted">Premium User | 1 Month</p>
                     </div>
     
                     <!-- Profile Visibility -->
-                    <div class="profile-setting mt-4 p-3">
-                        <h6>Profile Visible</h6>
-                        <p class="text-muted">You can set who can view your profile.</p>
+                    <div class="profile-setting mt-2">
+                        <div>
+                            <h6>Profile Visible</h6>
+                            <p class="text-muted mb-0">You can set who can view your profile.</p>
+                        </div>
                         <select class="form-select w-auto">
                             <option>All Users</option>
                             <option>Only Matched Users</option>
                         </select>
                     </div>
-    
-                    <!-- Interest Requests -->
-                    <div class="profile-setting mt-3 p-3">
-                        <h6>Who can send you interest requests?</h6>
-                        <p class="text-muted">You can set who can make interest requests here.</p>
+
+                     <!-- Interest Requests -->
+                    <div class="profile-setting mt-4">
+                        <div>
+                            <h6>Who can send you interest requests?</h6>
+                            <p class="text-muted mb-0">You can set who can make interest requests here</p>
+                        </div>
                         <select class="form-select w-auto">
                             <option>All Users</option>
                             <option>Only Matched Users</option>
@@ -68,18 +155,37 @@
     
                     <!-- Account Details -->
                     <div class="account-details mt-4 p-3">
-                        <h5>Account</h5>
-                        <div class="row mt-3">
-                            <div class="col-md-6">
-                                <p><strong>Full Name:</strong> {{ auth()->user()->name }}</p>
-                                <p><strong>Mobile:</strong> {{ auth()->user()->mobile }}</p>
-                                <p><strong>Email:</strong> {{ auth()->user()->email }}</p>
-                            </div>
-                            <div class="col-md-6">
-                                <p><strong>Password:</strong> ********</p>
-                                <p><strong>Profile Type:</strong> Platinum</p>
-                                <button class="btn btn-outline-primary">Edit</button>
-                            </div>
+                        <div class="account-heading">
+                            <h5 class="mb-0">Account</h5>
+                            <a href="{{ route('matrimony.edit-profile', auth()->id()) }}" class="btn btn-outline-primary">
+                                <i class="fa-solid fa-pen"></i> Edit
+                            </a>
+                        </div>
+                        <div class="table-responsive">
+                            @foreach ($kycRecords as $record)
+                                <table class="table table-borderless">
+                                    <tbody>
+                                        <tr>
+                                            <td class="label"><strong>Username</strong></td>
+                                            <td class="value">{{ $record->username ?? 'N/A' }}</td> <!-- Show Username -->
+                                        </tr>
+                                        <tr>
+                                            <td class="label"><strong>Education</strong></td>
+                                            <td class="value">{{ $record->education ?? 'N/A' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label"><strong>Occupation</strong></td>
+                                            <td class="value">{{ $record->occupation ?? 'N/A' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label"><strong>Annual Income</strong></td>
+                                            <td class="value">
+                                                {{ isset($record->annual_income) ? '₹' . number_format($record->annual_income) : 'N/A' }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -87,5 +193,4 @@
         </div>
     </div>
 </div>
-
 @endsection

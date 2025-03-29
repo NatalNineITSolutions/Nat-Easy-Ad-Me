@@ -271,117 +271,72 @@ class BuyMembershipIPNController extends Controller
         try {
             $last_membership_id = (int) $last_membership_id;
             $membership_history_id = (int) $membership_history_id;
+            $upgrade_membership_id = (int) $upgrade_membership_id;
 
-            $membership_details = UserMembership::with('membership')->find($last_membership_id);
-            $membership_history = MembershipHistory::find($membership_history_id);
+            // Fetch required models
+            $userMembership = UserMembership::findOrFail($last_membership_id);
+            $newMembership = Membership::findOrFail($upgrade_membership_id);
+            $membershipHistory = MembershipHistory::findOrFail($membership_history_id);
 
-            if (!$membership_details) {
-                throw new \Exception("Membership not found for ID: $last_membership_id");
+            // Update UserMembership
+            $userMembership->membership_id = $upgrade_membership_id;
+            $userMembership->payment_status = 'complete';
+            $userMembership->status = 1;
+            $userMembership->transaction_id = $transaction_id;
+            $userMembership->profile_limit = $newMembership->profile_limit;
+
+            // Set expiry based on category
+            if ($newMembership->category == 1) {
+                $userMembership->expire_date = Carbon::now()->addDays(30);
+            } else {
+                $existingExpiry = $userMembership->expire_date;
+                if ($existingExpiry && $existingExpiry > Carbon::now()) {
+                    $newExpiry = Carbon::now()->addDays(Carbon::now()->diffInDays($existingExpiry) + 30);
+                    $userMembership->expire_date = $newExpiry;
+                } else {
+                    $userMembership->expire_date = Carbon::now()->addDays(30);
+                }
             }
 
-            // Get the new membership details to access profile_limit
-            $new_membership = Membership::find($upgrade_membership_id);
-            if (!$new_membership) {
-                throw new \Exception("New membership not found for ID: $upgrade_membership_id");
-            }
+            $userMembership->save(); // Save changes
 
-            // Update the original membership record status & transaction
-            $updateData = [
+            // Update MembershipHistory
+            $membershipHistory->update([
                 'payment_status' => 'complete',
                 'status' => 1,
                 'transaction_id' => $transaction_id,
-                'profile_limit' => $new_membership->profile_limit, // Add this line
-            ];
+                'profile_limit' => $newMembership->profile_limit,
+            ]);
 
-            UserMembership::where('id', $last_membership_id)
-                ->where('user_id', $membership_details->user_id)
-                ->update($updateData);
+            // Handle BV Points
+            $usersBv = UsersBV::create([
+                'user_id' => $userMembership->user_id,
+                'membership_id' => $upgrade_membership_id,
+                'bv_points' => $newMembership->bv_points ?? 0,
+                'upgrade_time' => Carbon::now(),
+            ]);
 
-            // Update membership history record
-            MembershipHistory::where('id', $membership_history_id)
-                ->where('user_id', $membership_details->user_id)
-                ->update([
-                    'payment_status' => 'complete',
-                    'status' => 1,
-                    'transaction_id' => $transaction_id,
-                    'profile_limit' => $new_membership->profile_limit, // Add this line
-                ]);
+            $bvService = new BVDistributionService();
+            $bvService->distributeBVPoints(
+                $userMembership->user,
+                $usersBv->bv_points,
+                $upgrade_membership_id,
+                $userMembership->user_id
+            );
 
-            if ($new_membership->category == 1) {
-                $expire_date = Carbon::now()->addDays(30);
-
-                $existingRecord = UserMembership::where('user_id', $membership_details->user_id)
-                    ->whereHas('membership', function ($query) {
-                        $query->where('category', 1);
-                    })
-                    ->first();
-
-                $updateData = [
-                    'membership_id' => $upgrade_membership_id,
-                    'payment_status' => 'complete',
-                    'status' => 1,
-                    'transaction_id' => $transaction_id,
-                    'expire_date' => $expire_date,
-                    'profile_limit' => $new_membership->profile_limit, // Add this line
-                ];
-
-                if ($existingRecord) {
-                    $existingRecord->update($updateData);
-                } else {
-                    $updateData['user_id'] = $membership_details->user_id;
-                    UserMembership::create($updateData);
-                }
-            } else {
-                $check_user_current_membership = UserMembership::where('id', $last_membership_id)
-                    ->where('user_id', $membership_details->user_id)
-                    ->where('payment_status', 'complete')
-                    ->where('status', 1)
-                    ->where('expire_date', '>', Carbon::now())
-                    ->exists();
-
-                if ($membership_history && $check_user_current_membership) {
-                    $expire_date = Carbon::now()->addDays(
-                        Carbon::parse($membership_details->expire_date)->diffInDays(Carbon::now()) +
-                        Carbon::parse($membership_history->expire_date)->diffInDays(Carbon::now())
-                    );
-
-                    UserMembership::where('id', $last_membership_id)
-                        ->where('user_id', $membership_details->user_id)
-                        ->update([
-                            'membership_id' => $upgrade_membership_id,
-                            'payment_status' => 'complete',
-                            'status' => 1,
-                            'transaction_id' => $transaction_id,
-                            'expire_date' => $expire_date,
-                            'profile_limit' => $new_membership->profile_limit, // Add this line
-                        ]);
-                }
-            }
-
-            // Rest of your BV points distribution code remains the same
-            if ($new_membership) {
-                $usersBv = UsersBV::create([
-                    'user_id' => $membership_details->user_id,
-                    'membership_id' => $upgrade_membership_id,
-                    'bv_points' => $new_membership->bv_points ?? 0,
-                    'upgrade_time' => Carbon::now(),
-                ]);
-
-                $user = User::find($membership_details->user_id);
-                $bvService = new BVDistributionService();
-                $bvService->distributeBVPoints($user, $usersBv->bv_points, $upgrade_membership_id, $membership_details->user_id);
-            }
-
+            // Admin Notification
             AdminNotification::create([
                 'identity' => $last_membership_id,
-                'user_id' => $membership_details->user_id,
+                'user_id' => $userMembership->user_id,
                 'type' => __('Buy Membership'),
                 'message' => __('User membership purchase'),
             ]);
 
             session()->forget(['order_id', 'membership_history_id', 'upgrade_membership_id']);
+
         } catch (\Exception $e) {
-            Log::error('Failed to update membership: ' . $e->getMessage());
+            Log::error('Membership update failed: ' . $e->getMessage());
+            throw $e; // Re-throw to handle in the calling method
         }
     }
 }

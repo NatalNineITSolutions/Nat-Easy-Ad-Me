@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-
+use App\Http\Controllers\Api\ProductListingController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,6 +18,11 @@ use App\Http\Controllers\Api\AuthController;
 // Public Routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+
+Route::get('/top-listings', [ProductListingController::class, 'getTopListings']);
+Route::get('/location-listings', [ProductListingController::class, 'getLocationListings']);
+Route::get('/job-listings', [ProductListingController::class, 'getJobListings']);
+Route::get('/recent-listings', [ProductListingController::class, 'getRecentListings']);
 
 // Protected Routes (using Sanctum for authentication)
 Route::middleware('auth:sanctum')->group(function () {

@@ -21,15 +21,15 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validationRules = [
-            'first_name'       => 'required|max:191',
-            'last_name'        => 'required|max:191',
-            'email'            => 'required|email|unique:users|max:191',
-            'username'         => 'required|unique:users|max:191',
-            'phone'            => 'required|max:191',
-            'country_code'     => 'nullable|max:10',
-            'password'         => 'required|min:6|max:191',
+            'first_name' => 'required|max:191',
+            'last_name' => 'required|max:191',
+            'email' => 'required|email|unique:users|max:191',
+            'username' => 'required|unique:users|max:191',
+            'phone' => 'required|max:191',
+            'country_code' => 'nullable|max:10',
+            'password' => 'required|min:6|max:191',
             'confirm_password' => 'required|same:password',
-            'partner_id'       => 'nullable|exists:users,partner_id',
+            'partner_id' => 'nullable|exists:users,partner_id',
         ];
 
         // Validate the request
@@ -73,33 +73,33 @@ class AuthController extends Controller
 
             // Create the user
             $user = User::create([
-                'first_name'         => $request->first_name,
-                'last_name'          => $request->last_name,
-                'email'              => $request->email,
-                'username'           => $request->username,
-                'phone'              => $full_phone_number,
-                'password'           => Hash::make($request->password),
-                'terms_conditions'   => 1,
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+                'username' => $request->username,
+                'phone' => $full_phone_number,
+                'password' => Hash::make($request->password),
+                'terms_conditions' => 1,
                 'email_verify_token' => $email_verify_token,
-                'partner_id'         => $partnerId,
-                'partner_name'       => $partnerName,
-                'parent_id'          => $parent_id,
+                'partner_id' => $partnerId,
+                'partner_name' => $partnerName,
+                'parent_id' => $parent_id,
             ]);
 
             Log::info('User created successfully.', ['user_id' => $user->id]);
 
             // Record the user's BV points
             UsersBv::create([
-                'user_id'      => $user->id,
-                'membership_id'=> $membership_id,
-                'bv_points'    => $bv_points,
+                'user_id' => $user->id,
+                'membership_id' => $membership_id,
+                'bv_points' => $bv_points,
                 'upgrade_time' => now(),
             ]);
 
             Log::info('User BV points recorded.', [
-                'user_id'      => $user->id,
-                'membership_id'=> $membership_id,
-                'bv_points'    => $bv_points
+                'user_id' => $user->id,
+                'membership_id' => $membership_id,
+                'bv_points' => $bv_points
             ]);
 
             // Update referrer's BV points if applicable
@@ -110,7 +110,7 @@ class AuthController extends Controller
                     $referrer->save();
 
                     Log::info('Referrer BV points updated.', [
-                        'referrer_id'   => $referrer->id,
+                        'referrer_id' => $referrer->id,
                         'new_bv_points' => $referrer->bv_points
                     ]);
                 }
@@ -118,11 +118,11 @@ class AuthController extends Controller
 
             if (moduleExists("Wallet")) {
                 Wallet::create([
-                    'user_id'           => $user->id,
-                    'balance'           => 0,
+                    'user_id' => $user->id,
+                    'balance' => 0,
                     'remaining_balance' => 0,
-                    'withdraw_amount'   => 0,
-                    'status'            => 1,
+                    'withdraw_amount' => 0,
+                    'status' => 1,
                 ]);
             }
 
@@ -146,14 +146,56 @@ class AuthController extends Controller
 
             return response()->json([
                 'message' => 'User registered successfully.',
-                'user'    => $user,
-                'token'   => $token,
+                'user' => $user,
+                'token' => $token,
             ], 201);
         } catch (Exception $e) {
             Log::error('Error during user registration.', ['error' => $e->getMessage()]);
             return response()->json([
                 'error' => __('An error occurred during registration. Please try again.')
             ], 500);
+        }
+    }
+
+    public function login(Request $request)
+    {
+        $validationRules = [
+            'email' => 'required|email',
+            'password' => 'required|min:6',
+        ];
+
+        $request->validate($validationRules);
+
+        try {
+            Log::info('User login request received.', ['email' => $request->email]);
+
+            // Find user by email
+            $user = User::where('email', $request->email)->first();
+
+            if (!$user || !Hash::check($request->password, $user->password)) {
+                Log::warning('Invalid login credentials.', ['email' => $request->email]);
+                return response()->json(['error' => __('Invalid credentials')], 401);
+            }
+
+            // Check if email verification is required
+            if (!empty(get_static_option('user_email_verify_enable_disable')) && !$user->email_verified_at) {
+                Log::warning('User email not verified.', ['email' => $request->email]);
+                return response()->json(['error' => __('Please verify your email before logging in.')], 403);
+            }
+
+            // Generate API token using Laravel Sanctum
+            $token = $user->createToken('API Token')->plainTextToken;
+
+            Log::info('User logged in successfully.', ['user_id' => $user->id]);
+
+            return response()->json([
+                'message' => 'Login successful.',
+                'user' => $user,
+                'token' => $token,
+            ], 200);
+        } catch (Exception $e) {
+            Log::error('Error during user login.', ['error' => $e->getMessage()]);
+            return response()->json(['error' => __('An error occurred during login. Please try again.')], 500);
         }
     }
 }

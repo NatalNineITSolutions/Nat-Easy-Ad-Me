@@ -578,4 +578,35 @@ class MatrimonyController extends Controller
             }
         });
     }
+
+    public function dashboard()
+    {
+        // Get the authenticated user's ID
+        $userId = auth()->id();
+
+        // Get the user's preferences
+        $userPreferences = MatrimonyPreference::where('user_id', $userId)->first();
+
+        // Start building the query for potential matches - only verified users
+        $matchesQuery = ProfileListing::where('user_id', '!=', $userId)
+                        ->where('is_verified', 1); // Only verified profiles
+
+        if ($userPreferences && $userPreferences->occupation) {
+            // Occupation matching (exact match)
+            $matchesQuery->where('occupation', $userPreferences->occupation);
+        }
+
+        // Get the matches (limit to 4 for the dashboard)
+        $matches = $matchesQuery->inRandomOrder()->limit(4)->get();
+
+        // Add first image URL to each profile
+        $matches->each(function ($profile) {
+            $firstImageId = $profile->image; // Assuming you have image_id field
+            $profile->first_image_url = $firstImageId
+                ? render_image_markup_by_attachment_id($firstImageId)
+                : '/assets/uploads/media-uploader/profile.png';
+        });
+
+        return view('matrimony.dashboard', compact('matches'));
+    }
 }

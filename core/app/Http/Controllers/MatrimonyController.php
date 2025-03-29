@@ -93,7 +93,7 @@ class MatrimonyController extends Controller
         return view('matrimony.price', compact('memberships'));
     }
 
-    public function profiledetails($id = null)
+    public function profileDetails($id)
     {
         $user = Auth::user();
 
@@ -145,8 +145,8 @@ class MatrimonyController extends Controller
             'isUnlocked' => $isUnlocked,
             'hasRemainingViews' => $hasRemainingViews,
             'shouldBlur' => $shouldBlur,
-            'userEmail' => $profile->user->email ?? null,
-            'userPhone' => $profile->user->phone ?? null
+            'userEmail' => $profile->user->email ?? null,  
+            'userPhone' => $profile->user->phone ?? null   
         ]);
     }
 
@@ -294,52 +294,36 @@ class MatrimonyController extends Controller
             'redirect_url' => url('/matrimony'),
         ]);
     }
+
     public function profile()
     {
         $userId = auth()->id();
         Log::info("Fetching profile for user ID: {$userId}");
 
-        $kycRecords = DB::table('matrimony_kyc')
+        $kycRecord = DB::table('matrimony_kyc')
             ->leftJoin('users', 'matrimony_kyc.user_id', '=', 'users.id')
             ->select(
-                'matrimony_kyc.*',
+                'matrimony_kyc.*', 
                 'users.username'
             )
-            ->get();
+            ->where('matrimony_kyc.user_id', $userId) // Filter for logged-in user
+            ->first(); // Use first() instead of get() since we expect one record per user
 
-        Log::info("MatrimonyKYC Data:", $kycRecords->toArray());
+        Log::info("MatrimonyKYC Data:", (array) $kycRecord);
 
-        return view('matrimony.main-profile', ['kycRecords' => $kycRecords]);
+        return view('matrimony.main-profile', ['kycRecord' => $kycRecord]);
     }
 
-    public function editProfile($id)
-    {
-        $userProfile = DB::table('matrimony_kyc')
-            ->leftJoin('users', 'matrimony_kyc.user_id', '=', 'users.id')
-            ->select(
-                'matrimony_kyc.*',
-                'users.username'
-            )
-            ->where('matrimony_kyc.user_id', $id)
-            ->first();
+    // public function profilelisting()
+    // {
+    //     $castes = Caste::all(); 
+    //     $motherTongues = MotherTongue::all(); 
+    //     $countries = Country::all(); 
+    //     $states = State::all(); 
+    //     $cities = City::all();
 
-        return view('matrimony.edit-main-profile', compact('userProfile'));
-    }
-
-    public function updateMainProfile(Request $request, $id)
-    {
-        $validatedData = $request->validate([
-            'education' => 'nullable|string|max:255',
-            'occupation' => 'nullable|string|max:255',
-            'annual_income' => 'nullable|numeric',
-        ]);
-
-        DB::table('matrimony_kyc')
-            ->where('user_id', $id)
-            ->update($validatedData);
-
-        return redirect()->route('matrimony.edit-profile', $id)->with('success', 'Profile updated successfully!');
-    }
+    //     return view('matrimony.profile-listing', compact('castes', 'motherTongues', 'countries', 'states', 'cities'));
+    // }
 
     public function profilelisting(Request $request)
     {
@@ -496,14 +480,7 @@ class MatrimonyController extends Controller
 
     public function profilelists()
     {
-        // Get the current authenticated user's ID
-        $userId = auth()->id();
-
-        // Only get profiles that belong to this user
-        $profiles = ProfileListing::where('user_id', $userId)
-            ->select('id', 'name', 'age', 'is_verified', 'rejection_reason')
-            ->get();
-
+        $profiles = ProfileListing::select('id', 'name', 'age', 'is_verified', 'rejection_reason')->get();
         return view('matrimony.profile-lists', compact('profiles'));
     }
 
@@ -606,6 +583,7 @@ class MatrimonyController extends Controller
                     'status' => 'success',
                     'remaining_views' => $membership->profile_limit - 1
                 ]);
+
             } catch (\Exception $e) {
                 return response()->json([
                     'status' => 'error',
@@ -614,7 +592,6 @@ class MatrimonyController extends Controller
             }
         });
     }
-
 
     public function dashboard()
     {
@@ -626,7 +603,7 @@ class MatrimonyController extends Controller
 
         // Start building the query for potential matches - only verified users
         $matchesQuery = ProfileListing::where('user_id', '!=', $userId)
-            ->where('is_verified', 1); // Only verified profiles
+                        ->where('is_verified', 1); // Only verified profiles
 
         if ($userPreferences && $userPreferences->occupation) {
             // Occupation matching (exact match)

@@ -125,7 +125,7 @@
     
                     <!-- Profile Info -->
                     <div class="profile-card">
-                        <h5> {{ $kycRecords->where('user_id', auth()->id())->first()->username ?? auth()->user()->name }} </h5>
+                        <h5> {{ auth()->user()->username ?? auth()->user()->name }} </h5>
                         <p class="text-muted">Premium User | 1 Month</p>
                     </div>
     
@@ -162,30 +162,32 @@
                             </a>
                         </div>
                         <div class="table-responsive">
-                            @foreach ($kycRecords as $record)
-                                <table class="table table-borderless">
-                                    <tbody>
-                                        <tr>
-                                            <td class="label"><strong>Username</strong></td>
-                                            <td class="value">{{ $record->username ?? 'N/A' }}</td> <!-- Show Username -->
-                                        </tr>
-                                        <tr>
-                                            <td class="label"><strong>Education</strong></td>
-                                            <td class="value">{{ $record->education ?? 'N/A' }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="label"><strong>Occupation</strong></td>
-                                            <td class="value">{{ $record->occupation ?? 'N/A' }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="label"><strong>Annual Income</strong></td>
-                                            <td class="value">
-                                                {{ isset($record->annual_income) ? '₹' . number_format($record->annual_income) : 'N/A' }}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            @endforeach
+                            @if ($kycRecord)
+    <table class="table table-borderless">
+        <tbody>
+            <tr>
+                <td class="label"><strong>Username</strong></td>
+                <td class="value">{{ $kycRecord->username ?? 'N/A' }}</td>
+            </tr>
+            <tr>
+                <td class="label"><strong>Education</strong></td>
+                <td class="value">{{ $kycRecord->education ?? 'N/A' }}</td>
+            </tr>
+            <tr>
+                <td class="label"><strong>Occupation</strong></td>
+                <td class="value">{{ $kycRecord->occupation ?? 'N/A' }}</td>
+            </tr>
+            <tr>
+                <td class="label"><strong>Annual Income</strong></td>
+                <td class="value">
+                    {{ isset($kycRecord->annual_income) ? '₹' . number_format($kycRecord->annual_income) : 'N/A' }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+@else
+    <p>No profile information available.</p>
+@endif
                         </div>
                     </div>
                 </div>

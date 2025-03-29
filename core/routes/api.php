@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProductListingController;
+use App\Http\Controllers\Api\ListingApiController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,12 +25,16 @@ Route::get('/top-listings', [ProductListingController::class, 'getTopListings'])
 Route::get('/location-listings', [ProductListingController::class, 'getLocationListings']);
 Route::get('/job-listings', [ProductListingController::class, 'getJobListings']);
 Route::get('/recent-listings', [ProductListingController::class, 'getRecentListings']);
+Route::get('/categories', [ListingApiController::class, 'getCategories']);
+Route::get('/subcategories', [ListingApiController::class, 'getSubcategories']);
+Route::get('/childcategories', [ListingApiController::class, 'getChildcategories']);
 
 // Protected Routes (using Sanctum for authentication)
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+    Route::post('/add-listing', [ListingApiController::class, 'addListing']);
 
     // You can add more protected routes here
 });

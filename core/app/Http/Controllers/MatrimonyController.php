@@ -90,7 +90,15 @@ class MatrimonyController extends Controller
     {
         $memberships = Membership::where('category', 1)->get();
 
-        return view('matrimony.price', compact('memberships'));
+        // Get the user's most recent membership if logged in
+        $user_current_membership = null;
+        if (Auth::check()) {
+            $user_current_membership = Auth::user()->membershipHistory()
+                ->latest()
+                ->first();
+        }
+
+        return view('matrimony.price', compact('memberships', 'user_current_membership'));
     }
 
     public function profileDetails($id)
@@ -145,8 +153,8 @@ class MatrimonyController extends Controller
             'isUnlocked' => $isUnlocked,
             'hasRemainingViews' => $hasRemainingViews,
             'shouldBlur' => $shouldBlur,
-            'userEmail' => $profile->user->email ?? null,  
-            'userPhone' => $profile->user->phone ?? null   
+            'userEmail' => $profile->user->email ?? null,
+            'userPhone' => $profile->user->phone ?? null
         ]);
     }
 
@@ -303,7 +311,7 @@ class MatrimonyController extends Controller
         $kycRecord = DB::table('matrimony_kyc')
             ->leftJoin('users', 'matrimony_kyc.user_id', '=', 'users.id')
             ->select(
-                'matrimony_kyc.*', 
+                'matrimony_kyc.*',
                 'users.username'
             )
             ->where('matrimony_kyc.user_id', $userId) // Filter for logged-in user
@@ -603,7 +611,7 @@ class MatrimonyController extends Controller
 
         // Start building the query for potential matches - only verified users
         $matchesQuery = ProfileListing::where('user_id', '!=', $userId)
-                        ->where('is_verified', 1); // Only verified profiles
+            ->where('is_verified', 1); // Only verified profiles
 
         if ($userPreferences && $userPreferences->occupation) {
             // Occupation matching (exact match)

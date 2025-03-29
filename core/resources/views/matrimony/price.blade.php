@@ -148,7 +148,7 @@
         <div class="row justify-content-center">
             @foreach ($memberships as $membership)
                 <div class="col-md-4 d-flex">
-                    <div class="pricing-card w-100 h-100 d-flex flex-column @if (!empty($user_current_membership) && $user_current_membership->membership_id === $membership->id) active @endif">
+                    <div class="pricing-card w-100 h-100 d-flex flex-column @if (!empty($user_current_membership) && $user_current_membership->membership_id === $membership->id && $user_current_membership->profile_limit > 0) active @endif">
                         <h4>{{ $membership->title }}</h4>
                         <p>{{ $membership->description ?? 'No description available.' }}</p>
                         <h3 class="mt-3">₹{{ $membership->price }}</h3>
@@ -159,16 +159,21 @@
                                 @php
                                     $buttonText = __('Get Started');
                                     $buttonUrl = url('/user-register');
+                                    
+                                    // Check if this is the user's current membership but with profile_limit = 0
+                                    $isCurrentButExpired = (!empty($user_current_membership) && 
+                                        $user_current_membership->membership_id === $membership->id && 
+                                        $user_current_membership->profile_limit == 0);
                                 @endphp
 
-                                @if (!empty($user_current_membership) && $user_current_membership->membership_id === $membership->id)
+                                @if (!empty($user_current_membership) && $user_current_membership->membership_id === $membership->id && !$isCurrentButExpired)
                                     @php
                                         $buttonText = __('Current Plan');
                                         $buttonUrl = null;
                                     @endphp
                                 @endif
 
-                                @if (empty($user_current_membership))
+                                @if (empty($user_current_membership) || $isCurrentButExpired)
                                     <!--free membership form start -->
                                     <form action="{{ route('user.membership.buy') }}" method="post">
                                         @csrf
@@ -188,30 +193,34 @@
                             @else
                                 <!-- Paid Membership Plan -->
                                 @php
-                                    if (empty($user_current_membership)) {
-                                        $buttonText = __('Buy Now');
-                                    } else {
+                                    $buttonText = empty($user_current_membership) ? __('Upgrade Now') : __('Upgrade Now');
+                                    $modalTarget = Auth::check() ? '#paymentGatewayModal' : '#loginModal';
+                                    
+                                    // Check if this is the user's current membership
+                                    $isCurrent = (!empty($user_current_membership) && 
+                                        $user_current_membership->membership_id === $membership->id);
+                                    
+                                    // Check if profile_limit is 0 (expired)
+                                    $isExpired = $isCurrent && $user_current_membership->profile_limit == 0;
+                                    
+                                    // Override button text if expired
+                                    if ($isExpired) {
                                         $buttonText = __('Upgrade Now');
-                                    }
-
-                                    $modalTarget = '#loginModal';
-
-                                    if (Auth::check() && Auth::guard('web')->user()) {
-                                        $modalTarget = '#paymentGatewayModal';
-                                    }
-                                    if (
-                                        !empty($user_current_membership) &&
-                                        $user_current_membership->membership_id === $membership->id
-                                    ) {
+                                    } elseif ($isCurrent) {
                                         $buttonText = __('Current Plan');
                                         $modalTarget = null;
                                     }
                                 @endphp
-                                <button class="btn btn-light choose_membership_plan" data-bs-toggle="modal"
-                                    data-id="{{ $membership->id }}" data-price="{{ $membership->price }}"
-                                    data-bs-target="{{ $modalTarget }}">
-                                    {{ $buttonText }}
-                                </button>
+                                
+                                @if ($isCurrent && !$isExpired)
+                                    <button class="btn btn-light" disabled>{{ $buttonText }}</button>
+                                @else
+                                    <button class="btn btn-light choose_membership_plan" data-bs-toggle="modal"
+                                        data-id="{{ $membership->id }}" data-price="{{ $membership->price }}"
+                                        data-bs-target="{{ $modalTarget }}">
+                                        {{ $buttonText }}
+                                    </button>
+                                @endif
                             @endif
                         </div>
                         <ul class="list-unstyled mt-3 flex-grow-1 box-list">

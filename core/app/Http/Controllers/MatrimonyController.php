@@ -297,7 +297,21 @@ class MatrimonyController extends Controller
 
     public function profile()
     {
-        return view('matrimony.main-profile');
+        $userId = auth()->id();
+        Log::info("Fetching profile for user ID: {$userId}");
+
+        $kycRecord = DB::table('matrimony_kyc')
+            ->leftJoin('users', 'matrimony_kyc.user_id', '=', 'users.id')
+            ->select(
+                'matrimony_kyc.*', 
+                'users.username'
+            )
+            ->where('matrimony_kyc.user_id', $userId) // Filter for logged-in user
+            ->first(); // Use first() instead of get() since we expect one record per user
+
+        Log::info("MatrimonyKYC Data:", (array) $kycRecord);
+
+        return view('matrimony.main-profile', ['kycRecord' => $kycRecord]);
     }
 
     // public function profilelisting()

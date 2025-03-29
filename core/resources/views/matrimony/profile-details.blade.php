@@ -340,6 +340,23 @@
             opacity: 0.7;
             cursor: not-allowed;
         }
+
+        .request {
+            background-color: rgba(255, 22, 108, 1);
+            border: none;
+            outline: none;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .request:hover {
+            background-color: rgba(255, 22, 108, 1);
+        }
+
+        .alert {
+            font-size: 13px;
+            font-weight: 600;
+        }
     </style>
 
 @endsection
@@ -428,6 +445,27 @@
                                 </button>
                             </div>
                         @endif
+                        {{-- @if(!$isOwnProfile)
+                            <button class="btn btn-primary request">
+                                <i class="fas fa-paper-plane"></i> Send Request
+                            </button>
+                        @else
+                            <div class="bg-light p-3 rounded mb-3 alert">
+                                <i class="fas fa-user-shield me-2"></i> This profile was listed by you, so you can't send a request
+                            </div>
+                        @endif --}}
+                        @if(!$isOwnProfile)
+                            <form id="sendRequestForm" action="{{ route('matrimony.profile.send-request', $profile->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-primary request">
+                                    <i class="fas fa-paper-plane"></i> Send Request
+                                </button>
+                            </form>
+                        @else
+                            <div class="bg-light p-3 rounded mb-3 alert">
+                                <i class="fas fa-user-shield me-2"></i> This profile was listed by you
+                            </div>
+                        @endif
                     </div>
 
                     <div class="tab-content" id="gallery">
@@ -445,13 +483,13 @@
                     </div>
 
                     <!-- <div id="jothagam" class="tab-content">
-                                        @if($profile->jothagam_path)
-                                            <p>Download the Jothagam PDF file:</p>
-                                            <a href="{{ asset($profile->jothagam_path) }}" download class="download-btn">Download PDF</a>
-                                        @else
-                                            <p>No Jothagam available</p>
-                                        @endif
-                                    </div> -->
+                        @if($profile->jothagam_path)
+                            <p>Download the Jothagam PDF file:</p>
+                            <a href="{{ asset($profile->jothagam_path) }}" download class="download-btn">Download PDF</a>s
+                        @else
+                            <p>No Jothagam available</p>
+                        @endif
+                    </div> -->
                 </div>
             @endif
         </div>
@@ -460,6 +498,19 @@
 @endsection
 
 @section('script')
+
+    {{-- Toaster --}}
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000"
+        };
+    </script>
+
+    {{-- Tab Component --}}
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const tabLinks = document.querySelectorAll(".tab-link");
@@ -488,9 +539,7 @@
         });
     </script>
 
-    @section('scripts')
-
-    @endsection
+    {{-- Unlock Profile --}}
     <script>
         function unlockProfile() {
             const profileId = {{ $profile->id }};
@@ -567,5 +616,78 @@
                 }
             });
         }
+    </script>
+
+    {{-- Send request --}}
+    {{-- <script>
+        document.getElementById('sendRequestForm')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            try {
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        // Your additional data if needed
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert('Request sent successfully!');
+                    this.querySelector('button').disabled = true;
+                } else {
+                    alert(data.message || 'Error sending request');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred');
+            }
+        });
+    </script> --}}
+
+    <script>
+        document.getElementById('sendRequestForm')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const button = this.querySelector('button');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            button.disabled = true;
+
+            try {
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    toastr.success('Request sent successfully!');
+                    button.disabled = true;
+                    button.innerHTML = '<i class="fas fa-check"></i> Request Sent';
+                } else {
+                    toastr.error(data.message || 'Error sending request');
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                toastr.error('An error occurred. Please try again.');
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }
+        });
     </script>
 @endsection

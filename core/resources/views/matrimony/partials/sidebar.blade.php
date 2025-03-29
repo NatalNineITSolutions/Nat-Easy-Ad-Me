@@ -85,6 +85,11 @@
                         </a>
                     </li>
                     <li>
+                        <a class="nav-link {{ Route::is('matrimony.requests-lists') ? 'active' : '' }}" href="{{ route('matrimony.requests-lists') }}">
+                            <i class="fas fa-ring"></i> Requests Lists
+                        </a>
+                    </li>
+                    <li>
                         <a class="nav-link {{ Route::is('matrimony.profile-listing') ? 'active' : '' }}" href="{{ route('matrimony.profile-listing') }}">
                             <i class="fas fa-user-circle"></i> Profile Listing
                         </a>

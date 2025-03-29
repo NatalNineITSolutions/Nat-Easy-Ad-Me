@@ -242,12 +242,14 @@
             flex-grow: 1;
         }
 
-        .request-info h3 {
+        .request-info h4 {
             margin: 5px 0;
+            font-size: 15px;
+            font-weight: 600;
         }
 
         .request-info p {
-            font-size: 14px;
+            font-size: 13px;
             margin: 2px 0;
         }
 
@@ -296,6 +298,53 @@
             font-size: 14px;
             font-weight: 600;
         }
+
+        /* accept deny */
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        .status-badge.accepted {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.rejected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .action-buttons {
+            margin-top: 15px;
+        }
+
+        .accept {
+            background-color: #28a745;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .deny {
+            background-color: #dc3545;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        } 
+
+        .no-requests p {
+            font-size: 15px;
+            font-weight: 600;
+        }
     </style>
 @endsection
 
@@ -338,7 +387,7 @@
                         </div>
                     </section>
 
-                    <section class="plan-details">
+                    {{-- <section class="plan-details">
                         <h2 class="mb-0">Plan details</h2>
                         <div class="plan-card">
                             <div class="card-header">
@@ -354,6 +403,71 @@
                                 <a href="{{ route('matrimony.price') }}" class="upgrade-btn">UPGRADE NOW</a>
                             </div>
                         </div>
+                    </section> --}}
+
+                    {{-- <section class="plan-details">
+                        <h2 class="mb-0">Plan details</h2>
+                        @if($membershipInfo)
+                            <div class="plan-card">
+                                <div class="card-header">
+                                    <span>{{ $membershipInfo['title'] }} Plan</span>
+                                </div>
+                                <div class="card-body">
+                                    <img src="/assets/uploads/matrimony/gift.png" alt="Gift Icon">
+                                    <ul>
+                                        <li><strong>Plan name:</strong> {{ $membershipInfo['title'] }}</li>
+                                        <li><strong>Profile Limit:</strong> <span class="highlight">{{ $membershipInfo['profile_limit'] }} profiles</span></li>
+                                    </ul>
+                                    <a href="{{ route('matrimony.price') }}" class="upgrade-btn">UPGRADE NOW</a>
+                                </div>
+                            </div>
+                        @else
+                            <div class="plan-card inactive">
+                                <div class="card-header">
+                                    <span>No Active Plan</span>
+                                </div>
+                                <div class="card-body">
+                                    <img src="/assets/uploads/matrimony/gift.png" alt="Gift Icon">
+                                    <ul>
+                                        <li><strong>Status:</strong> <span class="highlight">Inactive</span></li>
+                                        <li><strong>Please purchase a plan to access all features</span></li>
+                                    </ul>
+                                    <a href="#" class="upgrade-btn">GET STARTED</a>
+                                </div>
+                            </div>
+                        @endif
+                    </section> --}}
+                    <section class="plan-details">
+                        <h2 class="mb-0">My Plan</h2>
+                        @if($membershipInfo)
+                            <div class="plan-card">
+                                <div class="card-header">
+                                    <span>{{ $membershipInfo['title'] }}</span>
+                                </div>
+                                <div class="card-body">
+                                    <img src="/assets/uploads/matrimony/gift.png" alt="Gift Icon">
+                                    <ul>
+                                        <li><strong>Profile Limit:</strong> 
+                                            <span class="highlight">{{ $membershipInfo['profile_limit'] }} profiles</span>
+                                        </li>
+                                    </ul>
+                                    <a href="{{ route('matrimony.price') }}" class="upgrade-btn">CHANGE PLAN</a>
+                                </div>
+                            </div>
+                        @else
+                            <div class="plan-card inactive">
+                                <div class="card-header">
+                                    <span>No Plan Active</span>
+                                </div>
+                                <div class="card-body">
+                                    <img src="/assets/uploads/matrimony/gift.png" alt="Gift Icon">
+                                    <ul>
+                                        <li>You haven't subscribed to any plan yet</li>
+                                    </ul>
+                                    <a href="{{ route('matrimony.price') }}" class="upgrade-btn">CHOOSE A PLAN</a>
+                                </div>
+                            </div>
+                        @endif
                     </section>
 
                     <section class="interest-request">
@@ -365,10 +479,9 @@
                             <button class="tab-button" data-tab="denied-requests">Deny request</button>
                         </div>
                 
-                        <div class="tab-content active" id="new-requests">
+                        {{-- <div class="tab-content active" id="new-requests">
 
                             <div class="request-card">
-                                <img src="/assets/uploads/matrimony/interest.png" alt="User Image">
                                 <div class="request-info">
                                     <h3>John Smith</h3>
                                     <p><strong>City:</strong> Illinois <strong>Age:</strong> 21 <strong>Height:</strong> 5.7 <strong>Job:</strong> <span class="highlight">Working</span></p>
@@ -380,14 +493,72 @@
                                     <button class="deny">Deny</button>
                                 </div>
                             </div>
+                        </div> --}}
+
+                        <div class="tab-content active" id="new-requests">
+                            @forelse($receivedRequests as $request)
+                                <div class="request-card" data-request-id="{{ $request->id }}">
+                                    <div class="request-info">
+                                        <h4>{{ $request->sender->username }} sent a request to:</h4>
+                                        <p class="profile-name">{{ $request->profile->name }}</p>
+                                        <p>
+                                            <strong>Age:</strong> {{ $request->profile->age ?? 'N/A' }}
+                                            <strong>Job:</strong> <span class="highlight">{{ $request->profile->occupation ?? 'N/A' }}</span>
+                                        </p>
+                                        <p>Request given on: {{ $request->created_at->format('d F Y') }}</p>
+                                    </div>
+                                    <div class="action-buttons">
+                                        <button class="accept" data-request-id="{{ $request->id }}">Accept</button>
+                                        <button class="deny" data-request-id="{{ $request->id }}">Deny</button>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="no-requests">
+                                    <p class="mb-0">No new requests found</p>
+                                </div>
+                            @endforelse
                         </div>
                 
                         <div class="tab-content" id="accepted-requests">
-                            <p>No accepted requests yet.</p>
+                            @forelse($acceptedRequests as $request)
+                                <div class="request-card" data-request-id="{{ $request->id }}">
+                                    <div class="request-info">
+                                        <h4>{{ $request->sender->username }} sent a request to:</h4>
+                                        <p class="profile-name">{{ $request->profile->name }}</p>
+                                        <p>
+                                            <strong>Age:</strong> {{ $request->profile->age ?? 'N/A' }}
+                                            <strong>Job:</strong> <span class="highlight">{{ $request->profile->occupation ?? 'N/A' }}</span>
+                                        </p>
+                                        <p>Request given on: {{ $request->created_at->format('d F Y') }}</p>
+                                    </div>
+                                    <div class="status-badge accepted">Accepted</div>
+                                </div>
+                            @empty
+                                <div class="no-requests">
+                                    <p>No accepted requests yet</p>
+                                </div>
+                            @endforelse
                         </div>
                 
                         <div class="tab-content" id="denied-requests">
-                            <p>No denied requests yet.</p>
+                            @forelse($rejectedRequests as $request)
+                                <div class="request-card" data-request-id="{{ $request->id }}">
+                                    <div class="request-info">
+                                        <h4>{{ $request->sender->username }} sent a request to:</h4>
+                                        <p class="profile-name">{{ $request->profile->name }}</p>
+                                        <p>
+                                            <strong>Age:</strong> {{ $request->profile->age ?? 'N/A' }}
+                                            <strong>Job:</strong> <span class="highlight">{{ $request->profile->occupation ?? 'N/A' }}</span>
+                                        </p>
+                                        <p>Request given on: {{ $request->created_at->format('d F Y') }}</p>
+                                    </div>
+                                    <div class="status-badge rejected">Rejected</div>
+                                </div>
+                            @empty
+                                <div class="no-requests">
+                                    <p>No rejected requests yet</p>
+                                </div>
+                            @endforelse
                         </div>
                 
                     </section>
@@ -399,6 +570,7 @@
 @endsection
 
 @section('script')
+    {{-- Tab content --}}
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const tabButtons = document.querySelectorAll(".tab-button");
@@ -412,6 +584,87 @@
                     this.classList.add("active");
                     document.getElementById(this.dataset.tab).classList.add("active");
                 });
+            });
+        });
+    </script>
+
+    {{-- Accept --}}
+    <script>
+        $(document).ready(function() {
+            // Accept Request
+            $(document).on('click', '.accept', function() {
+                const requestId = $(this).data('request-id');
+                const $card = $(this).closest('.request-card');
+                
+                $.ajax({
+                    url: "{{ route('matrimony.request.accept') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        id: requestId
+                    },
+                    success: function(response) {
+                        if(response.success) {
+                            // Remove from new requests
+                            $card.remove();
+                            
+                            // Update new requests empty state
+                            if($('#new-requests .request-card').length === 0) {
+                                $('#new-requests').html('<div class="no-requests"><p>No new requests found</p></div>');
+                            }
+                            
+                            // Add to accepted requests
+                            if($('#accepted-requests .no-requests').length > 0) {
+                                $('#accepted-requests').empty();
+                            }
+                            
+                            // Create accepted card
+                            const $acceptedCard = $card.clone();
+                            $acceptedCard.find('.action-buttons').remove();
+                            $acceptedCard.append('<div class="status-badge accepted">Accepted</div>');
+                            $('#accepted-requests').append($acceptedCard);
+                        }
+                    }
+                });
+            });
+
+            // Deny Request
+            $(document).on('click', '.deny', function() {
+                if(confirm('Are you sure you want to reject this request?')) {
+                    const requestId = $(this).data('request-id');
+                    const $card = $(this).closest('.request-card');
+                    
+                    $.ajax({
+                        url: "{{ route('matrimony.request.deny') }}",
+                        type: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            id: requestId
+                        },
+                        success: function(response) {
+                            if(response.success) {
+                                // Remove from new requests
+                                $card.remove();
+                                
+                                // Update new requests empty state
+                                if($('#new-requests .request-card').length === 0) {
+                                    $('#new-requests').html('<div class="no-requests"><p>No new requests found</p></div>');
+                                }
+                                
+                                // Add to rejected requests
+                                if($('#rejected-requests .no-requests').length > 0) {
+                                    $('#rejected-requests').empty();
+                                }
+                                
+                                // Create rejected card
+                                const $rejectedCard = $card.clone();
+                                $rejectedCard.find('.action-buttons').remove();
+                                $rejectedCard.append('<div class="status-badge rejected">Rejected</div>');
+                                $('#rejected-requests').append($rejectedCard);
+                            }
+                        }
+                    });
+                }
             });
         });
     </script>

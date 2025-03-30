@@ -22,7 +22,13 @@ class ListingApiController extends Controller
     {
         $categories = Category::where('status', 1)
             ->orderBy('name', 'asc')
-            ->get(['id', 'name', 'slug', 'icon']);
+            ->get(['id', 'name', 'slug', 'icon', 'image']);
+
+        // Map each category to include the attachment URL for image.
+        $categories = $categories->map(function ($category) {
+            $category->image = get_attachment_url_by_ids($category->image);
+            return $category;
+        });
 
         return response()->json([
             'success' => true,
@@ -30,6 +36,7 @@ class ListingApiController extends Controller
             'data' => $categories
         ]);
     }
+
 
     public function getSubcategories(Request $request)
     {
@@ -109,10 +116,10 @@ class ListingApiController extends Controller
             $request->validate([
                 'image' => 'image|mimes:jpg,jpeg,png|max:2048'
             ]);
-    
+
             $file = $request->file('image');
             $path = $file->store('media_uploads', 'public');
-    
+
             $media = MediaUpload::create([
                 'user_id' => $user->id,
                 'path' => $path,
@@ -124,7 +131,7 @@ class ListingApiController extends Controller
                 'alt' => '',
                 'dimensions' => getimagesize($file->getPathname()) ? implode('x', getimagesize($file->getPathname())) : null,
             ]);
-    
+
             $imageId = $media->id;
         } elseif ($request->filled('image')) {
             $request->validate([
@@ -195,7 +202,7 @@ class ListingApiController extends Controller
         $listing->authenticity = $request->authenticity;
         $listing->phone = $request->phone;
         $listing->phone_hidden = $request->phone_hidden ?? 0;
-        $listing->image = $imageId; 
+        $listing->image = $imageId;
         $listing->gallery_images = $request->gallery_images;
         $listing->video_url = $request->video_url ? getYoutubeEmbedUrl($request->video_url) : null;
         $listing->address = $request->address;
@@ -220,7 +227,7 @@ class ListingApiController extends Controller
                 'listing' => $listing,
                 'image_url' => get_attachment_url_by_ids($imageId),
             ]
-        ];        
+        ];
 
         // Handle tags
         if ($request->filled('tags')) {

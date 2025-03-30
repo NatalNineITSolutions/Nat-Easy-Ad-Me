@@ -28,11 +28,11 @@ class ProductListingController extends Controller
                     'title' => $listing->title,
                     'description' => $listing->description,
                     'image' => get_attachment_url_by_ids($listing->image),
+                    'price'       => $listing->category_id != 54 ? amount_with_currency_symbol($listing->price) : null,
+                    'is_featured' =>  $listing->is_featured,
+                    'created_at' =>  $listing->created_at,
                 ];
 
-                if ($listing->category_id != 54) {
-                    $data['price'] = amount_with_currency_symbol($listing->price);
-                }
             });
 
         return response()->json([

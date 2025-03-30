@@ -31,7 +31,7 @@ class ProductListingController extends Controller
                     'price'       => $listing->category_id != 54 ? amount_with_currency_symbol($listing->price) : null,
                     'address'       => $listing->address,
                     'is_featured' =>  $listing->is_featured,
-                    'created_at' =>  $listing->created_at,
+                    'created_at' =>  $listing->published_at,
                 ];
 
             });
@@ -75,13 +75,14 @@ class ProductListingController extends Controller
                     'description' => $listing->description,
                     'latitude' => $listing->lat,
                     'longitude' => $listing->lon,
+                    'price'       => $listing->category_id != 54 ? amount_with_currency_symbol($listing->price) : null,
                     'distance' => round($listing->distance, 2) . ' km',
                     'image' => get_attachment_url_by_ids($listing->image),
+                    'address'       => $listing->address,
+                    'is_featured' =>  $listing->is_featured,
+                    'created_at' =>  $listing->published_at,
                 ];
 
-                if ($listing->category_id != 54) {
-                    $data['price'] = amount_with_currency_symbol($listing->price);
-                }
             });
 
         return response()->json([

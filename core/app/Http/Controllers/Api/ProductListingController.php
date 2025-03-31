@@ -35,7 +35,6 @@ class ProductListingController extends Controller
                     'is_featured' => $listing->is_featured,
                     'created_at' => $listing->published_at,
                 ];
-
             });
 
         return response()->json([
@@ -84,7 +83,6 @@ class ProductListingController extends Controller
                     'is_featured' => $listing->is_featured,
                     'created_at' => $listing->published_at,
                 ];
-
             });
 
         return response()->json([
@@ -223,13 +221,23 @@ class ProductListingController extends Controller
             }
         }
 
+        $galleryImageIds = !empty($listing->gallery_images) ? explode('|', $listing->gallery_images) : [];
+
+        $galleryImagesUrls = array_map(function ($imgId) {
+            return get_image_url_id_wise($imgId);
+        }, $galleryImageIds);
+
+        $listingData = array_merge($listing->toArray(), [
+            'image'          => get_attachment_url_by_ids($listing->image),
+            'gallery_images' => $galleryImagesUrls,
+        ]);
+
+
         return response()->json([
             'success' => true,
             'message' => 'Listing details fetched successfully',
             'data' => [
-                'listing' => array_merge($listing->toArray(), [
-                    'image' => get_attachment_url_by_ids($listing->image) 
-                ]),
+                'listing'             => $listingData,
                 'related_listings' => $related_listings,
                 'user_total_listings' => $user_total_listings,
                 'report_reasons' => $report_reasons,
@@ -239,6 +247,6 @@ class ProductListingController extends Controller
                     'membership_badge' => $user_membership_badge,
                 ]
             ]
-        ], 200);        
+        ], 200);
     }
 }

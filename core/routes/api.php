@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProductListingController;
 use App\Http\Controllers\Api\ListingApiController;
+use App\Http\Controllers\Api\MembershipApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,13 +22,22 @@ use App\Http\Controllers\Api\ListingApiController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+// Home Page Listings
 Route::get('/top-listings', [ProductListingController::class, 'getTopListings']);
 Route::get('/location-listings', [ProductListingController::class, 'getLocationListings']);
 Route::get('/job-listings', [ProductListingController::class, 'getJobListings']);
 Route::get('/recent-listings', [ProductListingController::class, 'getRecentListings']);
+
+// Category
 Route::get('/categories', [ListingApiController::class, 'getCategories']);
 Route::get('/subcategories', [ListingApiController::class, 'getSubcategories']);
 Route::get('/childcategories', [ListingApiController::class, 'getChildcategories']);
+
+// ProductDetails
+Route::get('/listing-details/{identifier}', [ProductListingController::class, 'getListingDetails']);
+
+Route::get('/memberships', [MembershipApiController::class, 'getMembershipsByCategory']);
+
 
 // Protected Routes (using Sanctum for authentication)
 Route::middleware('auth:sanctum')->group(function () {
@@ -36,5 +46,4 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::post('/add-listing', [ListingApiController::class, 'addListing']);
 
-    // You can add more protected routes here
 });

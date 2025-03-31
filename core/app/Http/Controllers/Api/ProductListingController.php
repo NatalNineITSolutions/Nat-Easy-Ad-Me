@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Backend\Listing;
+use App\Models\Backend\Advertisement;
+use App\Models\Backend\ReportReason;
 
 class ProductListingController extends Controller
 {
@@ -28,10 +30,10 @@ class ProductListingController extends Controller
                     'title' => $listing->title,
                     'description' => $listing->description,
                     'image' => get_attachment_url_by_ids($listing->image),
-                    'price'       => $listing->category_id != 54 ? amount_with_currency_symbol($listing->price) : null,
-                    'address'       => $listing->address,
-                    'is_featured' =>  $listing->is_featured,
-                    'created_at' =>  $listing->published_at,
+                    'price' => $listing->category_id != 54 ? amount_with_currency_symbol($listing->price) : null,
+                    'address' => $listing->address,
+                    'is_featured' => $listing->is_featured,
+                    'created_at' => $listing->published_at,
                 ];
 
             });
@@ -75,12 +77,12 @@ class ProductListingController extends Controller
                     'description' => $listing->description,
                     'latitude' => $listing->lat,
                     'longitude' => $listing->lon,
-                    'price'       => $listing->category_id != 54 ? amount_with_currency_symbol($listing->price) : null,
+                    'price' => $listing->category_id != 54 ? amount_with_currency_symbol($listing->price) : null,
                     'distance' => round($listing->distance, 2) . ' km',
                     'image' => get_attachment_url_by_ids($listing->image),
-                    'address'       => $listing->address,
-                    'is_featured' =>  $listing->is_featured,
-                    'created_at' =>  $listing->published_at,
+                    'address' => $listing->address,
+                    'is_featured' => $listing->is_featured,
+                    'created_at' => $listing->published_at,
                 ];
 
             });
@@ -159,5 +161,84 @@ class ProductListingController extends Controller
             'message' => 'Recent listings retrieved successfully',
             'data' => $listings
         ]);
+    }
+
+    public function getListingDetails($identifier)
+    {
+        $query = Listing::with('user', 'brand', 'tags');
+
+        if (is_numeric($identifier)) {
+            $listing = $query->where('id', $identifier)->first();
+        } else {
+            $listing = $query->where('slug', $identifier)->first();
+        }
+
+        if (!$listing) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Listing not found'
+            ], 404);
+        }
+
+        if ($listing->is_published === 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Listing is not published'
+            ], 403);
+        }
+
+        $related_listings = Listing::where(['user_id' => $listing->user_id, 'status' => 1])
+            ->when(membershipModuleExistsAndEnable('Membership'), function ($q) {
+                $q->whereHas('user_membership');
+            })
+            ->inRandomOrder()
+            ->where('id', '!=', $listing->id)
+            ->take(4)
+            ->get();
+
+        $user_total_listings = $listing->user ? Listing::where('user_id', $listing->user->id)->count() : 0;
+
+        $listing->increment('view');
+
+        $report_reasons = ReportReason::where('status', 1)
+            ->latest()
+            ->take(500)
+            ->get();
+
+        // Membership details
+        $user_business_hour = false;
+        $user_enquiry_form = false;
+        $user_membership_badge = false;
+
+        if ($listing->category_id == 54) {
+            $user_business_hour = true;
+            $user_enquiry_form = true;
+            $user_membership_badge = true;
+        } elseif (moduleExists('Membership') && membershipModuleExistsAndEnable('Membership')) {
+            $membershipUser = optional($listing->user)->membershipUser;
+            if ($membershipUser) {
+                $user_business_hour = $membershipUser->business_hour === 1;
+                $user_enquiry_form = $membershipUser->enquiry_form === 1;
+                $user_membership_badge = $membershipUser->membership_badge === 1;
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Listing details fetched successfully',
+            'data' => [
+                'listing' => array_merge($listing->toArray(), [
+                    'image' => get_attachment_url_by_ids($listing->image) 
+                ]),
+                'related_listings' => $related_listings,
+                'user_total_listings' => $user_total_listings,
+                'report_reasons' => $report_reasons,
+                'membership' => [
+                    'business_hour' => $user_business_hour,
+                    'enquiry_form' => $user_enquiry_form,
+                    'membership_badge' => $user_membership_badge,
+                ]
+            ]
+        ], 200);        
     }
 }

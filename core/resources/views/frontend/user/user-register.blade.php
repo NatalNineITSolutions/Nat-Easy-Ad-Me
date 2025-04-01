@@ -1,3 +1,4 @@
+
 @extends('frontend.layout.master')
 @section('site_title')
     {{ __('User Register') }}

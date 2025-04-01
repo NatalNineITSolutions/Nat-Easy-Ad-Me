@@ -1,3 +1,14 @@
+<style>
+    .iti__arrow,
+    .iti__flag.iti__in{
+        display: none;
+    }
+
+    .iti--separate-dial-code .iti__selected-flag{
+        padding-right: 12px;
+    }
+</style>
+
 @php
     $countries = \Modules\CountryManage\app\Models\Country::all_countries();
     $restricted_countries = $countries->pluck('country_code')->toJson();
@@ -14,27 +25,34 @@
             const errorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"];
             const allowedCountryCodes = {!! $restricted_countries !!}.map(countryCode => countryCode.toLowerCase());
 
+            // Force India as default country if available in restricted countries
+            const defaultCountry = allowedCountryCodes.includes('in') ? 'in' : {!! $restricted_countries !!}[0].toLowerCase();
+
             const iti = window.intlTelInput(input, {
                 hiddenInput: "full_number",
                 nationalMode: false,
-                formatOnDisplay: true,
+                formatOnDisplay: false, // Disable automatic formatting
                 separateDialCode: true,
-                autoHideDialCode: true,
-                autoPlaceholder: "aggressive",
-                initialCountry: {!! $restricted_countries !!}[0],
+                autoHideDialCode: false,
+                initialCountry: defaultCountry,
                 placeholderNumberType: "MOBILE",
-                preferredCountries: {!! $restricted_countries !!}[0],
+                preferredCountries: [defaultCountry],
                 utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.1.1/js/utils.js",
                 allowDropdown: true,
                 searchCountryFlag: true
             });
 
+            // Remove any existing placeholder and set our custom one
+            $(input).removeAttr('placeholder').attr('placeholder', 'Type phone number');
+
+            // Hide restricted countries
             $('.iti__country').each(function() {
                 const countryDataCode = $(this).attr('data-country-code').toLowerCase();
                 if (countryDataCode && !allowedCountryCodes.includes(countryDataCode)) {
                     $(this).hide();
                 }
             });
+            
 
             input.addEventListener('input', validatePhoneNumber);
 

@@ -173,7 +173,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(User::class, 'parent_id');
     }
-    
+
     public function allReferrals()
     {
         return $this->referrals()->with('allReferrals');
@@ -199,6 +199,11 @@ class User extends Authenticatable
         }
 
         return $tree;
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(User::class, 'parent_id');
     }
 
     public function leftChild()

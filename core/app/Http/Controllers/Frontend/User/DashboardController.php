@@ -8,6 +8,7 @@ use App\Models\Frontend\Review;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
@@ -112,6 +113,27 @@ class DashboardController extends Controller
         return view('frontend.user.genology.genology', compact('mlmTree'));
     }
 
+    public function getChildren(Request $request, $id)
+    {
+        // Find the parent by ID and eager load only its immediate children with BV data
+        $parent = User::with([
+            'leftChild.userBvs',
+            'rightChild.userBvs'
+        ])->find($id);
+
+        if (!$parent) {
+            return redirect()->back()->withErrors(['error' => __('Parent not found')]);
+        }
+
+        // Calculate BV for the parent and its immediate children if needed
+        $this->calculateBV($parent);
+
+        // Redirect to a new page that displays the parent's node and its children
+        // Create a dedicated view for this, e.g. "frontend.user.genology.show_children"
+        return view('frontend.user.genology.show_children', compact('parent'));
+    }
+
+
     /**
      * Recursively calculate BV points for each user in the MLM tree.
      */
@@ -145,5 +167,4 @@ class DashboardController extends Controller
             $this->calculateBV($node->rightChild);
         }
     }
-
 }

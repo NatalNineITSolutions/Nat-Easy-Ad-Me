@@ -3,7 +3,9 @@
         <li>
             <div class="node root-node">
                 <div class="avatar-circle">
-                    <img src="{{ $node->avatar ?? '/assets/uploads/media-uploader/avatar.jpg' }}" alt="User Avatar">
+                    <a href="{{ route('user.user.mlm.children', ['id' => $node->id]) }}">
+                        <img src="{{ $node->avatar ?? '/assets/uploads/media-uploader/avatar.jpg' }}" alt="User Avatar">
+                    </a>
                 </div>
                 <span class="node-id">{{ $node->partner_id ?? 'N/A' }}</span>
                 <span class="node-name">{{ $node->first_name ?? 'N/A' }}</span>
@@ -13,13 +15,15 @@
                 </div>
             </div>
 
+
             <ul>
                 <li>
-                    @if($node->leftChild)
+                    @if ($node->leftChild)
                         @include('frontend.user.genology.partials.tree-node', ['node' => $node->leftChild])
                     @else
                         <div class="add-member-node">
-                            <a href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'left']) }}">
+                            <a
+                                href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'left']) }}">
                                 <div class="add-icon">
                                     <i class="fas fa-user-plus"></i>
                                 </div>
@@ -28,11 +32,14 @@
                     @endif
                 </li>
                 <li>
-                    @if($node->rightChild)
-                        @include('frontend.user.genology.partials.tree-node', ['node' => $node->rightChild])
+                    @if ($node->rightChild)
+                        @include('frontend.user.genology.partials.tree-node', [
+                            'node' => $node->rightChild,
+                        ])
                     @else
                         <div class="add-member-node">
-                            <a href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'right']) }}">
+                            <a
+                                href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'right']) }}">
                                 <div class="add-icon">
                                     <i class="fas fa-user-plus"></i>
                                 </div>
@@ -55,7 +62,7 @@
         }
 
         .full-width {
-            background-color:  #008081;
+            background-color: #008081;
             overflow-x: auto;
         }
 

@@ -52,6 +52,7 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
         Route::controller(DashboardController::class)->group(function () {
             Route::prefix('genology')->group(function () {
                 Route::get('info', 'genology')->name('genology');
+                Route::get('user/mlm/children/{id}', 'getChildren')->name('user.mlm.children');
             });
         });
 

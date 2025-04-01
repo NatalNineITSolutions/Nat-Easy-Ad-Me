@@ -9,7 +9,8 @@
         <!-- MLM Tree Section -->
         @if (isset($mlmTree) && $mlmTree)
             <div class="mlm-tree box-shadow1">
-                <h4 class="dis-title text-center text-white">{{ __('Genology') }}</h4>
+                <h4 class="dis-title text-center text-white">From the sponser of {{ $mlmTree->parent->partner_id ?? __('Genology') }}
+                </h4>
                 <div class="tree">
                     <ul>
                         <li>

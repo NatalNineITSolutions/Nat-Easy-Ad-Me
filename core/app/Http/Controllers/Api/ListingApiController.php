@@ -15,6 +15,8 @@ use Illuminate\Support\Carbon;
 use App\Models\Backend\Listing;
 use App\Models\Backend\MediaUpload;
 use App\Models\Frontend\ListingAttribute;
+use Modules\CountryManage\app\Models\Country;
+use App\Models\Backend\ListingTag;
 
 class ListingApiController extends Controller
 {
@@ -274,4 +276,281 @@ class ListingApiController extends Controller
             'data' => $listing
         ], 201);
     }
+
+    public function filterListings(Request $request)
+    {
+        try {
+            // Get all input parameters
+            $input = $request->all();
+            
+            // Initialize listing query
+            $listing_query = Listing::query()->where("status", 1);
+            
+            // Apply filters based on input parameters
+            
+            // Text search
+            if (!empty($input['q']) || !empty($input['home_search'])) {
+                $search_text = $input['home_search'] ?? $input['q'];
+                $listing_query->where(function ($query) use ($search_text) {
+                    $query->where("title", "LIKE", "%" . $search_text . "%")
+                        ->orWhere("description", "LIKE", "%" . $search_text . "%");
+                });
+            }
+            
+            // Location filters
+            if (!empty($input['latitude']) && !empty($input['longitude'])) {
+                $distance_radius_km = $input['distance_kilometers_value'] ?? 50;
+                $radius = $distance_radius_km == 0 ? 50 : $distance_radius_km;
+                
+                $listing_query->selectRaw(
+                    "listings.*,
+                    (6371 * acos(
+                        cos(radians(?)) * cos(radians(listings.lat)) * cos(radians(listings.lon) - radians(?)) +
+                        sin(radians(?)) * sin(radians(listings.lat))
+                    )) AS distance",
+                    [$input['latitude'], $input['longitude'], $input['latitude']]
+                )
+                ->havingRaw('distance <= ?', [$radius])
+                ->orderBy('distance', 'asc');
+            }
+            
+            // Price range filter
+            if (!empty($input['price_range_value'])) {
+                $priceRange = explode(',', $input['price_range_value']);
+                if (count($priceRange) === 2) {
+                    $listing_query->whereBetween('price', [$priceRange[0], $priceRange[1]]);
+                }
+            }
+            
+            // Country filter
+            if (!empty($input['country'])) {
+                $listings_country = Country::find($input['country']);
+                if ($listings_country) {
+                    $listings_country_ids = $listings_country->states->pluck("id")->toArray();
+                    $listing_query->whereIn("state_id", $listings_country_ids);
+                }
+            }
+            
+            // State filter
+            if (!empty($input['state'])) {
+                $listing_query->where("state_id", $input['state']);
+            }
+            
+            // City filter
+            if (!empty($input['city'])) {
+                $listing_query->where("city_id", $input['city']);
+            }
+            
+            // Category filters
+            if (!empty($input['cat'])) {
+                $listing_query->where("category_id", $input['cat']);
+            }
+            
+            if (!empty($input['subcat'])) {
+                $listing_query->where("sub_category_id", $input['subcat']);
+            }
+            
+            if (!empty($input['child_cat'])) {
+                $listing_query->where("child_category_id", $input['child_cat']);
+            }
+            
+            // Tag filter
+            if (!empty($input['tag_id'])) {
+                $tagIds = is_array($input['tag_id']) ? $input['tag_id'] : [$input['tag_id']];
+                $listing_tag_wise_ids = ListingTag::whereIn('tag_id', $tagIds)->pluck('listing_id');
+                $listing_query->whereIn("id", $listing_tag_wise_ids);
+            }
+            
+            // Rating filter
+            if (!empty($input['rating'])) {
+                $rating = (int) $input['rating'];
+                $listing_query->whereHas("reviews", function ($q) use ($rating) {
+                    $q->groupBy("reviews.id")
+                        ->havingRaw("AVG(reviews.rating) >= ?", [$rating])
+                        ->havingRaw("AVG(reviews.rating) < ?", [$rating + 1]);
+                });
+            }
+            
+            // Sort by
+            if (!empty($input['sortby'])) {
+                switch ($input['sortby']) {
+                    case "latest_listing":
+                        $listing_query->orderBy("id", "Desc");
+                        break;
+                    case "lowest_price":
+                        $listing_query->orderBy("price", "Asc");
+                        break;
+                    case "highest_price":
+                        $listing_query->orderBy("price", "Desc");
+                        break;
+                }
+            }
+            
+            // Listing type preferences
+            if (!empty($input['listing_type_preferences'])) {
+                switch ($input['listing_type_preferences']) {
+                    case "featured":
+                        $listing_query->where('is_featured', 1);
+                        break;
+                    case "top_listing":
+                        $listing_query->orderBy('view', 'desc');
+                        break;
+                }
+            }
+            
+            // Listing condition
+            if (!empty($input['listing_condition'])) {
+                $listing_query->where('condition', $input['listing_condition']);
+            }
+            
+            // Date posted
+            if (!empty($input['date_posted_listing'])) {
+                switch ($input['date_posted_listing']) {
+                    case "yesterday":
+                        $listing_query->whereDate('published_at', now()->subDays(1));
+                        break;
+                    case "last_week":
+                        $listing_query->whereBetween('published_at', [now()->startOfWeek(), now()->endOfWeek()]);
+                        break;
+                    case "today":
+                        $listing_query->whereDate('published_at', today());
+                        break;
+                }
+            }
+            
+            // Pagination
+            $perPage = $input['items'] ?? 10; // Default to 10 items per page
+            $all_listings = $listing_query->where('status', 1)
+                ->where('is_published', 1)
+                ->paginate($perPage);
+            
+            // Format listings for response
+            $formatted_listings = $all_listings->map(function ($listing) {
+                return [
+                    'id' => $listing->id,
+                    'title' => $listing->title,
+                    'slug' => $listing->slug,
+                    'description' => $listing->description,
+                    'price' => $listing->price,
+                    'price_formatted' => custom_amount_with_currency_symbol($listing->price),
+                    'image_url' => render_image_markup_by_attachment_id($listing->image),
+                    'is_featured' => $listing->is_featured,
+                    'published_at' => $listing->published_at,
+                    'published_at_formatted' => $listing->published_at ? \Carbon\Carbon::parse($listing->published_at)->format('j M Y') : null,
+                    'condition' => $listing->condition,
+                    'view_count' => $listing->view,
+                    'category' => $listing->category->name ?? null,
+                    'sub_category' => $listing->subCategory->name ?? null,
+                    'child_category' => $listing->childCategory->name ?? null,
+                    'country' => $listing->country->country ?? null,
+                    'state' => $listing->state->state ?? null,
+                    'city' => $listing->city->city ?? null,
+                    'latitude' => $listing->lat,
+                    'longitude' => $listing->lon,
+                    'rating' => $listing->reviews->avg('rating') ?? 0,
+                    'review_count' => $listing->reviews->count(),
+                    'details_url' => route("frontend.listing.details", $listing->slug),
+                ];
+            });
+            
+            // Get filter options
+            $countries = Country::where('status', 1)->select('id', 'country')->get();
+            $categories = Category::where('status', 1)->select('id', 'name')->get();
+            
+            // Get states and cities based on country if provided
+            $states = [];
+            $cities = [];
+            $sub_categories = [];
+            $child_categories = [];
+            
+            if (!empty($input['country'])) {
+                $states = State::where('status', 1)
+                    ->where('country_id', $input['country'])
+                    ->select('id', 'state')
+                    ->get();
+            }
+            
+            if (!empty($input['state'])) {
+                $cities = City::where('status', 1)
+                    ->where('state_id', $input['state'])
+                    ->select('id', 'city')
+                    ->get();
+            }
+            
+            if (!empty($input['cat'])) {
+                $sub_categories = SubCategory::where('status', 1)
+                    ->where('category_id', $input['cat'])
+                    ->select('id', 'name')
+                    ->get();
+            }
+            
+            if (!empty($input['subcat'])) {
+                $child_categories = ChildCategory::where('status', 1)
+                    ->where('sub_category_id', $input['subcat'])
+                    ->select('id', 'name')
+                    ->get();
+            }
+            
+            // Prepare response
+            $response = [
+                'success' => true,
+                'message' => 'Listings retrieved successfully',
+                'data' => [
+                    'listings' => $formatted_listings,
+                    'pagination' => [
+                        'total' => $all_listings->total(),
+                        'per_page' => $all_listings->perPage(),
+                        'current_page' => $all_listings->currentPage(),
+                        'last_page' => $all_listings->lastPage(),
+                        'from' => $all_listings->firstItem(),
+                        'to' => $all_listings->lastItem(),
+                    ],
+                    'filter_options' => [
+                        'countries' => $countries,
+                        'states' => $states,
+                        'cities' => $cities,
+                        'categories' => $categories,
+                        'sub_categories' => $sub_categories,
+                        'child_categories' => $child_categories,
+                        'rating_stars' => [
+                            "1" => "One Star",
+                            "2" => "Two Star",
+                            "3" => "Three Star",
+                            "4" => "Four Star",
+                            "5" => "Five Star",
+                        ],
+                        'sortby_options' => [
+                            "latest_listing" => "Latest listing",
+                            "lowest_price" => "Lowest Price",
+                            "highest_price" => "Highest Price",
+                        ],
+                        'date_posted_options' => [
+                            "today" => "Today",
+                            "yesterday" => "Yesterday",
+                            "last_week" => "Last Week",
+                        ],
+                        'listing_condition_options' => [
+                            "new" => "New",
+                            "used" => "Used",
+                        ],
+                        'listing_type_options' => [
+                            "featured" => "Featured",
+                            "top_listing" => "Top Listing",
+                        ],
+                    ],
+                    'current_filters' => $input,
+                ],
+            ];
+            
+            return response()->json($response);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve listings',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
+

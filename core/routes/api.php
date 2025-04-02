@@ -22,6 +22,9 @@ use App\Http\Controllers\Api\MembershipApiController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+// Partner Verification Routes
+Route::post('partner/verify', [AuthController::class, 'verifyPartner']);
+
 // Home Page Listings
 Route::get('/top-listings', [ProductListingController::class, 'getTopListings']);
 Route::get('/location-listings', [ProductListingController::class, 'getLocationListings']);
@@ -32,6 +35,8 @@ Route::get('/recent-listings', [ProductListingController::class, 'getRecentListi
 Route::get('/categories', [ListingApiController::class, 'getCategories']);
 Route::get('/subcategories', [ListingApiController::class, 'getSubcategories']);
 Route::get('/childcategories', [ListingApiController::class, 'getChildcategories']);
+
+Route::post('/listings/filter', [ListingApiController::class, 'filterListings']);
 
 // ProductDetails
 Route::get('/listing-details/{identifier}', [ProductListingController::class, 'getListingDetails']);

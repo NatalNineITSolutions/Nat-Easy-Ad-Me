@@ -1,4 +1,3 @@
-
 @extends('frontend.layout.master')
 @section('site_title')
     {{ __('User Register') }}
@@ -116,6 +115,19 @@
                             </div>
 
                             <div class="col-lg-6 col-md-12">
+                                <label class="infoTitle">{{ __('Gender') }}</label>
+                                <div class="input-form input-form2">
+                                    <select class="form-select ps-3" name="gender" id="gender" style="height: 40px;">
+                                        <option value="">{{ __('Select Gender') }}</option>
+                                        <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>{{ __('Male') }}
+                                        </option>
+                                        <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>
+                                            {{ __('Female') }}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12">
                                 <label class="infoTitle">{{ __('Password') }}</label>
                                 <div class="input-form">
                                     <input type="password" name="password" id="password"
@@ -152,14 +164,14 @@
                             </div>
 
                             <!-- @if(get_static_option('site_google_captcha_enable') == 'on')
-                                                    <div class="col-md-12 my-3">
-                                                        <div class="g-recaptcha" data-sitekey="{{ get_static_option('recaptcha_2_site_key')}}">
+                                                        <div class="col-md-12 my-3">
+                                                            <div class="g-recaptcha" data-sitekey="{{ get_static_option('recaptcha_2_site_key')}}">
+                                                            </div>
+                                                            @if ($errors->has('g-recaptcha-response'))
+                                                                <span class="text-danger">{{ $errors->first('g-recaptcha-response') }}</span>
+                                                            @endif
                                                         </div>
-                                                        @if ($errors->has('g-recaptcha-response'))
-                                                            <span class="text-danger">{{ $errors->first('g-recaptcha-response') }}</span>
-                                                        @endif
-                                                    </div>
-                                                @endif -->
+                                                    @endif -->
 
                             <div class="col-sm-12 mt-2">
                                 <div class="btn-wrapper text-center">
@@ -370,13 +382,14 @@
                     let phone = $('#phone').val();
                     let password = $('#password').val();
                     let confirm_password = $('#confirm_password').val();
+                    let gender = $('#gender').val();
 
                     let username_validation_text = $('#user_name_availability span').text();
                     let email_validation_text = $('#email_availability span').text();
                     let password_validation_text = $('#check_password_match').text();
                     let phone_validation_text = $('#phone_availability span').text();
 
-                    if (first_name == '' || last_name == '' || username == '' || email == '' || phone == '' || password == '' || confirm_password == '') {
+                    if (first_name == '' || last_name == '' || gender == '' || username == '' || email == '' || phone == '' || password == '' || confirm_password == '') {
                         toastr_warning_js("{{ __('Please fill all fields') }}")
                         return false
                     } else if (username_validation_text == 'Sorry! Username name is not available' || username_validation_text == 'Enter valid username') {

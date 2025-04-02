@@ -270,6 +270,14 @@ class ListingController extends Controller
                 }
             }
 
+            // Decrease listing limit only if it is greater than 0
+            $userMembership = UserMembership::where('user_id', $user_id)->first();
+            if ($userMembership && $userMembership->listing_limit > 0) {
+                UserMembership::where('user_id', $user_id)->update([
+                    'listing_limit' => DB::raw("GREATEST(listing_limit - 0, 0)"),
+                ]);
+            }
+
             //create listing notification to admin
             AdminNotification::create([
                 'identity' => $last_listing_id,

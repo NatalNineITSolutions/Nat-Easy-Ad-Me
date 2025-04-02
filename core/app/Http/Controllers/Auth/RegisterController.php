@@ -331,6 +331,7 @@ class RegisterController extends Controller
                 'password'        => 'required|min:6|max:191',
                 'confirm_password' => 'required|same:password',
                 'partner_id'      => 'nullable|exists:users,partner_id',
+                'gender'          => 'required|in:male,female', 
             ];
 
             if (get_static_option('site_google_captcha_enable') == 'on') {
@@ -419,6 +420,7 @@ class RegisterController extends Controller
                     'partner_name'    => $partnerName,
                     'parent_id'       => $parent_id,
                     'position'        => $position,
+                    'gender'          => $request->gender,
                 ]);
 
                 // Save the user within the nested set structure

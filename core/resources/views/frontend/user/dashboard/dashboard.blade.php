@@ -37,18 +37,28 @@
                                                         <x-badge.user-verified-badge :user="$user" />
                                                     </div>
                                                     <div class="member-listing">
-                                                        <span class="listing">{{ $user_ads_posted }} {{ __('listing') }}
-                                                        </span>
+                                                        <span class="listing">{{ $user_ads_posted }}
+                                                            {{ __('listing') }}</span>
                                                         <span class="dot"></span> {{ __('Member since') }}
                                                         {{ optional($user->created_at)->format('Y') }}
                                                     </div>
                                                     <div class="seller-ratings mt-3">
                                                         @if($averageRating >= 1)
                                                             <a href="javascript:void(0)" class="author_tag__review__star">
-                                                                {!! ratting_star(round($averageRating, 1)) !!} </a>
+                                                                {!! ratting_star(round($averageRating, 1)) !!}
+                                                            </a>
                                                             <a href="javascript:void(0)" class="author_tag__review__para">
-                                                                ({{ $user_review_count }}) </a>
+                                                                ({{ $user_review_count }})
+                                                            </a>
                                                         @endif
+                                                    </div>
+
+                                                    <!-- Partner & Parent Details -->
+                                                    <div class="seller-partner-info mt-3 d-flex">
+                                                        <span><strong>{{ __('Sponsor ID:') }}</strong>
+                                                            {{ $user->partner_id ?? __('N/A') }}</span>
+                                                        <span class="ms-3"><strong>{{ __('Referred By:') }}</strong>
+                                                            {{ $user->parent->fullname ?? __('N/A') }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -97,39 +107,31 @@
                                 <!--Add Listing States-->
                                 <div class="all-list-state mt-20">
                                     <div class="row g-3">
-                                        <div class="col-md-3 col-md-3 col-6">
+                                        <div class="col-md-3 col-6">
                                             <div class="list-state ad-posted">
                                                 <h4 class="list-head">{{ $user_ads_posted }}</h4>
                                                 <p class="post-state">{{ __('Ads Posted') }}</p>
                                             </div>
                                         </div>
-                                        <div class="col-md-3 col-md-3 col-6">
+                                        <div class="col-md-3 col-6">
                                             <div class="list-state active-posted">
                                                 <h4 class="list-head">{{ $user_active_listings }}</h4>
                                                 <p class="post-state">{{ __('Active Listing') }}</p>
                                             </div>
                                         </div>
-                                        <div class="col-md-3 col-md-3 col-6">
-                                            <div class="list-state active-posted">
-                                                <h4 class="list-head">
-                                                    @if($remaining_listings === 0 && ($listing_limit ?? 0) > 0)
-                                                        0
-                                                    @elseif(($listing_limit ?? 0) === 0)
-                                                        {{ __('Unlimited') }}
-                                                    @else
-                                                        {{ $remaining_listings }}
-                                                    @endif
-                                                </h4>
+                                        <div class="col-md-3 col-6">
+                                            <div class="list-state ad-posted">
+                                                <h4 class="list-head">{{ $remaining_listings}}</h4>
                                                 <p class="post-state">{{ __('Remaining Listings') }}</p>
                                             </div>
                                         </div>
-                                        <div class="col-md-3 col-md-3 col-6">
-                                            <div class="list-state deactivated-posted">
-                                                <h4 class="list-head">{{  $user_deactivated_ads }}</h4>
+                                        <div class="col-md-3 col-6">
+                                            <div class="list-state favorit-posted">
+                                                <h4 class="list-head">{{ $user_deactivated_ads }}</h4>
                                                 <p class="post-state">{{ __('Deactive Ads') }}</p>
                                             </div>
                                         </div>
-                                        <div class="col-md-3 col-md-3 col-6">
+                                        <div class="col-md-3 col-6">
                                             <div class="list-state favorit-posted">
                                                 <h4 class="list-head">{{ $user_favorite_ads }}</h4>
                                                 <p class="post-state">{{ __('Favorite Ads') }}</p>

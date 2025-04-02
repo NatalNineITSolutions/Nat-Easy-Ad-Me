@@ -18,9 +18,9 @@
                     <p class="userDetails__wrapper__item"><strong>{{ __('Username:') }}</strong> {{ $user_details->username ?? '' }}</p>
                     <p class="userDetails__wrapper__item"><strong>{{ __('Email:') }}</strong> {{ $user_details->email ?? '' }}</p>
                     <p class="userDetails__wrapper__item"><strong>{{ __('Phone:') }}</strong> {{ $user_details->phone ?? '' }}</p>
-                    <p class="userDetails__wrapper__item"><strong>{{ __('Country:') }}</strong> {{ optional($user_details->user_country)->country ?? '' }}</p>
+                    <!-- <p class="userDetails__wrapper__item"><strong>{{ __('Country:') }}</strong> {{ optional($user_details->user_country)->country ?? '' }}</p>
                     <p class="userDetails__wrapper__item"><strong>{{ __('State:') }}</strong> {{ optional($user_details->user_state)->state ?? '' }}</p>
-                    <p class="userDetails__wrapper__item"><strong>{{ __('City:') }}</strong> {{ optional($user_details->user_city)->city ?? '' }}</p>
+                    <p class="userDetails__wrapper__item"><strong>{{ __('City:') }}</strong> {{ optional($user_details->user_city)->city ?? '' }}</p> -->
                 </div>
             </div>
         </div>
@@ -65,6 +65,9 @@
                         <p class="userDetails__wrapper__item"><strong>{{ __('Verify by:') }}</strong> {{ $verify_by_name->name ?? '' }}</p>
                         <p class="userDetails__wrapper__item"><strong>{{ __('Zip Code:') }}</strong> {{ $user_identity_details->zip_code ?? '' }}</p>
                         <p class="userDetails__wrapper__item"><strong>{{ __('Address:') }}</strong> {{ $user_identity_details->address ?? '' }}</p>
+                        <p class="userDetails__wrapper__item"><strong>{{ __('PANCard No:') }}</strong> {{ $user_identity_details->pancard_no ?? '' }}</p>
+                        <p class="userDetails__wrapper__item"><strong>{{ __('BankAccount No:') }}</strong> {{ $user_identity_details->bank_account_no ?? '' }}</p>
+                        <p class="userDetails__wrapper__item"><strong>{{ __('IFSC Code:') }}</strong> {{ $user_identity_details->ifsc_code ?? '' }}</p>
                           @php
                               $request_country = \Modules\CountryManage\app\Models\Country::where('id', $user_identity_details->country_id)->first();
                               $request_state = \Modules\CountryManage\app\Models\State::where('id', $user_identity_details->state_id)->first();

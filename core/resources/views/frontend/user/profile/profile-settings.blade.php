@@ -85,8 +85,8 @@
                                         </div>
 
                                         <div class="input-form">
-                                            <label for="title">{{ __('Your Phone') }} <span class="text-danger">*</span> </label>
-                                            <input id="phone" type="tel" value="{{ Auth::guard('web')->user()->phone ?? '' }}" class="w-100 input-field">
+                                            <label for="title">{{ __('Your Phone') }}</label>
+                                            <input id="phone" type="tel" value="{{ Auth::guard('web')->user()->phone ?? '' }}" class="w-100 input-field" readonly>
                                         </div>
 
                                         <div class="input-form">

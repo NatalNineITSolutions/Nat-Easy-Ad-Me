@@ -1,4 +1,5 @@
 <!-- Membership Card Start-->
+<!-- Membership Card Start-->
 <section class="pricingCard plr" data-padding-top="{{$padding_top}}" data-padding-bottom="{{$padding_bottom}}">
     <div class="container-1440">
         <div class="row justify-content-center">
@@ -9,7 +10,21 @@
             </div>
         </div>
         <div class="row">
-        @foreach($memberships as $membership)
+            @php
+                // Make sure we have the current membership data
+                $user_current_membership = \Modules\Membership\app\Models\UserMembership::where(
+                    'user_id',
+                    auth()->guard('web')->user()->id ?? null,
+                )
+                ->whereHas('membership', function ($query) {
+                    $query->where('category', 0);
+                })
+                ->whereDate('expire_date', '>', now())
+                ->latest()
+                ->first();
+            @endphp
+            
+            @foreach($memberships as $membership)
                 <div class="col-xl-3 col-lg-4 col-sm-6">
                     <div class="singlePrice @if(!empty($user_current_membership) && $user_current_membership->membership_id === $membership->id) active @endif mb-24 wow fadeInLeft" data-wow-delay="0.0s">
                         <h4 class="priceTittle">{{ $membership->title }} </h4>
@@ -22,15 +37,13 @@
                                 @php
                                     $buttonText = __('Get Started');
                                     $buttonUrl = url('/user-register');
+                                    
+                                    if(!empty($user_current_membership) && $user_current_membership->membership_id === $membership->id) {
+                                        $buttonText = __('Current Plan');
+                                        $buttonUrl = null;
+                                    }
                                 @endphp
 
-                                  @if(!empty($user_current_membership) && $user_current_membership->membership_id === $membership->id)
-                                        @php
-                                            $buttonText = __('Current Plan');
-                                            $buttonUrl = null;
-                                        @endphp
-                                    @endif
-                                <!--if user membership empty buy free membership -->
                                 @if(empty($user_current_membership))
                                     <!--free membership form start -->
                                     <form action="{{route('user.membership.buy')}}" method="post">
@@ -42,37 +55,45 @@
                                     </form>
                                     <!--free membership form end -->
                                 @else
-                                    <a href="{{ $buttonUrl }}">
+                                    @if($buttonUrl)
+                                        <a href="{{ $buttonUrl }}">
+                                            <button class="cmn-btn-outline1">{{ $buttonText }}</button>
+                                        </a>
+                                    @else
                                         <button class="cmn-btn-outline1">{{ $buttonText }}</button>
-                                    </a>
+                                    @endif
                                 @endif
                             @else
                                 <!-- Paid Membership Plan -->
                                 @php
-
-                                    if(empty($user_current_membership)){
+                                    if(empty($user_current_membership)) {
                                        $buttonText = __('Buy Now');
-                                     }else{
+                                    } else {
                                        $buttonText = __('Upgrade Now');
                                     }
 
-                                     $modalTarget = '#loginModal';
+                                    $modalTarget = '#loginModal';
 
-                                       if(Auth::check() && Auth::guard('web')->user()){
-                                           $modalTarget = '#paymentGatewayModal';
-                                       }
-                                       if(!empty($user_current_membership) && $user_current_membership->membership_id === $membership->id){
-                                           $buttonText = __('Current Plan');
-                                           $modalTarget = null;
-                                       }
+                                    if(Auth::check() && Auth::guard('web')->user()){
+                                        $modalTarget = '#paymentGatewayModal';
+                                    }
+                                    if(!empty($user_current_membership) && $user_current_membership->membership_id === $membership->id){
+                                        $buttonText = __('Current Plan');
+                                        $modalTarget = null;
+                                    }
                                 @endphp
-                                <button class="cmn-btn-outline1 choose_membership_plan"
-                                        data-bs-toggle="modal"
-                                        data-id="{{ $membership->id }}"
-                                        data-price="{{ $membership->price }}"
-                                        data-bs-target="{{ $modalTarget }}">
-                                    {{ $buttonText }}
-                                </button>
+                                
+                                @if($modalTarget)
+                                    <button class="cmn-btn-outline1 choose_membership_plan"
+                                            data-bs-toggle="modal"
+                                            data-id="{{ $membership->id }}"
+                                            data-price="{{ $membership->price }}"
+                                            data-bs-target="{{ $modalTarget }}">
+                                        {{ $buttonText }}
+                                    </button>
+                                @else
+                                    <button class="cmn-btn-outline1">{{ $buttonText }}</button>
+                                @endif
                             @endif
                         </div>
 

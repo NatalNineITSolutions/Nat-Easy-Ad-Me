@@ -2,9 +2,13 @@
     <ul class="tree">
         <li>
             <div class="node root-node">
-                <div class="avatar-circle">
+                <div class="avatar-circle {{ $node->gender == 'female' ? 'female' : 'male' }} {{ ($node->leftBV ?? 0) == 0 && ($node->rightBV ?? 0) == 0 ? 'zero-bv' : '' }}">
                     <a href="{{ route('user.user.mlm.children', ['id' => $node->id]) }}">
-                        <img src="{{ $node->avatar ?? '/assets/uploads/media-uploader/avatar.jpg' }}" alt="User Avatar">
+                        @if($node->avatar)
+                            <img src="{{ $node->avatar }}" alt="User Avatar">
+                        @else
+                            <img src="{{ $node->gender == 'female' ? '/assets/uploads/media-uploader/girlavatart.jpg' : '/assets/uploads/media-uploader/avatar.jpg' }}" alt="Default Avatar">
+                        @endif
                     </a>
                 </div>
                 <span class="node-id">{{ $node->partner_id ?? 'N/A' }}</span>
@@ -15,15 +19,13 @@
                 </div>
             </div>
 
-
             <ul>
                 <li>
                     @if ($node->leftChild)
                         @include('frontend.user.genology.partials.tree-node', ['node' => $node->leftChild])
                     @else
                         <div class="add-member-node">
-                            <a
-                                href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'left']) }}">
+                            <a href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'left']) }}">
                                 <div class="add-icon">
                                     <i class="fas fa-user-plus"></i>
                                 </div>
@@ -33,13 +35,10 @@
                 </li>
                 <li>
                     @if ($node->rightChild)
-                        @include('frontend.user.genology.partials.tree-node', [
-                            'node' => $node->rightChild,
-                        ])
+                        @include('frontend.user.genology.partials.tree-node', ['node' => $node->rightChild])
                     @else
                         <div class="add-member-node">
-                            <a
-                                href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'right']) }}">
+                            <a href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'right']) }}">
                                 <div class="add-icon">
                                     <i class="fas fa-user-plus"></i>
                                 </div>
@@ -130,11 +129,17 @@
             height: 60px;
             border-radius: 50%;
             overflow: hidden;
-            background: #1a237e;
+            background: #1a237e; /* Default blue color */
             margin-bottom: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: background-color 0.3s ease; /* Smooth transition */
+        }
+
+        /* Red circle when both BV values are 0 */
+        .avatar-circle.zero-bv {
+            border: 5px solid #ff5252; 
         }
 
         .avatar-circle img {

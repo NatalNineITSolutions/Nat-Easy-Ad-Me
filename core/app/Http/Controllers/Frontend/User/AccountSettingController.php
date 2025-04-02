@@ -43,14 +43,14 @@ class AccountSettingController extends Controller
             toastr_error(__('Current Password is Wrong---'));
             return redirect()->back();
         }
-        $user_account_info= AccountDeactivate::where('user_id', $user_id)->first();
+        $user_account_info = AccountDeactivate::where('user_id', $user_id)->first();
         $user_verify_info = IdentityVerification::where('user_id', $user_id)->first();
 
         $business_hours_data = null;
-        if(moduleExists('Membership')){
-            if(membershipModuleExistsAndEnable('Membership')){
+        if (moduleExists('Membership')) {
+            if (membershipModuleExistsAndEnable('Membership')) {
                 $user_membership = UserMembership::where('user_id', $user_id)->first();
-                if($user_membership->business_hour === 1){
+                if ($user_membership->business_hour === 1) {
                     $user_business_hours = BusinessHours::where('user_id', $user_id)->first();
                     if ($user_business_hours) {
                         $business_hours_data = json_decode($user_business_hours->day_of_week, true);
@@ -74,14 +74,14 @@ class AccountSettingController extends Controller
                 'reason' => 'required',
                 'description' => 'required|max:150',
             ]);
-        //Deactivate Account
-        AccountDeactivate::create([
-            'user_id' => Auth::guard('web')->user()->id,
-            'reason' => $request['reason'],
-            'description' => $request['description'],
-            'status' => 0,
-            'account_status' => 0,
-        ]);
+            //Deactivate Account
+            AccountDeactivate::create([
+                'user_id' => Auth::guard('web')->user()->id,
+                'reason' => $request['reason'],
+                'description' => $request['description'],
+                'status' => 0,
+                'account_status' => 0,
+            ]);
             toastr_error(__('Your Account Successfully Deactivate'));
             return redirect()->back();
         }
@@ -102,16 +102,16 @@ class AccountSettingController extends Controller
                 'status' => 1,
                 'account_status' => 1,
             ]);
-                toastr_error(__('Your Account Delete Successfully'));
-            }
-            return redirect()->route('user.logout');
+            toastr_error(__('Your Account Delete Successfully'));
+        }
+        return redirect()->route('user.logout');
     }
 
     // buyer account Deactivate Cancel
     public function accountDeactiveCancel($id = null)
     {
         $account_details = AccountDeactivate::where('user_id', $id)->first();
-        if (!empty($account_details)){
+        if (!empty($account_details)) {
             $account_details->delete();
         }
         toastr_success(__('Your Account Successfully Active'));
@@ -119,107 +119,120 @@ class AccountSettingController extends Controller
     }
 
     //user verify
-    public function userProfileVerify(Request $request){
+    public function userProfileVerify(Request $request)
+    {
+        $request->validate([
+            'identification_type' => 'required|max:191',
+            'country_id' => 'required',
+            'state_id' => 'required',
+            'city_id' => 'required',
+            'zip_code' => 'required',
+            'address' => 'required',
+            'identification_number' => 'required',
+            'pancard_no' => 'required|string|max:20',
+            'bank_account_no' => 'required|string|max:30',
+            'ifsc_code' => 'required|string|max:20',
+        ]);
 
+        // Initialize variables for file names
+        $front_imageName = null;
+        $back_imageName = null;
+
+        // Handle front document upload
+        if ($request->hasFile('front_document')) {
             $request->validate([
-                'identification_type' => 'required|max:191',
-                'country_id' => 'required',
-                'state_id' => 'required',
-                'city_id' => 'required',
-                'zip_code' => 'required',
-                'address' => 'required',
-                'identification_number' => 'required'
+                'front_document' => 'file|mimes:jpg,png,jpeg,webp,pdf|max:10240',
             ]);
 
-                if ($request->file('front_document') || $request->file('back_document')){
-                    $request->validate([
-                        'front_document' => 'required|file|mimes:jpg,png,jpeg,webp,pdf|max:10240',
-                        'back_document' => 'required|file|mimes:jpg,png,jpeg,webp,pdf|max:10240',
-                    ]);
-                }
+            $front_document = $request->file('front_document');
+            $front_imageName = time() . '-' . uniqid() . '.' . $front_document->getClientOriginalExtension();
 
-                if($front_document = $request->file('front_document')){
-                    $front_imageName = time().'-'.uniqid().'.'.$front_document->getClientOriginalExtension();
-                    // Image scan start
-                    $uploaded_file = $request->front_document;
-                    $file_extension = $uploaded_file->getClientOriginalExtension();
-                    if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
-                        $processed_image = Image::make($uploaded_file);
-                        $image_default_width = $processed_image->width();
-                        $image_default_height = $processed_image->height();
-                        $processed_image->resize($image_default_width, $image_default_height, function ($constraint) {
-                            $constraint->aspectRatio();
-                        });
-                        $processed_image->save('assets/uploads/verification/' . $front_imageName);
-                    }else{
-                        $front_document->move('assets/uploads/verification',$front_imageName);
-                    } // Image scan end
+            $file_extension = $front_document->getClientOriginalExtension();
+            if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                $processed_image = Image::make($front_document);
+                $processed_image->save('assets/uploads/verification/' . $front_imageName);
+            } else {
+                $front_document->move('assets/uploads/verification', $front_imageName);
+            }
+        }
 
-                }
+        // Handle back document upload
+        if ($request->hasFile('back_document')) {
+            $request->validate([
+                'back_document' => 'file|mimes:jpg,png,jpeg,webp,pdf|max:10240',
+            ]);
 
-                if($back_document = $request->file('back_document')){
-                    $back_imageName = time().'-'.uniqid().'.'.$back_document->getClientOriginalExtension();
-                    // Image scan start
-                    $uploaded_file = $request->back_document;
-                    $file_extension = $uploaded_file->getClientOriginalExtension();
-                    if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
-                        $processed_image = Image::make($uploaded_file);
-                        $image_default_width = $processed_image->width();
-                        $image_default_height = $processed_image->height();
-                        $processed_image->resize($image_default_width, $image_default_height, function ($constraint) {
-                            $constraint->aspectRatio();
-                        });
-                        $processed_image->save('assets/uploads/verification/' . $back_imageName);
-                    }else{
-                        $back_document->move('assets/uploads/verification',$back_imageName);
-                    } // Image scan end
-                }
+            $back_document = $request->file('back_document');
+            $back_imageName = time() . '-' . uniqid() . '.' . $back_document->getClientOriginalExtension();
 
-                $user = Auth::guard('web')->user()->id;
-                $old_document = IdentityVerification::where('user_id', $user)->first();
+            $file_extension = $back_document->getClientOriginalExtension();
+            if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                $processed_image = Image::make($back_document);
+                $processed_image->save('assets/uploads/verification/' . $back_imageName);
+            } else {
+                $back_document->move('assets/uploads/verification', $back_imageName);
+            }
+        }
 
+        // Validate that at least one document is uploaded for new verification
+        $old_document = IdentityVerification::where('user_id', auth()->id())->first();
+        if (is_null($old_document) && (is_null($front_imageName) || is_null($back_imageName))) {
+            return redirect()->back()->withErrors([
+                'front_document' => __('Both front and back documents are required for new verification'),
+                'back_document' => __('Both front and back documents are required for new verification'),
+            ]);
+        }
 
-            if(is_null($old_document)){
-                IdentityVerification::create([
-                    'user_id' => $user,
-                    'front_document' => $front_imageName,
-                    'back_document' => $back_imageName,
-                    'identification_type' => $request->identification_type,
-                    'country_id' => $request->country_id,
-                    'state_id' => $request->state_id,
-                    'city_id' => $request->city_id,
-                    'zip_code' => $request->zip_code,
-                    'address' => $request->address,
-                    'identification_number' => $request->identification_number,
-                ]);
-            }else{
-                IdentityVerification::where('user_id', $user)->update([
-                    'user_id' => $user,
-                    'front_document' => $front_imageName ?? $old_document->front_document,
-                    'back_document' => $back_imageName ?? $old_document->back_document,
-                    'identification_type' => $request->identification_type,
-                    'country_id' => $request->country_id,
-                    'state_id' => $request->state_id,
-                    'city_id' => $request->city_id,
-                    'zip_code' => $request->zip_code,
-                    'address' => $request->address,
-                    'identification_number' => $request->identification_number,
-                    'status' => 0,
+        $user = auth()->id();
+        $data = [
+            'user_id' => $user,
+            'identification_type' => $request->identification_type,
+            'country_id' => $request->country_id,
+            'state_id' => $request->state_id,
+            'city_id' => $request->city_id,
+            'zip_code' => $request->zip_code,
+            'address' => $request->address,
+            'identification_number' => $request->identification_number,
+            'pancard_no' => $request->pancard_no,
+            'bank_account_no' => $request->bank_account_no,
+            'ifsc_code' => $request->ifsc_code,
+            'status' => 0, // Reset status when updating
+        ];
+
+        // Only update document fields if new files were uploaded
+        if (!is_null($front_imageName)) {
+            $data['front_document'] = $front_imageName;
+        }
+        if (!is_null($back_imageName)) {
+            $data['back_document'] = $back_imageName;
+        }
+
+        if (is_null($old_document)) {
+            // Ensure both documents are present for new verification
+            if (is_null($front_imageName) || is_null($back_imageName)) {
+                return redirect()->back()->withErrors([
+                    'front_document' => __('Both front and back documents are required'),
+                    'back_document' => __('Both front and back documents are required'),
                 ]);
             }
 
-            try {
-                $subject = get_static_option('user_identity_verification_subject') ?? __('User Verification Request');
-                $message = get_static_option('admin_user_identity_verification_message');
-                Mail::to(get_static_option('site_global_email'))->send(new BasicMail([
-                    'subject' => $subject,
-                    'message' => $message
-                ]));
-            } catch (\Exception $e) {
-                return redirect()->back()->with(FlashMsg::item_new($e->getMessage()));
-            }
+            IdentityVerification::create($data);
+        } else {
+            IdentityVerification::where('user_id', $user)->update($data);
+        }
 
-            toastr_success(__('Verify Info Update Success---'));
-            return redirect()->back();
+        try {
+            $subject = get_static_option('user_identity_verification_subject') ?? __('User Verification Request');
+            $message = get_static_option('admin_user_identity_verification_message');
+            Mail::to(get_static_option('site_global_email'))->send(new BasicMail([
+                'subject' => $subject,
+                'message' => $message
+            ]));
+        } catch (\Exception $e) {
+            return redirect()->back()->with(FlashMsg::item_new($e->getMessage()));
+        }
+
+        toastr_success(__('Verification information updated successfully'));
+        return redirect()->back();
     }
 }

@@ -165,7 +165,4 @@ class Listing extends Model
     public function guestListing(){
         return $this->hasOne(GuestListing::class, 'listing_id', 'id');
     }
-
-
-
 }

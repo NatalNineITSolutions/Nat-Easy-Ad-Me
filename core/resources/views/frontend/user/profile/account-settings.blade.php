@@ -311,17 +311,17 @@
                                         <div class="checkbox-group">
                                             <input type="hidden" name="identification_type" value="{{ $user_verify_info?->identification_type }}">
                                             <label>
-                                                <input type="checkbox" value="national">
+                                                <input type="checkbox" name="id_type" value="national">
                                                 <span></span>
-                                                {{ __('National ID') }}
+                                                {{ __('Aadhar ID') }}
                                             </label>
                                             <label>
-                                                <input type="checkbox" value="passport">
+                                                <input type="checkbox" name="id_type" value="passport">
                                                 <span></span>
                                                 {{ __('Passport') }}
                                             </label>
                                             <label>
-                                                <input type="checkbox" value="driving">
+                                                <input type="checkbox" name="id_type" value="driving">
                                                 <span></span>
                                                 {{ __('Driving License') }}
                                             </label>
@@ -379,7 +379,27 @@
                                 </div>
                                 <div class="col-12 mt-3">
                                     <div class="input-form">
-                                        <label class="d-block" for="identification_number">{{ __('National NID/Passport/Driving License Number') }} <span class="text-danger">*</span> </label>
+                                        <label class="d-block" for="pancard_no">{{ __('Pancard Number') }}</label>
+                                        <input class="form-control w-100" type="text" name="pancard_no" id="pancard_no" value="{{ $user_verify_info?->pancard_no }}">
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <div class="input-form">
+                                        <label class="d-block" for="bank_account_no">{{ __('Bank Account Number') }}</label>
+                                        <input class="form-control w-100" type="text" name="bank_account_no" id="bank_account_no" value="{{ $user_verify_info?->bank_account_no }}">
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <div class="input-form">
+                                        <label class="d-block" for="ifsc_code">{{ __('IFSC Code') }}</label>
+                                        <input class="form-control w-100" type="text" name="ifsc_code" id="ifsc_code" value="{{ $user_verify_info?->ifsc_code }}">
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-3">
+                                    <div class="input-form">
+                                        <label class="d-block" id="id_number_label" for="identification_number">{{ __('Aadhar ID/Passport/Driving License Number') }} <span class="text-danger">*</span> </label>
                                         <input class="form-control w-100" type="number" name="identification_number" id="identification_number" value="{{ $user_verify_info?->identification_number }}">
                                     </div>
                                 </div>
@@ -630,5 +650,38 @@
             });
         })(jQuery);
     </script>
+
+    <script>
+    $(document).ready(function() {
+        // Change the label when a radio button is selected
+        $('input[name="id_type"]').change(function() {
+            var selectedText = '';
+            switch($(this).val()) {
+                case 'national':
+                    selectedText = '{{ __("Aadhar ID Number") }}';
+                    break;
+                case 'passport':
+                    selectedText = '{{ __("Passport Number") }}';
+                    break;
+                case 'driving':
+                    selectedText = '{{ __("Driving License Number") }}';
+                    break;
+                default:
+                    selectedText = '{{ __("National NID/Passport/Driving License Number") }}';
+            }
+            $('#id_number_label').html(selectedText + ' <span class="text-danger">*</span>');
+            
+            // Also update the hidden field value
+            $('input[name="identification_type"]').val($(this).val());
+        });
+        
+        // Initialize label based on existing value
+        var initialType = $('input[name="identification_type"]').val();
+        if(initialType) {
+            $('input[name="id_type"][value="' + initialType + '"]').prop('checked', true).trigger('change');
+        }
+    });
+    </script>
+
 @endsection
 

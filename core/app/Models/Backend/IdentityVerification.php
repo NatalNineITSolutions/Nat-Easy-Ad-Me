@@ -26,6 +26,9 @@ class IdentityVerification extends Model
         'address',
         'verify_by',
         'status',
+        'pancard_no',
+        'bank_account_no',
+        'ifsc_code',
     ];
 
     protected $casts = ['status'=>'integer','is_read'=>'integer'];

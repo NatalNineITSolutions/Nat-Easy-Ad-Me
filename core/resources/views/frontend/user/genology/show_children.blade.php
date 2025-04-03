@@ -15,9 +15,16 @@
                     <li>
                         {{-- Render the parent node --}}
                         <div class="node root-node">
-                            <div class="avatar-circle">
-                                <img src="{{ $parent->avatar ?? '/assets/uploads/media-uploader/avatar.jpg' }}"
-                                    alt="User Avatar">
+                            <div class="avatar-circle {{ $parent->gender == 'female' ? 'female' : 'male' }} 
+                                {{ ($parent->leftBV ?? 0) == 0 && ($parent->rightBV ?? 0) == 0 ? 'zero-bv' : '' }}">
+                                <a href="{{ route('user.user.mlm.children', ['id' => $parent->id]) }}">
+                                    @if($parent->avatar)
+                                        <img src="{{ asset($parent->avatar) }}" alt="User Avatar">
+                                    @else
+                                        <img src="{{ asset($parent->gender == 'female' ? 'assets/uploads/media-uploader/girlavatart.jpg' : 'assets/uploads/media-uploader/avatar.jpg') }}" 
+                                             alt="Default Avatar">
+                                    @endif
+                                </a>
                             </div>
                             <span class="node-id">{{ $parent->partner_id ?? 'N/A' }}</span>
                             <span class="node-name">{{ $parent->first_name ?? 'N/A' }}</span>

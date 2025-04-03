@@ -379,21 +379,21 @@
                                 </div>
                                 <div class="col-12 mt-3">
                                     <div class="input-form">
-                                        <label class="d-block" for="pancard_no">{{ __('Pancard Number') }}</label>
+                                        <label class="d-block" for="pancard_no">{{ __('Pancard Number') }}<span class="text-danger">*</span></label>
                                         <input class="form-control w-100" type="text" name="pancard_no" id="pancard_no" value="{{ $user_verify_info?->pancard_no }}">
                                     </div>
                                 </div>
 
                                 <div class="col-12 mt-3">
                                     <div class="input-form">
-                                        <label class="d-block" for="bank_account_no">{{ __('Bank Account Number') }}</label>
+                                        <label class="d-block" for="bank_account_no">{{ __('Bank Account Number') }}<span class="text-danger">*</span></label>
                                         <input class="form-control w-100" type="text" name="bank_account_no" id="bank_account_no" value="{{ $user_verify_info?->bank_account_no }}">
                                     </div>
                                 </div>
 
                                 <div class="col-12 mt-3">
                                     <div class="input-form">
-                                        <label class="d-block" for="ifsc_code">{{ __('IFSC Code') }}</label>
+                                        <label class="d-block" for="ifsc_code">{{ __('IFSC Code') }}<span class="text-danger">*</span></label>
                                         <input class="form-control w-100" type="text" name="ifsc_code" id="ifsc_code" value="{{ $user_verify_info?->ifsc_code }}">
                                     </div>
                                 </div>

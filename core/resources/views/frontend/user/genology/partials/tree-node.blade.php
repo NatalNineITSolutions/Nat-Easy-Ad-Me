@@ -2,15 +2,17 @@
     <ul class="tree">
         <li>
             <div class="node root-node">
-                <div class="avatar-circle {{ $node->gender == 'female' ? 'female' : 'male' }} {{ ($node->leftBV ?? 0) == 0 && ($node->rightBV ?? 0) == 0 ? 'zero-bv' : '' }}">
-                    <a href="{{ route('user.user.mlm.children', ['id' => $node->id]) }}">
-                        @if($node->avatar)
-                            <img src="{{ $node->avatar }}" alt="User Avatar">
-                        @else
-                            <img src="{{ $node->gender == 'female' ? '/assets/uploads/media-uploader/girlavatart.jpg' : '/assets/uploads/media-uploader/avatar.jpg' }}" alt="Default Avatar">
-                        @endif
-                    </a>
-                </div>
+                    <div class="avatar-circle {{ $node->gender == 'female' ? 'female' : 'male' }} 
+                        {{ ($node->leftBV ?? 0) == 0 && ($node->rightBV ?? 0) == 0 ? 'zero-bv' : '' }}">
+                        <a href="{{ route('user.user.mlm.children', ['id' => $node->id]) }}">
+                            @if($node->avatar)
+                                <img src="{{ $node->avatar }}" alt="User Avatar">
+                            @else
+                                <img src="{{ $node->gender === 'female' ? asset('assets/uploads/media-uploader/girlavatart.jpg') : asset('assets/uploads/media-uploader/avatar.jpg') }}" 
+                                     alt="Default Avatar">
+                            @endif
+                        </a>
+                    </div>
                 <span class="node-id">{{ $node->partner_id ?? 'N/A' }}</span>
                 <span class="node-name">{{ $node->first_name ?? 'N/A' }}</span>
                 <div class="bv-points">
@@ -129,17 +131,30 @@
             height: 60px;
             border-radius: 50%;
             overflow: hidden;
-            background: #1a237e; /* Default blue color */
             margin-bottom: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background-color 0.3s ease; /* Smooth transition */
+            transition: all 0.3s ease;
+            position: relative;
         }
 
-        /* Red circle when both BV values are 0 */
+        /* Male (default) styling */
+        .avatar-circle.male {
+            background: #1a237e; /* Blue color for male */
+            border: 3px solid #1a237e;
+        }
+
+        /* Female styling */
+        .avatar-circle.female {
+            background: #d81b60; /* Pink color for female */
+            border: 3px solid #d81b60;
+        }
+
+        /* Zero BV styling - this will override gender colors */
         .avatar-circle.zero-bv {
-            border: 5px solid #ff5252; 
+            border: 3px solid #ff5252 !important;
+            background: transparent !important;
         }
 
         .avatar-circle img {
@@ -147,7 +162,31 @@
             height: 100%;
             object-fit: cover;
             border-radius: 50%;
-            position: relative;
+        }
+        
+        /* Mobile adjustments - ONLY padding reduction and scroll */
+        @media only screen and (max-width: 768px) {
+            .mlm-tree {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+                padding: 20px 10px; /* Slightly reduce side padding */
+            }
+
+            .tree {
+                min-width: 600px; /* Ensure tree maintains its width */
+                width: auto;
+                display: inline-block; /* Prevent vertical overflow */
+            }
+
+            /* Optional: Add scroll indicator for mobile */
+            .mlm-tree::-webkit-scrollbar {
+                height: 5px;
+            }
+            
+            .mlm-tree::-webkit-scrollbar-thumb {
+                background: rgba(255,255,255,0.3);
+                border-radius: 5px;
+            }
         }
     </style>
 @endsection

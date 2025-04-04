@@ -53,12 +53,10 @@
                                                         @endif
                                                     </div>
 
-                                                    <!-- Partner & Parent Details -->
-                                                    <div class="seller-partner-info mt-3 d-flex">
-                                                        <span><strong>{{ __('Sponsor ID:') }}</strong>
-                                                            {{ $user->partner_id ?? __('N/A') }}</span>
-                                                        <span class="ms-3"><strong>{{ __('Referred By:') }}</strong>
-                                                            {{ $user->parent->fullname ?? __('N/A') }}</span>
+                                                    <!-- Users age -->
+                                                    <div class="seller-age mt-2">
+                                                        <span><strong>{{ __('Age:') }}</strong> {{ $age }}
+                                                            {{ __('years') }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -104,6 +102,91 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- Referral and Business Stats -->
+                                <div class="referral-business-stats">
+                                    <div class="stats-grid">
+                                        <div class="stats-card">
+                                            <h4 class="stats-title">{{ __('Referrals') }}</h4>
+                                            <div class="stats-content">
+                                                <div class="stat-item">
+                                                    <span class="stat-label">{{ __('Sponsor ID:') }}</span>
+                                                    <span class="stat-value">{{ $user->partner_id ?? __('N/A') }}</span>
+                                                </div>
+                                                <div class="stat-item">
+                                                    <span class="stat-label">{{ __('Name:') }}</span>
+                                                    <span class="stat-value">{{ $user->fullname }}</span>
+                                                </div>
+                                                <div class="stat-item">
+                                                    <span class="stat-label">{{ __('Referred by:') }}</span>
+                                                    <span class="stat-value">{{ $user->parent->fullname ?? __('N/A') }}
+                                                        ({{ $user->parent->partner_id ?? __('N/A') }})</span>
+                                                </div>
+                                                <div class="stat-item">
+                                                    <span class="stat-label">{{ __('My Referrals:') }}</span>
+                                                    <span class="stat-value">{{ $directReferralsCount }}/{{ $directReferralsLimit }}</span>
+                                                </div>
+                                                <div class="stat-item">
+                                                    <span class="stat-label">{{ __('BV from Referrals:') }}</span>
+                                                    <span class="stat-value">{{number_format($totalBvPoints)}}</span>
+                                                </div>
+                                                <div class="stat-item">
+                                                    <span class="stat-label">{{ __('Referral Commission:') }}</span>
+                                                    <span class="stat-value">{{ $referralCommission }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="stats-card">
+                                            <h4 class="stats-title">{{ __('Business') }}</h4>
+                                            <div class="stats-content">
+                                                <div class="stat-item">
+                                                    <span class="stat-label">{{ __('Status:') }}</span>
+                                                    <span class="stat-value">DISTRIBUTOR</span>
+                                                </div>
+                                                <div class="stat-item">
+                                                    <span class="stat-label">{{ __('Self Purchase BV:') }}</span>
+                                                    <span class="stat-value">0</span>
+                                                </div>
+                                                <div class="stat-item">
+                                                    <span class="stat-label">{{ __('Team BV Left:') }}</span>
+                                                    <span class="stat-value">{{ number_format($leftBvPoints) }}</span>
+                                                </div>
+                                                <div class="stat-item">
+                                                    <span class="stat-label">{{ __('Team BV Right:') }}</span>
+                                                    <span class="stat-value">{{ $rightBvPoints ?? 0 }}</span>
+                                                </div>
+                                                <div class="stat-item">
+                                                    <span class="stat-label">{{ __('Business Points(BP):') }}</span>
+                                                    <span class="stat-value">4 → 10</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="stats-card">
+                                            <h4 class="stats-title">{{ __('Income') }}</h4>
+                                            <div class="stats-content">
+                                                <div class="stat-item">
+                                                    <span class="stat-label">{{ __('Total BP:') }}</span>
+                                                    <span class="stat-value">4 → 10</span>
+                                                </div>
+                                                <div class="stat-item">
+                                                    <span class="stat-label">{{ __('Equalized BP:') }}</span>
+                                                    <span class="stat-value">4</span>
+                                                </div>
+                                                <div class="stat-item">
+                                                    <span class="stat-label">{{ __('Balanced BP:') }}</span>
+                                                    <span class="stat-value">0 → 6</span>
+                                                </div>
+                                                <div class="stat-item">
+                                                    <span class="stat-label">{{ __('Income Amount:') }}</span>
+                                                    <span class="stat-value">0</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <!--Add Listing States-->
                                 <div class="all-list-state mt-20">
                                     <div class="row g-3">
@@ -181,4 +264,85 @@
 @endsection
 @section('scripts')
     <script src="{{asset('assets/backend/js/sweetalert2.js')}}"></script>
+@endsection
+
+@section('style')
+    <style>
+        .referral-business-stats {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .stats-card {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .stats-title {
+            font-size: 1.125rem;
+            line-height: 1.75rem;
+            font-weight: 600;
+            color: #111827;
+            padding-bottom: 0.75rem;
+            margin-bottom: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .stats-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-label {
+            color: #4b5563;
+            font-weight: 500;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+        }
+
+        .stat-value {
+            color: #111827;
+            font-weight: 600;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            .referral-business-stats {
+                padding: 1rem;
+            }
+
+            .stats-card {
+                padding: 1rem;
+            }
+        }
+    </style>
 @endsection

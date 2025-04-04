@@ -12,7 +12,7 @@
             font-size: 13px;
         }
 
-        .select2-container .select2-selection--single{
+        .select2-container .select2-selection--single {
             padding: 15px 16px;
         }
     </style>
@@ -119,6 +119,14 @@
                             </div>
 
                             <div class="col-lg-6 col-md-12">
+                                <label class="infoTitle">{{ __('Date of Birth') }}</label>
+                                <div class="input-form input-form2">
+                                    <input type="date" class="ps-3 py-4" name="dob" value="{{ old('dob') }}" id="dob"
+                                        placeholder="{{ __('Date of Birth') }}" style="height: 40px;">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12">
                                 <label class="infoTitle">{{ __('Gender') }}</label>
                                 <div class="input-form input-form2">
                                     <select class="form-select ps-3" name="gender" id="gender" style="height: 40px;">
@@ -126,7 +134,8 @@
                                         <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>{{ __('Male') }}
                                         </option>
                                         <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>
-                                            {{ __('Female') }}</option>
+                                            {{ __('Female') }}
+                                        </option>
                                     </select>
                                 </div>
                             </div>
@@ -168,14 +177,14 @@
                             </div>
 
                             <!-- @if(get_static_option('site_google_captcha_enable') == 'on')
-                                                        <div class="col-md-12 my-3">
-                                                            <div class="g-recaptcha" data-sitekey="{{ get_static_option('recaptcha_2_site_key')}}">
-                                                            </div>
-                                                            @if ($errors->has('g-recaptcha-response'))
-                                                                <span class="text-danger">{{ $errors->first('g-recaptcha-response') }}</span>
-                                                            @endif
-                                                        </div>
-                                                    @endif -->
+                                                                <div class="col-md-12 my-3">
+                                                                    <div class="g-recaptcha" data-sitekey="{{ get_static_option('recaptcha_2_site_key')}}">
+                                                                    </div>
+                                                                    @if ($errors->has('g-recaptcha-response'))
+                                                                        <span class="text-danger">{{ $errors->first('g-recaptcha-response') }}</span>
+                                                                    @endif
+                                                                </div>
+                                                            @endif -->
 
                             <div class="col-sm-12 mt-2">
                                 <div class="btn-wrapper text-center">
@@ -384,6 +393,7 @@
                     let username = $('#username').val();
                     let email = $('#email').val();
                     let phone = $('#phone').val();
+                    let dob = $('#dob').val();
                     let password = $('#password').val();
                     let confirm_password = $('#confirm_password').val();
                     let gender = $('#gender').val();
@@ -393,7 +403,7 @@
                     let password_validation_text = $('#check_password_match').text();
                     let phone_validation_text = $('#phone_availability span').text();
 
-                    if (first_name == '' || last_name == '' || gender == '' || username == '' || email == '' || phone == '' || password == '' || confirm_password == '') {
+                    if (first_name == '' || last_name == '' || gender == '' || username == '' || email == '' || phone == '' || dob == '' || password == '' || confirm_password == '') {
                         toastr_warning_js("{{ __('Please fill all fields') }}")
                         return false
                     } else if (username_validation_text == 'Sorry! Username name is not available' || username_validation_text == 'Enter valid username') {
@@ -416,6 +426,20 @@
                         return false
                     }
 
+                    // Validate Date of Birth (must be at least 18 years old)
+                    const today = new Date();
+                    const birthDate = new Date(dob);
+                    const age = today.getFullYear() - birthDate.getFullYear();
+                    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                        age--;
+                    }
+
+                    if (age < 18) {
+                        toastr_warning_js("{{ __('You must be at least 18 years old to register') }}");
+                        return false;
+                    }
 
                     // terms and condition check
                     if (!$('.terms-conditions .check-input').is(":checked")) {
@@ -432,5 +456,15 @@
 
             });
         }(jQuery));
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const dobInput = document.getElementById("dob");
+
+            dobInput.addEventListener("click", function () {
+                this.showPicker();
+            });
+        });
     </script>
 @endsection

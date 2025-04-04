@@ -30,6 +30,8 @@ class AuthController extends Controller
             'password' => 'required|min:6|max:191',
             'confirm_password' => 'required|same:password',
             'partner_id' => 'nullable|exists:users,partner_id',
+            'gender' => 'required|in:male,female', 
+            'dob' => 'required|date|before:today',
         ];
 
         // Validate the request
@@ -84,6 +86,8 @@ class AuthController extends Controller
                 'partner_id' => $partnerId,
                 'partner_name' => $partnerName,
                 'parent_id' => $parent_id,
+                'gender'          => $request->gender,
+                'dob'             => $request->dob,
             ]);
 
             Log::info('User created successfully.', ['user_id' => $user->id]);

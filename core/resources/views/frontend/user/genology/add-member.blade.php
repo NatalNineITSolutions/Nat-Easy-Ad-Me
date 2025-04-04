@@ -13,6 +13,10 @@
         span#phone_availability {
             font-size: 13px;
         }
+
+        .select2-container .select2-selection--single {
+            padding: 15px 16px;
+        }
     </style>
 @endsection
 
@@ -102,6 +106,28 @@
                                     <input type="hidden" id="country-code" name="country_code">
                                     <input type="tel" name="phone" id="phone" placeholder="{{ __('Type Phone') }}">
                                     <span id="phone_availability"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12">
+                                <label class="infoTitle">{{ __('Date of Birth') }}</label>
+                                <div class="input-form input-form2">
+                                    <input type="date" class="ps-3 py-4" name="dob" value="{{old('dob')}}" id="dob"
+                                        placeholder="{{ __('Date of Birth') }}" style="height: 40px;">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12">
+                                <label class="infoTitle">{{ __('Gender') }}</label>
+                                <div class="input-form input-form2">
+                                    <select class="form-select ps-3" name="gender" id="gender" style="height: 40px;">
+                                        <option value="">{{ __('Select Gender') }}</option>
+                                        <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>{{ __('Male') }}
+                                        </option>
+                                        <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>
+                                            {{ __('Female') }}
+                                        </option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -232,5 +258,15 @@
                 });
             });
         }(jQuery));
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const dobInput = document.getElementById("dob");
+
+            dobInput.addEventListener("click", function () {
+                this.showPicker();
+            });
+        });
     </script>
 @endsection

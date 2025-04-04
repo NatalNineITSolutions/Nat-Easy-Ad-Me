@@ -24,6 +24,11 @@ class DashboardController extends Controller
             'membershipHistory'
         ])->findOrFail($user_id);
 
+        // Calculate BV points
+        $leftBvPoints = $user->leftChild ? $user->leftChild->userBvs->sum('bv_points') : 0;
+        $rightBvPoints = $user->rightChild ? $user->rightChild->userBvs->sum('bv_points') : 0;
+        $totalBvPoints = $leftBvPoints + $rightBvPoints;
+
         // Get current membership details
         $current_membership = optional($user->membershipUser);
         $previous_membership = $user->membershipHistory()->latest('created_at')->first();
@@ -55,6 +60,22 @@ class DashboardController extends Controller
         $user_review_count = $user->reviews?->count();
         $user_given_reviews = Review::where('reviewer_id', $user_id)->take(500)->get();
 
+        // Calculate age from dob
+        $age = null;
+        if ($user->dob) {
+            $age = now()->diffInYears($user->dob);
+        }
+
+        // Count direct referrals (immediate children)
+        $directReferralsCount = $user->children()->count();
+        $directReferralsLimit = 206;
+
+        // Get referral commission rate from static_option table
+        $referralCommissionRate = get_static_option('payout_value') ?? 0;
+
+        // Calculate referral commission
+        $referralCommission = $totalBvPoints * $referralCommissionRate;
+
         return view('frontend.user.dashboard.dashboard', [
             'user' => $user,
             'user_ads_posted' => $user_ads_posted,
@@ -66,7 +87,15 @@ class DashboardController extends Controller
             'user_given_reviews' => $user_given_reviews,
             'remaining_listings' => $remaining_listings,
             'listing_limit' => $current_membership->listing_limit,
-            'show_upgrade' => $show_upgrade
+            'show_upgrade' => $show_upgrade,
+            'leftBvPoints' => $leftBvPoints,
+            'rightBvPoints' => $rightBvPoints,
+            'age' => $age,
+            'totalBvPoints' => $totalBvPoints,
+            'directReferralsCount' => $directReferralsCount,
+            'directReferralsLimit' => $directReferralsLimit,
+            'referralCommission' => $referralCommission,
+            'referralCommissionRate' => $referralCommissionRate
         ]);
     }
 

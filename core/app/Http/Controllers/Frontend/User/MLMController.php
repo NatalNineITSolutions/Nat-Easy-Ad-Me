@@ -63,6 +63,8 @@ class MLMController extends Controller
                 // Hidden fields from the form:
                 'sponsor_id' => 'required|exists:users,id',
                 'position' => 'required|in:left,right',
+                'gender' => 'required|in:male,female', 
+                'dob' => 'required|date|before:today',
             ];
 
             if (get_static_option('site_google_captcha_enable') == 'on') {
@@ -109,6 +111,8 @@ class MLMController extends Controller
                     'partner_id' => $partnerId,
                     'partner_name' => $partnerName,
                     'parent_id' => $parent_id,
+                    'gender' => $request->gender,
+                    'dob' => $request->dob,
                     'position' => $position,
                 ]);
 

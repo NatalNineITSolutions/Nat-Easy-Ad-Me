@@ -69,13 +69,13 @@
                                     <div class="input-form-wraper">
                                         <div class="d-flex justify-content-between gap-3">
                                             <div class="input-form">
-                                                <label for="title">{{ __('First Name') }} <span class="text-danger">*</span> </label>
-                                                <input id="first_name" value="{{ Auth::guard('web')->user()->first_name ?? '' }}" class="w-100 input-field">
+                                                <label for="title">{{ __('First Name') }}</label>
+                                                <input id="first_name" value="{{ Auth::guard('web')->user()->first_name ?? '' }}" class="w-100 input-field" readonly>
                                             </div>
 
                                             <div class="input-form">
-                                                <label for="title">{{ __('Last Name') }} <span class="text-danger">*</span> </label>
-                                                <input id="last_name" value="{{ Auth::guard('web')->user()->last_name ?? '' }}" class="w-100 input-field">
+                                                <label for="title">{{ __('Last Name') }}</label>
+                                                <input id="last_name" value="{{ Auth::guard('web')->user()->last_name ?? '' }}" class="w-100 input-field" readonly>
                                             </div>
                                         </div>
 

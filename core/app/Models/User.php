@@ -69,7 +69,8 @@ class User extends Authenticatable
         'membership_id',
         'bv_points',
         'profile_completed',
-        'gender'
+        'gender',
+        'dob'
     ];
 
     /**

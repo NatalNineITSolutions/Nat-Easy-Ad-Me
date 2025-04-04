@@ -367,7 +367,7 @@
                                </div>
                                 <div class="col-12 mt-3">
                                     <div class="input-form">
-                                        <label class="d-block" for="national-id-number">{{ __('Zip Code') }} <span class="text-danger">*</span> </label>
+                                        <label class="d-block" for="national-id-number">{{ __('Pin Code') }} <span class="text-danger">*</span> </label>
                                         <input class="form-control w-100" type="number" name="zip_code" id="zip_code" value="{{  $user_verify_info?->zip_code }}">
                                     </div>
                                 </div>

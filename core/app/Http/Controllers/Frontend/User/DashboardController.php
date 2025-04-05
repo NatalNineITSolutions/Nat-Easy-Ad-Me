@@ -21,60 +21,84 @@ class DashboardController extends Controller
             'user_country',
             'user_state',
             'membershipUser',
-            'membershipHistory'
+            'membershipHistory',
+            'parent', 
         ])->findOrFail($user_id);
-
-        // Calculate BV points
-        $leftBvPoints = $user->leftChild ? $user->leftChild->userBvs->sum('bv_points') : 0;
-        $rightBvPoints = $user->rightChild ? $user->rightChild->userBvs->sum('bv_points') : 0;
-        $totalBvPoints = $leftBvPoints + $rightBvPoints;
-
+        
         // Get current membership details
         $current_membership = optional($user->membershipUser);
         $previous_membership = $user->membershipHistory()->latest('created_at')->first();
 
         // Ensure user has an active membership
-        if (!$current_membership->id) {
-            return back()->with('error', 'No active membership found.');
-        }
+        // if (!$current_membership->id) {
+        //     return back()->with('error', 'No active membership found.');
+        // }
 
         // Count all ads posted by the user
         $user_ads_posted = $user->listings()->count();
 
-        // Identify if the user upgraded their membership
         $membership_upgraded = $previous_membership && $previous_membership->membership_id != $current_membership->membership_id;
 
         $remaining_listings = $current_membership->listing_limit;
 
-        // Count other details
         $user_active_listings = $user->listings()->where('is_published', 1)->where('status', 1)->count();
         $user_deactivated_ads = $user->listings()->where(function ($query) {
             $query->where('is_published', 0)->orWhere('status', 0);
         })->count();
         $user_favorite_ads = ListingFavorite::where('user_id', $user_id)->count();
 
-        // Show upgrade option if listing limit is reached
         $show_upgrade = ($current_membership->listing_limit > 0 && $remaining_listings === 0);
 
         $averageRating = $user->reviews?->avg('rating');
         $user_review_count = $user->reviews?->count();
         $user_given_reviews = Review::where('reviewer_id', $user_id)->take(500)->get();
 
-        // Calculate age from dob
         $age = null;
         if ($user->dob) {
             $age = now()->diffInYears($user->dob);
         }
 
-        // Count direct referrals (immediate children)
+        $bvvalue = get_static_option('payout_value') ?? 0;
+
         $directReferralsCount = $user->children()->count();
-        $directReferralsLimit = 206;
+        $directReferralsLimit = get_static_option('maximum_referrals') ?? 0;
 
-        // Get referral commission rate from static_option table
-        $referralCommissionRate = get_static_option('payout_value') ?? 0;
+        $leftBvPoints = $user->leftChild ? $user->leftChild->userBvs->sum('bv_points') : 0;
+        $rightBvPoints = $user->rightChild ? $user->rightChild->userBvs->sum('bv_points') : 0;
+        $totalBvPoints = $directReferralsCount * $bvvalue;
 
-        // Calculate referral commission
-        $referralCommission = $totalBvPoints * $referralCommissionRate;
+        $referralCommissionRate = $user->referral_commission ?? 0;
+
+        $referralCommission = $referralCommissionRate;
+
+        $bpConversionRate = get_static_option('bp_value') ?? 0;
+
+        $leftBP = floor($leftBvPoints / $bpConversionRate);
+        $rightBP = floor($rightBvPoints / $bpConversionRate);
+
+        $equalizedBP = min($leftBP, $rightBP);
+
+        $balancedLeftBP = $leftBP - $equalizedBP;
+        $balancedRightBP = $rightBP - $equalizedBP;
+
+        $businesspoint = "{$leftBP} <> {$rightBP}";
+        $totalBP = "{$leftBvPoints} <> {$rightBvPoints}";
+        $balancedBP = "{$balancedLeftBP} <> {$balancedRightBP}";
+
+        $bvFromReferrals = $user->children()->with('userBvs')->get()->sum(function ($child) {
+            return $child->userBvs->sum('bv_points');
+        });
+
+        $bv_value = get_static_option('payout_value') ?? 0;
+
+        $income = $directReferralsCount * $bv_value;
+
+        $showIncome = $equalizedBP > 0;
+
+        $selfPurchasedBv = 0;
+        if ($current_membership->id) {
+            $selfPurchasedBv = optional($current_membership->membership)->bv_points ?? 0;
+        }
 
         return view('frontend.user.dashboard.dashboard', [
             'user' => $user,
@@ -95,7 +119,15 @@ class DashboardController extends Controller
             'directReferralsCount' => $directReferralsCount,
             'directReferralsLimit' => $directReferralsLimit,
             'referralCommission' => $referralCommission,
-            'referralCommissionRate' => $referralCommissionRate
+            'referralCommissionRate' => $referralCommissionRate,
+            'totalBP' => $totalBP,
+            'equalizedBP' => $equalizedBP,
+            'balancedBP' => $balancedBP,
+            'bvFromReferrals' => $bvFromReferrals,
+            'income' => $income,
+            'showIncome' => $showIncome,
+            'businesspoint' => $businesspoint,
+            'selfPurchasedBv' => $selfPurchasedBv,
         ]);
     }
 

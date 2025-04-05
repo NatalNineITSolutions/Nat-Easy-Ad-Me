@@ -70,7 +70,9 @@ class User extends Authenticatable
         'bv_points',
         'profile_completed',
         'gender',
-        'dob'
+        'dob',
+        'referral_commission',
+        'sponsor_id',
     ];
 
     /**
@@ -255,4 +257,10 @@ class User extends Authenticatable
             'id' // Local key on profile_listings table
         );
     }
+
+    public function sponsor()
+    {
+        return $this->belongsTo(User::class, 'sponsor_id');
+    }
+
 }

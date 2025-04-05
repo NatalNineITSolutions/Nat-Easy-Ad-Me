@@ -119,16 +119,19 @@
                                                 </div>
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('Referred by:') }}</span>
-                                                    <span class="stat-value">{{ $user->parent->fullname ?? __('N/A') }}
-                                                        ({{ $user->parent->partner_id ?? __('N/A') }})</span>
+                                                    <span class="stat-value">
+                                                        {{ $user->sponsor->fullname ?? 'N/A' }}
+                                                        ({{ $user->sponsor->partner_id ?? '' }})
+                                                    </span>
                                                 </div>
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('My Referrals:') }}</span>
-                                                    <span class="stat-value">{{ $directReferralsCount }}/{{ $directReferralsLimit }}</span>
+                                                    <span
+                                                        class="stat-value">{{ $directReferralsCount }}/{{ $directReferralsLimit }}</span>
                                                 </div>
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('BV from Referrals:') }}</span>
-                                                    <span class="stat-value">{{number_format($totalBvPoints)}}</span>
+                                                    <span class="stat-value">{{number_format($bvFromReferrals)}}</span>
                                                 </div>
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('Referral Commission:') }}</span>
@@ -146,7 +149,7 @@
                                                 </div>
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('Self Purchase BV:') }}</span>
-                                                    <span class="stat-value">0</span>
+                                                    <span class="stat-value">{{$selfPurchasedBv}}</span>
                                                 </div>
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('Team BV Left:') }}</span>
@@ -158,7 +161,7 @@
                                                 </div>
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('Business Points(BP):') }}</span>
-                                                    <span class="stat-value">4 → 10</span>
+                                                    <span class="stat-value">{{ $businesspoint }}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -168,20 +171,27 @@
                                             <div class="stats-content">
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('Total BP:') }}</span>
-                                                    <span class="stat-value">4 → 10</span>
+                                                    <span class="stat-value">{{ $totalBP }}</span>
                                                 </div>
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('Equalized BP:') }}</span>
-                                                    <span class="stat-value">4</span>
+                                                    <span class="stat-value">{{ $equalizedBP }}</span>
                                                 </div>
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('Balanced BP:') }}</span>
-                                                    <span class="stat-value">0 → 6</span>
+                                                    <span class="stat-value">{{ $balancedBP }}</span>
                                                 </div>
-                                                <div class="stat-item">
-                                                    <span class="stat-label">{{ __('Income Amount:') }}</span>
-                                                    <span class="stat-value">0</span>
-                                                </div>
+                                                @if($showIncome)
+                                                    <div class="stat-item">
+                                                        <span class="stat-label">{{ __('Income:') }}</span>
+                                                        <span class="stat-value">{{ number_format($income) }}</span>
+                                                    </div>
+                                                @else
+                                                    <div class="stat-item">
+                                                        <span class="stat-label">{{ __('Income:') }}</span>
+                                                        <span class="stat-value">{{ __('0') }}</span>
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -295,7 +305,7 @@
         }
 
         .stats-card.full-width {
-            grid-column: 1 / -1;
+            grid-column: 1 / -1;j
         }
 
         .stats-title {

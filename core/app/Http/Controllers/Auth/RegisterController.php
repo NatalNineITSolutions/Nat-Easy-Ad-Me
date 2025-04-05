@@ -322,18 +322,17 @@ class RegisterController extends Controller
             Log::info('User registration request received.', ['request_data' => $request->all()]);
 
             $validationRules = [
-                'first_name'      => 'required|max:191',
-                'last_name'       => 'required|max:191',
-                'email'           => 'required|email|unique:users|max:191',
-                'username'        => 'required|unique:users|max:191',
-                'phone'           => 'required|max:191',
-                'country_code'    => 'nullable|max:10',
-                'password'        => 'required|min:6|max:191',
+                'first_name' => 'required|max:191',
+                'last_name' => 'required|max:191',
+                'email' => 'required|email|unique:users|max:191',
+                'username' => 'required|unique:users|max:191',
+                'phone' => 'required|max:191',
+                'country_code' => 'nullable|max:10',
+                'password' => 'required|min:6|max:191',
                 'confirm_password' => 'required|same:password',
-                'partner_id'      => 'nullable|exists:users,partner_id',
-                'gender'          => 'required|in:male,female', 
-                'dob'             => 'required|date|before:today',
-
+                'partner_id' => 'nullable|exists:users,partner_id',
+                'gender' => 'required|in:male,female',
+                'dob' => 'required|date|before:today',
             ];
 
             if (get_static_option('site_google_captcha_enable') == 'on') {
@@ -361,117 +360,143 @@ class RegisterController extends Controller
 
                 $partnerName = 'EASYADME-' . strtoupper($request->first_name);
 
-                $parent_id = null;
-                $position = null; // 'left' or 'right'
+                $sponsor_id = null;  
+                $parent_id = null;   
+                $position = null;    
 
                 if ($request->partner_id) {
-                    $partner = User::where('partner_id', $request->partner_id)->first();
+                    $partner = User::where('partner_id', $request->partner_id)
+                        ->orWhere('username', $request->partner_id)
+                        ->first();
+                        
                     if ($partner) {
-                        // Check direct children count on the partner with respect to binary slots:
-                        // First, try to fill left slot
+                        $sponsor_id = $partner->id; // Sponsor is always the person whose ID was used
+                
+                        // Binary tree placement logic
+                        $placementFound = false;
+                        
+                        // First try direct placement under partner
                         if (!$partner->children()->where('position', 'left')->exists()) {
                             $parent_id = $partner->id;
                             $position = 'left';
-                        }
-                        // Then try right slot
-                        elseif (!$partner->children()->where('position', 'right')->exists()) {
+                            $placementFound = true;
+                        } elseif (!$partner->children()->where('position', 'right')->exists()) {
                             $parent_id = $partner->id;
                             $position = 'right';
-                        } else {
-                            // Both direct slots are full.
-                            // Now assign spillover: search among partner's children for an available slot.
-                            $placed = false;
-                            foreach ($partner->children as $child) {
-                                if (!$child->children()->where('position', 'left')->exists()) {
-                                    $parent_id = $child->id;
+                            $placementFound = true;
+                        }
+                        
+                        // If direct slots are full, find next available spot in Kavya's subtree
+                        if (!$placementFound) {
+                            // Get all of Kavya's descendants in level order
+                            $descendants = $partner->descendants()->with('children')->get();
+                            
+                            foreach ($descendants as $descendant) {
+                                if (!$descendant->children()->where('position', 'left')->exists()) {
+                                    $parent_id = $descendant->id;
                                     $position = 'left';
-                                    $placed = true;
+                                    $placementFound = true;
                                     break;
-                                } elseif (!$child->children()->where('position', 'right')->exists()) {
-                                    $parent_id = $child->id;
+                                } elseif (!$descendant->children()->where('position', 'right')->exists()) {
+                                    $parent_id = $descendant->id;
                                     $position = 'right';
-                                    $placed = true;
+                                    $placementFound = true;
                                     break;
                                 }
                             }
-                            // Fallback if none found: use the first child of the partner and set a default position
-                            if (!$placed) {
-                                $firstChild = $partner->children->first();
-                                $parent_id = $firstChild->id;
-                                $position = 'left';
+                            
+                            // If still no placement found (unlikely), place under first available spot in tree
+                            if (!$placementFound) {
+                                $firstAvailable = User::whereDoesntHave('children', function($q) {
+                                        $q->where('position', 'left');
+                                    })
+                                    ->orWhereDoesntHave('children', function($q) {
+                                        $q->where('position', 'right');
+                                    })
+                                    ->first();
+                                    
+                                if ($firstAvailable) {
+                                    $parent_id = $firstAvailable->id;
+                                    $position = !$firstAvailable->children()->where('position', 'left')->exists() ? 'left' : 'right';
+                                }
                             }
                         }
-                        Log::info('Referred by existing user.', ['referrer_id' => $parent_id, 'position' => $position]);
+                
+                        Log::info('Referral details', [
+                            'entered_partner_id' => $request->partner_id,
+                            'sponsor_id' => $sponsor_id,
+                            'tree_parent_id' => $parent_id,
+                            'position' => $position
+                        ]);
                     }
                 }
 
                 $default_membership = Membership::find(1);
                 $membership_id = $default_membership ? $default_membership->id : 1;
                 $bv_points = $default_membership ? $default_membership->bv_points : 0;
+                $sponsor = User::where('partner_id', $request->partner_id)->first();
 
                 $user = new User([
-                    'first_name'      => $request->first_name,
-                    'last_name'       => $request->last_name,
-                    'email'           => $request->email,
-                    'username'        => $request->username,
-                    'phone'           => $full_phone_number,
-                    'password'        => Hash::make($request->password),
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'email' => $request->email,
+                    'username' => $request->username,
+                    'phone' => $full_phone_number,
+                    'password' => Hash::make($request->password),
                     'terms_conditions' => 1,
                     'email_verify_token' => $email_verify_token,
-                    'partner_id'      => $partnerId,
-                    'partner_name'    => $partnerName,
-                    'parent_id'       => $parent_id,
-                    'position'        => $position,
-                    'gender'          => $request->gender,
-                    'dob'             => $request->dob,
-
+                    'partner_id' => $partnerId,
+                    'partner_name' => $partnerName,
+                    'sponsor_id' => $sponsor_id,  // Track who referred this user
+                    'parent_id' => $parent_id,    // Binary tree parent
+                    'position' => $position,     // Left/right position
+                    'gender' => $request->gender,
+                    'dob' => $request->dob,
+                    'sponsor_id' => $sponsor->id,
                 ]);
 
                 // Save the user within the nested set structure
                 if ($parent_id) {
                     $parent = User::find($parent_id);
-                    // appendNode() is assumed to be part of a nested set implementation
                     $parent->appendNode($user);
                 } else {
-                    $user->saveAsRoot(); // Save the user as a root node if no sponsor exists
+                    $user->saveAsRoot();
                 }
 
                 Log::info('User created successfully.', ['user_id' => $user->id]);
 
                 UsersBv::create([
-                    'user_id'       => $user->id,
+                    'user_id' => $user->id,
                     'membership_id' => $membership_id,
-                    'bv_points'     => $bv_points,
-                    'upgrade_time'  => now(),
+                    'bv_points' => $bv_points,
+                    'upgrade_time' => now(),
                 ]);
 
-                Log::info('User BV points recorded.', [
-                    'user_id'       => $user->id,
-                    'membership_id' => $membership_id,
-                    'bv_points'     => $bv_points
-                ]);
-
-                // Update the referrer's BV points (if any)
-                if ($parent_id) {
-                    $referrer = User::find($parent_id);
+                // Add commission to sponsor (not necessarily the binary parent)
+                if ($sponsor_id) {
+                    $referrer = User::find($sponsor_id);
                     if ($referrer) {
                         $referrer->bv_points += $bv_points;
+
+                        $commissionAmount = get_static_option('referral_value') ?? 0;
+                        $referrer->referral_commission += $commissionAmount;
                         $referrer->save();
 
-                        Log::info('Referrer BV points updated.', [
-                            'referrer_id'   => $referrer->id,
-                            'new_bv_points' => $referrer->bv_points
+                        Log::info("Commission added to sponsor", [
+                            'sponsor_id' => $referrer->id,
+                            'sponsor_partner_id' => $referrer->partner_id,
+                            'amount' => $commissionAmount,
                         ]);
                     }
                 }
 
                 if (moduleExists("Wallet")) {
                     Wallet::create([
-                        'user_id'           => $user->id,
-                        'balance'           => 0,
+                        'user_id' => $user->id,
+                        'balance' => 0,
                         'remaining_balance' => 0,
-                        'withdraw_amount'   => 0,
-                        'status'            => 1,
+                        'withdraw_amount' => 0,
+                        'status' => 1,
                     ]);
                 }
 

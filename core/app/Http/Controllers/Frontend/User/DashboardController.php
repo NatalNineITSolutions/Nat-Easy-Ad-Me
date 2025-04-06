@@ -22,9 +22,9 @@ class DashboardController extends Controller
             'user_state',
             'membershipUser',
             'membershipHistory',
-            'parent', 
+            'parent',
         ])->findOrFail($user_id);
-        
+
         // Get current membership details
         $current_membership = optional($user->membershipUser);
         $previous_membership = $user->membershipHistory()->latest('created_at')->first();
@@ -70,11 +70,17 @@ class DashboardController extends Controller
         $referralCommissionRate = $user->referral_commission ?? 0;
 
         $referralCommission = $referralCommissionRate;
+        // Fetch the rate, defaulting to null so we can distinguish “not set” vs. zero
+        $bpConversionRate = get_static_option('bp_value');
 
-        $bpConversionRate = get_static_option('bp_value') ?? 0;
+        if (empty($bpConversionRate) || $bpConversionRate <= 0) {
+            error_log("Warning: invalid BP conversion rate: " . var_export($bpConversionRate, true));
+            $bpConversionRate = 1;
+        }
 
-        $leftBP = floor($leftBvPoints / $bpConversionRate);
+        $leftBP  = floor($leftBvPoints  / $bpConversionRate);
         $rightBP = floor($rightBvPoints / $bpConversionRate);
+
 
         $equalizedBP = min($leftBP, $rightBP);
 

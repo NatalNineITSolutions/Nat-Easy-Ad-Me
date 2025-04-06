@@ -18,12 +18,21 @@ class FrontendController extends Controller
             $home_page_id = get_static_option('home_page');
             $page_details = Page::find($home_page_id);
 
-        }catch (\Exception $exception){
+            // Get random active listing
+            $random_ad = Listing::where('status', 1)
+                ->where('is_published', 1)
+                ->inRandomOrder()
+                ->first();
+        } catch (\Exception $exception) {
             $page_details = null;
+            $random_ad = null;
         }
 
-        return view('frontend.pages.frontend-home',compact('page_details'));
-
+        return view('frontend.pages.frontend-home', [
+            'page_details' => $page_details,
+            'random_ad' => $random_ad,
+            'is_home' => true // Add flag to identify home page
+        ]);
     }
 
     public function dynamic_single_page($slug)
@@ -48,17 +57,15 @@ class FrontendController extends Controller
 
             if (in_array($slug, $pages_id_slugs) && $slug === $pages_id_slugs[$static_option['home_page']]) {
                 return redirect()->route('homepage');
-            } elseif(!is_null($user_details)){
+            } elseif (!is_null($user_details)) {
                 return $this->_user_profile($user_details);
             }
 
             $page_type = 'page';
             if (!is_null($page_post)) {
-                return view('frontend.pages.dynamic.dynamic-single', compact(['page_post','page_type']));
+                return view('frontend.pages.dynamic.dynamic-single', compact(['page_post', 'page_type']));
             }
-
-        }catch (\Exception $exception){
-
+        } catch (\Exception $exception) {
         }
 
         abort(404);

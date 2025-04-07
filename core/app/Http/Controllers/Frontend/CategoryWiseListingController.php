@@ -124,10 +124,8 @@ class CategoryWiseListingController extends Controller
 
     protected function showJobSeekers($slug)
     {
-        // Default fallback member ID
         $memberIds = [0];
 
-        // Fetch only active members if Membership module is enabled
         if (moduleExists('Membership') && membershipModuleExistsAndEnable('Membership')) {
             $memberIds = \DB::table('user_memberships')
                 ->where('expire_date', '>=', date('Y-m-d'))
@@ -145,15 +143,6 @@ class CategoryWiseListingController extends Controller
         \Log::info('Fetched Job Seeker Listings:', ['count' => $jobSeekerListings->count()]);
 
         $subcategory = SubCategory::with('category')->where('slug', $slug)->first();
-
-        // $subcategory = (object) [
-        //     'id' => 107,
-        //     'name' => 'Job Seekers',
-        //     'slug' => 'job-seekers',
-        //     'description' => '',
-        //     'category_id' => 54,
-        //     'category' => (object) ['name' => 'Jobs']
-        // ];
 
         $child_category_under_category = ChildCategory::where('sub_category_id', $subcategory->id)
             ->orderBy('name', 'asc')

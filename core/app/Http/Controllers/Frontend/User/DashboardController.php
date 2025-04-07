@@ -9,6 +9,10 @@ use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Models\Backend\Category;
+use Modules\CountryManage\app\Models\Country;
+use App\Models\JobDetail;
+use App\Models\Backend\SubCategory;
 
 class DashboardController extends Controller
 {
@@ -78,7 +82,7 @@ class DashboardController extends Controller
             $bpConversionRate = 1;
         }
 
-        $leftBP  = floor($leftBvPoints  / $bpConversionRate);
+        $leftBP = floor($leftBvPoints / $bpConversionRate);
         $rightBP = floor($rightBvPoints / $bpConversionRate);
 
 
@@ -222,5 +226,75 @@ class DashboardController extends Controller
         if ($node->rightChild) {
             $this->calculateBV($node->rightChild);
         }
+    }
+
+    public function addjobListing(Request $request)
+    {
+        /// Get basic data needed for form
+        $formData = [
+            'categories' => Category::where('status', 1)->get(),
+            'specific_subcategory' => SubCategory::with([
+                'childcategories' => function ($query) {
+                    $query->where('status', 1);
+                }
+            ])
+                ->where('id', 107)
+                ->where('status', 1)
+                ->first(),
+            'countries' => Country::where('status', 1)->get(),
+        ];
+
+        if ($request->isMethod('post')) {
+            $validated = $request->validate([
+                // Personal Information
+                'full_name' => 'required|string|max:255',
+                'email' => 'required|email|max:255',
+                'phone' => 'required|string|max:20',
+                'address' => 'required|string|max:500',
+                'image' => 'nullable|integer|exists:media_uploads,id',
+
+                // Category Selection
+                'child_category_id' => 'required|exists:child_categories,id',
+
+                // Resume/CV
+                'work_experience' => 'required|string',
+                'education' => 'required|string',
+                'skills' => 'required|string',
+                'certifications' => 'nullable|string',
+                'achievements' => 'nullable|string',
+                'projects' => 'nullable|string',
+                'summary' => 'required|string|max:1000',
+                'portfolio_links' => 'nullable|string',
+
+                // Application Details
+                'availability_date' => 'required|date',
+                'work_preference' => 'required|in:remote,hybrid,onsite',
+                'expected_salary' => 'required|numeric',
+                'relocation_willingness' => 'required|boolean',
+                'work_authorization' => 'required|string',
+
+                // Location
+                'country_id' => 'nullable|exists:countries,id',
+                'state_id' => 'nullable|exists:states,id',
+                'city_id' => 'nullable|exists:cities,id',
+            ]);
+
+            // Create job seeker profile
+            JobDetail::create(array_merge(
+                $validated,
+                [
+                    'user_id' => auth()->id(),
+                    'image' => $validated['image'] ?? null,
+                    'category_id' => $formData['specific_subcategory']->category_id,
+                    'sub_category_id' => 107,
+                    'child_category_id' => $validated['child_category_id'],
+                ]
+            ));
+
+            return redirect()->route('user.dashboard')
+                ->with('success', 'Profile submitted successfully!');
+        }
+
+        return view('frontend.user.listings.add-job-listing', $formData);
     }
 }

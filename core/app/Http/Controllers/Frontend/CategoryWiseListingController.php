@@ -66,7 +66,7 @@ class CategoryWiseListingController extends Controller
     {
         // Handle job-seekers as a special case
         if ($slug === 'job-seekers') {
-            return $this->showJobSeekers();
+            return $this->showJobSeekers($slug);
         }
 
         $subcategory = SubCategory::with('category')->where('slug', $slug)->first();
@@ -122,7 +122,7 @@ class CategoryWiseListingController extends Controller
         ));
     }
 
-    protected function showJobSeekers()
+    protected function showJobSeekers($slug)
     {
         // Default fallback member ID
         $memberIds = [0];
@@ -144,16 +144,25 @@ class CategoryWiseListingController extends Controller
             ->paginate(12);
         \Log::info('Fetched Job Seeker Listings:', ['count' => $jobSeekerListings->count()]);
 
-        $subcategory = (object) [
-            'id' => 107,
-            'name' => 'Job Seekers',
-            'slug' => 'job-seekers',
-            'description' => '',
-            'category_id' => 54,
-            'category' => (object) ['name' => 'Jobs']
-        ];
+        $subcategory = SubCategory::with('category')->where('slug', $slug)->first();
 
-        $child_category_under_category = collect([]);
+        // $subcategory = (object) [
+        //     'id' => 107,
+        //     'name' => 'Job Seekers',
+        //     'slug' => 'job-seekers',
+        //     'description' => '',
+        //     'category_id' => 54,
+        //     'category' => (object) ['name' => 'Jobs']
+        // ];
+
+        $child_category_under_category = ChildCategory::where('sub_category_id', $subcategory->id)
+            ->orderBy('name', 'asc')
+            ->take(20)
+            ->get()
+            ->transform(function ($item) {
+                $item->total_listings = JobDetail::where('child_category_id', $item->id)->count();
+                return $item;
+            });
 
         return view('job-seekers.index', [
             'listings' => $jobSeekerListings,
@@ -162,40 +171,101 @@ class CategoryWiseListingController extends Controller
         ]);
     }
 
+    // public function showListingsByChildCategory($slug = null)
+    // {
+    //     $child_category = ChildCategory::with('category', 'subcategory')->where('slug', $slug)->first();
+
+    //     if (empty($child_category)) {
+    //         return redirect_404_page();
+    //     }
+
+    //     $all_listings = collect([]);
+    //     $listing_query = Listing::query();
+    //     $listing_query->with('user');
+
+    //     $memberIds = [0];
+    //     // get all users ids from the users table according to listing table datas
+    //     if (moduleExists('Membership') && membershipModuleExistsAndEnable('Membership')) {
+    //         $memberIds = Listing::query()->select('listings.user_id')
+    //             ->join('user_memberships', 'user_memberships.user_id', '=', 'listings.user_id')
+    //             ->whereNot('listings.user_id', 0)
+    //             ->where('user_memberships.expire_date', '>=', date('Y-m-d'))
+    //             ->distinct()
+    //             ->pluck('user_id')->push(0)->toArray(); // this gives us the user ids
+    //     }
+
+    //     if (!is_null($child_category)) {
+    //         $all_listings = $listing_query->where(function ($query) use ($memberIds) {
+    //             return $query->whereIn('listings.user_id', $memberIds)
+    //                 ->orWhereNotNull('admin_id');
+    //         })
+    //             ->where(['child_category_id' => $child_category->id, 'status' => 1, 'is_published' => 1])
+    //             ->paginate(12);
+    //     }
+
+    //     return view('frontend.pages.listings.category.child-category-wise-listings', compact('all_listings', 'child_category'));
+    // }
+
     public function showListingsByChildCategory($slug = null)
     {
-        $child_category = ChildCategory::with('category', 'subcategory')->where('slug', $slug)->first();
+        $child_category = ChildCategory::with('category', 'subcategory')
+            ->where('slug', $slug)
+            ->first();
 
         if (empty($child_category)) {
             return redirect_404_page();
         }
 
         $all_listings = collect([]);
-        $listing_query = Listing::query();
-        $listing_query->with('user');
+        $listing_query = Listing::with('user');
 
+        // Membership filter (same as before)
         $memberIds = [0];
-        // get all users ids from the users table according to listing table datas
         if (moduleExists('Membership') && membershipModuleExistsAndEnable('Membership')) {
-            $memberIds = Listing::query()->select('listings.user_id')
+            $memberIds = Listing::query()
+                ->select('listings.user_id')
                 ->join('user_memberships', 'user_memberships.user_id', '=', 'listings.user_id')
                 ->whereNot('listings.user_id', 0)
                 ->where('user_memberships.expire_date', '>=', date('Y-m-d'))
                 ->distinct()
-                ->pluck('user_id')->push(0)->toArray(); // this gives us the user ids
+                ->pluck('user_id')
+                ->push(0)
+                ->toArray();
         }
 
-        if (!is_null($child_category)) {
-            $all_listings = $listing_query->where(function ($query) use ($memberIds) {
-                return $query->whereIn('listings.user_id', $memberIds)
-                    ->orWhereNotNull('admin_id');
-            })
-                ->where(['child_category_id' => $child_category->id, 'status' => 1, 'is_published' => 1])
+        // If the *parent* subcategory slug is job-seekers, pull from JobDetail instead
+        if (optional($child_category->subcategory)->slug === 'job-seekers') {
+            $listings = JobDetail::with('user')
+                ->where([
+                    'child_category_id' => $child_category->id
+                ])
+                ->paginate(12);
+
+            return view('job-seekers.child-category-listing', compact(
+                'listings',
+                'child_category'
+            ));
+        } else {
+            $all_listings = $listing_query
+                ->where(function ($query) use ($memberIds) {
+                    $query->whereIn('listings.user_id', $memberIds)
+                        ->orWhereNotNull('admin_id');
+                })
+                ->where([
+                    'child_category_id' => $child_category->id,
+                    'status'            => 1,
+                    'is_published'      => 1,
+                ])
                 ->paginate(12);
         }
 
-        return view('frontend.pages.listings.category.child-category-wise-listings', compact('all_listings', 'child_category'));
+        return view('frontend.pages.listings.category.child-category-wise-listings', compact(
+            'all_listings',
+            'child_category'
+        ));
     }
+
+
     public function loadMoreSubCategories(Request $request)
     {
         $subcategory_under_category = SubCategory::where('category_id', $request->catId)

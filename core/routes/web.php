@@ -20,6 +20,8 @@ use \App\Http\Controllers\Frontend\FrontendListingController;
 use \App\Http\Controllers\Frontend\FrontendUserProfileController;
 use App\Http\Controllers\Frontend\User\MLMController;
 use App\Http\Controllers\Frontend\User\UserController;
+use App\Models\Backend\SubCategory;
+use App\Models\Backend\ChildCategory;
 
 require_once __DIR__ . '/admin.php';
 require_once __DIR__ . '/user.php';
@@ -28,7 +30,7 @@ require_once __DIR__ . '/user.php';
 Route::group(['middleware' => ['globalVariable', 'setlang']], function () {
     Route::controller(LoginController::class)->group(function () {
         Route::get('/admin', 'showLoginForm')->name('admin.login');
-        Route::post('/admin',  'adminLogin');
+        Route::post('/admin', 'adminLogin');
         Route::get('/admin/forget-password', 'showAdminForgetPasswordForm')->name('admin.forget.password');
         Route::get('/admin/reset-password/{user}/{token}', 'showAdminResetPasswordForm')->name('admin.reset.password');
         Route::post('/admin/reset-password', 'AdminResetPassword')->name('admin.reset.password.change');
@@ -76,7 +78,7 @@ Route::group(['middleware' => ['globalVariable', 'maintains_mode', 'setlang']], 
             Route::post('get-subcategory', 'get_subcategory')->name('au.subcategory.all');
         });
 
-        Route::post('/add-new-tag',  [NewTagAddController::class, 'addNewTag'])->name('add.new.tag');
+        Route::post('/add-new-tag', [NewTagAddController::class, 'addNewTag'])->name('add.new.tag');
         // get category, subcategory, child category for select
         Route::post('get-subcategory', [GetCategoryController::class, 'get_sub_category'])->name('get.subcategory');
         Route::post('get-child-category', [GetCategoryController::class, 'get_child_category'])->name('get.subcategory.with.child.category');
@@ -85,7 +87,7 @@ Route::group(['middleware' => ['globalVariable', 'maintains_mode', 'setlang']], 
 
     // listings
     Route::group(['prefix' => 'listing'], function () {
-        Route::get('/{slug?}', [FrontendListingController::class, 'frontendListingDetails'])->name('frontend.listing.details');
+        Route::get('/{slug?}', [FrontendListingController::class, 'frontendListingDetails'])->name('frontend.listing.details');    
         Route::post('/load-more-relevant', [FrontendListingController::class, 'loadMoreListing'])->name('frontend.listing.load-more-relevant');
         Route::post('/store-location', [FrontendListingController::class, 'store']);
 
@@ -157,4 +159,21 @@ Route::group(['middleware' => ['globalVariable', 'maintains_mode', 'setlang']], 
             Route::post('/guest/media-upload/loadmore', [GuestMediaUploadController::class, 'getImageForLoadmore'])->name('web.guest.upload.media.file.loadmore');
         });
     });
+
+    Route::get('/job-seekers/{id}', [CategoryWiseListingController::class, 'show'])->name('frontend.jobseeker.details');
+    Route::get('/job-seeker/{id}/resume', [CategoryWiseListingController::class, 'showResume'])->name('job-seeker.resume');
+
+    Route::get('/get-subcategories', function (Request $request) {
+        $subcategories = SubCategory::where('category_id', $request->category_id)
+            ->where('status', 1)
+            ->get();
+        return response()->json($subcategories);
+    })->name('get.subcategories');
+
+    Route::get('/get-childcategories', function (Request $request) {
+        $childcategories = ChildCategory::where('sub_category_id', $request->sub_category_id)
+            ->where('status', 1)
+            ->get();
+        return response()->json($childcategories);
+    })->name('get.childcategories');
 });

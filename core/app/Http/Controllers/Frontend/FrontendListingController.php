@@ -8,6 +8,7 @@ use App\Models\Backend\Advertisement;
 use App\Models\Backend\Listing;
 use App\Models\Backend\ReportReason;
 use Illuminate\Http\Request;
+use App\Models\JobDetail;
 
 class FrontendListingController extends Controller
 {

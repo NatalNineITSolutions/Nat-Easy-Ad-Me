@@ -29,7 +29,7 @@
                     required></textarea>
             </div>
 
-            @if($listing->category_id == 54)
+            @if($listing->category_id == 54 && $listing->sub_category_id != 107)
                 <div class="input-wraper mt-3">
                     <label for="resume">{{ __('Upload Resume (PDF only)') }}</label>
                     <input class="form-control" type="file" name="resume" id="resume" accept=".pdf" required>

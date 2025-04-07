@@ -52,9 +52,9 @@ class Listing extends Model
         'status',
         'is_published',
         'published_at',
-        'qualification', 
+        'qualification',
         'experience',
-        'expected_salary', 
+        'expected_salary',
         'job_location',
     ];
 
@@ -68,10 +68,11 @@ class Listing extends Model
     }
     public function listing_creator()
     {
-        return $this->belongsTo(User::class,'user_id','id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function category(){
+    public function category()
+    {
         return $this->belongsTo('App\Models\Backend\Category');
     }
 
@@ -80,11 +81,13 @@ class Listing extends Model
         return $this->belongsTo(\App\Models\Backend\SubCategory::class, 'sub_category_id', 'id');
     }
 
-    public function childcategory(){
+    public function childcategory()
+    {
         return $this->belongsTo(ChildCategory::class, 'child_category_id', 'id');
     }
 
-    public function brand(){
+    public function brand()
+    {
         return $this->belongsTo(Brand::class, 'brand_id');
     }
 
@@ -103,18 +106,22 @@ class Listing extends Model
         return $this->belongsTo(City::class, 'city_id');
     }
 
-    public function user(){
-        return $this->belongsTo(User::class,'user_id','id');
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
-    public function admin(){
+    public function admin()
+    {
         return $this->belongsTo(Admin::class, 'admin_id', 'id');
     }
 
-    public function metaData(){
-        return $this->morphOne(MetaData::class,'meta_taggable');
+    public function metaData()
+    {
+        return $this->morphOne(MetaData::class, 'meta_taggable');
     }
-    public function listingCity(){
-        return $this->belongsTo(City::class,'city_id','id');
+    public function listingCity()
+    {
+        return $this->belongsTo(City::class, 'city_id', 'id');
     }
 
     public function listings()
@@ -157,12 +164,15 @@ class Listing extends Model
         return $this->hasMany(ListingFavorite::class, 'listing_id');
     }
 
-    public function user_membership(){
-        return $this->belongsTo('\Modules\Membership\app\Models\UserMembership','user_id','user_id')
+    public function user_membership()
+    {
+        return $this->belongsTo('\Modules\Membership\app\Models\UserMembership', 'user_id', 'user_id')
             ->where('expire_date', '>=', now())
             ->where('user_id', '!=', 0); // check guest user listing
     }
-    public function guestListing(){
+    public function guestListing()
+    {
         return $this->hasOne(GuestListing::class, 'listing_id', 'id');
     }
+
 }

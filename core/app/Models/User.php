@@ -262,5 +262,4 @@ class User extends Authenticatable
     {
         return $this->belongsTo(User::class, 'sponsor_id');
     }
-
 }

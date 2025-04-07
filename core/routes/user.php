@@ -58,6 +58,13 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
 
         Route::get('/mlm/add-member', [MLMController::class, 'addNewMember'])->name('mlm.addNewMember');
 
+        // job seeker
+        Route::controller(DashboardController::class)->group(function () {
+            Route::group(['prefix' => 'listing'], function () {
+                Route::match(['get', 'post'], '/add-job', 'addjobListing')->name('addjob.listing');
+            });
+        });
+
         // add listing
         Route::controller(ListingController::class)->group(function () {
             Route::group(['prefix' => 'listing'], function () {

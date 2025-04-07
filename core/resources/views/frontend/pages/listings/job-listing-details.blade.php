@@ -5,16 +5,16 @@
 @section('page-title')
     <?php
     $page_info = request()->url();
-    $str = explode("/", request()->url());
+    $str = explode('/', request()->url());
     $page_info = $str[count($str) - 2];
-            ?>
-    {{ __(ucwords(str_replace("-", " ", $page_info))) }}
+    ?>
+    {{ __(ucwords(str_replace('-', ' ', $page_info))) }}
 @endsection
 @section('inner-title')
-    {{ $listing->title}}
+    {{ $listing->title }}
 @endsection
 @section('page-meta-data')
-    {!!  render_page_meta_data_for_listing($listing) !!}
+    {!! render_page_meta_data_for_listing($listing) !!}
 @endsection
 @section('style')
     <style>
@@ -75,24 +75,25 @@
                         <!-- Top -->
                         <div class="descriptionTop">
                             <div class="row gy-4">
-                                @if(!empty($listing->qualification))
+                                @if (!empty($listing->qualification))
                                     <div class="col-4">
                                         {{ __('Qualification:') }} <span class="text-bold"> {{ $listing->qualification }}
                                         </span>
                                     </div>
                                 @endif
-                                @if(!empty($listing->expected_salary))
+                                @if (!empty($listing->expected_salary))
                                     <div class="col-4">
-                                        {{ __('Expected Salary:') }} <span class="text-bold"> {{ $listing->expected_salary }}
+                                        {{ __('Expected Salary:') }} <span class="text-bold">
+                                            {{ $listing->expected_salary }}
                                         </span>
                                     </div>
                                 @endif
-                                @if(!empty($listing->location))
+                                @if (!empty($listing->location))
                                     <div class="col-4">
                                         {{ __('Location:') }} <span class="text-bold">{{ $listing->location }}</span>
                                     </div>
                                 @endif
-                                @if(!empty($listing->experience))
+                                @if (!empty($listing->experience))
                                     <div class="col-4">
                                         {{ __('Experience:') }} <span class="text-bold">{{ $listing->experience }}</span>
                                     </div>
@@ -115,8 +116,7 @@
                     <!--for mobile device user info -->
                     <div class="seller-part mt-3 d-md-none">
                         <x-listings.user-listing-phone-for-responsive :listing="$listing" />
-                        <x-listings.listing-details-page-user-info :listing="$listing"
-                            :userTotalListings="$user_total_listings" />
+                        <x-listings.listing-details-page-user-info :listing="$listing" :userTotalListings="$user_total_listings" />
                     </div>
                     <!--Relevant Ads-->
                     @include('frontend.pages.listings.relevant-listing')
@@ -126,8 +126,7 @@
                         <!--user info -->
                         <div class="d-none d-md-block">
                             <x-listings.user-listing-phone :listing="$listing" />
-                            <x-listings.listing-details-page-user-info :listing="$listing"
-                                :userTotalListings="$user_total_listings" />
+                            <x-listings.listing-details-page-user-info :listing="$listing" :userTotalListings="$user_total_listings" />
                         </div>
 
                         <div class="share-on-wraper">
@@ -152,7 +151,7 @@
                                     @php
                                         $image_url = get_attachment_image_by_id($listing->image);
                                         $img_url = $image_url['img_url'] ?? '';
-                                     @endphp
+                                    @endphp
                                     {!! single_post_share(route('frontend.listing.details', $listing->slug), $listing->title, $img_url) !!}
                                 </span>
                             </div>
@@ -164,7 +163,7 @@
                             <h3 class="head5">{{ __('Map') }}</h3>
                             <p>{{ $listing->address }}</p>
                             <div class="map">
-                                @if (!empty(get_static_option("google_map_settings_on_off")))
+                                @if (!empty(get_static_option('google_map_settings_on_off')))
                                     <div id="single-map-canvas"
                                         style="height: 230px; width: 100%; position: relative; overflow: hidden;">
                                     </div>
@@ -181,22 +180,22 @@
     <x-frontend.login />
 @endsection
 @section('scripts')
-    @if(!empty(get_static_option('google_map_settings_on_off')))
+    @if (!empty(get_static_option('google_map_settings_on_off')))
         <x-map.google-map-listing-details-page-js :lat="$listing->lat ?? 0" :lon="$listing->lon ?? 0" />
     @endif
-    @if($user_enquiry_form === true)
+    @if ($user_enquiry_form === true)
         <x-listings.enquiry-form-submit-js />
     @endif
 
     <x-listings.listing-report-add-js />
     <script>
-        (function ($) {
+        (function($) {
             "use strict";
 
-            $(document).ready(function () {
+            $(document).ready(function() {
 
                 let page = 1;
-                $(document).on('click', '#load-more-ads', function () {
+                $(document).on('click', '#load-more-ads', function() {
                     page++;
                     let listingId = $(this).data('listing-id');
                     $.ajax({
@@ -206,22 +205,23 @@
                             page: page,
                             listing_id: listingId
                         },
-                        success: function (response) {
+                        success: function(response) {
                             if (response.html) {
                                 $('.relevant-listing-wrapper').append(response.html);
                             }
 
                             // Check if total relevant items is 0
                             if (response.total_relevant_items === 0) {
-                                $('#load-more-ads').prop('disabled', true); // Disable the button
+                                $('#load-more-ads').prop('disabled',
+                                true); // Disable the button
                                 $('#load-more-ads').hide(); // hide the button
                             } else {
-                                $('#load-more-ads').prop('disabled', false); // Enable the button
+                                $('#load-more-ads').prop('disabled',
+                                false); // Enable the button
                             }
 
                         },
-                        error: function (xhr) {
-                        }
+                        error: function(xhr) {}
                     });
                 });
 
@@ -235,7 +235,7 @@
                 } else {
                     $('#showMoreButton').hide();
                 }
-                showMoreButton.addEventListener('click', function () {
+                showMoreButton.addEventListener('click', function() {
                     if (!isExpanded) {
                         description.textContent = originalContent;
                         showMoreButton.textContent = 'Show Less';
@@ -251,7 +251,7 @@
                 $('#phoneNumber').hide();
                 $('#default_phone_number_show').show;
                 $('.show-number').show();
-                $(document).on('click', '#userPhoneNumberBtn', function (event) {
+                $(document).on('click', '#userPhoneNumberBtn', function(event) {
                     event.preventDefault();
                     $('#default_phone_number_show').hide();
                     $('#phoneNumber').show();
@@ -261,7 +261,7 @@
                 // for mobile responsive
                 $('#phoneNumberForResponsive').hide();
                 $('#default_phone_number_show_for_responsive').show();
-                $(document).on('click', '#userPhoneNumberBtnForResponsive', function (event) {
+                $(document).on('click', '#userPhoneNumberBtnForResponsive', function(event) {
                     event.preventDefault();
                     $('#default_phone_number_show_for_responsive').hide();
                     $('#phoneNumberForResponsive').show();
@@ -269,7 +269,7 @@
                 });
 
                 // for mobile responsive with call to number
-                $(document).on('click', '#phoneNumberForResponsive', function (event) {
+                $(document).on('click', '#phoneNumberForResponsive', function(event) {
                     event.preventDefault();
                     let phoneNumber = $('#phoneNumber').text().trim();
                     let tempLink = document.createElement('a');

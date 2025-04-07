@@ -17949,3 +17949,408 @@
 [2025-04-07 19:32:22] production.INFO: Profile ID: 8, First Image ID: , Unlocked: No  
 [2025-04-07 19:32:22] production.INFO: Profile ID: 4, First Image ID: , Unlocked: No  
 [2025-04-07 19:32:22] production.INFO: Profile ID: 6, First Image ID: , Unlocked: No  
+[2025-04-07 19:34:03] production.INFO: Fetched Job Seeker Listings: {"count":1} 
+[2025-04-07 19:36:33] production.ERROR: Method App\Http\Controllers\Frontend\FrontendListingController::frontendListingDetails does not exist. {"userId":24,"exception":"[object] (BadMethodCallException(code: 0): Method App\\Http\\Controllers\\Frontend\\FrontendListingController::frontendListingDetails does not exist. at C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php:68)
+[stacktrace]
+#0 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php(54): Illuminate\\Routing\\Controller->__call('frontendListing...', Array)
+#1 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(43): Illuminate\\Routing\\Controller->callAction('frontendListing...', Array)
+#2 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(259): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Http\\Controllers\\Frontend\\FrontendListingController), 'frontendListing...')
+#3 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(205): Illuminate\\Routing\\Route->runController()
+#4 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(806): Illuminate\\Routing\\Route->run()
+#5 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#6 C:\\laragon\\www\\easyadme\\core\\app\\Http\\Middleware\\SetLang.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#7 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\SetLang->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#8 C:\\laragon\\www\\easyadme\\core\\app\\Http\\Middleware\\MaintainsMode.php(22): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#9 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\MaintainsMode->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#10 C:\\laragon\\www\\easyadme\\core\\app\\Http\\Middleware\\GlobalVariableMiddleware.php(104): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#11 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\GlobalVariableMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#12 C:\\laragon\\www\\easyadme\\core\\app\\Http\\Middleware\\CheckUserOnlineStatus.php(32): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#13 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\CheckUserOnlineStatus->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#14 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#15 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#16 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#17 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#18 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#19 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#20 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#21 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#22 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#23 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#24 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#25 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#26 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#27 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#28 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#29 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#30 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#31 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#32 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#33 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#34 C:\\laragon\\www\\easyadme\\core\\vendor\\xgenious\\installer\\src\\Http\\Middleware\\InstallerMiddleware.php(18): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#35 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Xgenious\\Installer\\Http\\Middleware\\InstallerMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#36 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#37 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#38 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#39 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#40 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#41 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#42 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#43 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#44 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#45 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#46 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#47 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#48 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#49 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#50 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#51 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#52 C:\\laragon\\www\\easyadme\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#53 C:\\laragon\\www\\easyadme\\index.php(54): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#54 {main}
+"} 
+[2025-04-07 19:45:21] production.INFO: Broadcasting [livechat-user-90] on channels [private-livechat-user-channel.24.90] with payload:
+{
+    "message": {
+        "id": 1,
+        "live_chat_id": 54,
+        "from_user": 1,
+        "message": {
+            "message": null,
+            "listing": {
+                "id": 13,
+                "listing_creator": null,
+                "username": "Anu",
+                "title": "Apple Reconditioned No Scratch Laptop",
+                "slug": "dell-reconditioned-no-scratch-laptop",
+                "image": "983"
+            }
+        },
+        "file": "",
+        "is_seen": 0,
+        "created_at": "2025-04-07T19:45:19.000000Z",
+        "updated_at": "2025-04-07T19:45:19.000000Z"
+    },
+    "livechat": {
+        "id": 54,
+        "user_id": 90,
+        "member_id": 24,
+        "admin_id": null,
+        "created_at": "2025-04-07T19:45:19.000000Z",
+        "updated_at": "2025-04-07T19:45:19.000000Z",
+        "user": {
+            "id": 90,
+            "sponsor_id": 24,
+            "partner_id": "EAMMDZSEG",
+            "partner_name": "EASYADME-SHIJIL",
+            "first_name": "shijil",
+            "last_name": "`raju",
+            "gender": "male",
+            "username": "raju",
+            "email": "raju@gmail.com",
+            "dob": "2000-03-01",
+            "profile_completed": 1,
+            "phone": "+91 - 8989671100",
+            "membership_id": 1,
+            "bv_points": 0,
+            "image": null,
+            "profile_background": null,
+            "country_id": null,
+            "state_id": null,
+            "city_id": null,
+            "post_code": null,
+            "latitude": null,
+            "longitude": null,
+            "address": null,
+            "about": null,
+            "terms_condition": 1,
+            "google_id": null,
+            "facebook_id": null,
+            "apple_id": null,
+            "otp_verified": 1,
+            "email_verified": 0,
+            "email_verify_token": "814470",
+            "email_verified_at": null,
+            "check_online_status": "2025-04-07T19:45:19.000000Z",
+            "password_changed_at": null,
+            "verified_status": 0,
+            "status": 1,
+            "is_suspend": 0,
+            "deleted_at": null,
+            "created_at": "2025-04-06T12:35:32.000000Z",
+            "updated_at": "2025-04-07T19:45:19.000000Z",
+            "_lft": 53,
+            "_rgt": 54,
+            "parent_id": 86,
+            "position": "left",
+            "referral_commission": "0.00"
+        }
+    },
+    "messageBlade": "<div class=\"leftMessage chat-reply\">\n        <!-- single-->\n        <div class=\"singleLeft-message\">\n            <div class=\"messageText\">\n\n                <div class=\"messageImg\">\n                                            <img src=\"https:\/\/easyadme.test\/assets\/frontend\/img\/static\/user-no-image.webp\" alt=\"author\">\n                                    <\/div>\n\n                <div class=\"messageCaption\">\n                    \n                        \n                                                    <div class=\"card mb-3\" style=\"max-width: 540px;\">\n                                <div class=\"row g-0\">\n                                    <div class=\"col-md-4\">\n                                        <img src=\"https:\/\/easyadme.test\/assets\/uploads\/media-uploader\/untitled-design-121742361646.png\"  alt=\"\"\/>\n                                    <\/div>\n                                    <div class=\"col-md-8\">\n                                        <div class=\"card-body\">\n                                            <h5 class=\"card-title\">Apple Reconditioned No Scratch Laptop<\/h5>\n                                            <a class=\"red-global-btn\" target=\"_blank\"\n                                               href=\"https:\/\/easyadme.test\/listing\/dell-reconditioned-no-scratch-laptop?username=Anu\">\n                                                View details\n                                            <\/a>\n                                        <\/div>\n                                    <\/div>\n                                <\/div>\n                            <\/div>\n                                                <span  class=\"sendTime\">1 second ago<\/span>\n                <\/div>\n            <\/div>\n        <\/div>\n    <\/div>\n\n",
+    "socket": null
+}  
+[2025-04-07 19:45:29] production.INFO: Broadcasting [livechat-user-90] on channels [private-livechat-user-channel.24.90] with payload:
+{
+    "message": {
+        "id": 2,
+        "live_chat_id": 54,
+        "from_user": 1,
+        "message": {
+            "message": "hi",
+            "listing": null
+        },
+        "file": "",
+        "is_seen": 0,
+        "created_at": "2025-04-07T19:45:29.000000Z",
+        "updated_at": "2025-04-07T19:45:29.000000Z"
+    },
+    "livechat": {
+        "id": 54,
+        "user_id": 90,
+        "member_id": 24,
+        "admin_id": null,
+        "created_at": "2025-04-07T19:45:19.000000Z",
+        "updated_at": "2025-04-07T19:45:19.000000Z",
+        "user": {
+            "id": 90,
+            "sponsor_id": 24,
+            "partner_id": "EAMMDZSEG",
+            "partner_name": "EASYADME-SHIJIL",
+            "first_name": "shijil",
+            "last_name": "`raju",
+            "gender": "male",
+            "username": "raju",
+            "email": "raju@gmail.com",
+            "dob": "2000-03-01",
+            "profile_completed": 1,
+            "phone": "+91 - 8989671100",
+            "membership_id": 1,
+            "bv_points": 0,
+            "image": null,
+            "profile_background": null,
+            "country_id": null,
+            "state_id": null,
+            "city_id": null,
+            "post_code": null,
+            "latitude": null,
+            "longitude": null,
+            "address": null,
+            "about": null,
+            "terms_condition": 1,
+            "google_id": null,
+            "facebook_id": null,
+            "apple_id": null,
+            "otp_verified": 1,
+            "email_verified": 0,
+            "email_verify_token": "814470",
+            "email_verified_at": null,
+            "check_online_status": "2025-04-07T19:45:29.000000Z",
+            "password_changed_at": null,
+            "verified_status": 0,
+            "status": 1,
+            "is_suspend": 0,
+            "deleted_at": null,
+            "created_at": "2025-04-06T12:35:32.000000Z",
+            "updated_at": "2025-04-07T19:45:29.000000Z",
+            "_lft": 53,
+            "_rgt": 54,
+            "parent_id": 86,
+            "position": "left",
+            "referral_commission": "0.00"
+        }
+    },
+    "messageBlade": "<div class=\"leftMessage chat-reply\">\n        <!-- single-->\n        <div class=\"singleLeft-message\">\n            <div class=\"messageText\">\n\n                <div class=\"messageImg\">\n                                            <img src=\"https:\/\/easyadme.test\/assets\/frontend\/img\/static\/user-no-image.webp\" alt=\"author\">\n                                    <\/div>\n\n                <div class=\"messageCaption\">\n                                            <p class=\"messagePera\">hi<\/p>\n                    \n                        \n                                                <span  class=\"sendTime\">1 second ago<\/span>\n                <\/div>\n            <\/div>\n        <\/div>\n    <\/div>\n\n",
+    "socket": null
+}  
+[2025-04-07 19:45:51] production.INFO: Broadcasting [livechat-member-24] on channels [private-livechat-member-channel.90.24] with payload:
+{
+    "message": {
+        "id": 3,
+        "live_chat_id": 54,
+        "from_user": 2,
+        "message": {
+            "message": "tellme",
+            "listing": null
+        },
+        "file": "",
+        "is_seen": 0,
+        "created_at": "2025-04-07T19:45:51.000000Z",
+        "updated_at": "2025-04-07T19:45:51.000000Z"
+    },
+    "livechat": {
+        "id": 54,
+        "user_id": 90,
+        "member_id": 24,
+        "admin_id": null,
+        "created_at": "2025-04-07T19:45:19.000000Z",
+        "updated_at": "2025-04-07T19:45:19.000000Z",
+        "user": {
+            "id": 90,
+            "sponsor_id": 24,
+            "partner_id": "EAMMDZSEG",
+            "partner_name": "EASYADME-SHIJIL",
+            "first_name": "shijil",
+            "last_name": "`raju",
+            "gender": "male",
+            "username": "raju",
+            "email": "raju@gmail.com",
+            "dob": "2000-03-01",
+            "profile_completed": 1,
+            "phone": "+91 - 8989671100",
+            "membership_id": 1,
+            "bv_points": 0,
+            "image": null,
+            "profile_background": null,
+            "country_id": null,
+            "state_id": null,
+            "city_id": null,
+            "post_code": null,
+            "latitude": null,
+            "longitude": null,
+            "address": null,
+            "about": null,
+            "terms_condition": 1,
+            "google_id": null,
+            "facebook_id": null,
+            "apple_id": null,
+            "otp_verified": 1,
+            "email_verified": 0,
+            "email_verify_token": "814470",
+            "email_verified_at": null,
+            "check_online_status": "2025-04-07T19:45:29.000000Z",
+            "password_changed_at": null,
+            "verified_status": 0,
+            "status": 1,
+            "is_suspend": 0,
+            "deleted_at": null,
+            "created_at": "2025-04-06T12:35:32.000000Z",
+            "updated_at": "2025-04-07T19:45:29.000000Z",
+            "_lft": 53,
+            "_rgt": 54,
+            "parent_id": 86,
+            "position": "left",
+            "referral_commission": "0.00"
+        },
+        "member": {
+            "id": 24,
+            "sponsor_id": null,
+            "partner_id": "EAMQOT7LT",
+            "partner_name": "EASYADME-ANU",
+            "first_name": "Anu",
+            "last_name": "V",
+            "gender": null,
+            "username": "Anu",
+            "email": "anu@gmail.com",
+            "dob": null,
+            "profile_completed": 1,
+            "phone": "+91 - 9809032456",
+            "membership_id": 1,
+            "bv_points": 105,
+            "image": null,
+            "profile_background": null,
+            "country_id": null,
+            "state_id": null,
+            "city_id": null,
+            "post_code": null,
+            "latitude": null,
+            "longitude": null,
+            "address": null,
+            "about": null,
+            "terms_condition": 1,
+            "google_id": null,
+            "facebook_id": null,
+            "apple_id": null,
+            "otp_verified": 1,
+            "email_verified": 0,
+            "email_verify_token": "735192",
+            "email_verified_at": null,
+            "check_online_status": "2025-04-07T19:45:51.000000Z",
+            "password_changed_at": null,
+            "verified_status": 1,
+            "status": 1,
+            "is_suspend": 0,
+            "deleted_at": null,
+            "created_at": "2025-03-13T11:35:52.000000Z",
+            "updated_at": "2025-04-07T19:45:51.000000Z",
+            "_lft": 22,
+            "_rgt": 121,
+            "parent_id": 13,
+            "position": "left",
+            "referral_commission": "300.00"
+        }
+    },
+    "messageBlade": "<!-- left Message form 1 -->\n\n<!-- Left Message form 2 -->\n    <div class=\"leftMessage chat-reply\">\n        <!-- single-->\n        <div class=\"singleLeft-message\">\n            <div class=\"messageText\">\n\n                <div class=\"messageImg\">\n                                            <img src=\"https:\/\/easyadme.test\/assets\/frontend\/img\/static\/user-no-image.webp\" alt=\"author\">\n                                    <\/div>\n\n                <div class=\"messageCaption\">\n                                                    <p class=\"messagePera\">tellme<\/p>\n                                                \n                                            <span  class=\"sendTime\">1 second ago<\/span>\n                <\/div>\n            <\/div>\n        <\/div>\n    <\/div>\n",
+    "socket": null
+}  
+[2025-04-07 19:46:05] production.INFO: Broadcasting [livechat-user-90] on channels [private-livechat-user-channel.24.90] with payload:
+{
+    "message": {
+        "id": 4,
+        "live_chat_id": 54,
+        "from_user": 1,
+        "message": {
+            "message": "i need thi",
+            "listing": null
+        },
+        "file": "",
+        "is_seen": 0,
+        "created_at": "2025-04-07T19:46:05.000000Z",
+        "updated_at": "2025-04-07T19:46:05.000000Z"
+    },
+    "livechat": {
+        "id": 54,
+        "user_id": 90,
+        "member_id": 24,
+        "admin_id": null,
+        "created_at": "2025-04-07T19:45:19.000000Z",
+        "updated_at": "2025-04-07T19:45:19.000000Z",
+        "user": {
+            "id": 90,
+            "sponsor_id": 24,
+            "partner_id": "EAMMDZSEG",
+            "partner_name": "EASYADME-SHIJIL",
+            "first_name": "shijil",
+            "last_name": "`raju",
+            "gender": "male",
+            "username": "raju",
+            "email": "raju@gmail.com",
+            "dob": "2000-03-01",
+            "profile_completed": 1,
+            "phone": "+91 - 8989671100",
+            "membership_id": 1,
+            "bv_points": 0,
+            "image": null,
+            "profile_background": null,
+            "country_id": null,
+            "state_id": null,
+            "city_id": null,
+            "post_code": null,
+            "latitude": null,
+            "longitude": null,
+            "address": null,
+            "about": null,
+            "terms_condition": 1,
+            "google_id": null,
+            "facebook_id": null,
+            "apple_id": null,
+            "otp_verified": 1,
+            "email_verified": 0,
+            "email_verify_token": "814470",
+            "email_verified_at": null,
+            "check_online_status": "2025-04-07T19:46:05.000000Z",
+            "password_changed_at": null,
+            "verified_status": 0,
+            "status": 1,
+            "is_suspend": 0,
+            "deleted_at": null,
+            "created_at": "2025-04-06T12:35:32.000000Z",
+            "updated_at": "2025-04-07T19:46:05.000000Z",
+            "_lft": 53,
+            "_rgt": 54,
+            "parent_id": 86,
+            "position": "left",
+            "referral_commission": "0.00"
+        }
+    },
+    "messageBlade": "<div class=\"leftMessage chat-reply\">\n        <!-- single-->\n        <div class=\"singleLeft-message\">\n            <div class=\"messageText\">\n\n                <div class=\"messageImg\">\n                                            <img src=\"https:\/\/easyadme.test\/assets\/frontend\/img\/static\/user-no-image.webp\" alt=\"author\">\n                                    <\/div>\n\n                <div class=\"messageCaption\">\n                                            <p class=\"messagePera\">i need thi<\/p>\n                    \n                        \n                                                <span  class=\"sendTime\">1 second ago<\/span>\n                <\/div>\n            <\/div>\n        <\/div>\n    <\/div>\n\n",
+    "socket": null
+}  

@@ -11,10 +11,10 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->unsignedBigInteger('sponsor_id')->nullable()->after('id');
+            // $table->unsignedBigInteger('sponsor_id')->nullable()->after('id');
 
-            // If sponsor_id references another user
-            $table->foreign('sponsor_id')->references('id')->on('users')->onDelete('set null');
+            // // If sponsor_id references another user
+            // $table->foreign('sponsor_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 

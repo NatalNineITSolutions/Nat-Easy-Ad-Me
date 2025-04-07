@@ -398,6 +398,7 @@
                         {!! $mainImageHtml !!}
                     </div>
                 </div>
+
                 <div class="profile-info">
                     <div>
                         <h2>{{ $profile->name ?? 'User' }} <span>👑</span></h2>
@@ -408,12 +409,45 @@
                         <p><span>Occupation:</span> {{ $profile->occupation ?? 'Not specified' }}</p>
                     </div>
                     <div class="profile-info">
-                        <!-- ... profile info ... -->
-                        @if(!$isUnlocked)
-                            <div class="connect">
-                                <a href="javascript:void(0);" onclick="unlockProfile()" class="btn-profile">Unlock full
-                                    details</a>
+                        @if(!$isOwnProfile)
+                            @if(isset($sentRequest))
+                                @if($isRequestAccepted)
+                                    <button class="btn btn-success request" disabled>
+                                        <i class="fas fa-check-circle"></i> Request Accepted
+                                    </button>
+                                @else
+                                    <button class="btn btn-secondary request" disabled>
+                                        <i class="fas fa-paper-plane"></i> Request Sent
+                                    </button>
+                                @endif
+                            @else
+                                <form id="sendRequestForm" action="{{ route('matrimony.profile.send-request', $profile->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary request">
+                                        <i class="fas fa-paper-plane"></i> Send Request
+                                    </button>
+                                </form>
+                            @endif
+                        @else
+                            <div class="bg-light p-3 rounded mb-3 alert">
+                                <i class="fas fa-user-shield me-2"></i> This profile was listed by you
                             </div>
+                        @endif
+                        <!-- ... profile info ... -->
+                        @if(!$isOwnProfile)
+                            @if($sentRequest)
+                                @if($isRequestAccepted && !$isUnlocked)
+                                    <div class="connect mt-3">
+                                        <a href="javascript:void(0);" onclick="unlockProfile()" class="btn btn-success btn-profile">
+                                            <i class="fas fa-unlock"></i> Unlock full details
+                                        </a>
+                                    </div>
+                                @elseif(!$isRequestAccepted)
+                                    <div class="alert alert-warning mt-3">
+                                        <i class="fas fa-hourglass-half me-1"></i> The user has not yet accepted your request.
+                                    </div>
+                                @endif
+                            @endif
                         @endif
                     </div>
                 </div>
@@ -443,27 +477,6 @@
                                 <button onclick="unlockProfile()" class="btn btn-primary">
                                     Unlock Profile to View Contact Info
                                 </button>
-                            </div>
-                        @endif
-                        {{-- @if(!$isOwnProfile)
-                            <button class="btn btn-primary request">
-                                <i class="fas fa-paper-plane"></i> Send Request
-                            </button>
-                        @else
-                            <div class="bg-light p-3 rounded mb-3 alert">
-                                <i class="fas fa-user-shield me-2"></i> This profile was listed by you, so you can't send a request
-                            </div>
-                        @endif --}}
-                        @if(!$isOwnProfile)
-                            <form id="sendRequestForm" action="{{ route('matrimony.profile.send-request', $profile->id) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-primary request">
-                                    <i class="fas fa-paper-plane"></i> Send Request
-                                </button>
-                            </form>
-                        @else
-                            <div class="bg-light p-3 rounded mb-3 alert">
-                                <i class="fas fa-user-shield me-2"></i> This profile was listed by you
                             </div>
                         @endif
                     </div>
@@ -619,38 +632,6 @@
     </script>
 
     {{-- Send request --}}
-    {{-- <script>
-        document.getElementById('sendRequestForm')?.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            try {
-                const response = await fetch(this.action, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        // Your additional data if needed
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    alert('Request sent successfully!');
-                    this.querySelector('button').disabled = true;
-                } else {
-                    alert(data.message || 'Error sending request');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred');
-            }
-        });
-    </script> --}}
-
     <script>
         document.getElementById('sendRequestForm')?.addEventListener('submit', async function(e) {
             e.preventDefault();

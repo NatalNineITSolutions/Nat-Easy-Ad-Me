@@ -48,7 +48,7 @@
 
         <li class="single"><a href="{{ route('user.listing.favorite.all') }}" class="heart"><i
                     class="lar la-heart icon"></i></a></li>
-        <li class="single userAccount">
+        <li class="single userAccount"> 
             <x-frontend.user.user-profile-image />
             <div class="userAccount-wrapper">
                 <ul class="ac-list">
@@ -80,7 +80,7 @@
                                         <path d="M10 1L14 7L19 3L17 13H3L1 3L6 7L10 1Z" stroke="#64748B" stroke-width="2"
                                             stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
-                                    {{ __('Membership') }}
+                                    {{ __('Distributor') }}
                                 </a>
                             </li>
                         @endif
@@ -224,8 +224,8 @@
         </li>
     @else
         <li class="single">
-            <div class="btn-wrapper">
-                <a href="{{ route('user.login') }}" class="cmn-btn1 popup-modal">
+            <div class="btn-wrapper post" style="width: 200px;">
+                <a href="{{ route('user.login') }}" class="cmn-btn1 popup-modal" >
                     <i class="las la-plus-circle"></i>
                     <span class="text">{{ __('Post your ad') }}</span>
                 </a>

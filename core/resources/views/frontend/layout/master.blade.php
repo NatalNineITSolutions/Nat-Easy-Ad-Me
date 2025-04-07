@@ -14,3 +14,15 @@
 @yield('content')
 
 @include('frontend.layout.partials.footer')
+
+<style>
+    .btn-wrapper .cmn-btn1 {
+        width: 200px !important;
+    }
+
+    .heart {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+</style>

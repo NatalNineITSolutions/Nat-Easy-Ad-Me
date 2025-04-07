@@ -25,7 +25,7 @@
                     <path d="M10 1L14 7L19 3L17 13H3L1 3L6 7L10 1Z" stroke="#64748B" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round" />
                 </svg>
-                <span class="ms-2"> {{ __('Membership') }}</span>
+                <span class="ms-2"> {{ __('Distributor') }}</span>
             </a>
         @endif
     @endif

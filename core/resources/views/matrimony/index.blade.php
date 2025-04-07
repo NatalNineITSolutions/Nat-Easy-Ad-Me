@@ -358,7 +358,6 @@
             display: flex;
             align-items: center;
             gap: 20px;
-            ;
         }
 
         .profile-container-section-img {
@@ -811,37 +810,25 @@
             <img class="hibiscus" src="/assets/uploads/media-uploader/hibiscus.png" alt="Hibiscus">
             <h2 class="banner-heading">Find your <br> <span class="highlight">Right Match</span> here</h2>
             <p class="banner-desp">Forever Starts Here: Your Love, Your Journey, Your Wedding Wonderland!</p>
-
-            <div class="search-container">
-                <select class="form-select">
-                    <option selected>I'm looking for</option>
-                    <option>Male</option>
-                    <option>Female</option>
+            <form action="{{ route('matrimony.searchresults') }}" method="GET" class="search-container">
+                <select class="form-select" name="gender" id="search-gender">
+                    <option selected disabled>I'm looking for</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
                 </select>
-
-                <select class="form-select">
-                    <option selected>Age</option>
-                    <option>18-25</option>
-                    <option>26-35</option>
-                    <option>36-45</option>
+            
+                <select class="form-select" name="age" id="search-age">
+                    <option selected disabled>Age</option>
+                    <option value="18-25">18-25</option>
+                    <option value="26-35">26-35</option>
+                    <option value="36-45">36-45</option>
                 </select>
-
-                <select class="form-select">
-                    <option selected>Religion</option>
-                    <option>Hindu</option>
-                    <option>Christian</option>
-                    <option>Muslim</option>
-                </select>
-
-                <select class="form-select">
-                    <option selected>Location</option>
-                    <option>Chennai</option>
-                    <option>Bangalore</option>
-                    <option>Hyderabad</option>
-                </select>
-
-                <button class="btn btn-primary">Search</button>
-            </div>
+            
+                <input type="text" class="form-control" name="occupation" placeholder="Enter Occupation">
+                <input type="text" class="form-control" name="location" placeholder="Enter Location">
+            
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>           
         </div>
     </div>
 
@@ -896,10 +883,10 @@
             <p>Discover your soulmate and build a beautiful future together. Start your journey today and find your perfect
                 match with us!</p>
             <div class="buttons">
-                <a href="/matrimony/register" class="register-link">
+                <a href="/matrimony/profile-listing" class="register-link">
                     <button class="register-now">REGISTER NOW</button>
                 </a>
-                <button class="support">HELP & SUPPORT</button>
+                {{-- <button class="support">HELP & SUPPORT</button> --}}
             </div>
             <img class="perfect-match-banner-img" src="/assets/uploads/media-uploader/perfect-match-banner.png" alt="">
         </div>
@@ -949,4 +936,28 @@
             history.pushState(null, null, location.href);
         };
     </script>
+
+    {{-- Search --}}
+    <script>
+        document.getElementById('search-btn').addEventListener('click', function () {
+            const gender = document.getElementById('search-gender').value;
+            const age = document.getElementById('search-age').value;
+            const occupation = document.getElementById('search-occupation').value;
+            const location = document.getElementById('search-location').value;
+    
+            fetch("{{ route('matrimony.matrimony.search') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ gender, age, occupation, location })
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log("Matching Profiles:", data);
+            })
+            .catch(err => console.error("Search error:", err));
+        });
+    </script>    
 @endsection

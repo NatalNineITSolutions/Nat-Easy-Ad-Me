@@ -8,6 +8,8 @@ Route::middleware(['web'])->group(function () {
         'as' => 'matrimony.'
     ], function () {
         Route::get('/', [MatrimonyController::class, 'index'])->name('index');
+        Route::post('/matrimony/search', [MatrimonyController::class, 'search'])->name('matrimony.search');
+        Route::get('/search-results', [MatrimonyController::class, 'searchresults'])->name('searchresults');
         Route::get('/pricing', [MatrimonyController::class, 'price'])->name('price');
         Route::get('/profile-details/{id}', [MatrimonyController::class, 'profiledetails'])->name('profile-details');
         Route::get('/otp', [MatrimonyController::class, 'otp'])->name('otp');

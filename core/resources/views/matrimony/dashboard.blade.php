@@ -345,6 +345,45 @@
             font-size: 15px;
             font-weight: 600;
         }
+
+        .btn-profile {
+            padding: 10px 15px;
+            background-color: #FF166C;
+            border: none;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: white;
+            text-decoration: none;
+            margin-top: 15px;
+        }
+
+        .modal {
+            position: fixed;
+            z-index: 9999;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px; right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+        }
     </style>
 @endsection
 
@@ -478,22 +517,6 @@
                             <button class="tab-button" data-tab="accepted-requests">Accept request</button>
                             <button class="tab-button" data-tab="denied-requests">Deny request</button>
                         </div>
-                
-                        {{-- <div class="tab-content active" id="new-requests">
-
-                            <div class="request-card">
-                                <div class="request-info">
-                                    <h3>John Smith</h3>
-                                    <p><strong>City:</strong> Illinois <strong>Age:</strong> 21 <strong>Height:</strong> 5.7 <strong>Job:</strong> <span class="highlight">Working</span></p>
-                                    <p>Request on: 10:30 A.M, 18 August 2024</p>
-                                    <button class="profile-btn">View full profile</button>
-                                </div>
-                                <div class="action-buttons">
-                                    <button class="accept">Accept</button>
-                                    <button class="deny">Deny</button>
-                                </div>
-                            </div>
-                        </div> --}}
 
                         <div class="tab-content active" id="new-requests">
                             @forelse($receivedRequests as $request)
@@ -506,6 +529,13 @@
                                             <strong>Job:</strong> <span class="highlight">{{ $request->profile->occupation ?? 'N/A' }}</span>
                                         </p>
                                         <p>Request given on: {{ $request->created_at->format('d F Y') }}</p>
+                                        <button class="btn-profile view-sender-profile"
+                                            data-username="{{ $request->sender->username }}"
+                                            data-email="{{ $request->sender->email }}"
+                                            data-phone="{{ $request->sender->phone }}"
+                                            data-created="{{ $request->sender->created_at->format('d M Y') }}">
+                                            View Profile
+                                        </button>
                                     </div>
                                     <div class="action-buttons">
                                         <button class="accept" data-request-id="{{ $request->id }}">Accept</button>
@@ -517,6 +547,17 @@
                                     <p class="mb-0">No new requests found</p>
                                 </div>
                             @endforelse
+                        </div>
+
+                        <div id="senderProfileModal" class="modal" style="display: none;">
+                            <div class="modal-content">
+                                <span class="close-btn">&times;</span>
+                                <h2>Sender Details</h2>
+                                <p><strong>Username:</strong> <span id="modal-username"></span></p>
+                                <p><strong>Email:</strong> <span id="modal-email"></span></p>
+                                <p><strong>Phone:</strong> <span id="modal-phone"></span></p>
+                                <p><strong>Joined On:</strong> <span id="modal-created"></span></p>
+                            </div>
                         </div>
                 
                         <div class="tab-content" id="accepted-requests">
@@ -668,4 +709,33 @@
             });
         });
     </script>
+
+    {{-- Show modal --}}
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('senderProfileModal');
+        const closeBtn = document.querySelector('.close-btn');
+
+        document.querySelectorAll('.view-sender-profile').forEach(button => {
+            button.addEventListener('click', () => {
+                document.getElementById('modal-username').textContent = button.dataset.username || 'N/A';
+                document.getElementById('modal-email').textContent = button.dataset.email || 'N/A';
+                document.getElementById('modal-phone').textContent = button.dataset.phone || 'N/A';
+                document.getElementById('modal-created').textContent = button.dataset.created || 'N/A';
+
+                modal.style.display = 'block';
+            });
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+</script>
 @endsection

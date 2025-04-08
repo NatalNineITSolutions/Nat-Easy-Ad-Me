@@ -28,6 +28,64 @@
             margin: auto;
         }
 
+        /* Image upload preview styles */
+        .media-upload-btn-wrapper .img-wrap {
+            position: relative;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .media-upload-btn-wrapper .img-wrap .rmv-span {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: red;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .uploaded-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .image-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .uploaded-image {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 5px;
+            object-fit: cover;
+        }
+
+        .delete-image-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            padding: 2px 6px;
+            font-size: 12px;
+        }
+
+        .delete-image-btn:hover {
+            background: darkred;
+        }
+
         /* Style for date input to match other fields */
         input[type="date"].form-control {
             height: 45px;
@@ -141,13 +199,22 @@
                         <div class="col-12">
                             <label class="form-label">Profile Picture <span class="text-danger">*</span></label>
                             <div class="media-upload-btn-wrapper">
-                                <input type="hidden" name="image">
+                                <div class="img-wrap new_image_add_listing">
+                                    <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}" alt="images" class="w-100">
+                                </div>
+                                <input type="hidden" name="image" id="images_input">
                                 <button type="button" class="btn btn-info media_upload_form_btn"
-                                    data-btntitle="{{ __('Select Image') }}" data-modaltitle="{{ __('Upload Image') }}"
-                                    data-bs-toggle="modal" data-bs-target="#media_upload_modal">
+                                    data-btntitle="{{ __('Select Image') }}" 
+                                    data-modaltitle="{{ __('Upload Image') }}"
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#media_upload_modal"
+                                    data-mulitple="true">
                                     {{ __('Upload Profile Picture') }}
                                 </button>
                                 <small>{{ __('image format: jpg, jpeg, png, gif, webp') }}</small>
+                            </div>
+                            <div class="uploaded-images mt-3" id="uploaded-images-container">
+                                <!-- Preview of uploaded images will appear here -->
                             </div>
                         </div>
                     </div>
@@ -323,16 +390,70 @@
                 width: '100%'
             });
 
-            // Initialize media uploader for profile picture
-            $(document).on('click', '.media_upload_form_btn', function(e) {
-                e.preventDefault();
-                var form = $(this).closest('.media-upload-btn-wrapper');
-                var modal = $('#media_upload_modal');
-                modal.find('.modal-title').text($(this).data('modaltitle'));
-                modal.find('.btn-title').text($(this).data('btntitle'));
-                modal.modal('show');
+            // Media upload handling
+            $(document).on('media_upload_selected', function (e, data) {
+                if (data.trigger_button.hasClass('media_upload_form_btn')) {
+                    let wrapper = data.trigger_button.closest('.media-upload-btn-wrapper');
+                    let imagesInput = wrapper.find('input[name="image"]');
+
+                    // Get current value as array (or empty array if no value)
+                    let currentValue = imagesInput.val() ? imagesInput.val().split('|') : [];
+
+                    // Add new image ID if not already present
+                    if (!currentValue.includes(data.id.toString())) {
+                        currentValue.push(data.id);
+                        imagesInput.val(currentValue.join('|'));
+
+                        // Update preview container
+                        let previewContainer = $('#uploaded-images-container');
+
+                        // Create new image preview
+                        let newImage = $(`
+                            <div class="image-container">
+                                <img src="${data.url}" class="uploaded-image" alt="${data.name}">
+                                <button type="button" class="delete-image-btn" data-id="${data.id}">×</button>
+                            </div>
+                        `);
+
+                        previewContainer.append(newImage);
+
+                        // Update main preview to show the first image
+                        if (currentValue.length === 1) {
+                            wrapper.find('.new_image_add_listing').html(`
+                                <div class="attachment-preview">
+                                    <div class="thumbnail">
+                                        <div class="centered">
+                                            <img src="${data.url}" alt="${data.name}">
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                        }
+                    }
+                }
             });
 
-            
+            // Handle image deletion
+            $(document).on('click', '.delete-image-btn', function () {
+                let imageId = $(this).data('id');
+                let wrapper = $(this).closest('.media-upload-btn-wrapper');
+                let imagesInput = wrapper.find('input[name="image"]');
+                let currentValue = imagesInput.val() ? imagesInput.val().split('|') : [];
+
+                // Remove the image ID
+                currentValue = currentValue.filter(id => id != imageId);
+                imagesInput.val(currentValue.join('|'));
+
+                // Remove the preview
+                $(this).parent().remove();
+
+                // Update main preview if needed
+                if (currentValue.length === 0) {
+                    wrapper.find('.new_image_add_listing').html(`
+                        <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}" alt="images" class="w-100">
+                    `);
+                }
+            });
+        });
     </script>
 @endsection

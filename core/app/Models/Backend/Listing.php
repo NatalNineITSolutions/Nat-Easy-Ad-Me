@@ -15,6 +15,7 @@ use Modules\Brand\app\Models\Brand;
 use Modules\CountryManage\app\Models\City;
 use Modules\CountryManage\app\Models\Country;
 use Modules\CountryManage\app\Models\State;
+use App\Models\JobDetail;
 
 class Listing extends Model
 {
@@ -173,6 +174,11 @@ class Listing extends Model
     public function guestListing()
     {
         return $this->hasOne(GuestListing::class, 'listing_id', 'id');
+    }
+
+    public function jobDetail()
+    {
+        return $this->hasOne(JobDetail::class, 'listing_id');
     }
 
 }

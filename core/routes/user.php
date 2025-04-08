@@ -24,6 +24,7 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
             Route::match(['get', 'post'], 'profile/identity-verification', 'identity_verification')->name('identity.verification');
             Route::post('profile/check-password', 'check_password')->name('password.check');
             Route::match(['get', 'post'], 'profile/change-password', 'change_password')->name('password');
+            Route::get('profile/detail', [DashboardController::class, 'showProfile'])->name('profile.show');
         });
 
         // user account settings
@@ -62,6 +63,10 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
         Route::controller(DashboardController::class)->group(function () {
             Route::group(['prefix' => 'listing'], function () {
                 Route::match(['get', 'post'], '/add-job', 'addjobListing')->name('addjob.listing');
+                Route::get('/job-listings', 'getjobseeker')->name('job.listings');
+                Route::get('/edit-job/{id}', 'editJob')->name('edit.job');
+                Route::put('/update-job/{id}', 'updateJob')->name('update.job');
+                Route::delete('/delete-job/{id}', 'deleteJob')->name('delete.job');
             });
         });
 
@@ -87,4 +92,5 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
             Route::get('favorite/listing/all', 'ListingFavoriteAll')->name('listing.favorite.all');
         });
     });
+
 });

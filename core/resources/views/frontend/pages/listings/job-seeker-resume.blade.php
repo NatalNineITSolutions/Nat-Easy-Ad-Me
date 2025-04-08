@@ -30,8 +30,16 @@
                             <div class="col-md-6">
                                 <p><strong>{{ __('Email:') }}</strong> {{ $listing->email }}</p>
                                 <p><strong>{{ __('Phone:') }}</strong> {{ $listing->phone }}</p>
-                                <p><strong>{{ __('Location:') }}</strong> {{ $listing->location }}</p>
+                                <p><strong>{{ __('Date of Birth:') }}</strong> {{ $listing->dob }}</p>
+                                <p>
+                                    <strong>{{ __('Location:') }}</strong>
+                                    {{ $listing->address }},
+                                    {{ $listing->cities?->city }},
+                                    {{ $listing->states?->state }},
+                                    {{ $listing->counties?->country }}
+                                </p>
                             </div>
+                            
                             <div class="col-md-6">
                                 <p><strong>{{ __('Availability:') }}</strong>
                                     {{ \Carbon\Carbon::parse($listing->availability_date)->format('j F Y') }}</p>
@@ -142,6 +150,10 @@
         }
 
         .resume-photo {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 50%;
             border: 5px solid #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }

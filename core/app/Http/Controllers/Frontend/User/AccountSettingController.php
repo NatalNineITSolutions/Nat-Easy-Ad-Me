@@ -132,6 +132,10 @@ class AccountSettingController extends Controller
             'pancard_no' => 'required|string|max:20',
             'bank_account_no' => 'required|string|max:30',
             'ifsc_code' => 'required|string|max:20',
+            'bank_name' => 'required|string|max:191',
+            'branch' => 'required|string|max:191',
+            'relation_name' => 'nullable|string|max:191',
+            'account_type' => 'required|string|max:191',
         ]);
 
         // Initialize variables for file names
@@ -197,6 +201,10 @@ class AccountSettingController extends Controller
             'bank_account_no' => $request->bank_account_no,
             'ifsc_code' => $request->ifsc_code,
             'status' => 0, // Reset status when updating
+            'bank_name' => $request->bank_name,
+            'branch' => $request->branch,
+            'account_type' => $request->account_type,
+            'relation_name' => $request->relation_name,
         ];
 
         // Only update document fields if new files were uploaded

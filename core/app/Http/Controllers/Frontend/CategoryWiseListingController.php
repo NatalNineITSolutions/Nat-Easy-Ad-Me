@@ -242,8 +242,8 @@ class CategoryWiseListingController extends Controller
                 })
                 ->where([
                     'child_category_id' => $child_category->id,
-                    'status'            => 1,
-                    'is_published'      => 1,
+                    'status' => 1,
+                    'is_published' => 1,
                 ])
                 ->paginate(12);
         }
@@ -441,13 +441,18 @@ class CategoryWiseListingController extends Controller
 
     public function showResume($id)
     {
-        $listing = JobDetail::with(['user', 'user.membershipUser'])->findOrFail($id);
+        $listing = JobDetail::with([
+            'user',
+            'user.membershipUser',
+            'city',
+            'state',
+            'country'
+        ])->findOrFail($id);
 
         if (empty($listing) || $listing->is_published === 0) {
             return redirect_404_page();
         }
 
-        // Increment view count
         $listing->increment('view');
 
         return view('frontend.pages.listings.job-seeker-resume', [

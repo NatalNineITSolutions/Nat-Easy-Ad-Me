@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Backend\Listing;
+use Modules\CountryManage\app\Models\Country;
+use Modules\CountryManage\app\Models\State;
+use Modules\CountryManage\app\Models\City;
 
 class JobDetail extends Model
 {
@@ -39,6 +42,7 @@ class JobDetail extends Model
         'child_category_id',
         'listing_id',
         'image',
+        'dob',
     ];
 
     public function user()
@@ -46,9 +50,20 @@ class JobDetail extends Model
         return $this->belongsTo(User::class);
     }
 
-    // public function listing()
-    // {
-    //     return $this->hasOne(Listing::class, 'job_details_id', 'id');
-    // }
+    public function city()
+    {
+        return $this->belongsTo(City::class, 'city_id');
+    }
+
+    public function state()
+    {
+        return $this->belongsTo(State::class, 'state_id');
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_id');
+    }
+
 
 }

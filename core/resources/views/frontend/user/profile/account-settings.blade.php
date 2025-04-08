@@ -393,6 +393,40 @@
 
                                 <div class="col-12 mt-3">
                                     <div class="input-form">
+                                        <label class="d-block" for="bank_name">{{ __('Bank Name') }}<span class="text-danger">*</span></label>
+                                        <input class="form-control w-100" type="text" name="bank_name" id="bank_name" value="{{ $user_verify_info?->bank_name }}">
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <div class="input-form">
+                                        <label class="d-block" for="branch">{{ __('Branch') }}<span class="text-danger">*</span></label>
+                                        <input class="form-control w-100" type="text" name="branch" id="branch" value="{{ $user_verify_info?->branch }}">
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <div class="input-form">
+                                        <label class="d-block" for="account_type">{{ __('Account Type') }}<span class="text-danger">*</span></label>
+                                        <select class="form-control w-100" name="account_type" id="account_type" required>
+                                            <option value="">{{ __('Select Account Type') }}</option>
+                                            <option value="Savings" {{ $user_verify_info?->account_type == 'Savings' ? 'selected' : '' }}>{{ __('Savings') }}</option>
+                                            <option value="Current" {{ $user_verify_info?->account_type == 'Current' ? 'selected' : '' }}>{{ __('Current') }}</option>
+                                            <option value="Salary" {{ $user_verify_info?->account_type == 'Salary' ? 'selected' : '' }}>{{ __('Salary') }}</option>
+                                            <option value="Fixed Deposit" {{ $user_verify_info?->account_type == 'Fixed Deposit' ? 'selected' : '' }}>{{ __('Fixed Deposit') }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <div class="input-form">
+                                        <label class="d-block" for="relation_name">{{ __('Relation Name (Parents / Spouse / Friend)') }}</label>
+                                        <input class="form-control w-100" type="text" name="relation_name" id="relation_name" value="{{ $user_verify_info?->relation_name }}">
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <div class="input-form">
                                         <label class="d-block" for="ifsc_code">{{ __('IFSC Code') }}<span class="text-danger">*</span></label>
                                         <input class="form-control w-100" type="text" name="ifsc_code" id="ifsc_code" value="{{ $user_verify_info?->ifsc_code }}">
                                     </div>

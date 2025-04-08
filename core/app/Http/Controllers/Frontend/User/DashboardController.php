@@ -13,6 +13,9 @@ use App\Models\Backend\Category;
 use Modules\CountryManage\app\Models\Country;
 use App\Models\JobDetail;
 use App\Models\Backend\SubCategory;
+use Modules\CountryManage\app\Models\City;
+use Modules\CountryManage\app\Models\State;
+use App\Models\Backend\IdentityVerification;
 
 class DashboardController extends Controller
 {
@@ -230,7 +233,7 @@ class DashboardController extends Controller
 
     public function addjobListing(Request $request)
     {
-        /// Get basic data needed for form
+        // Get basic data needed for form
         $formData = [
             'categories' => Category::where('status', 1)->get(),
             'specific_subcategory' => SubCategory::with([
@@ -242,6 +245,8 @@ class DashboardController extends Controller
                 ->where('status', 1)
                 ->first(),
             'countries' => Country::where('status', 1)->get(),
+            'all_states' => State::where('status', 1)->get(),
+            'all_cities' => City::where('status', 1)->get(),
         ];
 
         if ($request->isMethod('post')) {
@@ -251,9 +256,15 @@ class DashboardController extends Controller
                 'email' => 'required|email|max:255',
                 'phone' => 'required|string|max:20',
                 'address' => 'required|string|max:500',
-                'image' => 'nullable|integer|exists:media_uploads,id',
+                'image' => 'required|integer|exists:media_uploads,id',
+                'dob' => 'required|date|before:-18 years',
 
-                // Category Selection
+                // Location Information
+                'country_id' => 'required|exists:countries,id',
+                'state_id' => 'required|exists:states,id',
+                'city_id' => 'required|exists:cities,id',
+
+                // Job Preferences
                 'child_category_id' => 'required|exists:child_categories,id',
 
                 // Resume/CV
@@ -272,11 +283,6 @@ class DashboardController extends Controller
                 'expected_salary' => 'required|numeric',
                 'relocation_willingness' => 'required|boolean',
                 'work_authorization' => 'required|string',
-
-                // Location
-                'country_id' => 'nullable|exists:countries,id',
-                'state_id' => 'nullable|exists:states,id',
-                'city_id' => 'nullable|exists:cities,id',
             ]);
 
             // Create job seeker profile
@@ -284,10 +290,13 @@ class DashboardController extends Controller
                 $validated,
                 [
                     'user_id' => auth()->id(),
-                    'image' => $validated['image'] ?? null,
+                    'image' => $validated['image'],
                     'category_id' => $formData['specific_subcategory']->category_id,
                     'sub_category_id' => 107,
                     'child_category_id' => $validated['child_category_id'],
+                    'country_id' => $validated['country_id'],
+                    'state_id' => $validated['state_id'],
+                    'city_id' => $validated['city_id'],
                 ]
             ));
 
@@ -296,5 +305,177 @@ class DashboardController extends Controller
         }
 
         return view('frontend.user.listings.add-job-listing', $formData);
+    }
+
+    public function getjobseeker()
+    {
+        $jobs = JobDetail::where('user_id', auth()->id())
+            ->latest()
+            ->paginate(10);
+
+        return view('frontend.user.job-listings', compact('jobs'));
+    }
+
+    /**
+     * Show the form for editing a job listing
+     */
+    public function editJob(Request $request, $id)
+    {
+        $jobDetail = JobDetail::where('user_id', auth()->id())->findOrFail($id);
+
+        // Get the form data needed for edit page
+        $formData = [
+            'jobDetail' => $jobDetail,
+            'categories' => Category::where('status', 1)->get(),
+            'specific_subcategory' => SubCategory::with([
+                'childcategories' => function ($query) {
+                    $query->where('status', 1);
+                }
+            ])
+                ->where('id', 107)
+                ->where('status', 1)
+                ->first(),
+            'countries' => Country::where('status', 1)->get(),
+            'all_states' => State::where('status', 1)->get(),
+            'all_cities' => City::where('status', 1)->get(),
+        ];
+
+        if ($request->isMethod('post')) {
+            $validated = $request->validate([
+                'full_name' => 'required|string|max:255',
+                'email' => 'required|email|max:255',
+                'phone' => 'required|string|max:20',
+                'address' => 'required|string|max:500',
+                'image' => 'required|integer|exists:media_uploads,id',
+                'dob' => 'required|date|before:-18 years',
+
+                'country_id' => 'required|exists:countries,id',
+                'state_id' => 'required|exists:states,id',
+                'city_id' => 'required|exists:cities,id',
+
+                'child_category_id' => 'required|exists:child_categories,id',
+
+                'work_experience' => 'required|string',
+                'education' => 'required|string',
+                'skills' => 'required|string',
+                'certifications' => 'nullable|string',
+                'achievements' => 'nullable|string',
+                'projects' => 'nullable|string',
+                'summary' => 'required|string|max:1000',
+                'portfolio_links' => 'nullable|string',
+
+                'availability_date' => 'required|date',
+                'work_preference' => 'required|in:remote,hybrid,onsite',
+                'expected_salary' => 'required|numeric',
+                'relocation_willingness' => 'required|boolean',
+                'work_authorization' => 'required|string',
+            ]);
+
+            $jobDetail->update(array_merge(
+                $validated,
+                [
+                    'category_id' => $formData['specific_subcategory']->category_id,
+                    'sub_category_id' => 107,
+                    'child_category_id' => $validated['child_category_id'],
+                    'country_id' => $validated['country_id'],
+                    'state_id' => $validated['state_id'],
+                    'city_id' => $validated['city_id'],
+                ]
+            ));
+
+            return redirect()->route('job.listings')->with('success', 'Job listing updated successfully!');
+        }
+
+        return view('frontend.user.edit-job-listings', $formData);
+    }
+
+    public function updateJob(Request $request, $id)
+    {
+        $jobDetail = JobDetail::where('user_id', auth()->id())->findOrFail($id);
+
+        $validated = $request->validate([
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:20',
+            'address' => 'required|string|max:500',
+            'image' => 'required|integer|exists:media_uploads,id',
+            'dob' => 'required|date|before:-18 years',
+
+            'country_id' => 'required|exists:countries,id',
+            'state_id' => 'required|exists:states,id',
+            'city_id' => 'required|exists:cities,id',
+
+            'child_category_id' => 'required|exists:child_categories,id',
+
+            'work_experience' => 'required|string',
+            'education' => 'required|string',
+            'skills' => 'required|string',
+            'certifications' => 'nullable|string',
+            'achievements' => 'nullable|string',
+            'projects' => 'nullable|string',
+            'summary' => 'required|string|max:1000',
+            'portfolio_links' => 'nullable|string',
+
+            'availability_date' => 'required|date',
+            'work_preference' => 'required|in:remote,hybrid,onsite',
+            'expected_salary' => 'required|numeric',
+            'relocation_willingness' => 'required|boolean',
+            'work_authorization' => 'required|string',
+        ]);
+
+        // Assuming sub_category_id is fixed to 107
+        $subcategory = SubCategory::with('category')->where('id', 107)->where('status', 1)->firstOrFail();
+
+        $jobDetail->update(array_merge(
+            $validated,
+            [
+                'category_id' => $subcategory->category_id,
+                'sub_category_id' => $subcategory->id,
+            ]
+        ));
+
+        return redirect()->route('user.job.listings')->with('success', 'Job listing updated successfully!');
+    }
+
+    public function deleteJob($id)
+    {
+        $job = JobDetail::where('user_id', auth()->id())
+            ->findOrFail($id);
+
+        $job->delete();
+
+        return redirect()->route('user.job.listings')
+            ->with('success', 'Job listing deleted successfully');
+    }
+
+    public function showProfile()
+    {
+        $user = auth()->user(); // Get the logged-in user
+
+        // Get identity verification details
+        $verification = IdentityVerification::where('user_id', $user->id)->first();
+        $sponsor = User::where('id', $user->sponsor_id)->first();
+
+        $profile = [
+            'profile_id' => $user->partner_id,
+            'sponsor_id' => $sponsor?->partner_id,
+            'full_name' => $user->full_name,
+            'dob' => $user->dob,
+            'gender' => $user->gender,
+            'whatsapp_no' => $user->phone,
+            'mobile_number' => $user->phone,
+            'father_husband_name' => $verification->relation_name ,
+            'completion_percentage' => $verification ? 100 : 0,
+            'email' => $user->email,
+            'nominee_name' => $verification->nominee_name,
+            'bank_name' => $verification->bank_name,
+            'branch' => $verification->branch,
+            'ifsc_code' => $verification->ifsc_code ,
+            'account_no' => $verification->bank_account_no,
+            'account_type' => $verification->account_type,
+            'image' => $user->image,
+        ];
+
+        return view('frontend.user.profile.main-profile', compact('profile'));
     }
 }

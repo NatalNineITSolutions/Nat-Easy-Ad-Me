@@ -198,7 +198,7 @@
                                 </p>
                                 <!-- <button id="showMoreButton" class="show-more-btn">{{ __('Show More') }}</button> -->
                                 <a href="{{ route('job-seeker.resume', $listing->id) }}" class="btn btn-primary mb-3" target="_blank">
-    {{ __('Show Resume') }}
+    {{ __('Show Profile') }}
 </a>
                             </div>
                         </div>
@@ -209,8 +209,6 @@
                     <div class="seller-part mt-3 d-md-none">
                         <x-listings.user-listing-phone-for-responsive :listing="$listing" />
                     </div>
-                    <!--Relevant Ads-->
-                    @include('frontend.pages.listings.relevant-listing')
                 </div>
                 
                 <!-- Right Sidebar (common for both types) -->

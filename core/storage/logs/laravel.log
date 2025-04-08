@@ -1348,3 +1348,10 @@
 [2025-04-08 13:16:44] production.INFO: Referral details {"entered_partner_id":"EAMAEPK9L","sponsor_id":57,"tree_parent_id":58,"position":"right"} 
 [2025-04-08 13:16:45] production.INFO: User created successfully. {"user_id":87} 
 [2025-04-08 13:16:45] production.INFO: Commission added to sponsor {"sponsor_id":57,"sponsor_partner_id":"EAMAEPK9L","amount":0} 
+[2025-04-08 13:20:59] production.INFO: Profile ID: 38, First Image ID: 989, Unlocked: Yes  
+[2025-04-08 13:20:59] production.INFO: Profile ID: 49, First Image ID: 1002, Unlocked: Yes  
+[2025-04-08 13:20:59] production.INFO: Profile ID: 48, First Image ID: 1001, Unlocked: Yes  
+[2025-04-08 13:20:59] production.INFO: Profile ID: 37, First Image ID: 985, Unlocked: Yes  
+[2025-04-08 13:20:59] production.INFO: Profile ID: 46, First Image ID: 963, Unlocked: Yes  
+[2025-04-08 13:20:59] production.INFO: Profile ID: 47, First Image ID: 961, Unlocked: Yes  
+[2025-04-08 13:20:59] production.INFO: Profile ID: 7, First Image ID: profile_images/LaphsyMiRD60l9qxQtIWOzIDQsDSbzK53WYCAqVg.png, Unlocked: Yes  

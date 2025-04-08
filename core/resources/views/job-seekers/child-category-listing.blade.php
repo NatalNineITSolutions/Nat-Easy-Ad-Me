@@ -61,7 +61,7 @@
                                         <div class="singleFeatureCard">
                                             <div class="featureImg">
                                                 <x-listings.favorite-item-add-remove :favorite="$listing->id ?? 0" />
-                                                <a href="{{ route('frontend.listing.details', $listing->slug ?? '#') }}"
+                                                <a href="{{ route('frontend.jobseeker.details', $listing->id ?? '#') }}"
                                                     class="main-card-image">
                                                     {!! render_image_markup_by_attachment_id($listing->image ?? null, '', 'thumb') !!}
                                                 </a>
@@ -69,7 +69,7 @@
                                             <div class="featurebody">
                                                 <div class="card-body-top">
                                                     <h4>
-                                                        <a href="{{ route('frontend.listing.details', $listing->slug ?? '#') }}"
+                                                        <a href="{{ route('frontend.jobseeker.details', $listing->id ?? '#') }}"
                                                             class="featureTittle head4 twoLine">
                                                             {{ $listing->full_name ?? __('No Title') }}
                                                         </a>

@@ -40,6 +40,18 @@
             font-size: 13px;
             font-weight: 600;
         }
+
+        .btn-profile {
+            padding: 8px 12px;
+            background-color: #FF166C;
+            border: none;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: white;
+            text-decoration: none;
+        }
         
     </style>
 @endsection
@@ -68,29 +80,35 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($requests as $request)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $request->profile->name ?? 'N/A' }}</td>
-                                <td>
-                                    @if(strtolower($request->status) == 'accepted')
-                                        <span style="color: green;">{{ $request->status }}</span>
-                                    @elseif(strtolower($request->status) == 'rejected')
-                                        <span style="color: red;">{{ $request->status }}</span>
-                                    @else
-                                        {{ $request->status }}
-                                    @endif
-                                </td>
-                                <td>{{ $request->created_at->format('d M Y') }}</td>
-                            </tr>
-                            @endforeach
+                            @forelse($requests as $request)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>
+                                        {{ $request->profile->name ?? 'N/A' }} 
+                                        <br> 
+                                        <a href="{{ route('matrimony.profile-details', $request->profile->id) }}" class="btn btn-profile mt-1">
+                                            View Profile
+                                        </a>
+                                    </td>
+                                    <td>
+                                        @php $status = strtolower($request->status); @endphp
+                                        @if($status == 'accepted')
+                                            <span style="color: green;">{{ ucfirst($request->status) }}</span>
+                                        @elseif($status == 'rejected')
+                                            <span style="color: red;">{{ ucfirst($request->status) }}</span>
+                                        @else
+                                            {{ ucfirst($request->status) }}
+                                        @endif
+                                    </td>
+                                    <td>{{ $request->created_at->format('d M Y') }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">You haven’t sent any requests yet.</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
-                    
-                    @if($requests->isEmpty())
-                        <div class="alert alert-info">No requests found</div>
-                    @endif
-                    
                 </div>
             </main>
         </div>

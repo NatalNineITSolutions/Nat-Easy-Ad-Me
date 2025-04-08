@@ -96,7 +96,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($profiles as $index => $profile)
+                            @forelse ($profiles as $index => $profile)
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ $profile->name }}</td>
@@ -106,7 +106,7 @@
                                             $statusText = 'Pending';
                                             $statusColor = 'red';
                                             $rejectionReason = '';
-                    
+                        
                                             if ($profile->is_verified == 1) {
                                                 $statusText = 'Verified';
                                                 $statusColor = 'green';
@@ -116,24 +116,30 @@
                                                 $rejectionReason = $profile->rejection_reason;
                                             }
                                         @endphp
-                    
+                        
                                         <span style="color: {{ $statusColor }};">
                                             {{ $statusText }}
                                         </span>
-                    
+                        
                                         @if($profile->is_verified == 2 && $rejectionReason)
                                             <br>
                                             <small class="text-muted">Reason: {{ $rejectionReason }}</small>
                                             <br>
                                             <!-- Refill Form Button -->
-                                            <a href="/matrimony/update-profile/{{ $profile->id ?? '' }}" class="btn btn-sm btn-primary mt-2">
+                                            <a href="{{ route('matrimony.update-profile', $profile->id) }}" class="btn btn-sm btn-primary mt-2">
                                                 Refill Form
                                             </a>
                                         @endif
                                     </td>
                                 </tr>
-                            @endforeach
-                        </tbody>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">
+                                        You are yet to list the users.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>                        
                     </table>
                     
                 </div>

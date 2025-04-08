@@ -712,30 +712,30 @@
 
     {{-- Show modal --}}
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const modal = document.getElementById('senderProfileModal');
-        const closeBtn = document.querySelector('.close-btn');
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('senderProfileModal');
+            const closeBtn = document.querySelector('.close-btn');
 
-        document.querySelectorAll('.view-sender-profile').forEach(button => {
-            button.addEventListener('click', () => {
-                document.getElementById('modal-username').textContent = button.dataset.username || 'N/A';
-                document.getElementById('modal-email').textContent = button.dataset.email || 'N/A';
-                document.getElementById('modal-phone').textContent = button.dataset.phone || 'N/A';
-                document.getElementById('modal-created').textContent = button.dataset.created || 'N/A';
+            document.querySelectorAll('.view-sender-profile').forEach(button => {
+                button.addEventListener('click', () => {
+                    document.getElementById('modal-username').textContent = button.dataset.username || 'N/A';
+                    document.getElementById('modal-email').textContent = button.dataset.email || 'N/A';
+                    document.getElementById('modal-phone').textContent = button.dataset.phone || 'N/A';
+                    document.getElementById('modal-created').textContent = button.dataset.created || 'N/A';
 
-                modal.style.display = 'block';
+                    modal.style.display = 'block';
+                });
+            });
+
+            closeBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+
+            window.addEventListener('click', (e) => {
+                if (e.target == modal) {
+                    modal.style.display = 'none';
+                }
             });
         });
-
-        closeBtn.addEventListener('click', () => {
-            modal.style.display = 'none';
-        });
-
-        window.addEventListener('click', (e) => {
-            if (e.target == modal) {
-                modal.style.display = 'none';
-            }
-        });
-    });
-</script>
+    </script>
 @endsection

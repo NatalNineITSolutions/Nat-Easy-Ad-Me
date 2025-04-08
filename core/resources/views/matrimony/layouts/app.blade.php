@@ -179,6 +179,7 @@
 
         .auth-buttons {
             display: flex;
+            align-items: center;
             gap: 5px;
             cursor: pointer;
         }
@@ -348,13 +349,13 @@
 
 <body>
 
-    @include('matrimony.partials.header') <!-- Include the header -->
-
+    @include('matrimony.partials.header') 
+    
     <div class="content">
-        @yield('content') <!-- Dynamic content section -->
+        @yield('content') 
     </div>
 
-    @include('matrimony.partials.footer') <!-- Include the footer -->
+    @include('matrimony.partials.footer') 
 
     {{-- Bootstrap --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

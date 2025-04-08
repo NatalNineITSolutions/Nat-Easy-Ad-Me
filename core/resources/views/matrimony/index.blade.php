@@ -149,181 +149,6 @@
         }
 
         /* Product slider */
-        .card-slider {
-            max-width: 960px;
-            margin: 0 auto;
-
-            @media screen and (max-width: 1024px) {
-                width: 80%;
-            }
-
-            .slick-prev-icon,
-            .slick-next-icon {
-                color: black;
-            }
-
-            .card {
-                position: relative;
-                display: flex !important;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                padding: 15px;
-                border-radius: 3px;
-                border: 1px solid rgba(0, 0, 0, .2);
-                background-color: white;
-                text-decoration: none;
-                color: rgba(0, 0, 0, .9);
-                transition: all .1s linear;
-
-                @media screen and (max-width: 600px) {
-                    height: auto;
-                }
-            }
-
-            .card h2 {
-                font-size: 15px;
-                font-weight: 600;
-                text-align: center;
-                margin-top: 15px;
-                margin-bottom: 15px;
-            }
-
-            .card p {
-                font-size: 12px;
-                font-weight: 600;
-            }
-
-            /** Product title */
-            .card .title {
-                color: #000;
-                margin: 0;
-                padding: 10px 10px 5px 10px;
-                font-size: 16px;
-                font-weight: bold;
-            }
-
-            .card .title:hover {
-                text-decoration: underline;
-            }
-
-            /** Product image */
-            .card .image {
-                /** Visually place the image above all other content (like the heading) in the parent flex container (.card). */
-                order: -1;
-
-                position: relative;
-                height: 100px;
-                padding: 2px;
-                overflow: hidden;
-
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-
-            .card .image img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                filter: grayscale(.5);
-                transition: all .3s ease-in-out;
-            }
-
-            .card .image:hover img {
-                width: 110%;
-                height: 110%;
-            }
-
-            /** Product description */
-            .card .description {
-                margin: 7px 10px 15px 10px;
-                font-size: 14px;
-                opacity: .8;
-            }
-
-            /** Floating "sale" badge */
-            .card .badge {
-                position: absolute;
-                top: 2px;
-                right: 2px;
-                z-index: 1;
-
-                padding: 5px 10px;
-
-                font-size: 12px;
-                font-weight: bold;
-                text-transform: uppercase;
-                color: white;
-                background-color: rgb(200, 0, 0);
-            }
-
-            /** Price */
-            .card .price {
-                padding-left: 10px;
-            }
-
-            .card .price .new-price {
-                font-weight: bold;
-            }
-
-            .card .price .original-price {
-                margin-left: 5px;
-                font-size: 14px;
-                font-style: italic;
-                opacity: .5;
-                text-decoration: line-through;
-            }
-
-            /** Rating */
-            .card .rating {
-                margin: 10px 0 15px 10px;
-                color: orange;
-                font-size: 12px;
-            }
-
-            /** "30 reviews" link next to stars */
-            .card .rating .reviews-link {
-                color: rgba(0, 0, 0, .6);
-                margin-left: 5px;
-            }
-
-            .card .rating .reviews-link:hover {
-                color: black;
-            }
-
-            .card .rating .reviews-link:focus {
-                color: royalblue;
-                outline: 3px dotted royalblue;
-                outline-offset: 2px;
-            }
-
-            /** Hover state = add box shadow, underline the title */
-            .card:hover {
-                border-color: rgba(0, 0, 0, .4);
-                box-shadow: 0 0 10px 0 rgba(0, 0, 0, .15);
-            }
-
-            .card:hover .image img,
-            .card:focus .image img {
-                filter: grayscale(0);
-            }
-
-            .card a:focus {
-                outline: none;
-            }
-        }
-
-        .slick-next,
-        .slick-prev {
-            background-color: black;
-        }
-
-        .slick-next:hover,
-        .slick-prev:hover {
-            background-color: black;
-        }
-
         .profile-container {
             margin-top: 30px;
             display: flex;
@@ -344,14 +169,6 @@
 
         .dividers img:nth-child(2) {
             transform: rotate(-180deg);
-        }
-
-        .card-slider {
-            margin-top: 30px;
-        }
-
-        .card-profile {
-            width: 60px;
         }
 
         .profile-container-section {
@@ -380,10 +197,6 @@
             color: #66451C;
         }
 
-        .slick-slide {
-            margin: 0 5px;
-        }
-
         .btn-profile {
             padding: 10px 15px;
             background-color: #FF166C;
@@ -398,43 +211,31 @@
 
         /* Main container */
         .profile-container {
-            margin: 30px auto 60px;
-            max-width: 1200px;
+            max-width: 1500px;
             padding: 0 20px;
-        }
-
-        /* Card slider container */
-        .card-slider-container {
-            width: 100%;
-            margin: 30px auto 0;
-            position: relative;
         }
 
         /* Card slider styles */
         .card-slider {
             margin: 0 auto;
-            max-width: 1000px;
+            max-width: 1300px;
             padding: 20px 0;
         }
 
-        /* Individual card styling */
-        .card {
-            position: relative;
-            display: flex !important;
+        .card-slider .card {
+            display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
             border-radius: 8px;
-            border: 1px solid rgba(0, 0, 0, .1);
-            background-color: white;
-            color: rgba(0, 0, 0, .9);
             transition: all 0.3s ease;
             margin: 0 15px;
-            /* Space between cards */
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            height: 100%;
+            padding: 20px 15px;
         }
+
+        /* .card img {
+            height: 100px;
+        } */
 
         .card h2 {
             font-size: 18px;
@@ -450,14 +251,6 @@
             margin: 5px 0;
             text-align: center;
             color: #555;
-        }
-
-        .card-profile {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #f8f8f8;
         }
 
         /* Slick slider customizations */
@@ -521,9 +314,11 @@
             color: white;
             text-decoration: none;
             border-radius: 4px;
-            font-size: 13px;
+            font-size: 11px;
             font-weight: 600;
             transition: all 0.3s ease;
+            width: 100%;
+            text-align: center;
         }
 
         .btn-profile:hover {
@@ -589,55 +384,7 @@
                 right: -15px;
             }
         }
-
-        /* Force display of single card */
-        .card-slider .slick-track {
-            display: flex !important;
-            gap: 15px;
-        }
-
-        .card-slider .slick-slide {
-            float: none !important;
-            height: auto !important;
-        }
-
-        /* Center single card */
-        .card-slider .slick-list {
-            overflow: visible;
-            text-align: center;
-        }
-
-        .card-slider .card {
-            margin: 0 auto;
-        }
-
-        /* Fallback style when only one card exists */
-        .single-card-fallback {
-            max-width: 300px;
-            margin: 0 auto;
-        }
-
-        .single-card-fallback .card {
-            width: 100% !important;
-            float: none !important;
-        }
-
-        .card-slider .slick-slide {
-            min-width: 280px !important;
-            /* Your card's natural width */
-            width: auto !important;
-        }
-
-        /* Fix for hidden initialization */
-        .card-slider.slick-initialized {
-            visibility: visible !important;
-        }
-
-        /* Container constraints */
-        .card-slider {
-            overflow: visible;
-        }
-
+        
         /* Perfect match */
         .perfect-match-banner {
             position: relative;
@@ -800,6 +547,44 @@
             -webkit-filter: blur(8px);
             transition: filter 0.3s ease;
         }
+
+        .user-details {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .details {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        .age,
+        .occupation,
+        .location {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .age,
+        .occupation,
+        .location  p {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .slick-prev:hover {
+            background: #C48C46;
+        }
+        
+        .slick-next:hover {
+            background: #C48C46;
+        }
     </style>
 @endsection
 
@@ -854,16 +639,28 @@
                 @forelse($profiles as $profile)
                     <div class="card">
                         @if (Str::startsWith($profile->first_image_url, '<img'))
-                            <div class="card-profile">{!! $profile->first_image_url !!}</div>
+                            <div>{!! str_replace('<img', '<img style="height: 100px;"', $profile->first_image_url) !!}</div>
                         @else
-                            <img class="card-profile" src="{{ $profile->first_image_url }}" alt="{{ $profile->name }}">
+                            <img src="{{ $profile->first_image_url }}" alt="{{ $profile->name }}" style="height: 100px;">
                         @endif
-                        <h2>{{ $profile->name }}</h2>
-                        <p>📅 {{ $profile->age }} Years</p>
-                        <p>💼 {{ $profile->occupation ?? 'Not specified' }}</p>
-                        <p>📍 {{ $profile->city ?? 'Location not specified' }}</p>
-                        <a href="{{ route('matrimony.profile-details', ['id' => $profile->id]) }}" class="btn-profile">View
-                            Profile</a>
+                        <div class="mt-3 user-details">
+                            <h2>{{ $profile->name }}</h2>
+                            <div class="details">
+                                <div class="age">
+                                    <img src="/assets/uploads/matrimony/age.png" alt="">
+                                    <p>{{ $profile->age }} Years</p>
+                                </div>
+                                <div class="occupation">
+                                    <img src="/assets/uploads/matrimony/occupation.png" alt="">
+                                    <p>{{ $profile->occupation ?? 'Not specified' }}</p>
+                                </div>
+                            </div>
+                            <div class="location">
+                                <img src="/assets/uploads/matrimony/location.png" alt="">
+                                <p>{{ $profile->city ?? 'Location not specified' }}</p>
+                            </div>
+                            <a href="{{ route('matrimony.profile-details', ['id' => $profile->id]) }}" class="btn-profile">View Profile</a>
+                        </div>
                     </div>
                 @empty
                     <div class="card">

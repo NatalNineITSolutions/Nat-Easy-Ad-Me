@@ -307,7 +307,6 @@
             }
         }
 
-
         @media (max-width: 600px) {
             .profile-card {
                 width: 90%;
@@ -357,6 +356,10 @@
             font-size: 13px;
             font-weight: 600;
         }
+
+        .main-profile-image img {
+            width: 150px;
+        }
     </style>
 
 @endsection
@@ -404,9 +407,10 @@
                         <h2>{{ $profile->name ?? 'User' }} <span>👑</span></h2>
                     </div>
                     <div class="details">
-                        <p><span>Education:</span> {{ $profile->education ?? 'Not specified' }}</p>
-                        <p><span>Age & Religion:</span> {{ $profile->age ?? '' }}, {{ $profile->religion ?? '' }}</p>
+                        <p><span>Age:</span> {{ $profile->age ?? '' }}</p>
                         <p><span>Occupation:</span> {{ $profile->occupation ?? 'Not specified' }}</p>
+                        <p><span>Annual Income:</span> {{ $profile->annual_income ?? 'Not specified' }}</p>
+                        <p><span>Description:</span> {{ $profile->description ?? 'Not specified' }}</p>
                     </div>
                     <div class="profile-info">
                         @if(!$isOwnProfile)
@@ -457,7 +461,7 @@
                 <div class="profile-bottom" id="profileTabs" style="{{ $isUnlocked ? '' : 'display: none;' }}">
                     <div class="profile-tabs">
                         <button class="tab-link active" data-tab="description"
-                            onclick="openTab(event, 'description')">Descriptions</button>
+                            onclick="openTab(event, 'description')">Description</button>
                         <button class="tab-link" data-tab="gallery" onclick="openTab(event, 'photos')">Photos</button>
                         <button class="tab-link" data-tab="contact" onclick="openTab(event, 'contact')">Contact</button>
                         <!-- <button class="tab-link" data-tab="jothagam" onclick="openTab(event, 'jothagam')">Jathagam</button> -->

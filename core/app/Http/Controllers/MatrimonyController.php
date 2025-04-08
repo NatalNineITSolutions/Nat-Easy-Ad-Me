@@ -44,6 +44,12 @@ class MatrimonyController extends Controller
             ->pluck('profile_id')
             ->toArray();
 
+        $notificationCount = ProfileRequest::whereHas('profile', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+            })
+            ->where('status', 'pending')
+            ->count();
+
         $profiles = ProfileListing::where('is_verified', 1)
             ->where('id', '!=', $user->id)
             ->select('id', 'name', 'age', 'occupation', 'city', 'image', 'mother_tongue')
@@ -82,10 +88,9 @@ class MatrimonyController extends Controller
                 return $profile;
             });
 
-        return view('matrimony.index', compact('profiles'));
+            return view('matrimony.index', compact('profiles', 'notificationCount'));
     }
 
-    
     public function searchresults(Request $request)
     {
         $gender = $request->gender;
@@ -540,7 +545,12 @@ class MatrimonyController extends Controller
 
     public function profilelists()
     {
-        $profiles = ProfileListing::select('id', 'name', 'age', 'is_verified', 'rejection_reason')->get();
+        $userId = auth()->id(); // Get the current logged-in user's ID
+
+        $profiles = ProfileListing::where('user_id', $userId)
+            ->select('id', 'name', 'age', 'is_verified', 'rejection_reason')
+            ->get();
+
         return view('matrimony.profile-lists', compact('profiles'));
     }
 
@@ -730,14 +740,12 @@ class MatrimonyController extends Controller
     public function requestlists()
     {
         $userId = auth()->id();
-        
-        $requests = ProfileRequest::with(['sender', 'profile'])
-            ->whereHas('profile', function($query) use ($userId) {
-                $query->where('user_id', $userId);
-            })
+
+        $requests = ProfileRequest::with(['profile']) // sender is not needed now
+            ->where('sender_id', $userId)
             ->orderBy('created_at', 'desc')
             ->get();
-        
+
         return view('matrimony.requests-lists', compact('requests'));
     }
 

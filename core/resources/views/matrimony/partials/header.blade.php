@@ -16,10 +16,24 @@
         </nav>
 
         <!-- Right Side: Login/Register -->
-        <div class="auth-buttons d-flex align-items-center position-relative">
+        <div class="auth-buttons">
+
+            {{-- @php
+                $count = $notificationCount ?? 0;
+            @endphp
+
+            <a href="#" class="position-relative d-inline-block">
+                <i class="fa fa-bell fa-lg"></i>
+                @if($count > 0)
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {{ $count }}
+                    </span>
+                @endif
+            </a> --}}
+
             @if(auth()->check())
                 <div class="dropdown">
-                    {{-- <button class="btn dropdown-toggle d-flex align-items-center border-0 bg-transparent" 
+                    <button class="btn dropdown-toggle d-flex align-items-center border-0 bg-transparent" 
                             type="button" 
                             id="authDropdown" 
                             data-bs-toggle="dropdown" 
@@ -29,20 +43,18 @@
                              class="rounded-circle" 
                              width="40" height="40">
                         <p class="profile mb-0 ms-2">{{ auth()->user()->username }}</p>
-                    </button> --}}
-                    <button class="btn border-0 bg-transparent d-flex align-items-center">
+                    </button>
+
+                    {{-- <button class="btn border-0 bg-transparent d-flex align-items-center">
                         <img src="{{ auth()->user()->profile_image ?? '/assets/uploads/matrimony/avatar.png' }}" 
                              alt="Profile Image" 
                              class="rounded-circle" 
                              width="40" height="40">
                         <span class="ms-2 username">{{ auth()->user()->username }}</span>
-                    </button>
-                    {{-- <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="authDropdown">
+                    </button> --}}
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="authDropdown">
                         <li><a class="dropdown-item" href="/matrimony/profile">Profile</a></li>
-                        <li>
-                            <a class="dropdown-item" href="#">Logout</a>
-                        </li>
-                    </ul> --}}
+                    </ul>
                 </div>
             @endif
         </div>

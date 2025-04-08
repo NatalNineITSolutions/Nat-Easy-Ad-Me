@@ -17044,7 +17044,7 @@ object {
         }
       }
       .main-body{
-        max-width:832px;
+        
         flex: 1;
         .edit-btn{
           a{
@@ -19427,9 +19427,6 @@ object {
   .new-style .favourite-ads .relevant-ads .single-add-card .single-add-image {
     max-width: 134px;
   }
-  .new-style .profile-setting.my-account .edit-btn {
-    margin-left: 68px;
-  }
    /*Walet page*/
    .new-style .profile-setting.setting-page-with-table .profile-setting-wraper {
     max-width: 720px;
@@ -19513,4 +19510,3 @@ object {
     }
   }
 }
-

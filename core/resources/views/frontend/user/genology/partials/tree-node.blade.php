@@ -323,7 +323,7 @@
         @media (max-width: 768px) {
             .mobile-tree {
                 padding: 0 10px;
-                overflow-x: hidden; /* Prevent horizontal scroll */
+                overflow-x: hidden; 
             }
 
             .mlm-node-card {
@@ -363,29 +363,7 @@
         }
 
         /* Mobile adjustments - ONLY padding reduction and scroll */
-        @media only screen and (max-width: 768px) {
-            .mlm-tree {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-                padding: 20px 10px; /* Slightly reduce side padding */
-            }
-
-            .tree {
-                min-width: 600px; /* Ensure tree maintains its width */
-                width: auto;
-                display: inline-block; /* Prevent vertical overflow */
-            }
-
-            /* Optional: Add scroll indicator for mobile */
-            .mlm-tree::-webkit-scrollbar {
-                height: 5px;
-            }
-            
-            .mlm-tree::-webkit-scrollbar-thumb {
-                background: rgba(255,255,255,0.3);
-                border-radius: 5px;
-            }
-        }
+       
     </style>
     {{-- <style>
         .mlm-node-card {

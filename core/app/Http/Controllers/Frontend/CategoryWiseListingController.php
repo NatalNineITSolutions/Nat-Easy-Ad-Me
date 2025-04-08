@@ -315,7 +315,7 @@ class CategoryWiseListingController extends Controller
     public function show($id)
     {
         $listing = JobDetail::with(['user', 'user.membershipUser'])->findOrFail($id);
-
+        
         if (empty($listing)) {
             return redirect_404_page();
         }

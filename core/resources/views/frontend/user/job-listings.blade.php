@@ -113,6 +113,45 @@
             padding: 5px 10px;
             font-size: 12px;
         }
+
+        @media (max-width: 768px) {
+            table thead {
+                display: none;
+            }
+
+            table tbody tr {
+                display: block;
+                margin-bottom: 15px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                padding: 10px;
+                background-color: #fff;
+            }
+
+            table tbody tr td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 8px 10px;
+                border: none;
+                border-bottom: 1px solid #eee;
+            }
+
+            table tbody tr td::before {
+                content: attr(data-label);
+                font-weight: bold;
+                color: #333;
+                flex-basis: 40%;
+            }
+
+            table tbody tr td:last-child {
+                border-bottom: none;
+            }
+
+            .action-btns {
+                justify-content: flex-end;
+            }
+        }
     </style>
 @endsection
 @section('content')
@@ -163,8 +202,9 @@
                                                                                 class="btn btn-primary btn-sm" title="Edit">
                                                                                 <i class="las la-edit"></i>
                                                                             </a>
-                                                                            
-                                                                            <form action="{{ route('user.delete.job', $job->id) }}"
+
+                                                                            <form
+                                                                                action="{{ route('user.delete.job', $job->id) }}"
                                                                                 method="POST"
                                                                                 onsubmit="return confirm('Are you sure you want to delete this job?');">
                                                                                 @csrf
@@ -181,7 +221,8 @@
                                                             @empty
                                                                 <tr>
                                                                     <td colspan="6" class="text-center">
-                                                                        {{ __('No job listings found.') }}</td>
+                                                                        {{ __('No job listings found.') }}
+                                                                    </td>
                                                                 </tr>
                                                             @endforelse
                                                         </tbody>

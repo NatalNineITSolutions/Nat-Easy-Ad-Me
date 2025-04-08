@@ -7,7 +7,7 @@
     $page_info = request()->url();
     $str = explode("/", request()->url());
     $page_info = $str[count($str) - 2];
-    ?>
+        ?>
     {{ __(ucwords(str_replace("-", " ", $page_info))) }}
 @endsection
 @section('inner-title')
@@ -25,9 +25,11 @@
             border-radius: 8px;
             margin-bottom: 20px;
         }
+
         .job-seeker-detail {
             margin-bottom: 15px;
         }
+
         .job-seeker-detail strong {
             display: inline-block;
             min-width: 150px;
@@ -67,13 +69,14 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     @if($listing->jobDetails->image)
-                                        <img src="{{ asset($listing->jobDetails->image) }}" class="img-fluid rounded mb-3" alt="Profile Picture">
+                                        <img src="{{ asset($listing->jobDetails->image) }}" class="img-fluid rounded mb-3"
+                                            alt="Profile Picture">
                                     @endif
                                 </div>
                                 <div class="col-md-8">
                                     <h4 class="mb-3">{{ __('Professional Summary') }}</h4>
                                     <p>{{ $listing->jobDetails->summary }}</p>
-                                    
+
                                     <div class="row mt-4">
                                         <div class="col-md-6">
                                             <div class="job-seeker-detail">
@@ -173,7 +176,8 @@
                                     @endif
                                     @if(!empty($listing->expected_salary))
                                         <div class="col-4">
-                                            {{ __('Expected Salary:') }} <span class="text-bold"> {{ $listing->expected_salary }}</span>
+                                            {{ __('Expected Salary:') }} <span class="text-bold">
+                                                {{ $listing->expected_salary }}</span>
                                         </div>
                                     @endif
                                     @if(!empty($listing->location))
@@ -192,14 +196,16 @@
                             <div class="devider"></div>
                             <!-- Mid -->
                             <div class="descriptionMid">
-                                <h4 class="disTittle">{{ get_static_option('listing_description_title') ?? __('Description') }}</h4>
+                                <h4 class="disTittle">{{ get_static_option('listing_description_title') ?? __('Description') }}
+                                </h4>
                                 <p class="pera" id="description">
                                     {!! Str::limit(str_replace('&nbsp;', ' ', strip_tags($listing->summary)), 20000) !!}
                                 </p>
                                 <!-- <button id="showMoreButton" class="show-more-btn">{{ __('Show More') }}</button> -->
-                                <a href="{{ route('job-seeker.resume', $listing->id) }}" class="btn btn-primary mb-3" target="_blank">
-    {{ __('Show Profile') }}
-</a>
+                                <a href="{{ route('job-seeker.resume', $listing->id) }}" class="btn btn-primary mb-3"
+                                    target="_blank">
+                                    {{ __('Show Profile') }}
+                                </a>
                             </div>
                         </div>
                     @endif
@@ -210,13 +216,30 @@
                         <x-listings.user-listing-phone-for-responsive :listing="$listing" />
                     </div>
                 </div>
-                
+
                 <!-- Right Sidebar (common for both types) -->
                 <div class="col-xl-4 col-lg-4 col-md-4">
                     <div class="seller-part">
                         <!--user info -->
-                        <div class="d-none d-md-block">
-                            <x-listings.user-listing-phone :listing="$listing" />
+                        <div class="seller-phone text-center">
+                            <p>{{ __('Phone') }}</p>
+
+                            {{-- Masked number by default --}}
+                            <span class="number" id="maskedNumber">
+                                {{ __('+880 XXX XXX XX') }}
+                            </span>
+
+                            {{-- Real number (hidden initially) --}}
+                            @if(!$listing->phone_hidden)
+                                <div class="number d-none" id="realPhoneNumber">
+                                    {{ $listing->phone }}
+                                </div>
+
+                                {{-- Show number button --}}
+                                <a href="#" class="show-number" id="showPhoneNumberBtn">
+                                    {{ __('Show Number') }}
+                                </a>
+                            @endif
                         </div>
 
                         <div class="share-on-wraper">
@@ -224,18 +247,6 @@
                         </div>
 
                         @include('frontend.pages.listings.frontend-enquiry-form')
-
-                        <div class="map-wraper box-shadow1">
-                            <h3 class="head5">{{ __('Map') }}</h3>
-                            <p>{{ $listing->address }}</p>
-                            <div class="map">
-                                @if (!empty(get_static_option("google_map_settings_on_off")))
-                                    <div id="single-map-canvas"
-                                        style="height: 230px; width: 100%; position: relative; overflow: hidden;">
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -257,5 +268,28 @@
     <x-listings.listing-report-add-js />
     <script>
         // Your existing JavaScript
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const showBtn = document.getElementById('showPhoneNumberBtn');
+            const maskedNumber = document.getElementById('maskedNumber');
+            const realNumber = document.getElementById('realPhoneNumber');
+
+            if (showBtn && maskedNumber && realNumber) {
+                showBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    // Hide the masked number
+                    maskedNumber.classList.add('d-none');
+
+                    // Show the real number
+                    realNumber.classList.remove('d-none');
+
+                    // Hide the button itself
+                    showBtn.classList.add('d-none');
+                });
+            }
+        });
     </script>
 @endsection

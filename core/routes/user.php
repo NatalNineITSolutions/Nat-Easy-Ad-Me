@@ -61,9 +61,9 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
 
         // job seeker
         Route::controller(DashboardController::class)->group(function () {
-            Route::group(['prefix' => 'listing'], function () {
+            Route::group(['prefix' => 'info'], function () {
                 Route::match(['get', 'post'], '/add-job', 'addjobListing')->name('addjob.listing');
-                Route::get('/job-listings', 'getjobseeker')->name('job.listings');
+                Route::get('/job-listings', 'getjobseeker')->name('job.info');
                 Route::get('/edit-job/{id}', 'editJob')->name('edit.job');
                 Route::put('/update-job/{id}', 'updateJob')->name('update.job');
                 Route::delete('/delete-job/{id}', 'deleteJob')->name('delete.job');

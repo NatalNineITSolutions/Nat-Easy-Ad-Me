@@ -450,11 +450,20 @@ class DashboardController extends Controller
 
     public function showProfile()
     {
-        $user = auth()->user(); // Get the logged-in user
-
-        // Get identity verification details
+        $user = auth()->user();
         $verification = IdentityVerification::where('user_id', $user->id)->first();
         $sponsor = User::where('id', $user->sponsor_id)->first();
+
+        // Get profile stats
+        $user_ads_posted = $user->listings()->count();
+        $averageRating = $user->reviews?->avg('rating');
+        $user_review_count = $user->reviews?->count();
+
+        // Calculate age
+        $age = null;
+        if ($user->dob) {
+            $age = now()->diffInYears($user->dob);
+        }
 
         $profile = [
             'profile_id' => $user->partner_id,
@@ -464,16 +473,27 @@ class DashboardController extends Controller
             'gender' => $user->gender,
             'whatsapp_no' => $user->phone,
             'mobile_number' => $user->phone,
-            'father_husband_name' => $verification->relation_name ,
+            'father_husband_name' => $verification->relation_name ?? null,
             'completion_percentage' => $verification ? 100 : 0,
             'email' => $user->email,
-            'nominee_name' => $verification->nominee_name,
-            'bank_name' => $verification->bank_name,
-            'branch' => $verification->branch,
-            'ifsc_code' => $verification->ifsc_code ,
-            'account_no' => $verification->bank_account_no,
-            'account_type' => $verification->account_type,
+            'nominee_name' => $verification->nominee_name ?? null,
+            'bank_name' => $verification->bank_name ?? null,
+            'branch' => $verification->branch ?? null,
+            'ifsc_code' => $verification->ifsc_code ?? null,
+            'account_no' => $verification->bank_account_no ?? null,
+            'account_type' => $verification->account_type ?? null,
             'image' => $user->image,
+            'user_ads_posted' => $user_ads_posted,
+            'average_rating' => $averageRating,
+            'review_count' => $user_review_count,
+            'age' => $age,
+            'created_at' => $user->created_at,
+            'address' => $user->address,
+            'country_id' => $user->country_id,
+            'state_id' => $user->state_id,
+            'city_id' => $user->city_id,
+            'phone' => $user->phone,
+            'is_verified' => $user->email_verified_at && $user->phone_verified_at
         ];
 
         return view('frontend.user.profile.main-profile', compact('profile'));

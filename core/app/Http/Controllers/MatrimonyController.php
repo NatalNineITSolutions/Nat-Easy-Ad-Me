@@ -49,6 +49,9 @@ class MatrimonyController extends Controller
             })
             ->where('status', 'pending')
             ->count();
+            
+            // Log the notification count
+            Log::info("Pending profile requests count for user {$user->id}: {$notificationCount}");
 
         $profiles = ProfileListing::where('is_verified', 1)
             ->where('id', '!=', $user->id)
@@ -715,7 +718,13 @@ class MatrimonyController extends Controller
         $requestModel->status = 'accepted';
         $requestModel->save();
 
-        return response()->json(['success' => true]);
+        // Get new count of pending requests
+        $newCount = ProfileRequest::where('status', 'pending')->count();
+
+        return response()->json([
+            'success' => true,
+            'newCount' => $newCount
+        ]);
     }
 
     public function deny(Request $request)
@@ -725,9 +734,12 @@ class MatrimonyController extends Controller
             $requestModel->status = 'rejected';
             $requestModel->save();
 
+            $newCount = ProfileRequest::where('status', 'pending')->count();
+
             return response()->json([
                 'success' => true,
-                'message' => 'Request has been denied successfully'
+                'message' => 'Request has been denied successfully',
+                'newCount' => $newCount
             ]);
         } catch (\Exception $e) {
             return response()->json([

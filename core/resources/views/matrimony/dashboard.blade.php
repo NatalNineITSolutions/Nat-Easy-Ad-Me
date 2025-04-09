@@ -629,8 +629,28 @@
         });
     </script>
 
-    {{-- Accept --}}
+    {{-- Accept and deny --}}
     <script>
+
+        function updateNotificationCount(count) {
+            const $badge = $('.fa-bell').siblings('.position-absolute');
+
+            if(count > 0) {
+                if($badge.length > 0) {
+                    $badge.text(count);
+                } else {
+                    $('.fa-bell').after(`
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            ${count}
+                            <span class="visually-hidden">unread notifications</span>
+                        </span>
+                    `);
+                }
+            } else {
+                $badge.remove();
+            }
+        }
+
         $(document).ready(function() {
             // Accept Request
             $(document).on('click', '.accept', function() {
@@ -664,6 +684,8 @@
                             $acceptedCard.find('.action-buttons').remove();
                             $acceptedCard.append('<div class="status-badge accepted">Accepted</div>');
                             $('#accepted-requests').append($acceptedCard);
+
+                            updateNotificationCount(response.newCount);
                         }
                     }
                 });
@@ -702,6 +724,8 @@
                                 $rejectedCard.find('.action-buttons').remove();
                                 $rejectedCard.append('<div class="status-badge rejected">Rejected</div>');
                                 $('#rejected-requests').append($rejectedCard);
+
+                                updateNotificationCount(response.newCount);
                             }
                         }
                     });

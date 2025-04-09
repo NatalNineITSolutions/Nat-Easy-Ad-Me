@@ -18,18 +18,15 @@
         <!-- Right Side: Login/Register -->
         <div class="auth-buttons">
 
-            {{-- @php
-                $count = $notificationCount ?? 0;
-            @endphp
-
             <a href="#" class="position-relative d-inline-block">
                 <i class="fa fa-bell fa-lg"></i>
-                @if($count > 0)
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {{ $count }}
+                @if(($notificationCount ?? 0) > 0)
+                    <span class="position-absolute top-[-10px] translate-middle badge rounded-pill bg-danger">
+                        {{ $notificationCount }}
+                        <span class="visually-hidden">unread notifications</span>
                     </span>
                 @endif
-            </a> --}}
+            </a>
 
             @if(auth()->check())
                 <div class="dropdown">

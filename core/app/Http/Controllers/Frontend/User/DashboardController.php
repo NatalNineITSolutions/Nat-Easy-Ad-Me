@@ -245,8 +245,6 @@ class DashboardController extends Controller
                 ->where('status', 1)
                 ->first(),
             'countries' => Country::where('status', 1)->get(),
-            'all_states' => State::where('status', 1)->get(),
-            'all_cities' => City::where('status', 1)->get(),
         ];
 
         if ($request->isMethod('post')) {
@@ -316,9 +314,6 @@ class DashboardController extends Controller
         return view('frontend.user.job-listings', compact('jobs'));
     }
 
-    /**
-     * Show the form for editing a job listing
-     */
     public function editJob(Request $request, $id)
     {
         $jobDetail = JobDetail::where('user_id', auth()->id())->findOrFail($id);
@@ -497,5 +492,77 @@ class DashboardController extends Controller
         ];
 
         return view('frontend.user.profile.main-profile', compact('profile'));
+    }
+
+    public function teamView($id)
+    {
+        // Get all users with their location relationships
+        $allUsers = User::with(['user_country', 'user_state', 'user_city', 'membership'])->get()->keyBy('id');
+
+        // Get the parent user
+        $parentUser = $allUsers->get($id);
+
+        if (!$parentUser) {
+            abort(404, 'User not found');
+        }
+
+        // Get all team members recursively
+        $teamMembers = $this->getEntireTeam($id, $allUsers);
+
+        return view('frontend.user.genology.team_view', [
+            'id' => $id,
+            'parentUser' => $parentUser,
+            'teamMembers' => $teamMembers,
+            'allUsers' => $allUsers
+        ]);
+    }
+
+    protected function getEntireTeam($userId, $allUsers)
+    {
+        // Initialize result array
+        $teamMembers = [];
+
+        // Recursively fetch all descendants
+        $this->fetchDescendants($userId, $allUsers, $teamMembers);
+
+        return collect($teamMembers); // Convert to collection for easier handling
+    }
+
+    protected function fetchDescendants($parentId, $allUsers, &$result, $level = 0)
+    {
+        $children = $allUsers->where('sponsor_id', $parentId);
+
+        foreach ($children as $child) {
+            $child->level = $level;
+
+            $child->position = $child->membership ? 'Paid User' : 'Free User';
+
+            $result[] = $child;
+
+            $this->fetchDescendants($child->id, $allUsers, $result, $level + 1);
+        }
+    }
+
+    public function referralView($id)
+    {
+        $allUsers = User::with(['user_country', 'user_state', 'user_city', 'membership'])->get()->keyBy('id');
+
+        $parentUser = $allUsers->get($id);
+
+        if (!$parentUser) {
+            abort(404, 'User not found');
+        }
+
+        $referrals = $allUsers->where('parent_id', $id)->map(function ($user) {
+            $user->position = $user->membership ? 'Paid User' : 'Free User';
+            return $user;
+        });
+
+        return view('frontend.user.genology.referral_view', [
+            'id' => $id,
+            'parentUser' => $parentUser,
+            'referrals' => $referrals,
+            'allUsers' => $allUsers
+        ]);
     }
 }

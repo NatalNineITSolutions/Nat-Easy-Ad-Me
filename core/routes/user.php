@@ -54,6 +54,22 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
             Route::prefix('genology')->group(function () {
                 Route::get('info', 'genology')->name('genology');
                 Route::get('user/mlm/children/{id}', 'getChildren')->name('user.mlm.children');
+                Route::get('team/view/{id}', 'teamView')->name('team.view');
+            });
+        });
+
+        // My Team
+        Route::controller(DashboardController::class)->group(function () {
+            Route::prefix('team')->group(function () {
+                Route::get('view/{id}', 'teamView')->name('team.view');
+            });
+        });
+
+        
+        // Referral
+        Route::controller(DashboardController::class)->group(function () {
+            Route::prefix('referral')->group(function () {
+                Route::get('referral/{id}', 'referralView')->name('referral.view');
             });
         });
 

@@ -262,4 +262,16 @@ class User extends Authenticatable
     {
         return $this->belongsTo(User::class, 'sponsor_id');
     }
+
+    // Recursive relationship
+    public function allChildren()
+    {
+        return $this->children()->with('allChildren');
+    }
+
+    public function membership()
+    {
+        return $this->hasOne(UserMembership::class);
+    }
+
 }

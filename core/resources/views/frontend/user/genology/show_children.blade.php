@@ -37,16 +37,14 @@
                             <li>
                                 @if ($parent->leftChild)
                                     {{-- Render left child --}}
-                                    @include('frontend.user.genology.partials.tree-node', [
-                                        'node' => $parent->leftChild,
-                                    ])
+                                    @include('frontend.user.genology.partials.tree-node', ['node' => $parent->leftChild, 'isChild' => true])
                                 @else
                                     <div class="add-member-node">
                                         <a
                                             href="{{ route('user.mlm.addNewMember', ['sponsor' => $parent->id, 'position' => 'left']) }}">
                                             <div class="add-icon">
                                                 <i class="fas fa-user-plus"></i>
-                                            </div>
+                                         </div>
                                         </a>
                                     </div>
                                 @endif
@@ -54,9 +52,7 @@
                             <li>
                                 @if ($parent->rightChild)
                                     {{-- Render right child --}}
-                                    @include('frontend.user.genology.partials/tree-node', [
-                                        'node' => $parent->rightChild,
-                                    ])
+                                    @include('frontend.user.genology.partials.tree-node', ['node' => $parent->rightChild, 'isChild' => true])
                                 @else
                                     <div class="add-member-node">
                                         <a

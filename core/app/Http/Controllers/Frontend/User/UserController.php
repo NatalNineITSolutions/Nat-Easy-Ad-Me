@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -48,86 +49,160 @@ class UserController extends Controller
     }
 
     //edit profile info
+    // public function edit_profile(Request $request)
+    // {
+    //     if (!empty($request->profile_bg_image_request) && $request->profile_bg_image_request == 1){
+    //         $request->validate(
+    //             ['profile_background'=>'required'],
+    //             ['profile_background.required'=> __('background image is required')]);
+    //     }else{
+    //         $request->validate(
+    //             [
+    //                 'first_name'=>'required|min:2|max:50',
+    //                 'last_name'=>'required|min:2|max:50',
+    //                 'email'=>'required|email|unique:users,email,'.Auth::guard('web')->user()->id,
+    //                 'phone'=>'required',
+    //                 'country'=>'required',
+    //                 'state'=>'required',
+    //             ],
+    //             [
+    //                 'first_name.required'=> __('First name is required'),
+    //                 'last_name.required'=> __('Last name is required'),
+    //                 'country_id.required'=> __('Country is required'),
+    //                 'state_id.required'=> __('State is required'),
+    //                 'phone.required'=> __('Phone is required'),
+    //             ]);
+    //       }
+
+    //     if($request->ajax()){
+    //         if (!empty($request->profile_bg_image_request) && $request->profile_bg_image_request == 1){
+    //             User::where('id',Auth::guard('web')->user()->id)->update([
+    //                 'profile_background'=>$request->profile_background,
+    //             ]);
+    //         }else{
+    //             User::where('id',Auth::guard('web')->user()->id)->update([
+    //                 'first_name'=>$request->first_name,
+    //                 'last_name'=>$request->last_name,
+    //                 'email'=>$request->email,
+    //                 'phone'=>$request->phone,
+    //                 'country_id'=>$request->country,
+    //                 'state_id'=>$request->state,
+    //                 'city_id'=>$request->city,
+    //                 'image'=>$request->image,
+    //             ]);
+    //         }
+
+    //         return response()->json([
+    //             'status'=>'ok',
+    //         ]);
+    //     }
+    // }
+
     public function edit_profile(Request $request)
     {
-        if (!empty($request->profile_bg_image_request) && $request->profile_bg_image_request == 1){
-            $request->validate(
-                ['profile_background'=>'required'],
-                ['profile_background.required'=> __('background image is required')]);
-        }else{
-            $request->validate(
-                [
-                    'first_name'=>'required|min:2|max:50',
-                    'last_name'=>'required|min:2|max:50',
-                    'email'=>'required|email|unique:users,email,'.Auth::guard('web')->user()->id,
-                    'phone'=>'required',
-                    'country'=>'required',
-                    'state'=>'required',
-                ],
-                [
-                    'first_name.required'=> __('First name is required'),
-                    'last_name.required'=> __('Last name is required'),
-                    'country_id.required'=> __('Country is required'),
-                    'state_id.required'=> __('State is required'),
-                    'phone.required'=> __('Phone is required'),
-                ]);
-          }
+        $userId = Auth::guard('web')->user()->id;
+        Log::info('Profile update request received.', ['request_data' => $request->all()]);
 
-        if($request->ajax()){
-            if (!empty($request->profile_bg_image_request) && $request->profile_bg_image_request == 1){
-                User::where('id',Auth::guard('web')->user()->id)->update([
-                    'profile_background'=>$request->profile_background,
+        try {
+            if (!empty($request->profile_bg_image_request) && $request->profile_bg_image_request == 1) {
+                $request->validate(
+                    ['profile_background' => 'required'],
+                    ['profile_background.required' => __('Background image is required')]
+                );
+
+                $update = User::where('id', $userId)->update([
+                    'profile_background' => $request->profile_background
                 ]);
-            }else{
-                User::where('id',Auth::guard('web')->user()->id)->update([
-                    'first_name'=>$request->first_name,
-                    'last_name'=>$request->last_name,
-                    'email'=>$request->email,
-                    'phone'=>$request->phone,
-                    'country_id'=>$request->country,
-                    'state_id'=>$request->state,
-                    'city_id'=>$request->city,
-                    'image'=>$request->image,
+
+                Log::info('Profile background image update result:', ['success' => (bool) $update]);
+            } else {
+                $request->validate([
+                    'first_name' => 'required|min:2|max:50',
+                    'last_name' => 'required|min:1|max:50',
+                    'email' => 'required|email|unique:users,email,' . $userId,
+                    'phone' => 'required',
+                    'country' => 'required',
+                    'state' => 'required',
+                ], [
+                    'first_name.required' => __('First name is required'),
+                    'last_name.required' => __('Last name is required'),
+                    'country.required' => __('Country is required'),
+                    'state.required' => __('State is required'),
+                    'phone.required' => __('Phone is required'),
+                ]);
+
+                $updateData = [
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'email' => $request->email,
+                    'phone' => $request->phone,
+                    'image' => $request->image,
+                ];
+
+                // Check which field names your database uses
+                $updateData['country_id'] = $request->country;
+                $updateData['state_id'] = $request->state;
+                $updateData['city_id'] = $request->city;
+
+                $update = User::where('id', $userId)->update($updateData);
+                Log::info('Full profile update result:', ['success' => (bool) $update, 'data' => $updateData]);
+            }
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => $update ? 'ok' : 'error',
+                    'message' => $update ? __('Profile updated successfully') : __('Failed to update profile')
                 ]);
             }
 
-            return response()->json([
-                'status'=>'ok',
-            ]);
+            return $update
+                ? back()->with(['msg' => __('Profile updated successfully'), 'type' => 'success'])
+                : back()->with(['msg' => __('Failed to update profile'), 'type' => 'danger']);
+
+        } catch (\Exception $e) {
+            Log::error('Profile update failed:', ['error' => $e->getMessage()]);
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => __('Profile update failed: ') . $e->getMessage()
+                ], 500);
+            }
+
+            return back()->with(['msg' => __('Profile update failed'), 'type' => 'danger']);
         }
     }
-
 
     // member identity verification
     public function identity_verification(Request $request)
     {
         $user_id = Auth::guard('web')->user()->id;
-        if($request->isMethod('post')){
+        if ($request->isMethod('post')) {
             $request->validate([
-                'country'=>'required',
-                'state'=>'required',
-                'city'=>'required',
-                'address'=>'required|max:191',
-                'zipcode'=>'required|max:191',
-                'national_id_number'=>'required|max:191',
-                'front_image'=>'required|image|mimes:jpeg,png,jpg|max:1024|dimensions:width=500,height=300',
-                'back_image'=>'required|image|mimes:jpeg,png,jpg|max:1024|dimensions:width=500,height=300',
+                'country' => 'required',
+                'state' => 'required',
+                'city' => 'required',
+                'address' => 'required|max:191',
+                'zipcode' => 'required|max:191',
+                'national_id_number' => 'required|max:191',
+                'front_image' => 'required|image|mimes:jpeg,png,jpg|max:1024|dimensions:width=500,height=300',
+                'back_image' => 'required|image|mimes:jpeg,png,jpg|max:1024|dimensions:width=500,height=300',
             ]);
 
-            $verification_image = IdentityVerification::where('user_id',$user_id)->first();
+            $verification_image = IdentityVerification::where('user_id', $user_id)->first();
             $delete_front_img = '';
             $delete_back_img = '';
 
-            if(!empty($verification_image)){
-                $delete_front_img =  'assets/uploads/verification/'.$verification_image->front_image;
-                $delete_back_img =  'assets/uploads/verification/'.$verification_image->back_image;
+            if (!empty($verification_image)) {
+                $delete_front_img = 'assets/uploads/verification/' . $verification_image->front_image;
+                $delete_back_img = 'assets/uploads/verification/' . $verification_image->back_image;
             }
 
             if ($image = $request->file('front_image')) {
-                if(file_exists($delete_front_img)){
+                if (file_exists($delete_front_img)) {
                     File::delete($delete_front_img);
                 }
-                $front_image_name = time().'-'.uniqid().'.'.$image->getClientOriginalExtension();
+                $front_image_name = time() . '-' . uniqid() . '.' . $image->getClientOriginalExtension();
 
                 // Image scan start
                 $uploaded_file = $request->front_image;
@@ -140,19 +215,19 @@ class UserController extends Controller
                         $constraint->aspectRatio();
                     });
                     $processed_image->save('assets/uploads/verification/' . $front_image_name);
-                }else{
+                } else {
                     $image->move('assets/uploads/verification', $front_image_name);
                 } // Image scan end
 
-            }else{
+            } else {
                 $front_image_name = $verification_image->front_image;
             }
 
             if ($image = $request->file('back_image')) {
-                if(file_exists($delete_back_img)){
+                if (file_exists($delete_back_img)) {
                     File::delete($delete_back_img);
                 }
-                $back_image_name= time().'-'.uniqid().'.'.$image->getClientOriginalExtension();
+                $back_image_name = time() . '-' . uniqid() . '.' . $image->getClientOriginalExtension();
 
                 // Image scan start
                 $uploaded_file = $request->back_image;
@@ -165,28 +240,28 @@ class UserController extends Controller
                         $constraint->aspectRatio();
                     });
                     $processed_image->save('assets/uploads/verification/' . $back_image_name);
-                }else{
+                } else {
                     $image->move('assets/uploads/verification', $back_image_name);
                 } // Image scan end
 
-            }else{
+            } else {
                 $back_image_name = $verification_image->back_image;
             }
 
             IdentityVerification::updateOrCreate(
-                ['user_id'=> $user_id],
+                ['user_id' => $user_id],
                 [
-                    'user_id'=>$user_id,
-                    'verify_by'=>$request->verify_by,
-                    'country_id'=>$request->country,
-                    'state_id'=>$request->state,
-                    'city_id'=>$request->city,
-                    'address'=>$request->address,
-                    'zipcode'=>$request->zipcode,
-                    'national_id_number'=>$request->national_id_number,
-                    'front_image'=>$front_image_name,
-                    'back_image'=>$back_image_name,
-                    'status'=>null,
+                    'user_id' => $user_id,
+                    'verify_by' => $request->verify_by,
+                    'country_id' => $request->country,
+                    'state_id' => $request->state,
+                    'city_id' => $request->city,
+                    'address' => $request->address,
+                    'zipcode' => $request->zipcode,
+                    'national_id_number' => $request->national_id_number,
+                    'front_image' => $front_image_name,
+                    'back_image' => $back_image_name,
+                    'status' => null,
                 ]
             );
             try {
@@ -195,9 +270,9 @@ class UserController extends Controller
                     'subject' => get_static_option('user_identity_verify_subject') ?? __('User Identity Verify Email'),
                     'message' => $message
                 ]));
+            } catch (\Exception $e) {
             }
-            catch (\Exception $e) {}
-            return response()->json(['status'=>'success']);
+            return response()->json(['status' => 'success']);
         }
     }
 
@@ -205,15 +280,15 @@ class UserController extends Controller
     public function check_password(Request $request)
     {
         if ($request->isMethod('post')) {
-            $current_password = User::select('password')->where('id',Auth::user()->id)->first();
+            $current_password = User::select('password')->where('id', Auth::user()->id)->first();
             if (Hash::check($request->current_password, $current_password->password)) {
                 return response()->json([
-                    'status'=>'match',
-                    'msg'=>__('Current password match'),
+                    'status' => 'match',
+                    'msg' => __('Current password match'),
                 ]);
-            }else{
+            } else {
                 return response()->json([
-                    'msg'=>__('Current password is wrong'),
+                    'msg' => __('Current password is wrong'),
                 ]);
             }
         }
@@ -228,16 +303,16 @@ class UserController extends Controller
                 'new_password' => 'required|min:6',
                 'confirm_new_password' => 'required|min:6',
             ]);
-            $user = User::select(['id','password'])->where('id',Auth::user()->id)->first();
+            $user = User::select(['id', 'password'])->where('id', Auth::user()->id)->first();
 
             if (Hash::check($request->current_password, $user->password)) {
                 if ($request->new_password == $request->confirm_new_password) {
                     User::where('id', $user->id)->update(['password' => Hash::make($request->new_password)]);
-                    return response()->json(['status'=>'success']);
+                    return response()->json(['status' => 'success']);
                 }
-                return response()->json(['status'=>'not_match']);
+                return response()->json(['status' => 'not_match']);
             }
-            return response()->json(['status'=>'current_pass_wrong']);
+            return response()->json(['status' => 'current_pass_wrong']);
         }
         return view('frontend.user.client.password.password');
     }

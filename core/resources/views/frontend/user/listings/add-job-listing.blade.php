@@ -28,6 +28,64 @@
             margin: auto;
         }
 
+        /* Image upload preview styles */
+        .media-upload-btn-wrapper .img-wrap {
+            position: relative;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .media-upload-btn-wrapper .img-wrap .rmv-span {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: red;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .uploaded-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .image-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .uploaded-image {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 5px;
+            object-fit: cover;
+        }
+
+        .delete-image-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            padding: 2px 6px;
+            font-size: 12px;
+        }
+
+        .delete-image-btn:hover {
+            background: darkred;
+        }
+
         /* Style for date input to match other fields */
         input[type="date"].form-control {
             height: 45px;
@@ -130,7 +188,8 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
-                            <input type="date" name="dob" class="form-control" max="{{ date('Y-m-d', strtotime('-18 years')) }}" required>
+                            <input type="date" name="dob" class="form-control"
+                                max="{{ date('Y-m-d', strtotime('-18 years')) }}" required>
                         </div>
 
                         <div class="col-12">
@@ -141,19 +200,27 @@
                         <div class="col-12">
                             <label class="form-label">Profile Picture <span class="text-danger">*</span></label>
                             <div class="media-upload-btn-wrapper">
-                                <input type="hidden" name="image">
+                                <div class="img-wrap new_image_add_listing">
+                                    <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}" alt="images"
+                                        class="w-100">
+                                </div>
+                                <input type="hidden" name="image" id="images_input">
                                 <button type="button" class="btn btn-info media_upload_form_btn"
                                     data-btntitle="{{ __('Select Image') }}" data-modaltitle="{{ __('Upload Image') }}"
-                                    data-bs-toggle="modal" data-bs-target="#media_upload_modal">
+                                    data-bs-toggle="modal" data-bs-target="#media_upload_modal" data-mulitple="true">
                                     {{ __('Upload Profile Picture') }}
                                 </button>
                                 <small>{{ __('image format: jpg, jpeg, png, gif, webp') }}</small>
+                            </div>
+                            <div class="uploaded-images mt-3" id="uploaded-images-container">
+                                <!-- Preview of uploaded images will appear here -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Location Section -->
             <!-- Location Section -->
             <div class="card mb-4">
                 <div class="card-header text-white">
@@ -175,9 +242,7 @@
                             <label class="form-label">State <span class="text-danger">*</span></label>
                             <select name="state_id" id="state_id" class="form-control select2" required>
                                 <option value="">Select State</option>
-                                @foreach($all_states as $state)
-                                    <option value="{{ $state->id }}">{{ $state->state }}</option>
-                                @endforeach
+                                <!-- States will be loaded via AJAX -->
                             </select>
                         </div>
 
@@ -185,9 +250,7 @@
                             <label class="form-label">City <span class="text-danger">*</span></label>
                             <select name="city_id" id="city_id" class="form-control select2" required>
                                 <option value="">Select City</option>
-                                @foreach($all_cities as $city)
-                                    <option value="{{ $city->id }}">{{ $city->city }}</option>
-                                @endforeach
+                                <!-- Cities will be loaded via AJAX -->
                             </select>
                         </div>
                     </div>
@@ -297,7 +360,8 @@
                             </select>
                         </div>
                         <div class="col-12">
-                            <label class="form-label">Work Authorization/Visa Status <span class="text-danger">*</span></label>
+                            <label class="form-label">Work Authorization/Visa Status <span
+                                    class="text-danger">*</span></label>
                             <input type="text" name="work_authorization" class="form-control" required>
                         </div>
                     </div>
@@ -317,22 +381,151 @@
     <x-media.js type="web" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Initialize Select2
             $('.select2').select2({
                 width: '100%'
             });
 
-            // Initialize media uploader for profile picture
-            $(document).on('click', '.media_upload_form_btn', function(e) {
-                e.preventDefault();
-                var form = $(this).closest('.media-upload-btn-wrapper');
-                var modal = $('#media_upload_modal');
-                modal.find('.modal-title').text($(this).data('modaltitle'));
-                modal.find('.btn-title').text($(this).data('btntitle'));
-                modal.modal('show');
+            // Media upload handling
+            $(document).on('media_upload_selected', function (e, data) {
+                if (data.trigger_button.hasClass('media_upload_form_btn')) {
+                    let wrapper = data.trigger_button.closest('.media-upload-btn-wrapper');
+                    let imagesInput = wrapper.find('input[name="image"]');
+
+                    // Get current value as array (or empty array if no value)
+                    let currentValue = imagesInput.val() ? imagesInput.val().split('|') : [];
+
+                    // Add new image ID if not already present
+                    if (!currentValue.includes(data.id.toString())) {
+                        currentValue.push(data.id);
+                        imagesInput.val(currentValue.join('|'));
+
+                        // Update preview container
+                        let previewContainer = $('#uploaded-images-container');
+
+                        // Create new image preview
+                        let newImage = $(`
+                                                            <div class="image-container">
+                                                                <img src="${data.url}" class="uploaded-image" alt="${data.name}">
+                                                                <button type="button" class="delete-image-btn" data-id="${data.id}">×</button>
+                                                            </div>
+                                                        `);
+
+                        previewContainer.append(newImage);
+
+                        // Update main preview to show the first image
+                        if (currentValue.length === 1) {
+                            wrapper.find('.new_image_add_listing').html(`
+                                                                <div class="attachment-preview">
+                                                                    <div class="thumbnail">
+                                                                        <div class="centered">
+                                                                            <img src="${data.url}" alt="${data.name}">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            `);
+                        }
+                    }
+                }
             });
 
-            
+            // Handle image deletion
+            $(document).on('click', '.delete-image-btn', function () {
+                let imageId = $(this).data('id');
+                let wrapper = $(this).closest('.media-upload-btn-wrapper');
+                let imagesInput = wrapper.find('input[name="image"]');
+                let currentValue = imagesInput.val() ? imagesInput.val().split('|') : [];
+
+                // Remove the image ID
+                currentValue = currentValue.filter(id => id != imageId);
+                imagesInput.val(currentValue.join('|'));
+
+                // Remove the preview
+                $(this).parent().remove();
+
+                // Update main preview if needed
+                if (currentValue.length === 0) {
+                    wrapper.find('.new_image_add_listing').html(`
+                                                        <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}" alt="images" class="w-100">
+                                                    `);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // Initialize Select2
+            $('.select2').select2({
+                width: '100%'
+            });
+
+            // Country change event
+            $('#country_id').on('change', function () {
+                var countryId = $(this).val();
+                if (countryId) {
+                    $.ajax({
+                        url: "{{ route('au.state.all') }}",
+                        type: "POST",
+                        data: {
+                            country: countryId, // Note: using 'country' as parameter name
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function (response) {
+                            if (response.status === 'success') {
+                                $('#state_id').empty();
+                                $('#state_id').append('<option value="">Select State</option>');
+                                $.each(response.states, function (index, state) {
+                                    $('#state_id').append('<option value="' + state.id + '">' + state.state + '</option>');
+                                });
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error fetching states:', error);
+                            $('#state_id').empty();
+                            $('#state_id').append('<option value="">Select State</option>');
+                        }
+                    });
+                } else {
+                    $('#state_id').empty();
+                    $('#state_id').append('<option value="">Select State</option>');
+                    $('#city_id').empty();
+                    $('#city_id').append('<option value="">Select City</option>');
+                }
+            });
+
+            // State change event
+            $('#state_id').on('change', function () {
+                var stateId = $(this).val();
+                if (stateId) {
+                    $.ajax({
+                        url: "{{ route('au.city.all') }}",
+                        type: "POST",
+                        data: {
+                            state: stateId, // Note: using 'state' as parameter name
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function (response) {
+                            if (response.status === 'success') {
+                                $('#city_id').empty();
+                                $('#city_id').append('<option value="">Select City</option>');
+                                $.each(response.cities, function (index, city) {
+                                    $('#city_id').append('<option value="' + city.id + '">' + city.city + '</option>');
+                                });
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error fetching cities:', error);
+                            $('#city_id').empty();
+                            $('#city_id').append('<option value="">Select City</option>');
+                        }
+                    });
+                } else {
+                    $('#city_id').empty();
+                    $('#city_id').append('<option value="">Select City</option>');
+                }
+            });
+        });
     </script>
 @endsection

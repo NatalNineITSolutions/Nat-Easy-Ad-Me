@@ -26,10 +26,10 @@
                                             <div class="seller-details-wraper">
                                                 <div class="seller-img">
                                                     @if(!empty($user->image))
-                                                        {!! render_image_markup_by_attachment_id($user->image) !!}
+                                                    {!! render_image_markup_by_attachment_id($user->image) !!}
                                                     @else
-                                                        <img src="{{ asset('assets/frontend/img/static/user-no-image.webp') }}"
-                                                            alt="No Image">
+                                                    <img src="{{ asset('assets/frontend/img/static/user-no-image.webp') }}"
+                                                        alt="No Image">
                                                     @endif
                                                 </div>
                                                 <div class="seller-name">
@@ -45,12 +45,12 @@
                                                     </div>
                                                     <div class="seller-ratings mt-3">
                                                         @if($averageRating >= 1)
-                                                            <a href="javascript:void(0)" class="author_tag__review__star">
-                                                                {!! ratting_star(round($averageRating, 1)) !!}
-                                                            </a>
-                                                            <a href="javascript:void(0)" class="author_tag__review__para">
-                                                                ({{ $user_review_count }})
-                                                            </a>
+                                                        <a href="javascript:void(0)" class="author_tag__review__star">
+                                                            {!! ratting_star(round($averageRating, 1)) !!}
+                                                        </a>
+                                                        <a href="javascript:void(0)" class="author_tag__review__para">
+                                                            ({{ $user_review_count }})
+                                                        </a>
                                                         @endif
                                                     </div>
 
@@ -68,19 +68,20 @@
                                         <div class="devider"></div>
 
                                         <div class="seller-contact">
-                                            @if(!empty($user->address) || !empty($user->country_id) || !empty($user->state_id) || !empty($user->city_id))
-                                                <div class="locations">
-                                                    <svg width="16" height="17" viewBox="0 0 16 17" fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                                                        <path
-                                                            d="M5.49967 7.16667C5.49967 7.82971 5.76307 8.4656 6.23191 8.93444C6.70075 9.40328 7.33663 9.66667 7.99967 9.66667C8.66272 9.66667 9.2986 9.40328 9.76744 8.93444C10.2363 8.4656 10.4997 7.82971 10.4997 7.16667C10.4997 6.50363 10.2363 5.86774 9.76744 5.3989C9.2986 4.93006 8.66272 4.66667 7.99967 4.66667C7.33663 4.66667 6.70075 4.93006 6.23191 5.3989C5.76307 5.86774 5.49967 6.50363 5.49967 7.16667Z"
-                                                            stroke="#1E293B" stroke-linecap="round" stroke-linejoin="round" />
-                                                        <path
-                                                            d="M12.7138 11.8808L9.17801 15.4167C8.8655 15.7289 8.44183 15.9042 8.00009 15.9042C7.55836 15.9042 7.13469 15.7289 6.82218 15.4167L3.28551 11.8808C2.3532 10.9485 1.71829 9.76058 1.46108 8.46739C1.20388 7.17419 1.33592 5.83376 1.84051 4.61561C2.34511 3.39745 3.19959 2.35628 4.29591 1.62376C5.39223 0.891229 6.68115 0.500244 7.99968 0.500244C9.31821 0.500244 10.6071 0.891229 11.7034 1.62376C12.7998 2.35628 13.6542 3.39745 14.1588 4.61561C14.6634 5.83376 14.7955 7.17419 14.5383 8.46739C14.2811 9.76058 13.6462 10.9485 12.7138 11.8808Z"
-                                                            stroke="#1E293B" stroke-linecap="round" stroke-linejoin="round" />
-                                                    </svg>
-                                                    <span>{!! userProfileLocation($user) !!}</span>
-                                                </div>
+                                            @if(!empty($user->address) || !empty($user->country_id) ||
+                                            !empty($user->state_id) || !empty($user->city_id))
+                                            <div class="locations">
+                                                <svg width="16" height="17" viewBox="0 0 16 17" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M5.49967 7.16667C5.49967 7.82971 5.76307 8.4656 6.23191 8.93444C6.70075 9.40328 7.33663 9.66667 7.99967 9.66667C8.66272 9.66667 9.2986 9.40328 9.76744 8.93444C10.2363 8.4656 10.4997 7.82971 10.4997 7.16667C10.4997 6.50363 10.2363 5.86774 9.76744 5.3989C9.2986 4.93006 8.66272 4.66667 7.99967 4.66667C7.33663 4.66667 6.70075 4.93006 6.23191 5.3989C5.76307 5.86774 5.49967 6.50363 5.49967 7.16667Z"
+                                                        stroke="#1E293B" stroke-linecap="round" stroke-linejoin="round" />
+                                                    <path
+                                                        d="M12.7138 11.8808L9.17801 15.4167C8.8655 15.7289 8.44183 15.9042 8.00009 15.9042C7.55836 15.9042 7.13469 15.7289 6.82218 15.4167L3.28551 11.8808C2.3532 10.9485 1.71829 9.76058 1.46108 8.46739C1.20388 7.17419 1.33592 5.83376 1.84051 4.61561C2.34511 3.39745 3.19959 2.35628 4.29591 1.62376C5.39223 0.891229 6.68115 0.500244 7.99968 0.500244C9.31821 0.500244 10.6071 0.891229 11.7034 1.62376C12.7998 2.35628 13.6542 3.39745 14.1588 4.61561C14.6634 5.83376 14.7955 7.17419 14.5383 8.46739C14.2811 9.76058 13.6462 10.9485 12.7138 11.8808Z"
+                                                        stroke="#1E293B" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                                <span>{!! userProfileLocation($user) !!}</span>
+                                            </div>
                                             @endif
 
                                             <div class="emails">
@@ -234,9 +235,11 @@
                                     </div>
                                 </div>
                                 <div class="pt-4 d-flex flex-column flex-lg-row gap-3">
-                                    <a href="#" class="team">{{ __('My Team View') }}</a>
+                                    <a href="{{ route('user.team.view', auth()->user()->id) }}" class="team">
+                                        {{ __('My Team View') }}
+                                    </a>
                                     <a href="{{ route('user.genology') }}" class="genology">{{ __('Genology') }}</a>
-                                    <a href="#" class="referral">{{ __('My Referral View') }}</a>
+                                    <a href="{{ route('user.referral.view', auth()->user()->id) }}" class="referral">{{ __('My Referral View') }}</a>
                                 </div>
                                 <!--All Reviews-->
                                 <div class="all-reviews box-shadow1 mt-20">
@@ -380,7 +383,8 @@
         }
 
         .genology {
-            background-color: #d9cc00; /* yellowish background */
+            background-color: #d9cc00;
+            /* yellowish background */
             color: white;
             padding: 12px 24px;
             border: none;
@@ -392,7 +396,8 @@
         }
 
         .referral {
-            background-color: #0f76d6; /* yellowish background */
+            background-color: #0f76d6;
+            /* yellowish background */
             color: white;
             padding: 12px 24px;
             border: none;
@@ -404,7 +409,8 @@
         }
 
         .team {
-            background-color: #d60f0f; /* yellowish background */
+            background-color: #d60f0f;
+            /* yellowish background */
             color: white;
             padding: 12px 24px;
             border: none;

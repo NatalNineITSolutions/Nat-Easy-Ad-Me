@@ -2,12 +2,12 @@
 @include('frontend.layout.partials.navbar')
 @if (!empty($page_post) && $page_post->breadcrumb_status == 'on')
     <div class="@if(Request::is('about') || Request::is('listings')) container-1920 plr1 @else container-1440 @endif">
-      <nav aria-label="breadcrumb" class="frontend-breadcrumb-wrap breadcrumb-nav-part">
+        <nav aria-label="breadcrumb" class="frontend-breadcrumb-wrap breadcrumb-nav-part">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Home') }}</a></li>
                 <li class="breadcrumb-item"><a href="#">{{ $page_post->title ?? '' }} @yield('inner-title')</a></li>
             </ol>
-       </nav>
+        </nav>
     </div>
 @endif
 
@@ -24,5 +24,22 @@
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
+    }
+
+    @media (max-width: 768px) {
+        .btn-wrapper .cmn-btn1 {
+            width: 35px !important;
+            height: 35px !important;
+            border-radius: 50% !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2px !important;
+        }
+
+        .seller-img{
+            width: 35px !important;
+            height: 35px !important;
+        }
     }
 </style>

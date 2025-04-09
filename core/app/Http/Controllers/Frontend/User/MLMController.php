@@ -85,7 +85,9 @@ class MLMController extends Controller
                 }
 
                 do {
-                    $partnerId = 'EAM' . Str::upper(Str::random(6));
+                    $randomDigits = rand(100, 9999); // generates a number between 100 and 9999 (3 or 4 digits)
+                    $dateString = now()->format('Ymd'); // current date in YYYYMMDD format
+                    $partnerId = 'EAM' . $randomDigits . $dateString;
                 } while (User::where('partner_id', $partnerId)->exists());
 
                 $partnerName = 'EASYADME-' . strtoupper($request->first_name);

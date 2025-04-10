@@ -84,12 +84,15 @@ class MLMController extends Controller
                     return redirect()->back()->withErrors(['phone' => __('Phone number is already taken')]);
                 }
 
+                // Generate a unique partner ID with format: EAM + date (Y + m + d without leading zeros) + random 4-5 digit number
                 do {
-                    $randomDigits = rand(100, 9999); // generates a number between 100 and 9999 (3 or 4 digits)
-                    $dateString = now()->format('Ymd'); // current date in YYYYMMDD format
-                    $partnerId = 'EAM' . $randomDigits . $dateString;
-                } while (User::where('partner_id', $partnerId)->exists());
+                    $year = now()->format('Y'); 
+                    $month = now()->format('n'); 
+                    $dateCode = $year . $month; 
 
+                    $randomDigits = rand(1000, 99999);
+                    $partnerId = 'GL' . $dateCode . $randomDigits;
+                } while (User::where('partner_id', $partnerId)->exists());
                 $partnerName = 'EASYADME-' . strtoupper($request->first_name);
 
                 $parent_id = $request->input('sponsor_id');

@@ -203,11 +203,14 @@ class RegisterController extends Controller
                 //     $partnerId = 'EAM' . Str::upper(Str::random(6));
                 // } while (User::where('partner_id', $partnerId)->exists());
 
-                // Generate a unique partner ID with format: EAM + random 3-4 digits + current date (YYYYMMDD)
+                // Generate a unique partner ID with format: EAM + date (Y + m + d without leading zeros) + random 4-5 digit number
                 do {
-                    $randomDigits = rand(100, 9999); // generates a number between 100 and 9999 (3 or 4 digits)
-                    $dateString = now()->format('Ymd'); // current date in YYYYMMDD format
-                    $partnerId = 'EAM' . $randomDigits . $dateString;
+                    $year = now()->format('Y'); // 2025
+                    $month = now()->format('n'); // 4 (no leading zero)
+                    $dateCode = $year . $month; // 2025410
+
+                    $randomDigits = rand(1000, 99999); // 4-5 digit number
+                    $partnerId = 'GL' . $dateCode . $randomDigits;
                 } while (User::where('partner_id', $partnerId)->exists());
 
                 $partnerName = 'EASYADME-' . strtoupper($request->first_name);

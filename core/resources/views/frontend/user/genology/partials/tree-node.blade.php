@@ -1,81 +1,113 @@
-<div class="mlm-tree full-width desktop-tree">
-    <ul class="tree">
-        <li>
-            <div class="node root-node">
-                <div class="avatar-circle {{ $node->gender == 'female' ? 'female' : 'male' }} 
-                        {{ ($node->leftBV ?? 0) == 0 && ($node->rightBV ?? 0) == 0 ? 'zero-bv' : '' }}">
-                    <a href="{{ route('user.user.mlm.children', ['id' => $node->id]) }}">
-                        @if($node->avatar)
-                            <img src="{{ $node->avatar }}" alt="User Avatar">
-                        @else
-                            <img src="{{ $node->gender === 'female' ? asset('assets/uploads/media-uploader/girlavatart.jpg') : asset('assets/uploads/media-uploader/avatar.jpg') }}"
-                                alt="Default Avatar">
-                        @endif
-                    </a>
-                </div>
-                <span class="node-id">{{ $node->partner_id ?? 'N/A' }}</span>
-                <span class="node-name">{{ $node->first_name ?? 'N/A' }}</span>
-                @if (!isset($isChild))
-                    <div class="bv-points">
-                        <span>BV (L): <strong>{{ $node->leftBV ?? 0 }}</strong></span>
-                        <span>BV (R): <strong>{{ $node->rightBV ?? 0 }}</strong></span>
-                    </div>
-                @endif
-            </div>
 
-            <ul>
-                <li>
-                    @if ($node->leftChild)
-                        @include('frontend.user.genology.partials.tree-node', ['node' => $node->leftChild, 'isChild' => true])
-                    @else
-                        <div class="add-member-node">
-                            <a href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'left']) }}">
-                                <div class="add-icon">
-                                    <i class="fas fa-user-plus"></i>
-                                </div>
-                            </a>
+    <div class="mlm-tree full-width desktop-tree">
+        <ul class="tree">
+            <li>
+                <div class="node root-node">
+                    <div class="avatar-circle {{ $node->gender == 'female' ? 'female' : 'male' }} 
+                            {{ ($node->leftBV ?? 0) == 0 && ($node->rightBV ?? 0) == 0 ? 'zero-bv' : '' }}">
+                        <a href="{{ route('user.user.mlm.children', ['id' => $node->id]) }}">
+                            @if($node->avatar)
+                                <img src="{{ $node->avatar }}" alt="User Avatar">
+                            @else
+                                <img src="{{ $node->gender === 'female' ? asset('assets/uploads/media-uploader/girlavatart.jpg') : asset('assets/uploads/media-uploader/avatar.jpg') }}"
+                                    alt="Default Avatar">
+                            @endif
+                        </a>
+                    </div>
+                    <span class="node-id">{{ $node->partner_id ?? 'N/A' }}</span>
+                    <span class="node-name">{{ $node->first_name ?? 'N/A' }}</span>
+                    @if (!isset($isChild))
+                        <div class="bv-points">
+                            <span>BV (L): <strong>{{ $node->leftBV ?? 0 }}</strong></span>
+                            <span>BV (R): <strong>{{ $node->rightBV ?? 0 }}</strong></span>
                         </div>
                     @endif
-                </li>
-                <li>
-                    @if ($node->rightChild)
-                        @include('frontend.user.genology.partials.tree-node', ['node' => $node->rightChild, 'isChild' => true])
-                    @else
-                        <div class="add-member-node">
-                            <a href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'right']) }}">
-                                <div class="add-icon">
-                                    <i class="fas fa-user-plus"></i>
-                                </div>
-                            </a>
-                        </div>
-                    @endif
-                </li>
-            </ul>
-        </li>
-    </ul>
-</div>
+                </div>
+
+                <ul>
+                    <li>
+                        @if ($node->leftChild)
+                            @include('frontend.user.genology.partials.tree-node', ['node' => $node->leftChild, 'isChild' => true])
+                        @else
+                            <div class="add-member-node">
+                                <a
+                                    href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'left']) }}">
+                                    <div class="add-icon">
+                                        <i class="fas fa-user-plus"></i>
+                                    </div>
+                                </a>
+                            </div>
+                        @endif
+                    </li>
+                    <li>
+                        @if ($node->rightChild)
+                            @include('frontend.user.genology.partials.tree-node', ['node' => $node->rightChild, 'isChild' => true])
+                        @else
+                            <div class="add-member-node">
+                                <a
+                                    href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'right']) }}">
+                                    <div class="add-icon">
+                                        <i class="fas fa-user-plus"></i>
+                                    </div>
+                                </a>
+                            </div>
+                        @endif
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
 
 @section('style')
     <style>
+        .mlm-tree-container {
+            /* width: 100%; */
+            height: auto;
+            background: #000000;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* .mlm-tree-scale-wrapper {
+            width: 100%;
+            position: relative;
+            background: #008081;
+            padding: 10px 0;
+        } */
+
+        .new-style .box-shadow1 {
+            background-color: red;
+            border: none;
+            border-radius: 0px;
+            height: 500px;
+        }
+
+        .mlm-tree.full-width.desktop-tree {
+            transform-origin: top center;
+            transition: transform 0.3s ease;
+            background: #000000;
+            border-radius: 8px;
+            width: 1200px;
+            margin: 0;
+            padding: 5px;
+        }
+
         .mlm-tree {
             text-align: center;
-            background: #fff;
-            padding: 20px;
+            padding: 10px;
             border-radius: 8px;
+            width: 100% !important;
+            max-width: 1800px;
+            transform-origin: top center;
         }
 
         .full-width {
-            background-color: #008081;
+            background-color: red;
         }
 
         .mobile-tree {
             display: none;
-        }
-
-        .new-style .box-shadow1 {
-            background-color: #008081;
-            border: none;
-            border-radius: 0px;
         }
 
         .add-icon {
@@ -90,19 +122,25 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
+            transform-origin: top center;
+            transition: transform 0.3s ease;
         }
 
         .tree ul {
             display: flex;
             justify-content: center;
+            padding: 0;
+            margin: 0;
             list-style: none;
             width: 100%;
+            position: relative;
         }
 
         .tree li {
             position: relative;
-            padding: 10px 20px;
+            padding: 5px 2px;
             width: 100%;
+            box-sizing: border-box;
         }
 
         .tree li::before {
@@ -111,7 +149,7 @@
             top: 0;
             left: 50%;
             width: 2px;
-            height: 30px;
+            height: 10px;
             background: white;
         }
 
@@ -120,20 +158,16 @@
             flex-direction: column;
             align-items: center;
             background: #008081;
-            padding: 10px;
+            padding: 8px;
             border-radius: 8px;
+            margin: 0 auto;
+            max-width: 1800px;
             box-shadow: 0 2px 5px rgba(255, 255, 255, 0.2);
         }
 
-        .node-id,
-        .node-name,
-        .bv-points {
-            color: white !important;
-        }
-
         .avatar-circle {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             overflow: hidden;
             margin-bottom: 5px;
@@ -143,6 +177,13 @@
             transition: all 0.3s ease;
             position: relative;
         }
+
+        .node-id,
+        .node-name,
+        .bv-points {
+            color: white !important;
+        }
+
 
         /* Male (default) styling */
         .avatar-circle.male {
@@ -171,6 +212,35 @@
 
         .dis-title {
             font-size: 18px !important;
+        }
+
+        /* Dynamic scaling based on tree depth */
+        .tree-depth-1 {
+            transform: scale(1);
+        }
+
+        .tree-depth-2 {
+            transform: scale(0.9);
+        }
+
+        .tree-depth-3 {
+            transform: scale(0.8);
+        }
+
+        .tree-depth-4 {
+            transform: scale(0.7);
+        }
+
+        .tree-depth-5 {
+            transform: scale(0.6);
+        }
+
+        .tree-depth-6 {
+            transform: scale(0.5);
+        }
+
+        .tree-depth-7 {
+            transform: scale(0.4);
         }
 
         @media (max-width: 768px) {
@@ -259,11 +329,37 @@
             .dis-title {
                 font-size: 12px !important;
             }
+
+            .new-style .box-shadow1{
+                height: 250px;
+            }
         }
     </style>
 @endsection
 
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function calculateTreeDepth(node) {
+            if (!node.children || node.children.length === 0) return 1;
+            let maxDepth = 0;
+            for (let i = 0; i < node.children.length; i++) {
+                const depth = calculateTreeDepth(node.children[i]);
+                if (depth > maxDepth) maxDepth = depth;
+            }
+            return maxDepth + 1;
+        }
+
+        const treeRoot = document.querySelector('.tree > ul > li');
+        if (treeRoot) {
+            const depth = calculateTreeDepth(treeRoot);
+            const treeContainer = document.querySelector('.tree');
+            const scaleClass = `tree-depth-${Math.min(depth, 7)}`;
+            treeContainer.classList.add(scaleClass);
+        }
+    });
+</script>
+
+<!-- <script>
     function toggleAccordion(header) {
         header.classList.toggle('collapsed');
         const content = header.nextElementSibling;
@@ -273,4 +369,4 @@
             content.style.display = "none";
         }
     }
-</script>
+</script> -->

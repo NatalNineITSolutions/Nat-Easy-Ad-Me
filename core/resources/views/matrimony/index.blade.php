@@ -234,8 +234,8 @@
         }
 
         /* .card img {
-            height: 100px;
-        } */
+                height: 100px;
+            } */
 
         .card h2 {
             font-size: 18px;
@@ -359,6 +359,10 @@
                 width: 70px;
                 height: 70px;
             }
+
+            .card-slider .card {
+                width: 220px;
+            }
         }
 
         @media (max-width: 576px) {
@@ -384,7 +388,7 @@
                 right: -15px;
             }
         }
-        
+
         /* Perfect match */
         .perfect-match-banner {
             position: relative;
@@ -539,8 +543,8 @@
         }
 
         /* .card-profile {
-            filter: blur(3px);
-        } */
+                filter: blur(3px);
+            } */
 
         .blurred {
             filter: blur(8px);
@@ -573,7 +577,7 @@
 
         .age,
         .occupation,
-        .location  p {
+        .location p {
             font-size: 14px;
             font-weight: 600;
         }
@@ -581,9 +585,13 @@
         .slick-prev:hover {
             background: #C48C46;
         }
-        
+
         .slick-next:hover {
             background: #C48C46;
+        }
+
+        .card-slider .card {
+            width: 220px;
         }
     </style>
 @endsection
@@ -601,19 +609,19 @@
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                 </select>
-            
+
                 <select class="form-select" name="age" id="search-age">
                     <option selected disabled>Age</option>
                     <option value="18-25">18-25</option>
                     <option value="26-35">26-35</option>
                     <option value="36-45">36-45</option>
                 </select>
-            
+
                 <input type="text" class="form-control" name="occupation" placeholder="Enter Occupation">
                 <input type="text" class="form-control" name="location" placeholder="Enter Location">
-            
+
                 <button type="submit" class="btn btn-primary">Search</button>
-            </form>           
+            </form>
         </div>
     </div>
 
@@ -659,7 +667,8 @@
                                 <img src="/assets/uploads/matrimony/location.png" alt="">
                                 <p>{{ $profile->city ?? 'Location not specified' }}</p>
                             </div>
-                            <a href="{{ route('matrimony.profile-details', ['id' => $profile->id]) }}" class="btn-profile">View Profile</a>
+                            <a href="{{ route('matrimony.profile-details', ['id' => $profile->id]) }}" class="btn-profile">View
+                                Profile</a>
                         </div>
                     </div>
                 @empty
@@ -741,7 +750,7 @@
             const age = document.getElementById('search-age').value;
             const occupation = document.getElementById('search-occupation').value;
             const location = document.getElementById('search-location').value;
-    
+
             fetch("{{ route('matrimony.matrimony.search') }}", {
                 method: 'POST',
                 headers: {
@@ -750,11 +759,11 @@
                 },
                 body: JSON.stringify({ gender, age, occupation, location })
             })
-            .then(res => res.json())
-            .then(data => {
-                console.log("Matching Profiles:", data);
-            })
-            .catch(err => console.error("Search error:", err));
+                .then(res => res.json())
+                .then(data => {
+                    console.log("Matching Profiles:", data);
+                })
+                .catch(err => console.error("Search error:", err));
         });
-    </script>    
+    </script>
 @endsection

@@ -15,6 +15,7 @@
                         <th>Distributor ID</th>
                         <th>Distributor Name</th>
                         <th>Position</th>
+                        <th>Date</th>
                         <th>Country</th>
                     </tr>
                 </thead>
@@ -25,6 +26,7 @@
                                         <td>{{ $user->partner_id }}</td>
                                         <td>{{ $user->full_name }}</td>
                                         <td>{{ $user->position }}</td>
+                                        <td>{{ $user->created_at->format('d M Y') }}</td>
                                         <td>
                                             @php
                                                 $city = $user->user_city->name ?? null;

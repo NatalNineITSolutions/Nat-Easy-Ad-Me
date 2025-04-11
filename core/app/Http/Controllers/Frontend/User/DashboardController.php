@@ -543,6 +543,46 @@ class DashboardController extends Controller
         }
     }
 
+    private function buildReferralTree($userId, $allUsers)
+    {
+        $user = $allUsers->get($userId);
+        if (!$user)
+            return null;
+
+        // Recursively build children
+        $user->referrals = $allUsers->where('parent_id', $userId)->map(function ($child) use ($allUsers) {
+            return $this->buildReferralTree($child->id, $allUsers);
+        });
+
+        return $user;
+    }
+
+    // public function referralView($id)
+    // {
+    //     $allUsers = User::with(['user_country', 'user_state', 'user_city', 'membership'])->get()->keyBy('id');
+
+    //     $parentUser = $allUsers->get($id);
+
+    //     if (!$parentUser) {
+    //         abort(404, 'User not found');
+    //     }
+
+    //     $referrals = $allUsers->where('parent_id', $id)->map(function ($user) {
+    //         $user->position = $user->membership ? 'Paid User' : 'Free User';
+    //         return $user;
+    //     });
+
+    //     $referralTree = $this->buildReferralTree($id, $allUsers);
+
+    //     return view('frontend.user.genology.referral_view', [
+    //         'id' => $id,
+    //         'parentUser' => $parentUser,
+    //         'referrals' => $referrals,
+    //         'allUsers' => $allUsers,
+    //         'referralTree' => $referralTree,
+    //     ]);
+    // }
+
     public function referralView($id)
     {
         $allUsers = User::with(['user_country', 'user_state', 'user_city', 'membership'])->get()->keyBy('id');
@@ -553,16 +593,25 @@ class DashboardController extends Controller
             abort(404, 'User not found');
         }
 
+        // Only fetch direct referrals (1 level)
         $referrals = $allUsers->where('parent_id', $id)->map(function ($user) {
             $user->position = $user->membership ? 'Paid User' : 'Free User';
             return $user;
         });
 
+        // 1-level tree structure
+        $referralTree = [
+            'user' => $parentUser,
+            'children' => $referrals->values()
+        ];
+
         return view('frontend.user.genology.referral_view', [
             'id' => $id,
             'parentUser' => $parentUser,
             'referrals' => $referrals,
-            'allUsers' => $allUsers
+            'allUsers' => $allUsers,
+            'referralTree' => $referralTree,
         ]);
     }
+
 }

@@ -17,7 +17,7 @@
                         <th>Distributor ID</th>
                         <th>Distributor Name</th>
                         <th>Position</th>
-                        <th>Country</th>
+                        <th>City</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,21 +41,7 @@
                                         <td>{{ $member->partner_id }}</td>
                                         <td>{{ $member->full_name }}</td>
                                         <td>{{ $member->position ?? 'N/A' }}</td>
-                                        <td>
-                                            @php
-                                                $city = $member->user_city ? $member->user_city->name : null;
-                                                $state = $member->user_state ? $member->user_state->name : null;
-                                                $country = $member->user_country ? $member->user_country->country : null;
-                                            @endphp
-
-                                            @if($city || $state || $country)
-                                                {{ $city ?? '' }}{{ $city && ($state || $country) ? ', ' : '' }}
-                                                {{ $state ?? '' }}{{ $state && $country ? ', ' : '' }}
-                                                {{ $country ?? '' }}
-                                            @else
-                                                N/A
-                                            @endif
-                                        </td>
+                                        <td>{{ $user->user_city->city ?? 'N/A' }}</td>
                                     </tr>
                     @empty
                         <tr>

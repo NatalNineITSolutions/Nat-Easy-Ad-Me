@@ -33,12 +33,15 @@ Route::get('/profile-lists', [MatrimonyController::class, 'profileLists']);
 Route::get('/profile/{profile_id}', [MatrimonyController::class, 'getProfileDetails']);
 
 
+
 // Protected Routes (using Sanctum for authentication)
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
     Route::post('/add-listing', [ListingApiController::class, 'addListing']);
+
+    Route::post('/profile', [MatrimonyController::class, 'storeProfile']);
 
     // You can add more protected routes here
 });

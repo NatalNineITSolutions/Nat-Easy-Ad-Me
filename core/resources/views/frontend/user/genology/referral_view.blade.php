@@ -7,6 +7,11 @@
         <strong>Referral ID:</strong> {{ $parentUser->partner_id }}
     </div>
 
+    {{-- Referral Tree View --}}
+    <div class="mlm-tree-wrapper d-flex justify-content-center">
+        @include('frontend.user.genology.partials.referral-tree-node', ['node' => $referralTree])
+    </div>
+
     {{-- Referral Table --}}
     <div class="table-responsive mb-5">
         <table class="table table-bordered table-striped w-100">
@@ -37,12 +42,6 @@
                 @endforelse
             </tbody>
         </table>
-    </div>
-
-    {{-- Referral Tree View --}}
-    <h4 class="text-center mb-3">Referral Tree Structure</h4>
-    <div class="mlm-tree-wrapper d-flex justify-content-center">
-        @include('frontend.user.genology.partials.referral-tree-node', ['node' => $referralTree])
     </div>
 </div>
 

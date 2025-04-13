@@ -1,330 +1,249 @@
-<div class="mlm-tree-container">
-    <div class="mlm-tree">
-      <div class="tree-node root">
-        <div class="node-card {{ $node->gender == 'female' ? 'female' : 'male' }} 
-                  {{ ($node->leftBV ?? 0) == 0 && ($node->rightBV ?? 0) == 0 ? 'inactive' : '' }}">
-          <a href="{{ route('user.user.mlm.children', ['id' => $node->id]) }}" class="node-link">
-            <div class="avatar-wrapper">
-              @if($node->avatar)
-                <img src="{{ $node->avatar }}" alt="User Avatar" class="user-avatar">
-              @else
-                <img src="{{ $node->gender === 'female' ? asset('assets/uploads/media-uploader/girlavatart.jpg') : asset('assets/uploads/media-uploader/avatar.jpg') }}"
-                    alt="Default Avatar" class="user-avatar">
-              @endif
-            </div>
-            <div class="node-details">
-              <span class="user-id">{{ $node->partner_id ?? 'N/A' }}</span>
-              <span class="user-name">{{ $node->first_name ?? 'N/A' }}</span>
-              @if (!isset($isChild))
-              <div class="bv-info">
-                <div class="bv-left">
-                  <span class="bv-value">{{ $node->leftBV ?? 0 }}</span>
-                  <span class="bv-label">L</span>
-                </div>
-                <div class="bv-right">
-                  <span class="bv-value">{{ $node->rightBV ?? 0 }}</span>
-                  <span class="bv-label">R</span>
-                </div>
+<div class="container-fluid px-1">
+  <div class="mlm-tree">
+      <ul class="tree">
+          <li>
+              <div class="node root-node">
+                  <div class="avatar-circle {{ $node->gender == 'female' ? 'female' : 'male' }} 
+                      {{ ($node->leftBV ?? 0) == 0 && ($node->rightBV ?? 0) == 0 ? 'zero-bv' : '' }}">
+                      <a href="{{ route('user.user.mlm.children', ['id' => $node->id]) }}">
+                          @if($node->avatar)
+                              <img src="{{ $node->avatar }}" alt="User Avatar">
+                          @else
+                              <img src="{{ $node->gender === 'female' 
+                                  ? asset('assets/uploads/media-uploader/girlavatart.jpg') 
+                                  : asset('assets/uploads/media-uploader/avatar.jpg') }}"
+                                  alt="Default Avatar">
+                          @endif
+                      </a>
+                  </div>
+                  <span class="node-id">{{ $node->partner_id ?? 'N/A' }}</span>
+                  <span class="node-name">{{ $node->first_name ?? 'N/A' }}</span>
+                  @if (!isset($isChild))
+                      <div class="bv-points">
+                          <span>BV (L): <strong>{{ $node->leftBV ?? 0 }}</strong></span>
+                          <span>BV (R): <strong>{{ $node->rightBV ?? 0 }}</strong></span>
+                      </div>
+                  @endif
               </div>
-              @endif
-            </div>
-          </a>
-        </div>
-  
-        <div class="children-wrapper">
-          <div class="children-row">
-            <div class="child-node left">
-              @if ($node->leftChild)
-                @include('frontend.user.genology.partials.tree-node', ['node' => $node->leftChild, 'isChild' => true])
-              @else
-                <a href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'left']) }}" class="add-node">
-                  <div class="add-icon">
-                    <i class="fas fa-plus"></i>
-                  </div>
-                </a>
-              @endif
-            </div>
-            
-            <div class="child-node right">
-              @if ($node->rightChild)
-                @include('frontend.user.genology.partials.tree-node', ['node' => $node->rightChild, 'isChild' => true])
-              @else
-                <a href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'right']) }}" class="add-node">
-                  <div class="add-icon">
-                    <i class="fas fa-plus"></i>
-                  </div>
-                </a>
-              @endif
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+
+              <ul>
+                  <li>
+                      @if ($node->leftChild)
+                          @include('frontend.user.genology.partials.tree-node', ['node' => $node->leftChild, 'isChild' => true])
+                      @else
+                          <div class="add-member-node">
+                              <a href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'left']) }}">
+                                  <div class="add-icon"><i class="fas fa-user-plus"></i></div>
+                              </a>
+                          </div>
+                      @endif
+                  </li>
+                  <li>
+                      @if ($node->rightChild)
+                          @include('frontend.user.genology.partials.tree-node', ['node' => $node->rightChild, 'isChild' => true])
+                      @else
+                          <div class="add-member-node">
+                              <a href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'right']) }}">
+                                  <div class="add-icon"><i class="fas fa-user-plus"></i></div>
+                              </a>
+                          </div>
+                      @endif
+                  </li>
+              </ul>
+          </li>
+      </ul>
   </div>
-  
-  <style>
-  /* Base Styles */
-  .mlm-tree-container {
-    width: 100%;
-    padding: 20px;
-    background: #f5f7fa;
-  }
-  
+</div>
+
+@section('style')
+<style>
   .mlm-tree {
-    width: 100%;
-    overflow: hidden;
+      width: 100%;
+      overflow-x: hidden;
+      padding: 10px 0;
+      background: #008081;
+      border-radius: 8px;
   }
-  
-  /* Node Structure */
-  .tree-node {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    width: 100%;
+
+  .tree {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
   }
-  
-  .node-card {
-    width: 120px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    padding: 12px;
-    margin-bottom: 15px;
-    transition: all 0.2s ease;
-    position: relative;
-    z-index: 2;
+
+  .tree ul {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      width: 100%;
   }
-  
-  .node-card.male {
-    border-top: 3px solid #4e73df;
+
+  .tree li {
+      position: relative;
+      padding: 5px 2px;
+      flex: 1 1 45%;
+      min-width: 120px;
+      max-width: 100%;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
   }
-  
-  .node-card.female {
-    border-top: 3px solid #e83e8c;
+
+  .tree li::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 2px;
+      height: 10px;
+      background: white;
   }
-  
-  .node-card.inactive {
-    opacity: 0.7;
-    border-top: 3px solid #6c757d;
-  }
-  
-  .node-link {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-  }
-  
-  /* Avatar & Details */
-  .avatar-wrapper {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin: 0 auto 8px;
-    border: 2px solid #e9ecef;
-  }
-  
-  .user-avatar {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .node-details {
-    text-align: center;
-  }
-  
-  .user-id {
-    display: block;
-    font-size: 10px;
-    color: #6c757d;
-    margin-bottom: 2px;
-  }
-  
-  .user-name {
-    display: block;
-    font-size: 12px;
-    font-weight: 600;
-    color: #343a40;
-    margin-bottom: 6px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  /* BV Information */
-  .bv-info {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
-  
-  .bv-left, .bv-right {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-  }
-  
-  .bv-value {
-    font-size: 11px;
-    font-weight: 700;
-  }
-  
-  .bv-left .bv-value {
-    color: #4e73df;
-  }
-  
-  .bv-right .bv-value {
-    color: #e83e8c;
-  }
-  
-  .bv-label {
-    font-size: 10px;
-    color: #6c757d;
-  }
-  
-  /* Children Structure */
-  .children-wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .children-row {
-    display: flex;
-    justify-content: center;
-    position: relative;
-    width: 100%;
-  }
-  
-  .child-node {
-    position: relative;
-    padding-top: 20px;
-    flex: 1;
-    max-width: 50%;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .child-node::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    width: calc(50% - 60px);
-    height: 20px;
-    border-top: 2px solid #dee2e6;
-  }
-  
-  .child-node.left {
-    padding-right: 15px;
-  }
-  
-  .child-node.left::before {
-    right: 0;
-    border-right: 2px solid #dee2e6;
-    border-top-right-radius: 8px;
-  }
-  
-  .child-node.right {
-    padding-left: 15px;
-  }
-  
-  .child-node.right::before {
-    left: 0;
-    border-left: 2px solid #dee2e6;
-    border-top-left-radius: 8px;
-  }
-  
-  /* Add Node Button */
-  .add-node {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    background: #f8f9fa;
-    border-radius: 50%;
-    color: #6c757d;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    border: 1px dashed #adb5bd;
-  }
-  
-  .add-node:hover {
-    background: #4e73df;
-    color: white;
-    border-style: solid;
-  }
-  
-  .add-icon {
-    font-size: 14px;
-  }
-  
-  /* Responsive Adjustments */
-  @media (max-width: 768px) {
-    .node-card {
-      width: 100px;
+
+  .node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #008081;
       padding: 8px;
-    }
-    
-    .avatar-wrapper {
-      width: 40px;
-      height: 40px;
-    }
-    
-    .user-name {
-      font-size: 11px;
-    }
-    
-    .bv-info {
-      gap: 6px;
-    }
-    
-    .child-node {
-      padding-top: 15px;
-    }
-    
-    .child-node::before {
-      height: 15px;
-      width: calc(50% - 50px);
-    }
-    
-    .add-node {
-      width: 35px;
-      height: 35px;
-    }
+      border-radius: 8px;
+      width: 100%;
+      max-width: 200px;
+      box-shadow: 0 2px 5px rgba(255, 255, 255, 0.2);
   }
-  
-  /* Auto-scaling for deep trees */
-  .tree-depth-1 { transform: scale(1); }
-  .tree-depth-2 { transform: scale(0.9); }
-  .tree-depth-3 { transform: scale(0.8); }
-  .tree-depth-4 { transform: scale(0.7); }
-  .tree-depth-5 { transform: scale(0.6); }
-  </style>
-  
-  <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Auto-scaling based on tree depth
-    function calculateTreeDepth(nodeElement) {
-      let depth = 0;
-      let current = nodeElement;
-      
-      while (current.querySelector('.child-node .tree-node')) {
-        depth++;
-        current = current.querySelector('.child-node .tree-node');
+
+  .avatar-circle {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: all 0.3s ease;
+  }
+
+  .avatar-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+  }
+
+  .avatar-circle.male {
+      background: #1a237e;
+      border: 3px solid #1a237e;
+  }
+
+  .avatar-circle.female {
+      background: #d81b60;
+      border: 3px solid #d81b60;
+  }
+
+  .avatar-circle.zero-bv {
+      border: 3px solid #ff5252 !important;
+      background: transparent !important;
+  }
+
+  .node-id,
+  .node-name,
+  .bv-points {
+      color: white;
+      font-size: 12px;
+      text-align: center;
+  }
+
+  .bv-points {
+      font-size: 11px;
+      margin-top: 4px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+  }
+
+  .add-icon {
+      color: white;
+      font-size: 24px;
+      text-align: center;
+  }
+
+  @media (max-width: 768px) {
+      .mlm-tree {
+          padding: 5px 0;
       }
-      
-      return depth;
-    }
-  
-    const rootNode = document.querySelector('.tree-node.root');
-    if (rootNode) {
-      const depth = calculateTreeDepth(rootNode);
-      const treeContainer = document.querySelector('.mlm-tree');
-      const scaleClass = `tree-depth-${Math.min(depth, 5)}`;
-      treeContainer.classList.add(scaleClass);
-    }
+
+      .tree ul {
+          flex-direction: column;
+          gap: 8px;
+      }
+
+      .tree li {
+          flex: 1 1 100%;
+          padding: 2px;
+      }
+
+      .node {
+          max-width: 100%;
+          padding: 5px;
+      }
+
+      .avatar-circle {
+          width: 30px;
+          height: 30px;
+      }
+
+      .node-id,
+      .node-name {
+          font-size: 10px;
+      }
+
+      .bv-points {
+          font-size: 9px;
+      }
+
+      .add-icon {
+          font-size: 18px;
+      }
+  }
+</style>
+@endsection
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      function calculateTreeDepth(node) {
+          if (!node.children || node.children.length === 0) return 1;
+          let maxDepth = 0;
+          for (let i = 0; i < node.children.length; i++) {
+              const depth = calculateTreeDepth(node.children[i]);
+              if (depth > maxDepth) maxDepth = depth;
+          }
+          return maxDepth + 1;
+      }
+
+      const treeRoot = document.querySelector('.tree > ul > li');
+      if (treeRoot) {
+          const depth = calculateTreeDepth(treeRoot);
+          const treeContainer = document.querySelector('.tree');
+          const scaleClass = `tree-depth-${Math.min(depth, 7)}`;
+          treeContainer.classList.add(scaleClass);
+      }
   });
-  </script>
+</script>
+
+<!-- <script>
+  function toggleAccordion(header) {
+      header.classList.toggle('collapsed');
+      const content = header.nextElementSibling;
+      if (content.style.display === "none" || content.style.display === "") {
+          content.style.display = "block";
+      } else {
+          content.style.display = "none";
+      }
+  }
+</script> -->

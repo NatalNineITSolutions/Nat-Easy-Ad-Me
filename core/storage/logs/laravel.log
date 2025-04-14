@@ -1,18 +1,158 @@
-[2025-04-13 13:34:46] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":1,"user_current_profile_limit":null,"calculated_profile_limit":1} 
-[2025-04-13 13:35:08] production.INFO: Distributed BV points to parent user: {"user_id":41,"bv_points":20} 
-[2025-04-13 13:35:08] production.INFO: Distributed BV points to parent user: {"user_id":25,"bv_points":20} 
-[2025-04-13 13:35:08] production.INFO: Distributed BV points to parent user: {"user_id":13,"bv_points":20} 
-[2025-04-13 13:35:10] production.ERROR: Failed to clear session: Connection could not be established with host "YOUR_SMTP_HOST_NAME:587": stream_socket_client(): php_network_getaddresses: getaddrinfo for YOUR_SMTP_HOST_NAME failed: No such host is known.   
-[2025-04-13 13:35:10] production.INFO: Data to update: {"upgrade_membership_id":23} 
-[2025-04-13 13:35:44] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":3,"user_current_profile_limit":null,"calculated_profile_limit":3} 
-[2025-04-13 13:36:09] production.INFO: Distributed BV points to parent user: {"user_id":41,"bv_points":30} 
-[2025-04-13 13:36:09] production.INFO: Distributed BV points to parent user: {"user_id":25,"bv_points":30} 
-[2025-04-13 13:36:09] production.INFO: Distributed BV points to parent user: {"user_id":13,"bv_points":30} 
-[2025-04-13 13:36:10] production.ERROR: Failed to clear session: Connection could not be established with host "YOUR_SMTP_HOST_NAME:587": stream_socket_client(): php_network_getaddresses: getaddrinfo for YOUR_SMTP_HOST_NAME failed: No such host is known.   
-[2025-04-13 13:36:10] production.INFO: Data to update: {"upgrade_membership_id":24} 
-[2025-04-13 13:36:42] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":null,"calculated_profile_limit":0} 
-[2025-04-13 13:37:04] production.INFO: Distributed BV points to parent user: {"user_id":41,"bv_points":6} 
-[2025-04-13 13:37:04] production.INFO: Distributed BV points to parent user: {"user_id":25,"bv_points":6} 
-[2025-04-13 13:37:05] production.INFO: Distributed BV points to parent user: {"user_id":13,"bv_points":6} 
-[2025-04-13 13:37:06] production.ERROR: Failed to clear session: Connection could not be established with host "YOUR_SMTP_HOST_NAME:587": stream_socket_client(): php_network_getaddresses: getaddrinfo for YOUR_SMTP_HOST_NAME failed: No such host is known.   
-[2025-04-13 13:37:06] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-04-14 17:05:42] production.INFO: Calculated BV points for node: {"node_id":24,"leftBV":4700,"rightBV":3450} 
+[2025-04-14 17:05:42] production.INFO: Calculated BV points for node: {"node_id":36,"leftBV":270,"rightBV":0} 
+[2025-04-14 17:05:42] production.INFO: Calculated BV points for node: {"node_id":88,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:42] production.INFO: Calculated BV points for node: {"node_id":107,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:42] production.INFO: Calculated BV points for node: {"node_id":112,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:42] production.INFO: Calculated BV points for node: {"node_id":125,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:42] production.INFO: Calculated BV points for node: {"node_id":114,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:42] production.INFO: Calculated BV points for node: {"node_id":117,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:42] production.INFO: Calculated BV points for node: {"node_id":108,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:42] production.INFO: Calculated BV points for node: {"node_id":94,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:42] production.INFO: Calculated BV points for node: {"node_id":111,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:42] production.INFO: Calculated BV points for node: {"node_id":103,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:42] production.INFO: Calculated BV points for node: {"node_id":93,"leftBV":0,"rightBV":240} 
+[2025-04-14 17:05:42] production.INFO: Calculated BV points for node: {"node_id":95,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:42] production.INFO: Calculated BV points for node: {"node_id":97,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:42] production.INFO: Calculated BV points for node: {"node_id":98,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:42] production.INFO: Calculated BV points for node: {"node_id":96,"leftBV":0,"rightBV":240} 
+[2025-04-14 17:05:42] production.INFO: Calculated BV points for node: {"node_id":109,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:42] production.INFO: Calculated BV points for node: {"node_id":92,"leftBV":0,"rightBV":240} 
+[2025-04-14 17:05:42] production.INFO: Calculated BV points for node: {"node_id":115,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:42] production.INFO: Calculated BV points for node: {"node_id":113,"leftBV":240,"rightBV":0} 
+[2025-04-14 17:05:42] production.INFO: Calculated BV points for node: {"node_id":122,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:42] production.INFO: Calculated BV points for node: {"node_id":116,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:47] production.INFO: Calculated BV points for node: {"node_id":24,"leftBV":4700,"rightBV":3450} 
+[2025-04-14 17:05:47] production.INFO: Calculated BV points for node: {"node_id":36,"leftBV":270,"rightBV":0} 
+[2025-04-14 17:05:47] production.INFO: Calculated BV points for node: {"node_id":88,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:47] production.INFO: Calculated BV points for node: {"node_id":107,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:47] production.INFO: Calculated BV points for node: {"node_id":112,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:47] production.INFO: Calculated BV points for node: {"node_id":125,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:47] production.INFO: Calculated BV points for node: {"node_id":114,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:47] production.INFO: Calculated BV points for node: {"node_id":117,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:47] production.INFO: Calculated BV points for node: {"node_id":108,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:47] production.INFO: Calculated BV points for node: {"node_id":94,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:47] production.INFO: Calculated BV points for node: {"node_id":111,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:47] production.INFO: Calculated BV points for node: {"node_id":103,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:47] production.INFO: Calculated BV points for node: {"node_id":93,"leftBV":0,"rightBV":240} 
+[2025-04-14 17:05:47] production.INFO: Calculated BV points for node: {"node_id":95,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:47] production.INFO: Calculated BV points for node: {"node_id":97,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:47] production.INFO: Calculated BV points for node: {"node_id":98,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:47] production.INFO: Calculated BV points for node: {"node_id":96,"leftBV":0,"rightBV":240} 
+[2025-04-14 17:05:47] production.INFO: Calculated BV points for node: {"node_id":109,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:47] production.INFO: Calculated BV points for node: {"node_id":92,"leftBV":0,"rightBV":240} 
+[2025-04-14 17:05:47] production.INFO: Calculated BV points for node: {"node_id":115,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:47] production.INFO: Calculated BV points for node: {"node_id":113,"leftBV":240,"rightBV":0} 
+[2025-04-14 17:05:47] production.INFO: Calculated BV points for node: {"node_id":122,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:05:47] production.INFO: Calculated BV points for node: {"node_id":116,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:06:36] production.INFO: Checking for BV flush. Now: 17:06, Configured: 17:06  
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 1 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 13 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 24 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 25 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 36 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 41 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 42 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 56 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 57 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 58 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 59 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 60 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 61 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 85 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 86 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 87 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 88 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 90 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 92 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 93 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 94 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 95 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 96 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 97 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 98 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 102 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 103 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 107 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 108 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 109 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 111 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 112 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 113 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 114 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 115 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 116 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 117 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 118 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 119 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 122 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 124 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:36] production.INFO: BV flushed for user ID: 125 {"flushedLeft":0.0,"flushedRight":0.0,"remainingLeft":0.0,"remainingRight":0.0} 
+[2025-04-14 17:06:56] production.INFO: Calculated BV points for node: {"node_id":24,"leftBV":4700,"rightBV":3450} 
+[2025-04-14 17:06:56] production.INFO: Calculated BV points for node: {"node_id":36,"leftBV":270,"rightBV":0} 
+[2025-04-14 17:06:56] production.INFO: Calculated BV points for node: {"node_id":88,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:06:56] production.INFO: Calculated BV points for node: {"node_id":107,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:06:56] production.INFO: Calculated BV points for node: {"node_id":112,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:06:56] production.INFO: Calculated BV points for node: {"node_id":125,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:06:56] production.INFO: Calculated BV points for node: {"node_id":114,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:06:56] production.INFO: Calculated BV points for node: {"node_id":117,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:06:56] production.INFO: Calculated BV points for node: {"node_id":108,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:06:56] production.INFO: Calculated BV points for node: {"node_id":94,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:06:56] production.INFO: Calculated BV points for node: {"node_id":111,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:06:56] production.INFO: Calculated BV points for node: {"node_id":103,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:06:56] production.INFO: Calculated BV points for node: {"node_id":93,"leftBV":0,"rightBV":240} 
+[2025-04-14 17:06:56] production.INFO: Calculated BV points for node: {"node_id":95,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:06:56] production.INFO: Calculated BV points for node: {"node_id":97,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:06:56] production.INFO: Calculated BV points for node: {"node_id":98,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:06:56] production.INFO: Calculated BV points for node: {"node_id":96,"leftBV":0,"rightBV":240} 
+[2025-04-14 17:06:56] production.INFO: Calculated BV points for node: {"node_id":109,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:06:56] production.INFO: Calculated BV points for node: {"node_id":92,"leftBV":0,"rightBV":240} 
+[2025-04-14 17:06:56] production.INFO: Calculated BV points for node: {"node_id":115,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:06:56] production.INFO: Calculated BV points for node: {"node_id":113,"leftBV":240,"rightBV":0} 
+[2025-04-14 17:06:56] production.INFO: Calculated BV points for node: {"node_id":122,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:06:56] production.INFO: Calculated BV points for node: {"node_id":116,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:10:35] production.INFO: Calculated BV points for node: {"node_id":24,"leftBV":4700,"rightBV":3450} 
+[2025-04-14 17:10:35] production.INFO: Calculated BV points for node: {"node_id":36,"leftBV":270,"rightBV":0} 
+[2025-04-14 17:10:35] production.INFO: Calculated BV points for node: {"node_id":88,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:10:35] production.INFO: Calculated BV points for node: {"node_id":107,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:10:35] production.INFO: Calculated BV points for node: {"node_id":112,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:10:35] production.INFO: Calculated BV points for node: {"node_id":125,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:10:35] production.INFO: Calculated BV points for node: {"node_id":114,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:10:35] production.INFO: Calculated BV points for node: {"node_id":117,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:10:35] production.INFO: Calculated BV points for node: {"node_id":108,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:10:35] production.INFO: Calculated BV points for node: {"node_id":94,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:10:35] production.INFO: Calculated BV points for node: {"node_id":111,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:10:35] production.INFO: Calculated BV points for node: {"node_id":103,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:10:35] production.INFO: Calculated BV points for node: {"node_id":93,"leftBV":0,"rightBV":240} 
+[2025-04-14 17:10:35] production.INFO: Calculated BV points for node: {"node_id":95,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:10:35] production.INFO: Calculated BV points for node: {"node_id":97,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:10:35] production.INFO: Calculated BV points for node: {"node_id":98,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:10:35] production.INFO: Calculated BV points for node: {"node_id":96,"leftBV":0,"rightBV":240} 
+[2025-04-14 17:10:35] production.INFO: Calculated BV points for node: {"node_id":109,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:10:35] production.INFO: Calculated BV points for node: {"node_id":92,"leftBV":0,"rightBV":240} 
+[2025-04-14 17:10:35] production.INFO: Calculated BV points for node: {"node_id":115,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:10:35] production.INFO: Calculated BV points for node: {"node_id":113,"leftBV":240,"rightBV":0} 
+[2025-04-14 17:10:35] production.INFO: Calculated BV points for node: {"node_id":122,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:10:35] production.INFO: Calculated BV points for node: {"node_id":116,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:12:21] production.INFO: Calculated BV points for node: {"node_id":24,"leftBV":4700,"rightBV":3450} 
+[2025-04-14 17:12:21] production.INFO: Calculated BV points for node: {"node_id":36,"leftBV":270,"rightBV":0} 
+[2025-04-14 17:12:21] production.INFO: Calculated BV points for node: {"node_id":88,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:12:21] production.INFO: Calculated BV points for node: {"node_id":107,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:12:21] production.INFO: Calculated BV points for node: {"node_id":112,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:12:21] production.INFO: Calculated BV points for node: {"node_id":125,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:12:21] production.INFO: Calculated BV points for node: {"node_id":114,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:12:21] production.INFO: Calculated BV points for node: {"node_id":117,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:12:21] production.INFO: Calculated BV points for node: {"node_id":108,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:12:21] production.INFO: Calculated BV points for node: {"node_id":94,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:12:21] production.INFO: Calculated BV points for node: {"node_id":111,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:12:21] production.INFO: Calculated BV points for node: {"node_id":103,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:12:21] production.INFO: Calculated BV points for node: {"node_id":93,"leftBV":0,"rightBV":240} 
+[2025-04-14 17:12:21] production.INFO: Calculated BV points for node: {"node_id":95,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:12:21] production.INFO: Calculated BV points for node: {"node_id":97,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:12:21] production.INFO: Calculated BV points for node: {"node_id":98,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:12:21] production.INFO: Calculated BV points for node: {"node_id":96,"leftBV":0,"rightBV":240} 
+[2025-04-14 17:12:21] production.INFO: Calculated BV points for node: {"node_id":109,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:12:21] production.INFO: Calculated BV points for node: {"node_id":92,"leftBV":0,"rightBV":240} 
+[2025-04-14 17:12:21] production.INFO: Calculated BV points for node: {"node_id":115,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:12:21] production.INFO: Calculated BV points for node: {"node_id":113,"leftBV":240,"rightBV":0} 
+[2025-04-14 17:12:21] production.INFO: Calculated BV points for node: {"node_id":122,"leftBV":0,"rightBV":0} 
+[2025-04-14 17:12:21] production.INFO: Calculated BV points for node: {"node_id":116,"leftBV":0,"rightBV":0} 

@@ -23,8 +23,9 @@ class PayoutController extends Controller
             'payment_type' => get_static_option('payment_type'),
             'referral_value' => get_static_option('referral_value'),
             'referral_percentage' => get_static_option('referral_percentage'),
-            'maximum_referrals' => get_static_option('maximum_referrals'),
             'bp_value' => get_static_option('bp_value'),
+            'sealing_limitation' => get_static_option('sealing_limitation'),
+            'bv_flush_time' => get_static_option('bv_flush_time'),
         ];
 
         return view('backend.pages.payout-manage.payout-settings', compact('payoutSettings'));
@@ -44,8 +45,9 @@ class PayoutController extends Controller
             'payment_type' => 'required|string|max:255',
             'referral_value' => 'required|numeric|min:0',
             'referral_percentage' => 'nullable|numeric|between:0,100',
-            'maximum_referrals' => 'required|numeric|min:0',
             'bp_value' => 'required|numeric|min:0',
+            'sealing_limitation' => 'required|numeric|min:0',
+            'bv_flush_time' => 'required|date_format:H:i',
         ]);
 
         if ($validator->fails()) {
@@ -57,8 +59,9 @@ class PayoutController extends Controller
         set_static_option('payment_type', $request->input('payment_type'));
         set_static_option('referral_value', $request->input('referral_value'));
         set_static_option('referral_percentage', $request->input('referral_percentage'));
-        set_static_option('maximum_referrals', $request->input('maximum_referrals'));
         set_static_option('bp_value', $request->input('bp_value'));
+        set_static_option('sealing_limitation', $request->input('sealing_limitation'));
+        set_static_option('bv_flush_time', $request->input('bv_flush_time'));
 
         return redirect()->route('payout.settings')->with('success', __('Payout settings updated successfully!'));
     }

@@ -66,20 +66,46 @@
                                        value="{{ get_static_option('referral_percentage') }}" placeholder="{{ __('Enter referral percentage') }}">
                             </div>
                         </div>
+
                         <div class="col-md-6">
                             <div class="form__input__single mb-3">
-                                <label for="maximum_referrals" class="form__input__single__label">{{__('Maximum referrals')}}<span class="text-danger">*</span></label>
-                                <input type="number" name="maximum_referrals" id="maximum_referrals" class="form-control radius-5"
-                                       value="{{ get_static_option('maximum_referrals') }}" placeholder="{{ __('Enter maximum referrals') }}">
+                                <label for="sealing_limitation" class="form__input__single__label">{{__('Sealing Limitation')}}<span class="text-danger">*</span></label>
+                                <input type="number" step="0.01" name="sealing_limitation" id="sealing_limitation" class="form-control radius-5"
+                                       value="{{ get_static_option('sealing_limitation') }}" placeholder="{{ __('Enter sealing limitation') }}">
                             </div>
                         </div>
 
                         <!-- Fourth Row -->
                         <div class="col-md-6">
                             <div class="form__input__single mb-3">
-                                <label for="bp_value" class="form__input__single__label">{{__('Business Point')}}<span class="text-danger">*</span></label>
+                                <label for="bp_value" class="form__input__single__label">{{__('Commission Value')}}<span class="text-danger">*</span></label>
                                 <input type="number" step="0.01" name="bp_value" id="bp_value" class="form-control radius-5"
                                        value="{{ get_static_option('bp_value') }}" placeholder="{{ __('Enter BP Value') }}">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form__input__single mb-3">
+                                <label for="tds_value" class="form__input__single__label">{{__('TDS Value')}}<span class="text-danger">*</span></label>
+                                <input type="number" step="0.01" name="tds_value" id="tds_value" class="form-control radius-5"
+                                       value="{{ get_static_option('tds_value') }}" placeholder="{{ __('Enter tds value') }}">
+                            </div>
+                        </div>
+
+                        <!-- Fifth row -->
+                        <div class="col-md-6">
+                            <div class="form__input__single mb-3">
+                                <label for="service_charge" class="form__input__single__label">{{__('Service Charge')}}<span class="text-danger">*</span></label>
+                                <input type="number" step="0.01" name="service_charge" id="service_charge" class="form-control radius-5"
+                                       value="{{ get_static_option('service_charge') }}" placeholder="{{ __('Enter service charge') }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form__input__single mb-3">
+                                <label for="bv_flush_time" class="form__input__single__label">{{__('Payout Schedule Time')}} <span class="text-danger">*</span></label>
+                                <input type="time" name="bv_flush_time" id="bv_flush_time" class="form-control radius-5"
+                                       value="{{ get_static_option('bv_flush_time') }}" placeholder="{{ __('Enter schedule time') }}">
+                                <small class="text-muted">{{ __('Time when payout will be processed daily') }}</small>
                             </div>
                         </div>
                     </div>

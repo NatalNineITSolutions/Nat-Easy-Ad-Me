@@ -86,6 +86,13 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
             });
         });
 
+        // Income 
+        Route::controller(DashboardController::class)->group(function () {
+            Route::group(['prefix' => 'info'], function () {
+                Route::match(['get', 'post'], '/income', 'viewincome')->name('income');
+            });
+        });
+
         // add listing
         Route::controller(ListingController::class)->group(function () {
             Route::group(['prefix' => 'listing'], function () {

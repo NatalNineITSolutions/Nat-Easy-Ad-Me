@@ -129,7 +129,7 @@
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('My Referrals:') }}</span>
                                                     <span
-                                                        class="stat-value">{{ $directReferralsCount }}/{{ $directReferralsLimit }}</span>
+                                                        class="stat-value">{{ $directReferralsCount }}</span>
                                                 </div>
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('BV from Referrals:') }}</span>
@@ -142,7 +142,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="stats-card">
+                                        <!-- <div class="stats-card">
                                             <h4 class="stats-title">{{ __('Business') }}</h4>
                                             <div class="stats-content">
                                                 <div class="stat-item">
@@ -164,6 +164,43 @@
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('Business Points(BP):') }}</span>
                                                     <span class="stat-value">{{ $businesspoint }}</span>
+                                                </div>
+                                            </div>
+                                        </div> -->
+
+                                        <div class="stats-card">
+                                            <h4 class="stats-title">{{ __('Business') }}</h4>
+                                            <div class="stats-content">
+                                                <div class="stat-item">
+                                                    <span class="stat-label">{{ __('Status:') }}</span>
+                                                    <span class="stat-value">DISTRIBUTOR</span>
+                                                </div>
+                                                <div class="stat-item">
+                                                    <span class="stat-label">{{ __('Self Purchase BV:') }}</span>
+                                                    <span class="stat-value">{{ number_format($selfPurchasedBv) }}</span>
+                                                </div>
+
+                                                <!-- Team BV Left -->
+                                                <div class="stat-item">
+                                                    <span class="stat-label">{{ __('Team BV Left:') }}</span>
+                                                    <div class="stat-value-group">
+                                                        <span
+                                                            class="stat-value">{{ number_format($remainingLeftBv) }}</span>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Team BV Right -->
+                                                <div class="stat-item">
+                                                    <span class="stat-label">{{ __('Team BV Right:') }}</span>
+                                                    <div class="stat-value-group">
+                                                        <span
+                                                            class="stat-value">{{ number_format($remainingRightBv) }}</span>
+                                                    </div>
+                                                </div> 
+                                                
+                                                <div class="stat-item">
+                                                    <span class="stat-label">{{ __('Commission Value (CV):') }}</span>
+                                                    <span class="stat-value">{{ $balancedBP }}</span>
                                                 </div>
                                             </div>
                                         </div>

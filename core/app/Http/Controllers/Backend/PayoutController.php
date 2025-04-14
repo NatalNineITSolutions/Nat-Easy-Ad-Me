@@ -26,6 +26,8 @@ class PayoutController extends Controller
             'bp_value' => get_static_option('bp_value'),
             'sealing_limitation' => get_static_option('sealing_limitation'),
             'bv_flush_time' => get_static_option('bv_flush_time'),
+            'tds_value' => get_static_option('tds_value'),
+            'service_charge' => get_static_option('service_charge'),
         ];
 
         return view('backend.pages.payout-manage.payout-settings', compact('payoutSettings'));
@@ -48,6 +50,8 @@ class PayoutController extends Controller
             'bp_value' => 'required|numeric|min:0',
             'sealing_limitation' => 'required|numeric|min:0',
             'bv_flush_time' => 'required|date_format:H:i',
+            'tds_value' => 'required|numeric|min:0',
+            'service_charge' => 'required|numeric|min:0',
         ]);
 
         if ($validator->fails()) {
@@ -62,6 +66,8 @@ class PayoutController extends Controller
         set_static_option('bp_value', $request->input('bp_value'));
         set_static_option('sealing_limitation', $request->input('sealing_limitation'));
         set_static_option('bv_flush_time', $request->input('bv_flush_time'));
+        set_static_option('tds_value', $request->input('tds_value'));
+        set_static_option('service_charge', $request->input('service_charge'));
 
         return redirect()->route('payout.settings')->with('success', __('Payout settings updated successfully!'));
     }

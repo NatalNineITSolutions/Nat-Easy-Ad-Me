@@ -30,89 +30,90 @@ class DashboardController extends Controller
             'membershipUser',
             'membershipHistory',
             'parent',
+            'children.userBvs',
+            'leftChild.userBvs',
+            'rightChild.userBvs'
         ])->findOrFail($user_id);
 
-        // Get current membership details
         $current_membership = optional($user->membershipUser);
         $previous_membership = $user->membershipHistory()->latest('created_at')->first();
 
-        // Ensure user has an active membership
-        // if (!$current_membership->id) {
-        //     return back()->with('error', 'No active membership found.');
-        // }
-
-        // Count all ads posted by the user
+        // Basic user stats
         $user_ads_posted = $user->listings()->count();
-
-        $membership_upgraded = $previous_membership && $previous_membership->membership_id != $current_membership->membership_id;
-
         $remaining_listings = $current_membership->listing_limit;
-
         $user_active_listings = $user->listings()->where('is_published', 1)->where('status', 1)->count();
         $user_deactivated_ads = $user->listings()->where(function ($query) {
             $query->where('is_published', 0)->orWhere('status', 0);
         })->count();
         $user_favorite_ads = ListingFavorite::where('user_id', $user_id)->count();
-
         $show_upgrade = ($current_membership->listing_limit > 0 && $remaining_listings === 0);
-
         $averageRating = $user->reviews?->avg('rating');
         $user_review_count = $user->reviews?->count();
         $user_given_reviews = Review::where('reviewer_id', $user_id)->take(500)->get();
+        $age = $user->dob ? now()->diffInYears($user->dob) : null;
 
-        $age = null;
-        if ($user->dob) {
-            $age = now()->diffInYears($user->dob);
-        }
-
+        // BV and BP configuration
         $bvvalue = get_static_option('payout_value') ?? 0;
+        $bpConversionRate = get_static_option('bp_value') ?? 1;
+        $sealingLimit = get_static_option('sealing_limit') ?? 1;
 
-        $directReferralsCount = $user->children()->count();
-        $directReferralsLimit = get_static_option('maximum_referrals') ?? 0;
-
+        // Calculate BV points
         $leftBvPoints = $user->leftChild ? $user->leftChild->userBvs->sum('bv_points') : 0;
         $rightBvPoints = $user->rightChild ? $user->rightChild->userBvs->sum('bv_points') : 0;
-        $totalBvPoints = $directReferralsCount * $bvvalue;
 
-        $referralCommissionRate = $user->referral_commission ?? 0;
 
-        $referralCommission = $referralCommissionRate;
-        // Fetch the rate, defaulting to null so we can distinguish “not set” vs. zero
-        $bpConversionRate = get_static_option('bp_value');
 
-        if (empty($bpConversionRate) || $bpConversionRate <= 0) {
-            error_log("Warning: invalid BP conversion rate: " . var_export($bpConversionRate, true));
-            $bpConversionRate = 1;
+        $sealingLimitBv = $sealingLimit * $bpConversionRate;
+
+        // Step 1: Deduct one sealing limit if both sides meet it
+        if ($leftBvPoints >= $sealingLimitBv && $rightBvPoints >= $sealingLimitBv) {
+            $leftBvPoints -= $sealingLimitBv;
+            $rightBvPoints -= $sealingLimitBv;
         }
 
-        $leftBP = floor($leftBvPoints / $bpConversionRate);
-        $rightBP = floor($rightBvPoints / $bpConversionRate);
+        // Step 2: Keep only multiples of sealingLimitBv
+        $remainingLeftBv = floor($leftBvPoints / $sealingLimitBv) * $sealingLimitBv;
+        $remainingRightBv = floor($rightBvPoints / $sealingLimitBv) * $sealingLimitBv;
 
+        // Step 3: Calculate flushed BVs
+        $flushedLeft = $leftBvPoints - $remainingLeftBv;
+        $flushedRight = $rightBvPoints - $remainingRightBv;
 
+        // Apply sealing limit to the BV points
+        $sealingLimitBv = $sealingLimit * $bpConversionRate;
+
+        // Retain only BV up to the sealing limit
+        $sealedLeftBv = min($leftBvPoints, $sealingLimitBv);
+        $sealedRightBv = min($rightBvPoints, $sealingLimitBv);
+
+        // Update the retained BP points for display
+        $leftBP = floor($sealedLeftBv / $bpConversionRate);
+        $rightBP = floor($sealedRightBv / $bpConversionRate);
         $equalizedBP = min($leftBP, $rightBP);
 
-        $balancedLeftBP = $leftBP - $equalizedBP;
-        $balancedRightBP = $rightBP - $equalizedBP;
-
-        $businesspoint = "{$leftBP} <> {$rightBP}";
-        $totalBP = "{$leftBvPoints} <> {$rightBvPoints}";
-        $balancedBP = "{$balancedLeftBP} <> {$balancedRightBP}";
-
-        $bvFromReferrals = $user->children()->with('userBvs')->get()->sum(function ($child) {
-            return $child->userBvs->sum('bv_points');
-        });
-
-        $bv_value = get_static_option('payout_value') ?? 0;
-
-        $income = $directReferralsCount * $bv_value;
-
+        // Calculate income
+        $income = $equalizedBP * $bvvalue;
         $showIncome = $equalizedBP > 0;
 
-        $selfPurchasedBv = 0;
-        if ($current_membership->id) {
-            $selfPurchasedBv = optional($current_membership->membership)->bv_points ?? 0;
-        }
+        // Format display values
+        $businesspoint = "$leftBvPoints <> $rightBvPoints";
+        $totalBP = "$leftBP <> $rightBP";
+        $balancedBP = "$remainingLeftBv <> $remainingRightBv";
 
+        // BV from direct referrals
+        $bvFromReferrals = $user->children()->with('userBvs')->get()->sum(fn($child) => $child->userBvs->sum('bv_points'));
+
+        // Referral commission
+        $referralCommissionRate = $user->referral_commission ?? 0;
+        $referralCommission = $referralCommissionRate;
+
+        // Self purchased BV
+        $selfPurchasedBv = $current_membership->id ? ($current_membership->membership->bv_points ?? 0) : 0;
+
+        // Calculate BV points
+        $directReferralsCount = $user->children()->count();
+
+        // Return the view with updated data
         return view('frontend.user.dashboard.dashboard', [
             'user' => $user,
             'user_ads_posted' => $user_ads_posted,
@@ -128,9 +129,8 @@ class DashboardController extends Controller
             'leftBvPoints' => $leftBvPoints,
             'rightBvPoints' => $rightBvPoints,
             'age' => $age,
-            'totalBvPoints' => $totalBvPoints,
+            'totalBvPoints' => $businesspoint,
             'directReferralsCount' => $directReferralsCount,
-            'directReferralsLimit' => $directReferralsLimit,
             'referralCommission' => $referralCommission,
             'referralCommissionRate' => $referralCommissionRate,
             'totalBP' => $totalBP,
@@ -141,6 +141,14 @@ class DashboardController extends Controller
             'showIncome' => $showIncome,
             'businesspoint' => $businesspoint,
             'selfPurchasedBv' => $selfPurchasedBv,
+            'sealingLimit' => $sealingLimit,
+            'sealedLeftBv' => $sealedLeftBv,
+            'sealedRightBv' => $sealedRightBv,
+            'remainingLeftBv' => $remainingLeftBv,
+            'remainingRightBv' => $remainingRightBv,
+            'sealingLimitBv' => $sealingLimitBv,
+            'flushedLeft' => $flushedLeft,
+            'flushedRight' => $flushedRight,
         ]);
     }
 
@@ -556,32 +564,6 @@ class DashboardController extends Controller
 
         return $user;
     }
-
-    // public function referralView($id)
-    // {
-    //     $allUsers = User::with(['user_country', 'user_state', 'user_city', 'membership'])->get()->keyBy('id');
-
-    //     $parentUser = $allUsers->get($id);
-
-    //     if (!$parentUser) {
-    //         abort(404, 'User not found');
-    //     }
-
-    //     $referrals = $allUsers->where('parent_id', $id)->map(function ($user) {
-    //         $user->position = $user->membership ? 'Paid User' : 'Free User';
-    //         return $user;
-    //     });
-
-    //     $referralTree = $this->buildReferralTree($id, $allUsers);
-
-    //     return view('frontend.user.genology.referral_view', [
-    //         'id' => $id,
-    //         'parentUser' => $parentUser,
-    //         'referrals' => $referrals,
-    //         'allUsers' => $allUsers,
-    //         'referralTree' => $referralTree,
-    //     ]);
-    // }
 
     public function referralView($id)
     {

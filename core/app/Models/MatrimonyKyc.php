@@ -34,7 +34,8 @@ class MatrimonyKyc extends Authenticatable
         'city',
         'about',
         'image', // Add image if needed
-        'matrimony_id', // Add matrimony_id if needed
+        'matrimony_id',
+        'document',
     ];
 
     protected $hidden = ['password']; // Hide password from JSON responses

@@ -309,6 +309,88 @@
             max-width: 300px;
         }
 
+        /* Image Upload */
+        .new_image_add_listing .attachment-preview {
+            width: 200px;
+            height: 200px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .new_image_add_listing .attachment-preview .thumbnail .centered img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            transform: translate(-50%, -50%);
+        }
+
+        button.btn.btn-info.media_upload_form_btn {
+            background-color: rgb(239, 246, 255);
+            border: none;
+            color: rgb(59, 130, 246);
+            outline: none;
+            box-shadow: none;
+            margin: auto;
+        }
+
+        /* Image upload preview styles */
+        .media-upload-btn-wrapper .img-wrap {
+            position: relative;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .media-upload-btn-wrapper .img-wrap .rmv-span {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: red;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .uploaded-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .image-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .uploaded-image {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 5px;
+            object-fit: cover;
+        }
+
+        .delete-image-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            padding: 2px 6px;
+            font-size: 12px;
+        }
+
+        .delete-image-btn:hover {
+            background: darkred;
+        }
+
         @media (max-width: 991px) {
 
             .left {
@@ -359,7 +441,7 @@
                                     <option value="" selected>Choose Status</option>
                                     <option value="Unmarried">Unmarried</option>
                                     <option value="Married">Married</option>
-                                    <option value="Divorce">Divorce</option>
+                                    <option value="Second Marriage">Second Marriage</option>
                                 </select>
                             </div>
 
@@ -367,6 +449,11 @@
                             <div class="col-md-6">
                                 <label class="form-label">DOB</label>
                                 <input type="date" class="form-control" name="dob" id="dob">
+                            </div>
+
+                            <div class="col-md-12" id="divorce_doc_div" style="display: none;">
+                                <label class="form-label">Upload Divorce Order</label>
+                                <input type="file" class="form-control" name="document" id="document" accept=".pdf,application/pdf">
                             </div>
 
                             <!-- Family Status -->
@@ -621,6 +708,30 @@
 
                     <form class="user-form section-4" style="display: none;" id="user-form">
                         <div class="row g-3">
+
+                            {{-- User images --}}
+                            <div class="col-12">
+                                <label class="form-label">Profile Picture <span class="text-danger">*</span></label>
+                                <div class="media-upload-btn-wrapper">
+                                    <div class="img-wrap new_image_add_listing">
+                                        <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}" alt="images" class="w-100">
+                                    </div>
+                                    <input type="hidden" name="image" id="images_input">
+                                    <button type="button" class="btn btn-info media_upload_form_btn"
+                                        data-btntitle="{{ __('Select Image') }}" 
+                                        data-modaltitle="{{ __('Upload Image') }}"
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#media_upload_modal"
+                                        data-mulitple="true">
+                                        {{ __('Upload Profile Picture') }}
+                                    </button>
+                                    <small>{{ __('image format: jpg, jpeg, png, gif, webp') }}</small>
+                                </div>
+                                <div class="uploaded-images mt-3" id="uploaded-images-container">
+                                    <!-- Preview of uploaded images will appear here -->
+                                </div>
+                            </div>
+
                             <!-- About You Text Area -->
                             <div class="col-md-8">
                                 <label class="form-label">About You</label>
@@ -638,39 +749,6 @@
                             </div>
                         </div>
                     </form>
-
-                    {{-- <form class="user-form section-5" style="display: none;">
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label class="form-label fw-bold">Upload Image</label>
-                                <p class="text-muted">Please upload files in jpg, jpeg, or png format and make sure the file size is under 25 MB.</p>
-                    
-                                <!-- Upload Box -->
-                                <div class="upload-box text-center p-4">
-                                    <div class="upload-area">
-                                        <img src="/assets/uploads/media-uploader/upload.png" alt="Upload Icon" class="upload-icon">
-                                        <p class="upload-text mb-0">Drop file or Browse</p>
-                                        <p class="text-muted mb-0">Format: jpg, jpeg, png & Max file size: 25 MB</p>
-                                        <input type="file" class="file-input" name="image" id="image" accept="image/jpg, image/jpeg, image/png" hidden multiple>
-                                    </div>
-                    
-                                    <!-- Buttons -->
-                                    <div class="d-flex justify-content-center mt-3">
-                                        <button type="button" class="upload-btn browse-btn">Browse</button>
-                                        <button type="button" class="upload-btn cancel-button">Cancel</button>
-                                    </div>
-                                </div>
-                    
-                                <!-- Preview Uploaded Images -->
-                                <div class="uploaded-images mt-3"></div>
-                            </div>
-                    
-                            <!-- Next Button -->
-                            <div class="col-12 text-end">
-                                <button type="submit" id="submit-btn" class="next-button" onclick="validateSection(event, 5)">Submit</button>
-                            </div>
-                        </div>
-                    </form> --}}
 
                     <form class="user-form section-6 text-center" style="display: none;">
                         <div class="row g-3 justify-content-center">
@@ -695,9 +773,13 @@
                         </div>
                     </form>
                 </div>
+
+                <x-media.markup type="web" />
             </div>
         </div>
     </div>
+
+    
 
     {{-- Bootstrap --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -707,6 +789,18 @@
 
     <!-- Include Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    {{-- Show Divorce upload Input --}}
+    <script>
+        document.getElementById('marital_status').addEventListener('change', function () {
+            var divorceDiv = document.getElementById('divorce_doc_div');
+            if (this.value === 'Second Marriage') {
+                divorceDiv.style.display = 'block';
+            } else {
+                divorceDiv.style.display = 'none';
+            }
+        });
+    </script>
 
     {{-- Country, state, city --}}
     <script>
@@ -756,6 +850,7 @@
             }
         });
     </script>
+
     {{-- Toaster initialization --}}
     <script>
         toastr.options = {
@@ -803,6 +898,83 @@
                 sectionToShow.style.display = 'block';
             }
         }
+    </script>
+
+    {{-- Image --}}
+    <x-media.js type="web" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Initialize Select2
+            $('.select2').select2({
+                width: '100%'
+            });
+
+            // Media upload handling
+            $(document).on('media_upload_selected', function (e, data) {
+                if (data.trigger_button.hasClass('media_upload_form_btn')) {
+                    let wrapper = data.trigger_button.closest('.media-upload-btn-wrapper');
+                    let imagesInput = wrapper.find('input[name="image"]');
+
+                    // Get current value as array (or empty array if no value)
+                    let currentValue = imagesInput.val() ? imagesInput.val().split('|') : [];
+
+                    // Add new image ID if not already present
+                    if (!currentValue.includes(data.id.toString())) {
+                        currentValue.push(data.id);
+                        imagesInput.val(currentValue.join('|'));
+
+                        // Update preview container
+                        let previewContainer = $('#uploaded-images-container');
+
+                        // Create new image preview
+                        let newImage = $(`
+                            <div class="image-container">
+                                <img src="${data.url}" class="uploaded-image" alt="${data.name}">
+                                <button type="button" class="delete-image-btn" data-id="${data.id}">×</button>
+                            </div>
+                        `);
+
+                        previewContainer.append(newImage);
+
+                        // Update main preview to show the first image
+                        if (currentValue.length === 1) {
+                            wrapper.find('.new_image_add_listing').html(`
+                                <div class="attachment-preview">
+                                    <div class="thumbnail">
+                                        <div class="centered">
+                                            <img src="${data.url}" alt="${data.name}">
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                        }
+                    }
+                }
+            });
+
+            // Handle image deletion
+            $(document).on('click', '.delete-image-btn', function () {
+                let imageId = $(this).data('id');
+                let wrapper = $(this).closest('.media-upload-btn-wrapper');
+                let imagesInput = wrapper.find('input[name="image"]');
+                let currentValue = imagesInput.val() ? imagesInput.val().split('|') : [];
+
+                // Remove the image ID
+                currentValue = currentValue.filter(id => id != imageId);
+                imagesInput.val(currentValue.join('|'));
+
+                // Remove the preview
+                $(this).parent().remove();
+
+                // Update main preview if needed
+                if (currentValue.length === 0) {
+                    wrapper.find('.new_image_add_listing').html(`
+                        <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}" alt="images" class="w-100">
+                    `);
+                }
+            });
+        });
     </script>
 
     {{-- Form Validation --}}
@@ -890,7 +1062,7 @@
                     id: 'about_you',
                     name: 'About You'
                 }],
-                5: [] // Removed 'image' field
+                5: [] 
             };
 
             const requiredFields = sectionFields[sectionNumber];
@@ -905,6 +1077,14 @@
                     missingFields.push(field.name);
                 }
             });
+
+            // Divorce Order validation
+            const maritalStatus = document.getElementById('marital_status')?.value;
+            const divorceDoc = document.getElementById('document');
+            if (maritalStatus === 'Second Marriage' && (!divorceDoc || !divorceDoc.files.length)) {
+                isValid = false;
+                missingFields.push('Divorce Order Document');
+            }
 
             if (!isValid) {
                 toastr.error(`Please fill out the following fields: ${missingFields.join(', ')}`);
@@ -945,6 +1125,13 @@
             formData.append('city', document.querySelector('[name="city"]').value);
             formData.append('about', document.querySelector('[name="about"]').value);
             // Removed 'image' field
+
+            // 👉 Add Divorce Order document if applicable
+            const maritalStatus = getValue('[name="marital_status"]');
+            const divorceDocInput = document.getElementById('document');
+            if (maritalStatus === 'Second Marriage' && divorceDocInput && divorceDocInput.files.length > 0) {
+                formData.append('document', divorceDocInput.files[0]);
+            }
 
             for (let [key, value] of formData.entries()) {
                 console.log(key, value);

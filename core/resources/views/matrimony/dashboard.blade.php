@@ -533,7 +533,8 @@
                                             data-username="{{ $request->sender->username }}"
                                             data-email="{{ $request->sender->email }}"
                                             data-phone="{{ $request->sender->phone }}"
-                                            data-created="{{ $request->sender->created_at->format('d M Y') }}">
+                                            data-created="{{ $request->sender->created_at->format('d M Y') }}"
+                                            data-address="{{ $request->sender->identity_verify->address ?? 'N/A' }}">
                                             View Profile
                                         </button>
                                     </div>
@@ -557,6 +558,7 @@
                                 <p><strong>Email:</strong> <span id="modal-email"></span></p>
                                 <p><strong>Phone:</strong> <span id="modal-phone"></span></p>
                                 <p><strong>Joined On:</strong> <span id="modal-created"></span></p>
+                                <p><strong>Address:</strong> <span id="modal-address"></span></p>
                             </div>
                         </div>
                 
@@ -746,6 +748,7 @@
                     document.getElementById('modal-email').textContent = button.dataset.email || 'N/A';
                     document.getElementById('modal-phone').textContent = button.dataset.phone || 'N/A';
                     document.getElementById('modal-created').textContent = button.dataset.created || 'N/A';
+                    document.getElementById('modal-address').textContent = button.dataset.address || 'N/A';
 
                     modal.style.display = 'block';
                 });

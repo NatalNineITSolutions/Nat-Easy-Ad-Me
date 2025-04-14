@@ -254,10 +254,87 @@ class MatrimonyController extends Controller
         return response()->json(['cities' => $cities]);
     }
 
+    // public function storeUserDetails(Request $request)
+    // {
+    //     try {
+    //         // Ensure the user is logged in
+    //         if (!auth()->check()) {
+    //             return response()->json([
+    //                 'status' => 'error',
+    //                 'message' => 'User must be logged in to submit details.'
+    //             ], 401);
+    //         }
+
+    //         // Log the incoming request data
+    //         \Log::info('Incoming request data:', $request->all());
+
+    //         // Validate the request data
+    //         $validatedData = $request->validate([
+    //             'marital_status' => 'required|string|in:Unmarried,Married,Second Marriage',
+    //             'dob' => 'required|date',
+    //             'family_status' => 'required|string',
+    //             'family_values' => 'required|string',
+    //             'family_type' => 'required|string',
+    //             'disability' => 'required|string',
+    //             'height' => 'required|numeric|min:50|max:250',
+    //             'weight' => 'required|string',
+    //             'caste' => 'required|string',
+    //             'dosham' => 'required|string',
+    //             'gothram' => 'required|string',
+    //             'education' => 'required|string',
+    //             'occupation' => 'required|string',
+    //             'annual_income' => 'required|string',
+    //             'employed_in' => 'required|string',
+    //             'country' => 'required|string',
+    //             'state' => 'required|string',
+    //             'city' => 'required|string',
+    //             'about' => 'required|string',
+    //         ]);
+
+    //         // Convert marital_status to lowercase (to match ENUM values in DB)
+    //         $validatedData['marital_status'] = strtolower($validatedData['marital_status']);
+
+    //         // Assign the logged-in user's ID
+    //         $validatedData['user_id'] = auth()->id();
+
+    //         // Log validated data
+    //         \Log::info('Validated data with user_id:', $validatedData);
+
+    //         // Check and store divorce document if marital status is second marriage
+    //         if ($validatedData['marital_status'] === 'second marriage' && $request->hasFile('document')) {
+    //             $file = $request->file('document');
+    //             $path = $file->store('documents/divorce_orders', 'public'); // Store in storage/app/public/documents/divorce_orders
+    //             $validatedData['document'] = $path;
+    //         }
+
+    //         // Store Data in MatrimonyKyc table
+    //         $matrimonyKyc = MatrimonyKyc::create($validatedData);
+
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'message' => 'User details saved successfully!',
+    //             'user_id' => $matrimonyKyc->id
+    //         ]);
+    //     } catch (\Illuminate\Validation\ValidationException $e) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Validation failed',
+    //             'errors' => $e->errors()
+    //         ], 422);
+    //     } catch (\Exception $e) {
+    //         \Log::error('User Details Store Error: ' . $e->getMessage());
+    //         \Log::error('Stack Trace: ' . $e->getTraceAsString());
+
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'An error occurred. Please try again.'
+    //         ], 500);
+    //     }
+    // }
+
     public function storeUserDetails(Request $request)
     {
         try {
-            // Ensure the user is logged in
             if (!auth()->check()) {
                 return response()->json([
                     'status' => 'error',
@@ -265,12 +342,9 @@ class MatrimonyController extends Controller
                 ], 401);
             }
 
-            // Log the incoming request data
-            \Log::info('Incoming request data:', $request->all());
-
-            // Validate the request data
+            // Validate basic fields
             $validatedData = $request->validate([
-                'marital_status' => 'required|string',
+                'marital_status' => 'required|string|in:Unmarried,Married,Second Marriage',
                 'dob' => 'required|date',
                 'family_status' => 'required|string',
                 'family_values' => 'required|string',
@@ -291,16 +365,22 @@ class MatrimonyController extends Controller
                 'about' => 'required|string',
             ]);
 
-            // Convert marital_status to lowercase (to match ENUM values in DB)
-            $validatedData['marital_status'] = strtolower($validatedData['marital_status']);
+            // Handle document if Second Marriage
+            if (strtolower($validatedData['marital_status']) === 'second marriage') {
+                $request->validate([
+                    'document' => 'required|file|mimes:pdf|max:2048'
+                ]);
+                
+                $file = $request->file('document');
+                $filename = 'divorce_'.time().'_'.auth()->id().'.'.$file->extension();
+                $path = $file->storeAs('assets/uploads/matrimony', $filename, 'public');
+                $validatedData['document'] = $path;
+            }
 
-            // Assign the logged-in user's ID
             $validatedData['user_id'] = auth()->id();
 
-            // Log validated data
-            \Log::info('Validated data with user_id:', $validatedData);
-
-            // Store Data in MatrimonyKyc table
+            \Log::info('Creating record with:', $validatedData);
+            
             $matrimonyKyc = MatrimonyKyc::create($validatedData);
 
             return response()->json([
@@ -308,6 +388,7 @@ class MatrimonyController extends Controller
                 'message' => 'User details saved successfully!',
                 'user_id' => $matrimonyKyc->id
             ]);
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'status' => 'error',
@@ -315,12 +396,10 @@ class MatrimonyController extends Controller
                 'errors' => $e->errors()
             ], 422);
         } catch (\Exception $e) {
-            \Log::error('User Details Store Error: ' . $e->getMessage());
-            \Log::error('Stack Trace: ' . $e->getTraceAsString());
-
+            \Log::error('Error in storeUserDetails: '.$e->getMessage());
             return response()->json([
                 'status' => 'error',
-                'message' => 'An error occurred. Please try again.'
+                'message' => 'Server error: '.$e->getMessage()
             ], 500);
         }
     }
@@ -665,7 +744,7 @@ class MatrimonyController extends Controller
         });
     
         // Get all requests for current user's profiles
-        $receivedRequests = ProfileRequest::with(['sender', 'profile'])
+        $receivedRequests = ProfileRequest::with(['sender.identity_verify', 'profile'])
             ->whereHas('profile', function($query) use ($userId) {
                 $query->where('user_id', $userId);
             })
@@ -673,7 +752,7 @@ class MatrimonyController extends Controller
             ->latest()
             ->get();
     
-        $acceptedRequests = ProfileRequest::with(['sender', 'profile'])
+        $acceptedRequests = ProfileRequest::with(['sender.identity_verify', 'profile'])
             ->whereHas('profile', function($query) use ($userId) {
                 $query->where('user_id', $userId);
             })
@@ -681,7 +760,7 @@ class MatrimonyController extends Controller
             ->latest()
             ->get();
     
-        $rejectedRequests = ProfileRequest::with(['sender', 'profile'])
+        $rejectedRequests = ProfileRequest::with(['sender.identity_verify', 'profile'])
             ->whereHas('profile', function($query) use ($userId) {
                 $query->where('user_id', $userId);
             })

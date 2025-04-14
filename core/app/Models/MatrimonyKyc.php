@@ -33,7 +33,7 @@ class MatrimonyKyc extends Authenticatable
         'state',
         'city',
         'about',
-        'image', // Add image if needed
+        'image', 
         'matrimony_id',
         'document',
     ];

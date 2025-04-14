@@ -334,72 +334,76 @@ class MatrimonyController extends Controller
 
     public function storeUserDetails(Request $request)
     {
+        $validated = $request->validate([
+            'marital_status' => 'required|string',
+            'dob' => 'required|date',
+            'family_status' => 'required|string',
+            'family_values' => 'required|string',
+            'family_type' => 'required|string',
+            'disability' => 'required|string',
+            'height' => 'required|numeric',
+            'weight' => 'required|string',
+            'caste' => 'required|integer',
+            'dosham' => 'required|integer',
+            'gothram' => 'required|integer',
+            'education' => 'required|string',
+            'occupation' => 'required|string',
+            'annual_income' => 'required|string',
+            'employed_in' => 'required|string',
+            'country' => 'required|integer',
+            'state' => 'required|integer',
+            'city' => 'required|integer',
+            'about' => 'required|string|max:500',
+            'document' => 'nullable|file|mimes:pdf|max:2048',
+            'image' => 'required|string', 
+        ]);
+
         try {
-            if (!auth()->check()) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'User must be logged in to submit details.'
-                ], 401);
+            // Handle file upload if exists
+            $documentPath = null;
+            if ($request->hasFile('document')) {
+                $documentPath = $request->file('document')->store('matrimony/documents', 'public');
             }
 
-            // Validate basic fields
-            $validatedData = $request->validate([
-                'marital_status' => 'required|string|in:Unmarried,Married,Second Marriage',
-                'dob' => 'required|date',
-                'family_status' => 'required|string',
-                'family_values' => 'required|string',
-                'family_type' => 'required|string',
-                'disability' => 'required|string',
-                'height' => 'required|numeric|min:50|max:250',
-                'weight' => 'required|string',
-                'caste' => 'required|string',
-                'dosham' => 'required|string',
-                'gothram' => 'required|string',
-                'education' => 'required|string',
-                'occupation' => 'required|string',
-                'annual_income' => 'required|string',
-                'employed_in' => 'required|string',
-                'country' => 'required|string',
-                'state' => 'required|string',
-                'city' => 'required|string',
-                'about' => 'required|string',
+            // Create KYC record
+            $kyc = MatrimonyKyc::create([
+                'user_id' => Auth::id(),
+                'marital_status' => $validated['marital_status'],
+                'dob' => $validated['dob'],
+                'family_status' => $validated['family_status'],
+                'family_values' => $validated['family_values'],
+                'family_type' => $validated['family_type'],
+                'disability' => $validated['disability'],
+                'height' => $validated['height'],
+                'weight' => $validated['weight'],
+                'caste_id' => $validated['caste'],
+                'dosham_id' => $validated['dosham'],
+                'gothram_id' => $validated['gothram'],
+                'education' => $validated['education'],
+                'occupation' => $validated['occupation'],
+                'annual_income' => $validated['annual_income'],
+                'employed_in' => $validated['employed_in'],
+                'country_id' => $validated['country'],
+                'state_id' => $validated['state'],
+                'city_id' => $validated['city'],
+                'about' => $validated['about'],
+                'document_path' => $documentPath,
+                'image' => $validated['image'], // Store the media IDs
+                'status' => 'pending', // Default status
             ]);
 
-            // Handle document if Second Marriage
-            if (strtolower($validatedData['marital_status']) === 'second marriage') {
-                $request->validate([
-                    'document' => 'required|file|mimes:pdf|max:2048'
-                ]);
-                
-                $file = $request->file('document');
-                $filename = 'divorce_'.time().'_'.auth()->id().'.'.$file->extension();
-                $path = $file->storeAs('assets/uploads/matrimony', $filename, 'public');
-                $validatedData['document'] = $path;
-            }
-
-            $validatedData['user_id'] = auth()->id();
-
-            \Log::info('Creating record with:', $validatedData);
-            
-            $matrimonyKyc = MatrimonyKyc::create($validatedData);
+            Log::info('Incoming KYC image IDs:', ['image' => $validated['image']]);
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'User details saved successfully!',
-                'user_id' => $matrimonyKyc->id
+                'message' => 'KYC submitted successfully!',
+                'user_id' => 'M' . str_pad(Auth::id(), 6, '0', STR_PAD_LEFT) // Generate user ID
             ]);
 
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Validation failed',
-                'errors' => $e->errors()
-            ], 422);
         } catch (\Exception $e) {
-            \Log::error('Error in storeUserDetails: '.$e->getMessage());
             return response()->json([
                 'status' => 'error',
-                'message' => 'Server error: '.$e->getMessage()
+                'message' => 'Failed to submit KYC: ' . $e->getMessage()
             ], 500);
         }
     }

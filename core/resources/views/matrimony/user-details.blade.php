@@ -453,7 +453,8 @@
 
                             <div class="col-md-12" id="divorce_doc_div" style="display: none;">
                                 <label class="form-label">Upload Divorce Order</label>
-                                <input type="file" class="form-control" name="document" id="document" accept=".pdf,application/pdf">
+                                <input type="file" class="form-control" name="document" id="document"
+                                    accept=".pdf,application/pdf">
                             </div>
 
                             <!-- Family Status -->
@@ -500,8 +501,7 @@
                                         Moderate
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Liberal', 'family_values')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete"
-                                            alt="Delete">
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete">
                                         <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
                                         Liberal
                                     </span>
@@ -533,15 +533,14 @@
                             <!-- Height -->
                             <div class="col-md-6">
                                 <label class="form-label">Height (in cm)</label>
-                                <input type="number" class="form-control" name="height" id="height"
-                                    step="0.1" min="50" max="250">
+                                <input type="number" class="form-control" name="height" id="height" step="0.1" min="50"
+                                    max="250">
                             </div>
 
                             <!-- Weight -->
                             <div class="col-md-6">
                                 <label class="form-label">Weight</label>
-                                <input type="text" class="form-control" name="weight" id="weight"
-                                    placeholder="56kg">
+                                <input type="text" class="form-control" name="weight" id="weight" placeholder="56kg">
                             </div>
 
                             <div class="col-12 text-end">
@@ -630,38 +629,32 @@
                                 <label class="form-label">Employed In</label>
                                 <div class="badge-select">
                                     <span class="badge" onclick="toggleBadge(this, 'Government', 'employed_in')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete"
-                                            alt="Delete">
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete">
                                         <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
                                         Government
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Private', 'employed_in')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete"
-                                            alt="Delete">
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete">
                                         <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
                                         Private
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Defense', 'employed_in')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete"
-                                            alt="Delete">
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete">
                                         <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
                                         Defense
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Business', 'employed_in')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete"
-                                            alt="Delete">
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete">
                                         <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
                                         Business
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Self-employed', 'employed_in')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete"
-                                            alt="Delete">
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete">
                                         <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
                                         Self-employed
                                     </span>
                                     <span class="badge" onclick="toggleBadge(this, 'Not working', 'employed_in')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete"
-                                            alt="Delete">
+                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete">
                                         <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
                                         Not working
                                     </span>
@@ -681,7 +674,8 @@
                             </div>
 
                             {{-- <div class="col-md-4">
-                                <x-form.country-dropdown :title="__('Select Your Country')" :id="'country_id'" :required="true"/>
+                                <x-form.country-dropdown :title="__('Select Your Country')" :id="'country_id'"
+                                    :required="true" />
                             </div> --}}
 
                             <div class="col-md-4">
@@ -714,15 +708,14 @@
                                 <label class="form-label">Profile Picture <span class="text-danger">*</span></label>
                                 <div class="media-upload-btn-wrapper">
                                     <div class="img-wrap new_image_add_listing">
-                                        <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}" alt="images" class="w-100">
+                                        <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}"
+                                            alt="images" class="w-100">
                                     </div>
                                     <input type="hidden" name="image" id="images_input">
                                     <button type="button" class="btn btn-info media_upload_form_btn"
-                                        data-btntitle="{{ __('Select Image') }}" 
-                                        data-modaltitle="{{ __('Upload Image') }}"
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#media_upload_modal"
-                                        data-mulitple="true">
+                                        data-btntitle="{{ __('Select Image') }}"
+                                        data-modaltitle="{{ __('Upload Image') }}" data-bs-toggle="modal"
+                                        data-bs-target="#media_upload_modal" data-mulitple="true">
                                         {{ __('Upload Profile Picture') }}
                                     </button>
                                     <small>{{ __('image format: jpg, jpeg, png, gif, webp') }}</small>
@@ -735,7 +728,8 @@
                             <!-- About You Text Area -->
                             <div class="col-md-8">
                                 <label class="form-label">About You</label>
-                                <textarea class="form-control" name="about" id="about_you" rows="4" placeholder="Enter about yourself"></textarea>
+                                <textarea class="form-control" name="about" id="about_you" rows="4"
+                                    placeholder="Enter about yourself"></textarea>
                             </div>
 
                             <!-- Description -->
@@ -773,13 +767,11 @@
                         </div>
                     </form>
                 </div>
-
-                <x-media.markup type="web" />
             </div>
         </div>
     </div>
+    <x-media.markup type="web" />
 
-    
 
     {{-- Bootstrap --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -804,21 +796,21 @@
 
     {{-- Country, state, city --}}
     <script>
-        $('#country').on('change', function() {
+        $('#country').on('change', function () {
             var country_id = $(this).val();
             if (country_id) {
                 $.ajax({
                     url: '{{ route('matrimony.get-states', ':id') }}'.replace(':id', country_id),
                     type: "GET",
                     dataType: "json",
-                    success: function(data) {
+                    success: function (data) {
                         $('#state').empty().append('<option value="">Choose state</option>');
-                        $.each(data.states, function(key, value) { 
+                        $.each(data.states, function (key, value) {
                             $('#state').append('<option value="' + value.id + '">' + value
                                 .state + '</option>');
                         });
                     },
-                    error: function() {
+                    error: function () {
                         alert("Error fetching states. Please try again.");
                     }
                 });
@@ -827,21 +819,21 @@
             }
         });
 
-        $('#state').on('change', function() {
+        $('#state').on('change', function () {
             var state_id = $(this).val();
             if (state_id) {
                 $.ajax({
                     url: '{{ route('matrimony.get-cities', ':id') }}'.replace(':id', state_id),
                     type: "GET",
                     dataType: "json",
-                    success: function(data) {
+                    success: function (data) {
                         $('#city').empty().append('<option value="">Choose city</option>');
-                        $.each(data.cities, function(key, value) { 
+                        $.each(data.cities, function (key, value) {
                             $('#city').append('<option value="' + value.id + '">' + value.city +
                                 '</option>');
                         });
                     },
-                    error: function() {
+                    error: function () {
                         alert("Error fetching cities. Please try again.");
                     }
                 });
@@ -984,85 +976,85 @@
 
             const sectionFields = {
                 1: [{
-                        id: 'marital_status',
-                        name: 'Marital Status'
-                    },
-                    {
-                        id: 'dob',
-                        name: 'Date of Birth'
-                    },
-                    {
-                        id: 'family_status',
-                        name: 'Family Status'
-                    },
-                    {
-                        id: 'family_values',
-                        name: 'Family Values'
-                    },
-                    {
-                        id: 'family_type',
-                        name: 'Family Type'
-                    },
-                    {
-                        id: 'disability',
-                        name: 'Disability'
-                    },
-                    {
-                        id: 'height',
-                        name: 'Height'
-                    },
-                    {
-                        id: 'weight',
-                        name: 'Weight'
-                    }
+                    id: 'marital_status',
+                    name: 'Marital Status'
+                },
+                {
+                    id: 'dob',
+                    name: 'Date of Birth'
+                },
+                {
+                    id: 'family_status',
+                    name: 'Family Status'
+                },
+                {
+                    id: 'family_values',
+                    name: 'Family Values'
+                },
+                {
+                    id: 'family_type',
+                    name: 'Family Type'
+                },
+                {
+                    id: 'disability',
+                    name: 'Disability'
+                },
+                {
+                    id: 'height',
+                    name: 'Height'
+                },
+                {
+                    id: 'weight',
+                    name: 'Weight'
+                }
                 ],
                 2: [{
-                        id: 'caste',
-                        name: 'Caste'
-                    },
-                    {
-                        id: 'dosham',
-                        name: 'Dosham'
-                    },
-                    {
-                        id: 'gothram',
-                        name: 'Gothram'
-                    }
+                    id: 'caste',
+                    name: 'Caste'
+                },
+                {
+                    id: 'dosham',
+                    name: 'Dosham'
+                },
+                {
+                    id: 'gothram',
+                    name: 'Gothram'
+                }
                 ],
                 3: [{
-                        id: 'education',
-                        name: 'Higher Education'
-                    },
-                    {
-                        id: 'occupation',
-                        name: 'Occupation'
-                    },
-                    {
-                        id: 'annual_income',
-                        name: 'Annual Income'
-                    },
-                    {
-                        id: 'employed_in',
-                        name: 'Employed In'
-                    },
-                    {
-                        id: 'country',
-                        name: 'Country'
-                    },
-                    {
-                        id: 'state',
-                        name: 'State'
-                    },
-                    {
-                        id: 'city',
-                        name: 'City'
-                    }
+                    id: 'education',
+                    name: 'Higher Education'
+                },
+                {
+                    id: 'occupation',
+                    name: 'Occupation'
+                },
+                {
+                    id: 'annual_income',
+                    name: 'Annual Income'
+                },
+                {
+                    id: 'employed_in',
+                    name: 'Employed In'
+                },
+                {
+                    id: 'country',
+                    name: 'Country'
+                },
+                {
+                    id: 'state',
+                    name: 'State'
+                },
+                {
+                    id: 'city',
+                    name: 'City'
+                }
                 ],
                 4: [{
                     id: 'about_you',
                     name: 'About You'
                 }],
-                5: [] 
+                5: []
             };
 
             const requiredFields = sectionFields[sectionNumber];
@@ -1124,7 +1116,7 @@
             formData.append('state', document.querySelector('[name="state"]').value);
             formData.append('city', document.querySelector('[name="city"]').value);
             formData.append('about', document.querySelector('[name="about"]').value);
-            // Removed 'image' field
+            formData.append('image', document.querySelector('[name="image"]').value);
 
             // 👉 Add Divorce Order document if applicable
             const maritalStatus = getValue('[name="marital_status"]');
@@ -1138,23 +1130,31 @@
             }
 
             fetch('/matrimony/user-details', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: formData
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json' // Explicitly request JSON
+                },
+                body: formData
+            })
+                .then(response => {
+                    // First check if the response is JSON
+                    const contentType = response.headers.get('content-type');
+                    if (!contentType || !contentType.includes('application/json')) {
+                        return response.text().then(text => {
+                            throw new Error(`Expected JSON but got: ${text.substring(0, 100)}...`);
+                        });
+                    }
+                    return response.json();
                 })
-                .then(response => response.json())
                 .then(data => {
+                    // Handle successful response
                     if (data.status === 'success') {
                         toastr.success('KYC submitted successfully! Please fill preferences to complete your profile.');
-
                         showSection(6);
-
-                        // Update UI to reflect user ID if needed
                         document.querySelector('.user-id strong').textContent = data.user_id;
                     } else {
-                        toastr.error('Error: ' + data.message);
+                        toastr.error('Error: ' + (data.message || 'Unknown error'));
                     }
                 })
                 .catch(error => {
@@ -1166,7 +1166,7 @@
 
     {{-- Form submission --}}
     <script>
-        document.getElementById('submit-btn').addEventListener('click', function(event) {
+        document.getElementById('submit-btn').addEventListener('click', function (event) {
             event.preventDefault();
             validateSection(event, 4);
         });

@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProductListingController;
 use App\Http\Controllers\Api\ListingApiController;
+use App\Http\Controllers\Api\MatrimonyController;
+use App\Http\Controllers\Api\BuyMembershipApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +30,12 @@ Route::get('/recent-listings', [ProductListingController::class, 'getRecentListi
 Route::get('/categories', [ListingApiController::class, 'getCategories']);
 Route::get('/subcategories', [ListingApiController::class, 'getSubcategories']);
 Route::get('/childcategories', [ListingApiController::class, 'getChildcategories']);
+Route::get('/profile-lists', [MatrimonyController::class, 'profileLists']);
+Route::get('/profile/{profile_id}', [MatrimonyController::class, 'getProfileDetails']);
+
+
+
+
 
 // Protected Routes (using Sanctum for authentication)
 Route::middleware('auth:sanctum')->group(function () {
@@ -35,6 +43,9 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
     Route::post('/add-listing', [ListingApiController::class, 'addListing']);
+
+    Route::post('/profile', [MatrimonyController::class, 'storeProfile']);
+    Route::post('/membership/update', [BuyMembershipApiController::class, 'updateMembership']);
 
     // You can add more protected routes here
 });

@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProductListingController;
 use App\Http\Controllers\Api\ListingApiController;
 use App\Http\Controllers\Api\MatrimonyController;
+use App\Http\Controllers\Api\BuyMembershipApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,8 @@ Route::get('/profile/{profile_id}', [MatrimonyController::class, 'getProfileDeta
 
 
 
+
+
 // Protected Routes (using Sanctum for authentication)
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
@@ -42,6 +45,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/add-listing', [ListingApiController::class, 'addListing']);
 
     Route::post('/profile', [MatrimonyController::class, 'storeProfile']);
+    Route::post('/membership/update', [BuyMembershipApiController::class, 'updateMembership']);
 
     // You can add more protected routes here
 });

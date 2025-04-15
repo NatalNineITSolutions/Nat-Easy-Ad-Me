@@ -141,8 +141,7 @@ class MatrimonyController extends Controller
             return redirect()->route('user.login')->with('error', 'Please log in to view profile details');
         }
 
-        $profile = ProfileListing::with('user') 
-            ->findOrFail($id);
+        $profile = ProfileListing::with(['user', 'caste', 'city'])->findOrFail($id);
 
         $isOwnProfile = $profile->user_id === $user->id; // Add this line to check if it's the user's own profile
 
@@ -534,17 +533,22 @@ class MatrimonyController extends Controller
             \Log::info('Uploaded profile image path: ' . $imagePath);
         }
 
+        $countryName = Country::find($request->country)?->country ?? null;
+        $stateName = State::find($request->state)?->state ?? null;
+        $cityName = City::find($request->city)?->city ?? null;
+        $casteName = Caste::find($request->caste)?->caste ?? null;
+
         $profileListing = ProfileListing::create([
             'user_id' => Auth::id(),
             'name' => $request->name,
             'age' => $request->age,
             'occupation' => $request->occupation,
             'annual_income' => $request->annual_income,
-            'caste' => $request->caste,
+            'caste' => $casteName,
             'mother_tongue' => $request->motherTongue,
-            'country' => $request->country,
-            'state' => $request->state,
-            'city' => $request->city,
+            'country' => $countryName,
+            'state' => $stateName,
+            'city' => $cityName,
             'image' => $request->images,
             'description' => $request->description,
             'paid' => 0,

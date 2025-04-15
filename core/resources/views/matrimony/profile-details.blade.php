@@ -406,11 +406,20 @@
                     <div>
                         <h2>{{ $profile->name ?? 'User' }} <span>👑</span></h2>
                     </div>
-                    <div class="details">
-                        <p><span>Age:</span> {{ $profile->age ?? '' }}</p>
-                        <p><span>Occupation:</span> {{ $profile->occupation ?? 'Not specified' }}</p>
-                        <p><span>Annual Income:</span> {{ $profile->annual_income ?? 'Not specified' }}</p>
-                        <p><span>Description:</span> {{ $profile->description ?? 'Not specified' }}</p>
+                    <div class="details row">
+                        <div class="col-12 col-md-6 col-lg-4 mb-2">
+                            <p><span>Age:</span> {{ $profile->age ?? '' }}</p>
+                            <p><span>Occupation:</span> {{ $profile->occupation ?? 'Not specified' }}</p>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-4 mb-2">
+                            <p><span>Annual Income:</span> {{ $profile->annual_income ?? 'Not specified' }}</p>
+                            <p><span>Description:</span> {{ $profile->description ?? 'Not specified' }}</p>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-4 mb-2">
+                            <p><span>Caste:</span> {{ $profile->caste ?? 'Not specified' }}</p>
+                            <p><span>City:</span> {{ $profile->city ?? 'Not specified' }}</p>
+                            <p><span>Mother Tongue:</span> {{ $profile->mother_tongue ?? 'Not specified' }}</p>
+                        </div>
                     </div>
                     <div class="profile-info">
                         @if(!$isOwnProfile)

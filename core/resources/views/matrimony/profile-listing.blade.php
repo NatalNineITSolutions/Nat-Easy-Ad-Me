@@ -286,6 +286,7 @@
                                         @endforeach
                                     </select>
                                 </div>
+
                                 <div class="col-md-4">
                                     <label for="state" class="form-label">State</label>
                                     <select class="form-select" id="state" name="state" required>
@@ -295,6 +296,7 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                
                                 <div class="col-md-4">
                                     <label for="city" class="form-label">City</label>
                                     <select class="form-select" id="city" name="city" required>

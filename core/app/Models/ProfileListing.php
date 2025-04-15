@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Caste;
+use Modules\CountryManage\app\Models\City;
 
 class ProfileListing extends Model
 {
@@ -37,4 +39,15 @@ class ProfileListing extends Model
     {
         return $this->hasMany(ProfileRequest::class, 'profile_id');
     }
+
+    public function caste()
+    {
+        return $this->belongsTo(Caste::class, 'caste');
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class, 'city');
+    }
+
 }

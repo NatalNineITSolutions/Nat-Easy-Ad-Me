@@ -752,7 +752,7 @@ class MatrimonyController extends Controller
         });
     
         // Get all requests for current user's profiles
-        $receivedRequests = ProfileRequest::with(['sender.identity_verify', 'profile'])
+        $receivedRequests = ProfileRequest::with(['sender.identity_verify','sender.kyc', 'profile'])
             ->whereHas('profile', function($query) use ($userId) {
                 $query->where('user_id', $userId);
             })
@@ -760,7 +760,7 @@ class MatrimonyController extends Controller
             ->latest()
             ->get();
     
-        $acceptedRequests = ProfileRequest::with(['sender.identity_verify', 'profile'])
+        $acceptedRequests = ProfileRequest::with(['sender.identity_verify','sender.kyc', 'profile'])
             ->whereHas('profile', function($query) use ($userId) {
                 $query->where('user_id', $userId);
             })
@@ -768,7 +768,7 @@ class MatrimonyController extends Controller
             ->latest()
             ->get();
     
-        $rejectedRequests = ProfileRequest::with(['sender.identity_verify', 'profile'])
+        $rejectedRequests = ProfileRequest::with(['sender.identity_verify','sender.kyc', 'profile'])
             ->whereHas('profile', function($query) use ($userId) {
                 $query->where('user_id', $userId);
             })

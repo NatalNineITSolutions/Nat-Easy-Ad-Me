@@ -529,12 +529,23 @@
                                             <strong>Job:</strong> <span class="highlight">{{ $request->profile->occupation ?? 'N/A' }}</span>
                                         </p>
                                         <p>Request given on: {{ $request->created_at->format('d F Y') }}</p>
+                                        @php
+                                            $imageId = $request->sender->image;
+                                            $senderImage = $imageId
+                                                ? get_attachment_image_by_id($imageId, null, true)['img_url']
+                                                : asset('assets/uploads/media-uploader/profile.png');
+                                        @endphp
                                         <button class="btn-profile view-sender-profile"
                                             data-username="{{ $request->sender->username }}"
                                             data-email="{{ $request->sender->email }}"
                                             data-phone="{{ $request->sender->phone }}"
                                             data-created="{{ $request->sender->created_at->format('d M Y') }}"
-                                            data-address="{{ $request->sender->identity_verify->address ?? 'N/A' }}">
+                                            data-address="{{ $request->sender->identity_verify->address ?? 'N/A' }}"
+                                            data-marital="{{ $request->sender->kyc?->marital_status ?? 'N/A' }}"
+                                            data-family="{{ $request->sender->kyc?->family_status ?? 'N/A' }}"
+                                            data-height="{{ $request->sender->kyc?->height ?? 'N/A' }}"
+                                            data-weight="{{ $request->sender->kyc?->weight ?? 'N/A' }}"
+                                            data-image="{{ $senderImage }}">
                                             View Profile
                                         </button>
                                     </div>
@@ -554,11 +565,16 @@
                             <div class="modal-content">
                                 <span class="close-btn">&times;</span>
                                 <h2>Sender Details</h2>
+                                <img id="modal-image" src="" alt="Sender Image" style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%; margin-bottom: 15px;">
                                 <p><strong>Username:</strong> <span id="modal-username"></span></p>
                                 <p><strong>Email:</strong> <span id="modal-email"></span></p>
                                 <p><strong>Phone:</strong> <span id="modal-phone"></span></p>
                                 <p><strong>Joined On:</strong> <span id="modal-created"></span></p>
                                 <p><strong>Address:</strong> <span id="modal-address"></span></p>
+                                <p><strong>Marital Status:</strong> <span id="modal-marital"></span></p>
+                                <p><strong>Family Status:</strong> <span id="modal-family"></span></p>
+                                <p><strong>Height:</strong> <span id="modal-height"></span></p>
+                                <p><strong>Weight:</strong> <span id="modal-weight"></span></p>
                             </div>
                         </div>
                 
@@ -749,6 +765,11 @@
                     document.getElementById('modal-phone').textContent = button.dataset.phone || 'N/A';
                     document.getElementById('modal-created').textContent = button.dataset.created || 'N/A';
                     document.getElementById('modal-address').textContent = button.dataset.address || 'N/A';
+                    document.getElementById('modal-marital').textContent = button.dataset.marital || 'N/A';
+                    document.getElementById('modal-family').textContent = button.dataset.family || 'N/A';
+                    document.getElementById('modal-height').textContent = button.dataset.height || 'N/A';
+                    document.getElementById('modal-weight').textContent = button.dataset.weight || 'N/A';
+                    document.getElementById('modal-image').src = button.dataset.image || '/assets/uploads/media-uploader/profile.png';
 
                     modal.style.display = 'block';
                 });

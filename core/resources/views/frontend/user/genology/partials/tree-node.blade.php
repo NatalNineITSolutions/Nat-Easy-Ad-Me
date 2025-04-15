@@ -1,17 +1,15 @@
-<div class="container-fluid px-1">
-    <div class="mlm-tree">
+<div class="mlm-tree-container">
+    <div class="mlm-tree full-width desktop-tree">
         <ul class="tree">
             <li>
                 <div class="node root-node">
                     <div class="avatar-circle {{ $node->gender == 'female' ? 'female' : 'male' }} 
-                        {{ ($node->leftBV ?? 0) == 0 && ($node->rightBV ?? 0) == 0 ? 'zero-bv' : '' }}">
+                            {{ ($node->leftBV ?? 0) == 0 && ($node->rightBV ?? 0) == 0 ? 'zero-bv' : '' }}">
                         <a href="{{ route('user.user.mlm.children', ['id' => $node->id]) }}">
                             @if($node->avatar)
                                 <img src="{{ $node->avatar }}" alt="User Avatar">
                             @else
-                                <img src="{{ $node->gender === 'female' 
-                                    ? asset('assets/uploads/media-uploader/girlavatart.jpg') 
-                                    : asset('assets/uploads/media-uploader/avatar.jpg') }}"
+                                <img src="{{ $node->gender === 'female' ? asset('assets/uploads/media-uploader/girlavatart.jpg') : asset('assets/uploads/media-uploader/avatar.jpg') }}"
                                     alt="Default Avatar">
                             @endif
                         </a>
@@ -32,8 +30,11 @@
                             @include('frontend.user.genology.partials.tree-node', ['node' => $node->leftChild, 'isChild' => true])
                         @else
                             <div class="add-member-node">
-                                <a href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'left']) }}">
-                                    <div class="add-icon"><i class="fas fa-user-plus"></i></div>
+                                <a
+                                    href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'left']) }}">
+                                    <div class="add-icon">
+                                        <i class="fas fa-user-plus"></i>
+                                    </div>
                                 </a>
                             </div>
                         @endif
@@ -43,8 +44,11 @@
                             @include('frontend.user.genology.partials.tree-node', ['node' => $node->rightChild, 'isChild' => true])
                         @else
                             <div class="add-member-node">
-                                <a href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'right']) }}">
-                                    <div class="add-icon"><i class="fas fa-user-plus"></i></div>
+                                <a
+                                    href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'right']) }}">
+                                    <div class="add-icon">
+                                        <i class="fas fa-user-plus"></i>
+                                    </div>
                                 </a>
                             </div>
                         @endif
@@ -56,162 +60,283 @@
 </div>
 
 @section('style')
-<style>
-    .mlm-tree {
-        width: 100%;
-        overflow-x: hidden;
-        padding: 10px 0;
-        background: #008081;
-        border-radius: 8px;
-    }
-
-    .tree {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-    }
-
-    .tree ul {
-        display: flex;
-        justify-content: space-around;
-        flex-wrap: wrap;
-        padding: 0;
-        margin: 0;
-        list-style: none;
-        width: 100%;
-    }
-
-    .tree li {
-        position: relative;
-        padding: 5px 2px;
-        flex: 1 1 45%;
-        min-width: 120px;
-        max-width: 100%;
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .tree li::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 50%;
-        width: 2px;
-        height: 10px;
-        background: white;
-    }
-
-    .node {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        background: #008081;
-        padding: 8px;
-        border-radius: 8px;
-        width: 100%;
-        max-width: 200px;
-        box-shadow: 0 2px 5px rgba(255, 255, 255, 0.2);
-    }
-
-    .avatar-circle {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        overflow: hidden;
-        margin-bottom: 5px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        transition: all 0.3s ease;
-    }
-
-    .avatar-circle img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 50%;
-    }
-
-    .avatar-circle.male {
-        background: #1a237e;
-        border: 3px solid #1a237e;
-    }
-
-    .avatar-circle.female {
-        background: #d81b60;
-        border: 3px solid #d81b60;
-    }
-
-    .avatar-circle.zero-bv {
-        border: 3px solid #ff5252 !important;
-        background: transparent !important;
-    }
-
-    .node-id,
-    .node-name,
-    .bv-points {
-        color: white;
-        font-size: 12px;
-        text-align: center;
-    }
-
-    .bv-points {
-        font-size: 11px;
-        margin-top: 4px;
-        display: flex;
-        justify-content: space-between;
-        gap: 8px;
-    }
-
-    .add-icon {
-        color: white;
-        font-size: 24px;
-        text-align: center;
-    }
-
-    @media (max-width: 768px) {
-        .mlm-tree {
-            padding: 5px 0;
+    <style>
+        .mlm-tree-container {
+            width: 100%;
+            height: auto;
+            background: #008081;
+            padding: 0;
+            margin: 0;
         }
 
-        .tree ul {
-            flex-direction: column;
-            gap: 8px;
+        .mlm-tree-scale-wrapper {
+            width: 100%;
+            /* position: relative; */
+            background: #008081;
+            padding: 10px 0;
         }
 
-        .tree li {
-            flex: 1 1 100%;
-            padding: 2px;
-        }
-
-        .node {
-            max-width: 100%;
+        .mlm-tree.full-width.desktop-tree {
+            transform-origin: top center;
+            transition: transform 0.3s ease;
+            background: #008081;
+            border-radius: 8px;
+            width: 100%;
+            /* Changed from calc(100% - 20px) */
+            margin: 0;
             padding: 5px;
+            /* Reduced from 10px */
         }
 
-        .avatar-circle {
-            width: 30px;
-            height: 30px;
+        .mlm-tree {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            width: 100% !important;
+            max-width: 300vw;
+            transform-origin: top center;
         }
 
-        .node-id,
-        .node-name {
-            font-size: 10px;
+        .full-width {
+            background-color: red;
         }
 
-        .bv-points {
-            font-size: 9px;
+        .mobile-tree {
+            display: none;
+        }
+
+        .new-style .box-shadow1 {
+            background-color: #008081;
+            border: none;
+            border-radius: 0px;
+            height: 500px;
         }
 
         .add-icon {
-            font-size: 18px;
+            color: white;
+            font-size: 30px;
+            position: relative;
+            left: 6px;
         }
-    }
-</style>
+
+        .tree {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            transform-origin: top center;
+            transition: transform 0.3s ease;
+        }
+
+        .tree ul {
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            width: 100%;
+            position: relative;
+        }
+
+        .tree li {
+            position: relative;
+            padding: 5px 2px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .tree li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 2px;
+            height: 10px;
+            background: white;
+        }
+
+        .node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #008081;
+            padding: 8px;
+            border-radius: 8px;
+            margin: 0 auto;
+            max-width: 800px;
+            box-shadow: 0 2px 5px rgba(255, 255, 255, 0.2);
+        }
+
+        .avatar-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .node-id,
+        .node-name,
+        .bv-points {
+            color: white !important;
+        }
+
+
+        /* Male (default) styling */
+        .avatar-circle.male {
+            background: #1a237e;
+            border: 3px solid #1a237e;
+        }
+
+        /* Female styling */
+        .avatar-circle.female {
+            background: #d81b60;
+            border: 3px solid #d81b60;
+        }
+
+        /* Zero BV styling - this will override gender colors */
+        .avatar-circle.zero-bv {
+            border: 3px solid #ff5252 !important;
+            background: transparent !important;
+        }
+
+        .avatar-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .dis-title {
+            font-size: 18px !important;
+        }
+
+        /* Dynamic scaling based on tree depth */
+        .tree-depth-1 {
+            transform: scale(1);
+        }
+
+        .tree-depth-2 {
+            transform: scale(0.9);
+        }
+
+        .tree-depth-3 {
+            transform: scale(0.8);
+        }
+
+        .tree-depth-4 {
+            transform: scale(0.7);
+        }
+
+        .tree-depth-5 {
+            transform: scale(0.6);
+        }
+
+        .tree-depth-6 {
+            transform: scale(0.5);
+        }
+
+        .tree-depth-7 {
+            transform: scale(0.4);
+        }
+
+        @media (max-width: 768px) {
+            .mlm-tree {
+                padding: 2px;
+            }
+
+            .tree {
+                padding: 0;
+            }
+
+            .tree ul {
+                padding: 0;
+                margin: 0;
+            }
+
+            .tree li {
+                position: relative;
+                padding: 1px 0;
+                width: 100%;
+                margin: 0;
+            }
+
+            .tree li::before {
+                content: '';
+                position: absolute;
+                top: -5px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 1px;
+                height: 8px;
+                background: white;
+                z-index: 1;
+            }
+
+            .node {
+                padding: 2px;
+                margin: 0 auto;
+                width: 90%;
+            }
+
+            .avatar-circle {
+                width: 20px;
+                height: 20px;
+                margin-bottom: 0;
+                border-width: 1px;
+            }
+
+            .avatar-circle img {
+                object-fit: fill;
+                height: 18px;
+            }
+
+            .node-id,
+            .node-name {
+                font-size: 6px;
+                line-height: 1;
+                margin: 0;
+            }
+
+            .bv-points {
+                font-size: 5px;
+                display: flex;
+                justify-content: center;
+                width: 100%;
+                gap: 10px;
+            }
+
+            .add-icon {
+                font-size: 6px;
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                top: 4px;
+            }
+
+            .tree>ul>li::before {
+                display: none;
+            }
+
+            .tree ul ul li::before {
+                height: 6px;
+                top: -3px;
+            }
+
+            .dis-title {
+                font-size: 12px !important;
+            }
+
+            .new-style .box-shadow1{
+                height: 250px;
+            }
+        }
+    </style>
 @endsection
 
 <script>

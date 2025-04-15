@@ -73,6 +73,7 @@ class User extends Authenticatable
         'dob',
         'referral_commission',
         'sponsor_id',
+        'placement_id',
     ];
 
     /**

@@ -112,6 +112,9 @@
                                 <li class="dashboard__bottom__list__item @if(request()->is('admin/payout/settings')) selected @endif">
                                     <a href="{{ route('payout.settings') }}">{{ __('Payout Settings') }}</a>
                                 </li>
+                                <li class="dashboard__bottom__list__item @if(request()->is('admin/payout/income-dividing-system')) selected @endif">
+                                    <a href="{{ route('income.payout.manage') }}">{{ __('Income Dividing System') }}</a>
+                                </li>
                         </ul>
                 </li>
 

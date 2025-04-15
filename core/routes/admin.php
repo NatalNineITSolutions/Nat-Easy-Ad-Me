@@ -121,6 +121,7 @@ Route::middleware(['setlang'])->group(function () {
             Route::get('/settings', 'index')->name('payout.settings')->permission('payout-settings');
             Route::post('/settings/update', 'update')->name('payout.settings.update')->permission('payout-settings-update');
             Route::get('/user-bv-referrals', 'userBvReferrals')->name('user.bv.referrals')->permission('user-bv-referrals-view');
+            Route::get('/income-dividing-system', 'incomepayoutmanage')->name('income.payout.manage')->permission('income-payout-manage');
         });
     });
 

@@ -16,6 +16,8 @@ use App\Models\Backend\SubCategory;
 use Modules\CountryManage\app\Models\City;
 use Modules\CountryManage\app\Models\State;
 use App\Models\Backend\IdentityVerification;
+use Carbon\Carbon;
+use App\Models\UserPayoutDetail;
 
 class DashboardController extends Controller
 {
@@ -596,4 +598,117 @@ class DashboardController extends Controller
         ]);
     }
 
+    // public function viewincome()
+    // {
+    //     $user = auth()->user();
+    //     $user->load(['kycRecord.user_country', 'kycRecord.user_state', 'kycRecord.user_city']);
+
+    //     // Get payment type from static option
+    //     $paymentType = get_static_option('payment_type') ?? 'day';
+    //     $tdsPercentage = get_static_option('tds_value') ?? 0;
+    //     $servicecharge = get_static_option('service_charge') ?? 0;
+
+    //     // Get income data and filter
+    //     $allDays = $this->getIncomeDays($user->id);
+    //     $filteredDays = $this->filterIncomeDays($allDays, $paymentType);
+
+
+    //     $totalIncome = collect($filteredDays)->sum('income');
+
+    //     $incomeData = [
+    //         'name' => $user->full_name,
+    //         'rank' => $user->rank,
+    //         'address' => $user->address,
+    //         'bank_details' => $user->bank_details,
+    //         'days' => $filteredDays,
+    //         'total_income' => $totalIncome,
+    //         'product_coupon' => 0,
+    //         'tds' => $tdsPercentage,
+    //         'service_charge' => $servicecharge,
+    //         'net_amount' => $totalIncome * (1 - (10 + 5 + 2) / 100),
+    //         'direct_business_bv' => 150,
+    //         'kyc' => $user->kycRecord,
+    //     ];
+
+    //     return view('frontend.user.income.income', compact('incomeData'));
+    // }
+
+
+    public function viewincome()
+    {
+        $user = auth()->user();
+        $user->load(['kycRecord.user_country', 'kycRecord.user_state', 'kycRecord.user_city']);
+
+        // Get settings
+        $paymentType = get_static_option('payment_type') ?? 'day';
+        $tdsPercentage = get_static_option('tds_value') ?? 0;
+        $serviceChargePercentage = get_static_option('service_charge') ?? 0;
+
+        // Get income data
+        $allDays = $this->getIncomeDays($user->id);
+        $filteredDays = $this->filterIncomeDays($allDays, $paymentType);
+        $totalIncome = collect($filteredDays)->sum('income');
+
+        // ✅ Correct percentage calculations
+        $tdsAmount = $totalIncome * ($tdsPercentage / 100);
+        $serviceChargeAmount = $totalIncome * ($serviceChargePercentage / 100);
+        $netAmount = $totalIncome - $tdsAmount - $serviceChargeAmount;
+
+        $incomeData = [
+            'name' => $user->full_name,
+            'rank' => $user->rank,
+            'address' => $user->address,
+            'bank_details' => $user->bank_details,
+            'days' => $filteredDays,
+            'total_income' => round($totalIncome, 2),
+            'product_coupon' => 0,
+            'tds' => round($tdsAmount, 3),
+            'service_charge' => round($serviceChargeAmount, 3),
+            'net_amount' => round($netAmount, 3),
+            'direct_business_bv' => 150,
+            'kyc' => $user->kycRecord,
+            'tds_percentage' => $tdsPercentage,
+            'service_charge_percentage' => $serviceChargePercentage,
+        ];
+
+        return view('frontend.user.income.income', compact('incomeData'));
+    }
+
+    private function filterIncomeDays(array $days, string $paymentType): array
+    {
+        $today = Carbon::today();
+
+        switch ($paymentType) {
+            case 'week':
+                $startDate = $today->copy()->subDays(6);
+                break;
+            case 'month':
+                $startDate = $today->copy()->subDays(27);
+                break;
+            case 'day':
+            default:
+                $startDate = $today;
+                break;
+        }
+
+        return array_filter($days, function ($item) use ($startDate) {
+            return Carbon::parse($item['day'])->greaterThanOrEqualTo($startDate);
+        });
+    }
+
+    private function getIncomeDays($userId)
+    {
+        return UserPayoutDetail::where('user_id', $userId)
+            ->orderBy('created_at', 'asc')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'day' => Carbon::parse($item->created_at)->toDateString(),
+                    'team_cv' => $item->left_bv + $item->right_bv,
+                    'income' => $item->net_amount,
+                ];
+            })
+            ->toArray();
+    }
+    
 }

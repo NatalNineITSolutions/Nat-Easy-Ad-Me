@@ -108,12 +108,10 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
         Route::post('user-profile-verify', [AccountSettingController::class, 'userProfileVerify'])->name('profile.verify');
     });
 
-
     // user  listing favorite items
     Route::group(['middleware' => ['globalVariable', 'maintains_mode', 'setlang']], function () {
         Route::controller(ListingFavoriteController::class)->group(function () {
             Route::get('favorite/listing/all', 'ListingFavoriteAll')->name('listing.favorite.all');
         });
     });
-
 });

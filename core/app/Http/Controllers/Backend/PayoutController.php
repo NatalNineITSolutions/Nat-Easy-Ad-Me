@@ -19,6 +19,15 @@ class PayoutController extends Controller
      */
     public function index()
     {
+        $latestPayout = IncomePayoutManage::latest()->first();
+        $previousCaseOnHand = $latestPayout?->previous_case_on_hand ?? 0;
+        $currentDayBV = UsersBV::whereDate('created_at', Carbon::today())->sum('bv_points');
+        $currentDayMatchingPairs = $latestPayout?->matching_pairs ?? 1; // Ensure at least 1 to prevent division by zero
+
+        $maxAllowed = ($currentDayMatchingPairs > 0)
+            ? floor(($previousCaseOnHand + $currentDayBV) / $currentDayMatchingPairs)
+            : 0;
+
         $payoutSettings = [
             'payout_method' => get_static_option('payout_method'),
             'payout_value' => get_static_option('payout_value'),
@@ -33,7 +42,13 @@ class PayoutController extends Controller
             'maximum_one_pair_income' => get_static_option('maximum_one_pair_income'),
         ];
 
-        return view('backend.pages.payout-manage.payout-settings', compact('payoutSettings'));
+        return view('backend.pages.payout-manage.payout-settings', compact(
+            'payoutSettings',
+            'previousCaseOnHand',
+            'currentDayBV',
+            'currentDayMatchingPairs',
+            'maxAllowed'
+        ));
     }
 
     /**
@@ -177,28 +192,28 @@ class PayoutController extends Controller
         ]);
 
         $latestPayout = IncomePayoutManage::latest()->first();
-
         $previousCaseOnHand = $latestPayout?->previous_case_on_hand ?? 0;
         $currentDayBV = UsersBV::whereDate('created_at', Carbon::today())->sum('bv_points');
         $totalBV = $previousCaseOnHand + $currentDayBV;
         $currentDayMatchingPairs = $latestPayout?->matching_pairs ?? 0;
 
-        $submittedPairIncome = $request->maximum_one_pair_income;
-
-        // Block if no pairs available.
+        // Block if no pairs available
         if ($currentDayMatchingPairs == 0) {
             return back()->with('error', 'No matching pairs found for today. Please check before updating.');
         }
 
         // Calculate max allowed income
         $maxAllowed = floor($totalBV / $currentDayMatchingPairs);
+        $submittedPairIncome = $request->maximum_one_pair_income;
 
         if ($submittedPairIncome > $maxAllowed) {
-            return back()->with('error', 'Entered value is too high! The maximum allowed value is ' . $maxAllowed . '. Please enter a value within this limit.');
+            return back()
+                ->with('error', 'Entered value is too high! The maximum allowed value is ' . $maxAllowed . '. Please enter a value within this limit.')
+                ->withInput()
+                ->with('maxAllowed', $maxAllowed);
         }
 
         update_static_option('maximum_one_pair_income', $submittedPairIncome);
-
         return back()->with('success', 'Maximum Pair Income updated successfully!');
     }
 }

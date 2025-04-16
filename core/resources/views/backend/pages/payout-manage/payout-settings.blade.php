@@ -136,18 +136,21 @@
                             <label for="maximum_one_pair_income">Maximum Pair Income</label>
                             <input type="number" name="maximum_one_pair_income" id="maximum_one_pair_income"
                                 class="form-control @error('maximum_one_pair_income') is-invalid @enderror"
-                                value="{{ old('maximum_one_pair_income', get_static_option('maximum_one_pair_income')) }}">
+                                value="{{ old('maximum_one_pair_income', get_static_option('maximum_one_pair_income')) }}"
+                                @if($maxAllowed <= 0) disabled @endif>
 
                             @error('maximum_one_pair_income')
                                 <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                             @enderror
 
-                            @isset($maxAllowed)
-                                <small class="text-muted">
+                            <small class="text-muted">
+                                @if($maxAllowed > 0)
                                     {{ __('Maximum allowed based on current BV & Matching Pairs:') }}
                                     <strong>{{ $maxAllowed }}</strong>
-                                </small>
-                            @endisset
+                                @else
+                                    {{ __('No available BV to distribute. Please check your BV records.') }}
+                                @endif
+                            </small>
                         </div>
                     </div>
                     <div class="btn_wrapper mt-4">
@@ -182,5 +185,25 @@
                 });
             });
         })(jQuery)
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const maxAllowed = {{ $maxAllowed ?? 0 }};
+            const pairInput = document.getElementById('maximum_one_pair_income');
+
+            if (pairInput) {
+                pairInput.addEventListener('input', function () {
+                    const value = parseFloat(this.value) || 0;
+
+                    if (maxAllowed <= 0) {
+                        alert('No available BV to distribute. Please check your BV records.');
+                        this.value = 0;
+                    } else if (value > maxAllowed) {
+                        alert(`Value cannot exceed ${maxAllowed} to prevent negative balance!`);
+                        this.value = maxAllowed;
+                    }
+                });
+            }
+        });
     </script>
 @endsection

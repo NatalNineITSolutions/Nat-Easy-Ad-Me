@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Backend\IdentityVerification;
 use App\Models\Backend\Listing;
+use App\Models\UserPayoutDetail;
 use App\Models\Frontend\AccountDeactivate;
 use App\Models\Frontend\Review;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -221,7 +222,6 @@ class User extends Authenticatable
         return $this->hasOne(User::class, 'parent_id')->where('position', 'right');
     }
 
-
     public function kyc()
     {
         return $this->hasOne(MatrimonyKyc::class, 'user_id');
@@ -275,4 +275,13 @@ class User extends Authenticatable
         return $this->hasOne(UserMembership::class);
     }
 
+    public function kycRecord()
+    {
+        return $this->hasOne(IdentityVerification::class);
+    }
+
+    public function payout_details()
+    {
+        return $this->hasOne(UserPayoutDetail::class)->latestOfMany();
+    }
 }

@@ -18,6 +18,7 @@ use Modules\CountryManage\app\Models\State;
 use App\Models\Backend\IdentityVerification;
 use Carbon\Carbon;
 use App\Models\UserPayoutDetail;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class DashboardController extends Controller
 {
@@ -710,5 +711,55 @@ class DashboardController extends Controller
             })
             ->toArray();
     }
-    
+
+    public function downloadIncomePdf()
+    {
+        $user = auth()->user();
+        $user->load(['kycRecord.user_country', 'kycRecord.user_state', 'kycRecord.user_city']);
+
+        // Get settings (same as viewincome method)
+        $paymentType = get_static_option('payment_type') ?? 'day';
+        $tdsPercentage = get_static_option('tds_value') ?? 0;
+        $serviceChargePercentage = get_static_option('service_charge') ?? 0;
+
+        // Get income data (same as viewincome method)
+        $allDays = $this->getIncomeDays($user->id);
+        $filteredDays = $this->filterIncomeDays($allDays, $paymentType);
+        $totalIncome = collect($filteredDays)->sum('income');
+
+        // Calculate amounts (same as viewincome method)
+        $tdsAmount = $totalIncome * ($tdsPercentage / 100);
+        $serviceChargeAmount = $totalIncome * ($serviceChargePercentage / 100);
+        $netAmount = $totalIncome - $tdsAmount - $serviceChargeAmount;
+
+        $today = now()->toDateString();
+        $todayIncome = collect($filteredDays)->filter(function ($item) use ($today) {
+            $dateField = $item['created_at'] ?? $item['date'] ?? $item['day'] ?? null;
+            return $dateField && Carbon::parse($dateField)->toDateString() === $today;
+        });
+
+        $incomeData = [
+            'name' => $user->full_name,
+            'rank' => $user->rank,
+            'address' => $user->address,
+            'bank_details' => $user->bank_details,
+            'days' => $filteredDays,
+            'today_income' => $todayIncome,
+            'total_income' => round($totalIncome, 2),
+            'product_coupon' => 0,
+            'tds' => round($tdsAmount, 3),
+            'service_charge' => round($serviceChargeAmount, 3),
+            'net_amount' => round($netAmount, 3),
+            'direct_business_bv' => 150,
+            'kyc' => $user->kycRecord,
+            'tds_percentage' => $tdsPercentage,
+            'service_charge_percentage' => $serviceChargePercentage,
+            'today' => $today,
+        ];
+
+        $pdf = Pdf::loadView('frontend.user.income.income-pdf', compact('incomeData', 'user'));
+
+        return $pdf->download('income-statement.pdf');
+    }
+
 }

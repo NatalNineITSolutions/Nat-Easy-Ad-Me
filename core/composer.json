@@ -6,9 +6,11 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "barryvdh/laravel-dompdf": "^3.1",
         "brian2694/laravel-toastr": "^5.59",
         "guzzlehttp/guzzle": "^7.2",
         "intervention/image": "^2.5",
+        "kalnoy/nestedset": "^6.0",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/socialite": "^5.14",
@@ -25,8 +27,7 @@
         "twilio/sdk": "^7.15",
         "xgenious/installer": "^1.6.0",
         "xgenious/paymentgateway": "^4.19.0",
-        "xgenious/xgapiclient": "^3.0",
-        "kalnoy/nestedset": "^6.0"
+        "xgenious/xgapiclient": "^3.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

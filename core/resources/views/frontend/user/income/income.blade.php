@@ -47,9 +47,12 @@
 
                                                 @if ($todayIncome->isNotEmpty())
                                                     <div class="card">
-                                                        <div class="card-header text-white">
-                                                            <h3 class="mb-0">INCOME STATEMENT</h3>
-                                                        </div>
+                                                    <div class="d-flex justify-content-between align-items-center px-3 py-2">
+                                                        <h3 class="mb-0">INCOME STATEMENT</h3>
+                                                        <a href="{{ route('user.income.pdf') }}" class="btn btn-sm btn-primary" target="_blank">
+                                                            Download PDF
+                                                        </a>
+                                                    </div>
                                                         <div class="card-body">
                                                             <!-- Header Info -->
                                                             <div class="row mb-4">

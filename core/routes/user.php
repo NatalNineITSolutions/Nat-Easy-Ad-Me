@@ -90,6 +90,7 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
         Route::controller(DashboardController::class)->group(function () {
             Route::group(['prefix' => 'info'], function () {
                 Route::match(['get', 'post'], '/income', 'viewincome')->name('income');
+                Route::get('/income-statement/download', 'downloadIncomePDF')->name('income.pdf');
             });
         });
 

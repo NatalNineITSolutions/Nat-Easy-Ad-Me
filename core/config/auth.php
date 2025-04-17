@@ -43,7 +43,7 @@ return [
 
         'matrimony' => [ // Custom guard for matrimony users
             'driver' => 'session',
-            'provider' => 'matrimony_users',
+            'provider' => 'matrimony_kyc',
         ],
 
         'admin' => [
@@ -79,10 +79,15 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
+        'matrimony_kyc' => [ // This must match the provider name used in 'matrimony' guard
+        'driver' => 'eloquent',
+        'model' => App\Models\MatrimonyKyc::class, // Make sure this model exists
+    ],
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\Backend\Admin::class,
         ],
+
     ],
 
     /*

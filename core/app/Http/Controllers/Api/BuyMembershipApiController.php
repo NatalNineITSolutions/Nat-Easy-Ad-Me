@@ -57,6 +57,7 @@ class BuyMembershipApiController extends Controller
             'initial_enquiry_form' => $membership->enquiry_form,
             'initial_business_hour' => $membership->business_hour,
             'initial_membership_badge' => $membership->membership_badge,
+            'profile_limit' => 0,
             'expire_date' => now()->addMonths(1),
             'payment_gateway' => $gateway,
             'payment_status' => 'paid',

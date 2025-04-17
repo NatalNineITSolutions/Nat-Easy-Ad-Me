@@ -8,6 +8,9 @@ use App\Http\Controllers\Api\ListingApiController;
 use App\Http\Controllers\Api\MatrimonyController;
 use App\Http\Controllers\Api\BuyMembershipApiController;
 use App\Http\Controllers\Api\EnquiryControllerApi;
+use App\Http\Controllers\Api\MatrimonyRequestApiController;
+use App\Http\Controllers\Api\MatrimonyUserDetailsApiController;
+use App\Http\Controllers\Api\MatrimonyPreferencesApiController;
 
 
 /*
@@ -32,8 +35,9 @@ Route::get('/recent-listings', [ProductListingController::class, 'getRecentListi
 Route::get('/categories', [ListingApiController::class, 'getCategories']);
 Route::get('/subcategories', [ListingApiController::class, 'getSubcategories']);
 Route::get('/childcategories', [ListingApiController::class, 'getChildcategories']);
-Route::get('/profile-lists', [MatrimonyController::class, 'profileLists']);
-Route::get('/profile/{profile_id}', [MatrimonyController::class, 'getProfileDetails']);
+Route::get('/matrimony/profile-lists', [MatrimonyController::class, 'profileLists']);
+Route::get('/matrimony/profile/{profile_id}', [MatrimonyController::class, 'getProfileDetails']);
+
 
 
 
@@ -46,9 +50,13 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::post('/add-listing', [ListingApiController::class, 'addListing']);
 
-    Route::post('/profile', [MatrimonyController::class, 'storeProfile']);
+    Route::post('/matrimony/profile', [MatrimonyController::class, 'storeProfile']);
     Route::post('/membership/update', [BuyMembershipApiController::class, 'updateMembership']);
     Route::post('/enquiry', [EnquiryControllerApi::class, 'store']);
+    Route::post('/matrimony/profiles/{profile}/send-request', [MatrimonyRequestApiController::class, 'sendRequest']);
+    Route::post('/matrimony/requests/accept', [MatrimonyRequestApiController::class, 'accept']);
+    Route::post('/matrimony/user-details', [MatrimonyUserDetailsApiController::class, 'storeUserDetails']);
+    Route::post('/matrimony/preferences',[MatrimonyPreferencesApiController::class, 'store']);
    
 
 

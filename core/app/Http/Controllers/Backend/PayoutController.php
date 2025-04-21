@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\UsersBV;
+use App\Models\IncomePayoutManage;
+use Carbon\Carbon;
 
 class PayoutController extends Controller
 {
@@ -17,17 +19,36 @@ class PayoutController extends Controller
      */
     public function index()
     {
+        $latestPayout = IncomePayoutManage::latest()->first();
+        $previousCaseOnHand = $latestPayout?->previous_case_on_hand ?? 0;
+        $currentDayBV = UsersBV::whereDate('created_at', Carbon::today())->sum('bv_points');
+        $currentDayMatchingPairs = $latestPayout?->matching_pairs ?? 1; // Ensure at least 1 to prevent division by zero
+
+        $maxAllowed = ($currentDayMatchingPairs > 0)
+            ? floor(($previousCaseOnHand + $currentDayBV) / $currentDayMatchingPairs)
+            : 0;
+
         $payoutSettings = [
             'payout_method' => get_static_option('payout_method'),
             'payout_value' => get_static_option('payout_value'),
             'payment_type' => get_static_option('payment_type'),
             'referral_value' => get_static_option('referral_value'),
             'referral_percentage' => get_static_option('referral_percentage'),
-            'maximum_referrals' => get_static_option('maximum_referrals'),
             'bp_value' => get_static_option('bp_value'),
+            'sealing_limitation' => get_static_option('sealing_limitation'),
+            'bv_flush_time' => get_static_option('bv_flush_time'),
+            'tds_value' => get_static_option('tds_value'),
+            'service_charge' => get_static_option('service_charge'),
+            'maximum_one_pair_income' => get_static_option('maximum_one_pair_income'),
         ];
 
-        return view('backend.pages.payout-manage.payout-settings', compact('payoutSettings'));
+        return view('backend.pages.payout-manage.payout-settings', compact(
+            'payoutSettings',
+            'previousCaseOnHand',
+            'currentDayBV',
+            'currentDayMatchingPairs',
+            'maxAllowed'
+        ));
     }
 
     /**
@@ -44,8 +65,12 @@ class PayoutController extends Controller
             'payment_type' => 'required|string|max:255',
             'referral_value' => 'required|numeric|min:0',
             'referral_percentage' => 'nullable|numeric|between:0,100',
-            'maximum_referrals' => 'required|numeric|min:0',
             'bp_value' => 'required|numeric|min:0',
+            'sealing_limitation' => 'required|numeric|min:0',
+            'bv_flush_time' => 'required|date_format:H:i',
+            'tds_value' => 'required|numeric|min:0',
+            'service_charge' => 'required|numeric|min:0',
+            'maximum_one_pair_income' => 'required|numeric|min:0',
         ]);
 
         if ($validator->fails()) {
@@ -57,8 +82,12 @@ class PayoutController extends Controller
         set_static_option('payment_type', $request->input('payment_type'));
         set_static_option('referral_value', $request->input('referral_value'));
         set_static_option('referral_percentage', $request->input('referral_percentage'));
-        set_static_option('maximum_referrals', $request->input('maximum_referrals'));
         set_static_option('bp_value', $request->input('bp_value'));
+        set_static_option('sealing_limitation', $request->input('sealing_limitation'));
+        set_static_option('bv_flush_time', $request->input('bv_flush_time'));
+        set_static_option('tds_value', $request->input('tds_value'));
+        set_static_option('service_charge', $request->input('service_charge'));
+        set_static_option('maximum_one_pair_income', $request->input('maximum_one_pair_income'));
 
         return redirect()->route('payout.settings')->with('success', __('Payout settings updated successfully!'));
     }
@@ -77,7 +106,7 @@ class PayoutController extends Controller
 
         $users = User::whereIn('id', $eligibleParents)
             ->select('id', 'first_name', 'last_name', 'partner_id')
-            ->with('descendants') 
+            ->with('descendants')
             ->get()
             ->map(function ($user) use ($payoutMethod, $payoutValue, $selectedDate) {
                 $user->total_referrals = $this->countTotalReferrals($user);
@@ -119,5 +148,72 @@ class PayoutController extends Controller
         }
 
         return $count;
+    }
+
+    public function incomepayoutmanage()
+    {
+        $latestPayout = IncomePayoutManage::latest()->first();
+
+        $previousCaseOnHand = $latestPayout?->previous_case_on_hand ?? 0;
+        $currentDayBV = UsersBV::whereDate('created_at', Carbon::today())->sum('bv_points');
+        $totalBV = $previousCaseOnHand + $currentDayBV;
+
+        $pairIncome = get_static_option('maximum_one_pair_income') ?? 250;
+        $maximumDailyCeiling = get_static_option('sealing_limitation') ?? 10;
+        $maximumPairIncomeLimit = get_static_option('maximum_pair_income') ?? PHP_INT_MAX;
+
+        $currentDayMatchingPairs = $latestPayout?->matching_pairs ?? 0;
+
+        $totalOutPutAmount = $currentDayMatchingPairs * $pairIncome;
+
+        if ($totalOutPutAmount > $maximumPairIncomeLimit) {
+            $totalOutPutAmount = $maximumPairIncomeLimit;
+        }
+
+        $balanceCaseOnHand = $totalBV - $totalOutPutAmount;
+
+        return view('backend.pages.payout-manage.income-payout-manage', compact(
+            'previousCaseOnHand',
+            'currentDayBV',
+            'totalBV',
+            'currentDayMatchingPairs',
+            'maximumDailyCeiling',
+            'pairIncome',
+            'totalOutPutAmount',
+            'balanceCaseOnHand',
+            'maximumPairIncomeLimit'
+        ));
+    }
+
+    public function updateMaximumPairIncome(Request $request)
+    {
+        $request->validate([
+            'maximum_one_pair_income' => 'required|numeric|min:0',
+        ]);
+
+        $latestPayout = IncomePayoutManage::latest()->first();
+        $previousCaseOnHand = $latestPayout?->previous_case_on_hand ?? 0;
+        $currentDayBV = UsersBV::whereDate('created_at', Carbon::today())->sum('bv_points');
+        $totalBV = $previousCaseOnHand + $currentDayBV;
+        $currentDayMatchingPairs = $latestPayout?->matching_pairs ?? 0;
+
+        // Block if no pairs available
+        if ($currentDayMatchingPairs == 0) {
+            return back()->with('error', 'No matching pairs found for today. Please check before updating.');
+        }
+
+        // Calculate max allowed income
+        $maxAllowed = floor($totalBV / $currentDayMatchingPairs);
+        $submittedPairIncome = $request->maximum_one_pair_income;
+
+        if ($submittedPairIncome > $maxAllowed) {
+            return back()
+                ->with('error', 'Entered value is too high! The maximum allowed value is ' . $maxAllowed . '. Please enter a value within this limit.')
+                ->withInput()
+                ->with('maxAllowed', $maxAllowed);
+        }
+
+        update_static_option('maximum_one_pair_income', $submittedPairIncome);
+        return back()->with('success', 'Maximum Pair Income updated successfully!');
     }
 }

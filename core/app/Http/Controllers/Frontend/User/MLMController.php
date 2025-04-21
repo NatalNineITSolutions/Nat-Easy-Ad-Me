@@ -24,6 +24,29 @@ class MLMController extends Controller
      * @param Request $request
      * @return \Illuminate\View\View
      */
+    // public function addNewMember(Request $request)
+    // {
+    //     $sponsorId = $request->query('sponsor');
+    //     $position = $request->query('position');
+
+    //     // Validate the parameters.
+    //     if (!$sponsorId || !in_array($position, ['left', 'right'])) {
+    //         return redirect()->back()->withErrors(['error' => __('Invalid sponsor or position provided.')]);
+    //     }
+
+    //     $sponsor = User::find($sponsorId);
+    //     if (!$sponsor) {
+    //         return redirect()->back()->withErrors(['error' => __('Sponsor user not found.')]);
+    //     }
+
+    //     $existingChild = $sponsor->children()->where('position', $position)->first();
+    //     if ($existingChild) {
+    //         return redirect()->back()->withErrors(['error' => __('The selected position is already occupied.')]);
+    //     }
+
+    //     return view('frontend.user.genology.add-member', compact('sponsor', 'position'));
+    // }
+
     public function addNewMember(Request $request)
     {
         $sponsorId = $request->query('sponsor');
@@ -39,12 +62,14 @@ class MLMController extends Controller
             return redirect()->back()->withErrors(['error' => __('Sponsor user not found.')]);
         }
 
-        $existingChild = $sponsor->children()->where('position', $position)->first();
-        if ($existingChild) {
-            return redirect()->back()->withErrors(['error' => __('The selected position is already occupied.')]);
+        // Ensure the sponsor is the root user (the top-most user in the MLM system)
+        $rootUser = auth()->user();
+
+        if (!$rootUser) {
+            return redirect()->back()->withErrors(['error' => __('Root user not found.')]);
         }
 
-        return view('frontend.user.genology.add-member', compact('sponsor', 'position'));
+        return view('frontend.user.genology.add-member', compact('rootUser', 'position'));
     }
 
     public function registerNewMember(Request $request)
@@ -60,10 +85,9 @@ class MLMController extends Controller
                 'phone' => 'required|max:191',
                 'password' => 'required|min:6|max:191',
                 'confirm_password' => 'required|same:password',
-                // Hidden fields from the form:
-                'sponsor_id' => 'required|exists:users,id',
+                'sponsor' => 'nullable|exists:users,id',
                 'position' => 'required|in:left,right',
-                'gender' => 'required|in:male,female', 
+                'gender' => 'required|in:male,female',
                 'dob' => 'required|date|before:today',
             ];
 
@@ -84,26 +108,34 @@ class MLMController extends Controller
                     return redirect()->back()->withErrors(['phone' => __('Phone number is already taken')]);
                 }
 
-                // Generate a unique partner ID with format: EAM + date (Y + m + d without leading zeros) + random 4-5 digit number
+                // Generate unique partner ID
                 do {
-                    $year = now()->format('Y'); 
-                    $month = now()->format('n'); 
-                    $dateCode = $year . $month; 
-
+                    $year = now()->format('Y');
+                    $month = now()->format('n');
+                    $dateCode = $year . $month;
                     $randomDigits = rand(1000, 99999);
                     $partnerId = 'GL' . $dateCode . $randomDigits;
                 } while (User::where('partner_id', $partnerId)->exists());
+
                 $partnerName = 'EASYADME-' . strtoupper($request->first_name);
 
-                $parent_id = $request->input('sponsor_id');
+                // Get sponsor and position from URL
+                $placement_id = $request->input('sponsor');
+                $parent_id = $placement_id;
                 $position = $request->input('position');
+                $sponsor_id = auth()->id();
 
-                Log::info('New member referred by existing user.', ['referrer_id' => $parent_id, 'position' => $position]);
+                Log::info('Creating user under sponsor.', [
+                    'placement_id' => $placement_id,
+                    'sponsor_id' => $sponsor_id,
+                    'position' => $position
+                ]);
 
                 $default_membership = Membership::find(1);
                 $membership_id = $default_membership ? $default_membership->id : 1;
                 $bv_points = $default_membership ? $default_membership->bv_points : 0;
 
+                // Prepare user object (not saved yet)
                 $user = new User([
                     'first_name' => $request->first_name,
                     'last_name' => $request->last_name,
@@ -116,16 +148,23 @@ class MLMController extends Controller
                     'partner_id' => $partnerId,
                     'partner_name' => $partnerName,
                     'parent_id' => $parent_id,
+                    'placement_id' => $placement_id,
+                    'sponsor_id' => $sponsor_id,
                     'gender' => $request->gender,
                     'dob' => $request->dob,
                     'position' => $position,
                 ]);
 
-                if ($parent_id) {
-                    $parent = User::find($parent_id);
-                    $parent->appendNode($user);
+                // Use nested set or normal save
+                if ($placement_id) {
+                    $parent = User::find($placement_id);
+                    if ($parent) {
+                        $parent->appendNode($user); // saves $user automatically
+                    } else {
+                        $user->saveAsRoot(); // fallback
+                    }
                 } else {
-                    $user->saveAsRoot(); 
+                    $user->saveAsRoot();
                 }
 
                 UsersBv::create([
@@ -135,11 +174,7 @@ class MLMController extends Controller
                     'upgrade_time' => now(),
                 ]);
 
-                Log::info('User BV points recorded.', [
-                    'user_id' => $user->id,
-                    'membership_id' => $membership_id,
-                    'bv_points' => $bv_points
-                ]);
+                Log::info('BV points initialized.', ['user_id' => $user->id, 'bv' => $bv_points]);
 
                 if (moduleExists("Wallet")) {
                     Wallet::create([
@@ -151,9 +186,7 @@ class MLMController extends Controller
                     ]);
                 }
 
-                if ($user) {
-                    dispatch(new SendRegisterUserEmailJob($user, $request->password));
-                }
+                dispatch(new SendRegisterUserEmailJob($user, $request->password));
 
                 return redirect()->route('user.genology')->with('success', __('New member registered successfully!'));
             } catch (\Exception $e) {

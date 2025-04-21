@@ -23,8 +23,10 @@
                         <!-- First Row -->
                         <div class="col-md-6">
                             <div class="form__input__single mb-3">
-                                <label for="payout_method" class="form__input__single__label">{{__('Payout Method')}} <span class="text-danger">*</span></label>
-                                <select name="payout_method" id="payout_method" class="form-control select2_activation radius-5" disabled>
+                                <label for="payout_method" class="form__input__single__label">{{__('Payout Method')}} <span
+                                        class="text-danger">*</span></label>
+                                <select name="payout_method" id="payout_method"
+                                    class="form-control select2_activation radius-5" disabled>
                                     <option value="amount" selected>{{__('Amount')}}</option>
                                 </select>
                                 <input type="hidden" name="payout_method" value="amount">
@@ -32,59 +34,128 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form__input__single mb-3">
-                                <label for="payout_value" class="form__input__single__label">{{__('BV Value')}} <span class="text-danger">*</span></label>
+                                <label for="payout_value" class="form__input__single__label">{{__('BV Value')}} <span
+                                        class="text-danger">*</span></label>
                                 <input type="number" name="payout_value" id="payout_value" class="form-control radius-5"
-                                       value="{{ get_static_option('payout_value') }}" placeholder="{{ __('Enter value') }}">
+                                    value="{{ get_static_option('payout_value') }}" placeholder="{{ __('Enter value') }}">
                             </div>
                         </div>
 
                         <!-- Second Row -->
                         <div class="col-md-6">
                             <div class="form__input__single mb-3">
-                                <label for="payment_type" class="form__input__single__label">{{__('Payment Type')}} <span class="text-danger">*</span></label>
-                                <select name="payment_type" id="payment_type" class="form-control select2_activation radius-5">
+                                <label for="payment_type" class="form__input__single__label">{{__('Payment Type')}} <span
+                                        class="text-danger">*</span></label>
+                                <select name="payment_type" id="payment_type"
+                                    class="form-control select2_activation radius-5">
                                     <option value="">{{ __('Select Payment Type') }}</option>
-                                    <option value="day" {{ get_static_option('payment_type') === 'day' ? 'selected' : '' }}>{{ __('Day') }}</option>
-                                    <option value="week" {{ get_static_option('payment_type') === 'week' ? 'selected' : '' }}>{{ __('Week') }}</option>
+                                    <option value="day" {{ get_static_option('payment_type') === 'day' ? 'selected' : '' }}>
+                                        {{ __('Day') }}
+                                    </option>
+                                    <option value="week" {{ get_static_option('payment_type') === 'week' ? 'selected' : '' }}>
+                                        {{ __('Week') }}
+                                    </option>
                                     <option value="month" {{ get_static_option('payment_type') === 'month' ? 'selected' : '' }}>{{ __('Month') }}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form__input__single mb-3">
-                                <label for="referral_value" class="form__input__single__label">{{__('Referral value')}} <span class="text-danger">*</span></label>
+                                <label for="referral_value" class="form__input__single__label">{{__('Referral value')}}
+                                    <span class="text-danger">*</span></label>
                                 <input type="number" name="referral_value" id="referral_value" class="form-control radius-5"
-                                       value="{{ get_static_option('referral_value') }}" placeholder="{{ __('Enter referral value') }}">
+                                    value="{{ get_static_option('referral_value') }}"
+                                    placeholder="{{ __('Enter referral value') }}">
                             </div>
                         </div>
 
                         <!-- Third Row -->
                         <div class="col-md-6">
                             <div class="form__input__single mb-3">
-                                <label for="referral_percentage" class="form__input__single__label">{{__('Referral Percentage (%)')}}<span class="text-danger">*</span></label>
-                                <input type="number" step="0.01" name="referral_percentage" id="referral_percentage" class="form-control radius-5"
-                                       value="{{ get_static_option('referral_percentage') }}" placeholder="{{ __('Enter referral percentage') }}">
+                                <label for="referral_percentage"
+                                    class="form__input__single__label">{{__('Referral Percentage (%)')}}<span
+                                        class="text-danger">*</span></label>
+                                <input type="number" step="0.01" name="referral_percentage" id="referral_percentage"
+                                    class="form-control radius-5" value="{{ get_static_option('referral_percentage') }}"
+                                    placeholder="{{ __('Enter referral percentage') }}">
                             </div>
                         </div>
+
                         <div class="col-md-6">
                             <div class="form__input__single mb-3">
-                                <label for="maximum_referrals" class="form__input__single__label">{{__('Maximum referrals')}}<span class="text-danger">*</span></label>
-                                <input type="number" name="maximum_referrals" id="maximum_referrals" class="form-control radius-5"
-                                       value="{{ get_static_option('maximum_referrals') }}" placeholder="{{ __('Enter maximum referrals') }}">
+                                <label for="sealing_limitation"
+                                    class="form__input__single__label">{{__('Sealing Limitation')}}<span
+                                        class="text-danger">*</span></label>
+                                <input type="number" step="0.01" name="sealing_limitation" id="sealing_limitation"
+                                    class="form-control radius-5" value="{{ get_static_option('sealing_limitation') }}"
+                                    placeholder="{{ __('Enter sealing limitation') }}">
                             </div>
                         </div>
 
                         <!-- Fourth Row -->
                         <div class="col-md-6">
                             <div class="form__input__single mb-3">
-                                <label for="bp_value" class="form__input__single__label">{{__('Business Point')}}<span class="text-danger">*</span></label>
+                                <label for="bp_value" class="form__input__single__label">{{__('Commission Value')}}<span
+                                        class="text-danger">*</span></label>
                                 <input type="number" step="0.01" name="bp_value" id="bp_value" class="form-control radius-5"
-                                       value="{{ get_static_option('bp_value') }}" placeholder="{{ __('Enter BP Value') }}">
+                                    value="{{ get_static_option('bp_value') }}" placeholder="{{ __('Enter BP Value') }}">
                             </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form__input__single mb-3">
+                                <label for="tds_value" class="form__input__single__label">{{__('TDS Value')}}<span
+                                        class="text-danger">*</span></label>
+                                <input type="number" step="0.01" name="tds_value" id="tds_value"
+                                    class="form-control radius-5" value="{{ get_static_option('tds_value') }}"
+                                    placeholder="{{ __('Enter tds value') }}">
+                            </div>
+                        </div>
+
+                        <!-- Fifth row -->
+                        <div class="col-md-6">
+                            <div class="form__input__single mb-3">
+                                <label for="service_charge" class="form__input__single__label">{{__('Service Charge')}}<span
+                                        class="text-danger">*</span></label>
+                                <input type="number" step="0.01" name="service_charge" id="service_charge"
+                                    class="form-control radius-5" value="{{ get_static_option('service_charge') }}"
+                                    placeholder="{{ __('Enter service charge') }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form__input__single mb-3">
+                                <label for="bv_flush_time" class="form__input__single__label">{{__('Payout Schedule Time')}}
+                                    <span class="text-danger">*</span></label>
+                                <input type="time" name="bv_flush_time" id="bv_flush_time" class="form-control radius-5"
+                                    value="{{ get_static_option('bv_flush_time') }}"
+                                    placeholder="{{ __('Enter schedule time') }}">
+                                <small class="text-muted">{{ __('Time when payout will be processed daily') }}</small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="maximum_one_pair_income">Maximum Pair Income</label>
+                            <input type="number" name="maximum_one_pair_income" id="maximum_one_pair_income"
+                                class="form-control @error('maximum_one_pair_income') is-invalid @enderror"
+                                value="{{ old('maximum_one_pair_income', get_static_option('maximum_one_pair_income')) }}"
+                                @if($maxAllowed <= 0) disabled @endif>
+
+                            @error('maximum_one_pair_income')
+                                <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                            @enderror
+
+                            <small class="text-muted">
+                                @if($maxAllowed > 0)
+                                    {{ __('Maximum allowed based on current BV & Matching Pairs:') }}
+                                    <strong>{{ $maxAllowed }}</strong>
+                                @else
+                                    {{ __('No available BV to distribute. Please check your BV records.') }}
+                                @endif
+                            </small>
                         </div>
                     </div>
                     <div class="btn_wrapper mt-4">
-                        <button type="submit" id="update" class="cmnBtn btn_5 btn_bg_blue radius-5">{{ __('Save Changes') }}</button>
+                        <button type="submit" id="update"
+                            class="cmnBtn btn_5 btn_bg_blue radius-5">{{ __('Save Changes') }}</button>
                     </div>
                 </form>
             </div>
@@ -114,5 +185,25 @@
                 });
             });
         })(jQuery)
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const maxAllowed = {{ $maxAllowed ?? 0 }};
+            const pairInput = document.getElementById('maximum_one_pair_income');
+
+            if (pairInput) {
+                pairInput.addEventListener('input', function () {
+                    const value = parseFloat(this.value) || 0;
+
+                    if (maxAllowed <= 0) {
+                        alert('No available BV to distribute. Please check your BV records.');
+                        this.value = 0;
+                    } else if (value > maxAllowed) {
+                        alert(`Value cannot exceed ${maxAllowed} to prevent negative balance!`);
+                        this.value = maxAllowed;
+                    }
+                });
+            }
+        });
     </script>
 @endsection

@@ -43,14 +43,13 @@
                         @csrf
 
                         <!-- Hidden fields to carry sponsor and position information -->
-                        <input type="hidden" name="sponsor_id" value="{{ $sponsor->id }}">
                         <input type="hidden" name="position" value="{{ $position }}">
 
                         <div class="row">
                             <div class="col-lg-6 col-md-12">
                                 <label class="infoTitle">{{ __('Sponsor Id') }}</label>
                                 <div class="input-group" style="height: 40px;">
-                                    <input type="text" class="form-control" value="{{ $sponsor->partner_id }}"
+                                    <input type="text" class="form-control" value="{{ $rootUser->partner_id }}"
                                         id="sponsor_id_display" placeholder="{{ __('Sponsor Id') }}"
                                         style="height: 40px; border-radius: 8px;" readonly>
                                 </div>
@@ -60,8 +59,8 @@
                                 <label class="infoTitle">{{ __('Sponsor Name') }}</label>
                                 <div class="input-form input-form2" style="padding-top: 5px;">
                                     <input type="text" class="ps-3 form-control" name="sponsor_name" id="sponsor_name"
-                                        value="{{ $sponsor->partner_name }}" placeholder="{{ __('Sponsor Name') }}" readonly
-                                        style="height: 40px;">
+                                        value="{{ $rootUser->partner_name }}" placeholder="{{ __('Sponsor Name') }}"
+                                        readonly style="height: 40px;">
                                 </div>
                             </div>
 

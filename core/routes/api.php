@@ -42,8 +42,6 @@ Route::get('/recent-listings', [ProductListingController::class, 'getRecentListi
 Route::get('/categories', [ListingApiController::class, 'getCategories']);
 Route::get('/subcategories', [ListingApiController::class, 'getSubcategories']);
 Route::get('/childcategories', [ListingApiController::class, 'getChildcategories']);
-Route::get('/matrimony/profile-lists', [MatrimonyController::class, 'profileLists']);
-Route::get('/matrimony/profile/{profile_id}', [MatrimonyController::class, 'getProfileDetails']);
 
 Route::post('/listings/filter', [ListingApiController::class, 'filterListings']);
 
@@ -59,14 +57,15 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
     Route::post('/add-listing', [ListingApiController::class, 'addListing']);
-
+    Route::get('/matrimony/profile-lists', [MatrimonyController::class, 'profileLists']);
+    Route::get('/matrimony/profile/{profile_id}', [MatrimonyController::class, 'getProfileDetails']);
     Route::post('/matrimony/profile', [MatrimonyController::class, 'storeProfile']);
     Route::post('/membership/update', [MembershipApiController::class, 'updateMembership']);
     Route::post('/enquiry', [EnquiryControllerApi::class, 'store']);
     Route::post('/matrimony/profiles/{profile}/send-request', [MatrimonyController::class, 'sendRequest']);
     Route::post('/matrimony/requests/accept', [MatrimonyController::class, 'accept']);
     Route::post('/matrimony/user-details', [MatrimonyController::class, 'storeUserDetails']);
-    Route::post('/matrimony/preferences',[MatrimonyController::class, 'store']);
+    Route::post('/matrimony/preferences', [MatrimonyController::class, 'store']);
 
 
     // You can add more protected routes here

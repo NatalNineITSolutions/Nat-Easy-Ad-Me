@@ -86,6 +86,14 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
             });
         });
 
+        // Income 
+        Route::controller(DashboardController::class)->group(function () {
+            Route::group(['prefix' => 'info'], function () {
+                Route::match(['get', 'post'], '/income', 'viewincome')->name('income');
+                Route::get('/income-statement/download', 'downloadIncomePDF')->name('income.pdf');
+            });
+        });
+
         // add listing
         Route::controller(ListingController::class)->group(function () {
             Route::group(['prefix' => 'listing'], function () {
@@ -101,12 +109,10 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
         Route::post('user-profile-verify', [AccountSettingController::class, 'userProfileVerify'])->name('profile.verify');
     });
 
-
     // user  listing favorite items
     Route::group(['middleware' => ['globalVariable', 'maintains_mode', 'setlang']], function () {
         Route::controller(ListingFavoriteController::class)->group(function () {
             Route::get('favorite/listing/all', 'ListingFavoriteAll')->name('listing.favorite.all');
         });
     });
-
 });

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Razorpay Payment</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const order_id = urlParams.get('order_id');
+        const amount = urlParams.get('amount');
+        const currency = urlParams.get('currency');
+        const key = urlParams.get('key');
+
+        const options = {
+            key: key,
+            amount: amount * 100,
+            currency: currency,
+            name: "Membership Payment",
+            description: "Upgrade Membership Plan",
+            order_id: order_id,
+            handler: function (response) {
+                alert('Payment successful! Razorpay Payment ID: ' + response.razorpay_payment_id);
+            },
+            theme: {
+                color: "#3399cc"
+            }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+    </script>
+</body>
+</html>

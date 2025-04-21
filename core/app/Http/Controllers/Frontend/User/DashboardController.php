@@ -159,7 +159,6 @@ class DashboardController extends Controller
     {
         $user_id = Auth::id();
 
-        // Eager load the binary tree relationships recursively
         $user = User::with([
             'leftChild.userBvs',
             'rightChild.userBvs',
@@ -440,7 +439,7 @@ class DashboardController extends Controller
             ]
         ));
 
-        return redirect()->route('user.job.listings')->with('success', 'Job listing updated successfully!');
+        return redirect()->route('user.job.info')->with('success', 'Job listing updated successfully!');
     }
 
     public function deleteJob($id)
@@ -450,7 +449,7 @@ class DashboardController extends Controller
 
         $job->delete();
 
-        return redirect()->route('user.job.listings')
+        return redirect()->route('user.job.info')
             ->with('success', 'Job listing deleted successfully');
     }
 

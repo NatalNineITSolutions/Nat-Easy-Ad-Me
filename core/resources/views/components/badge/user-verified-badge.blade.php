@@ -17,7 +17,7 @@
     <x-badge.membership-badge :user="$user" />
 @endif
 
-{{-- @if (!empty($user))
+@if (!empty($user))
     @php
         $isUserVerified = !is_null($user->identity_verify) && $user->identity_verify->status === 1;
         $verificationUrl = route('user.account.settings');
@@ -32,7 +32,7 @@
     </span>
     
     <x-badge.membership-badge :user="$user"/>
-@endif --}}
+@endif 
 
 <style>
     .verification-badge {

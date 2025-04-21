@@ -67,6 +67,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/matrimony/user-details', [MatrimonyController::class, 'storeUserDetails']);
     Route::post('/matrimony/preferences', [MatrimonyController::class, 'store']);
 
-
-    // You can add more protected routes here
+    Route::get('/user/listings', [ListingApiController::class, 'allListingsApi']);
+    Route::get('/user/enquiries', [EnquiryControllerApi::class, 'allEnquiriesApi']);
+    Route::get('/user/profile', [EnquiryControllerApi::class, 'showProfileApi']);
+    Route::get('/user/dashboard', [AuthController::class, 'dashboardApi']);
 });

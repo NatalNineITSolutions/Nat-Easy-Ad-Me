@@ -140,7 +140,7 @@
     <div class="container py-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 class="head4">{{ __('Edit Job Listing') }}</h3>
-            <a href="{{ route('user.job.listings') }}" class="red-btn">
+            <a href="{{ route('user.job.info') }}" class="red-btn">
                 <i class="las la-arrow-left"></i> {{ __('Back to Listings') }}
             </a>
         </div>

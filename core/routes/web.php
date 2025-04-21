@@ -26,6 +26,9 @@ use App\Models\Backend\ChildCategory;
 require_once __DIR__ . '/admin.php';
 require_once __DIR__ . '/user.php';
 
+Route::get('/razorpay-checkout', function () {
+    return view('razorpay-checkout');
+})->name('razorpay.checkout');  // Add this name
 
 Route::group(['middleware' => ['globalVariable', 'setlang']], function () {
     Route::controller(LoginController::class)->group(function () {

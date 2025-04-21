@@ -15,6 +15,9 @@ use Modules\Wallet\app\Models\Wallet;
 use App\Jobs\SendRegisterUserEmailJob;
 use App\Mail\BasicMail;
 use App\Models\UsersBV;
+use App\Models\Frontend\ListingFavorite;
+use App\Models\Frontend\Review;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -30,7 +33,7 @@ class AuthController extends Controller
             'password' => 'required|min:6|max:191',
             'confirm_password' => 'required|same:password',
             'partner_id' => 'nullable|exists:users,partner_id',
-            'gender' => 'required|in:male,female', 
+            'gender' => 'required|in:male,female',
             'dob' => 'required|date|before:today',
         ];
 
@@ -86,8 +89,8 @@ class AuthController extends Controller
                 'partner_id' => $partnerId,
                 'partner_name' => $partnerName,
                 'parent_id' => $parent_id,
-                'gender'          => $request->gender,
-                'dob'             => $request->dob,
+                'gender' => $request->gender,
+                'dob' => $request->dob,
             ]);
 
             Log::info('User created successfully.', ['user_id' => $user->id]);
@@ -166,8 +169,8 @@ class AuthController extends Controller
     public function verifyPartner(Request $request)
     {
         $partner = User::where('partner_id', $request->partner_id)
-                     ->orWhere('username', $request->partner_id)
-                     ->first();
+            ->orWhere('username', $request->partner_id)
+            ->first();
 
         if (!$partner) {
             return response()->json([
@@ -178,7 +181,7 @@ class AuthController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'partner_name' => $partner->first_name.' '.$partner->last_name,
+            'partner_name' => $partner->first_name . ' ' . $partner->last_name,
             'partner_id' => $partner->partner_id
         ]);
     }
@@ -223,5 +226,131 @@ class AuthController extends Controller
             Log::error('Error during user login.', ['error' => $e->getMessage()]);
             return response()->json(['error' => __('An error occurred during login. Please try again.')], 500);
         }
+    }
+
+    public function dashboardApi()
+    {
+        $user_id = Auth::id();
+        $user = User::with([
+            'listings',
+            'reviews',
+            'user_country',
+            'user_state',
+            'membershipUser.membership',
+            'membershipHistory',
+            'parent',
+            'children.userBvs',
+            'leftChild.userBvs',
+            'rightChild.userBvs'
+        ])->findOrFail($user_id);
+
+        $current_membership = optional($user->membershipUser);
+        $previous_membership = $user->membershipHistory()->latest('created_at')->first();
+
+        $user_ads_posted = $user->listings()->count();
+        $remaining_listings = $current_membership->listing_limit;
+        $user_active_listings = $user->listings()->where('is_published', 1)->where('status', 1)->count();
+        $user_deactivated_ads = $user->listings()->where(function ($query) {
+            $query->where('is_published', 0)->orWhere('status', 0);
+        })->count();
+        $user_favorite_ads = ListingFavorite::where('user_id', $user_id)->count();
+        $show_upgrade = ($current_membership->listing_limit > 0 && $remaining_listings === 0);
+        $averageRating = $user->reviews?->avg('rating');
+        $user_review_count = $user->reviews?->count();
+        $user_given_reviews = Review::where('reviewer_id', $user_id)->take(500)->get();
+        $age = $user->dob ? now()->diffInYears($user->dob) : null;
+
+        $bvvalue = get_static_option('payout_value') ?? 0;
+        $bpConversionRate = get_static_option('bp_value') ?? 1;
+        $sealingLimit = get_static_option('sealing_limit') ?? 1;
+
+        $leftBvPoints = $user->leftChild ? $user->leftChild->userBvs->sum('bv_points') : 0;
+        $rightBvPoints = $user->rightChild ? $user->rightChild->userBvs->sum('bv_points') : 0;
+
+        $sealingLimitBv = $sealingLimit * $bpConversionRate;
+
+        if ($leftBvPoints >= $sealingLimitBv && $rightBvPoints >= $sealingLimitBv) {
+            $leftBvPoints -= $sealingLimitBv;
+            $rightBvPoints -= $sealingLimitBv;
+        }
+
+        $remainingLeftBv = floor($leftBvPoints / $sealingLimitBv) * $sealingLimitBv;
+        $remainingRightBv = floor($rightBvPoints / $sealingLimitBv) * $sealingLimitBv;
+
+        $flushedLeft = $leftBvPoints - $remainingLeftBv;
+        $flushedRight = $rightBvPoints - $remainingRightBv;
+
+        $sealedLeftBv = min($leftBvPoints, $sealingLimitBv);
+        $sealedRightBv = min($rightBvPoints, $sealingLimitBv);
+
+        $leftBP = floor($sealedLeftBv / $bpConversionRate);
+        $rightBP = floor($sealedRightBv / $bpConversionRate);
+        $equalizedBP = min($leftBP, $rightBP);
+
+        $income = $equalizedBP * $bvvalue;
+        $showIncome = $equalizedBP > 0;
+
+        $businesspoint = "$leftBvPoints <> $rightBvPoints";
+        $totalBP = "$leftBP <> $rightBP";
+        $balancedBP = "$remainingLeftBv <> $remainingRightBv";
+
+        $bvFromReferrals = $user->children->sum(fn($child) => $child->userBvs->sum('bv_points'));
+
+        $referralCommissionRate = $user->referral_commission ?? 0;
+        $referralCommission = $referralCommissionRate;
+
+        $selfPurchasedBv = $current_membership->id ? ($current_membership->membership->bv_points ?? 0) : 0;
+
+        $directReferralsCount = $user->children()->count();
+
+        return response()->json([
+            'user' => $user,
+            'user_ads_posted' => $user_ads_posted,
+            'user_active_listings' => $user_active_listings,
+            'user_deactivated_ads' => $user_deactivated_ads,
+            'user_favorite_ads' => $user_favorite_ads,
+            'averageRating' => $averageRating,
+            'user_review_count' => $user_review_count,
+            'user_given_reviews' => $user_given_reviews,
+            'remaining_listings' => $remaining_listings,
+            'show_upgrade' => $show_upgrade,
+            'age' => $age,
+            'showIncome' => $showIncome,
+            'sealingLimit' => $sealingLimit,
+            'sealedLeftBv' => $sealedLeftBv,
+            'sealedRightBv' => $sealedRightBv,
+            'remainingLeftBv' => $remainingLeftBv,
+            'remainingRightBv' => $remainingRightBv,
+            'sealingLimitBv' => $sealingLimitBv,
+            'flushedLeft' => $flushedLeft,
+            'flushedRight' => $flushedRight,
+
+            // ✅ Grouped Sections (no duplication)
+            'referrals' => [
+                'sponsor_id' => $user->sponsor_id,
+                'sponsor_name' => optional($user->parent)->name,
+                'referred_by' => optional($user->parent)?->name . ' (' . optional($user->parent)?->user_id . ')',
+                'my_referrals_count' => $directReferralsCount,
+                'bv_from_referrals' => $bvFromReferrals,
+                'referral_commission' => number_format($referralCommission, 2),
+                'referral_commission_rate' => $referralCommissionRate,
+            ],
+
+            'business' => [
+                'status' => strtoupper($user->status ?? 'DISTRIBUTOR'),
+                'self_purchase_bv' => $selfPurchasedBv,
+                'team_bv_left' => $leftBvPoints,
+                'team_bv_right' => $rightBvPoints,
+                'commission_value' => "$sealedLeftBv <> $sealedRightBv",
+            ],
+
+            'income_details' => [
+                'total_bv_points' => $businesspoint,
+                'total_bp' => "$totalBP",
+                'equalized_bp' => $equalizedBP,
+                'balanced_bp' => "$remainingLeftBv <> $remainingRightBv",
+                'income' => $income,
+            ],
+        ]);
     }
 }

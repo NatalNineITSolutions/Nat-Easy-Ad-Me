@@ -16,14 +16,21 @@ class MatrimonyController extends Controller
 
     public function profileLists()
     {
-        $profiles = ProfileListing::all();
+        $profiles = ProfileListing::all()->map(function ($profile) {
+            $imageIds = array_filter(preg_split('/[|,]/', $profile->image), fn($id) => !empty(trim($id)));
+
+            $profile->image_urls = array_map(function ($id) {
+                return get_attachment_url_by_ids(trim($id));
+            }, $imageIds);
+
+            return $profile;
+        });
 
         return response()->json([
             'success' => true,
             'data' => $profiles
         ]);
     }
-
 
     public function getProfileDetails($profile_id)
     {
@@ -43,12 +50,17 @@ class MatrimonyController extends Controller
             ], 404);
         }
 
+        $imageIds = array_filter(preg_split('/[|,]/', $profile->image), fn($id) => !empty(trim($id)));
+
+        $profile->image_urls = array_map(function ($id) {
+            return get_attachment_url_by_ids(trim($id)); // Only URL, no HTML
+        }, $imageIds);
+
         return response()->json([
             'success' => true,
             'data' => $profile
         ]);
     }
-
 
     public function storeProfile(Request $request)
     {
@@ -150,7 +162,7 @@ class MatrimonyController extends Controller
     public function storeUserDetails(Request $request)
     {
         try {
-          
+
             if (!auth()->check()) {
                 return response()->json([
                     'status' => 'error',
@@ -158,10 +170,10 @@ class MatrimonyController extends Controller
                 ], 401);
             }
 
-          
+
             \Log::info('Incoming request data:', $request->all());
 
-          
+
             $validatedData = $request->validate([
                 'marital_status' => 'required|string',
                 'dob' => 'required|date',
@@ -184,16 +196,16 @@ class MatrimonyController extends Controller
                 'about' => 'required|string',
             ]);
 
-         
+
             $validatedData['marital_status'] = strtolower($validatedData['marital_status']);
 
-           
+
             $validatedData['user_id'] = auth()->id();
 
-            
+
             \Log::info('Validated data with user_id:', $validatedData);
 
-           
+
             $matrimonyKyc = MatrimonyKyc::create($validatedData);
 
             return response()->json([
@@ -241,13 +253,13 @@ class MatrimonyController extends Controller
 
 
         MatrimonyPreference::updateOrCreate(
-            ['user_id' => $user->id], 
+            ['user_id' => $user->id],
             $validatedData
         );
 
 
         if ($user->kyc && $user->matrimonyPreference) {
-            $user->update(['profile_completed' => 1]); 
+            $user->update(['profile_completed' => 1]);
         }
 
 

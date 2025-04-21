@@ -68,6 +68,217 @@ class ListingApiController extends Controller
         ]);
     }
 
+    // public function addListing(Request $request)
+    // {
+    //     $request->headers->set('Accept', 'application/json');
+    //     $user = Auth::guard('sanctum')->user();
+
+    //     if (!$user) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Unauthorized access'
+    //         ], 401);
+    //     }
+
+    //     $validatedData = $request->validate([
+    //         'category_id' => 'required|integer|exists:categories,id',
+    //         'title' => 'required|max:191',
+    //         'description' => 'required|min:150',
+    //         'slug' => 'required|max:255|unique:listings',
+    //         'price' => $request->category_id == 54 ? 'nullable|numeric' : 'required|numeric',
+    //         'qualification' => $request->category_id == 54 ? 'required|string|max:255' : 'nullable|string|max:255',
+    //         'experience' => $request->category_id == 54 ? 'required|string|max:255' : 'nullable|string|max:255',
+    //         'salary' => $request->category_id == 54 ? 'required|numeric' : 'nullable|numeric',
+    //         'job_location' => $request->category_id == 54 ? 'required|string|max:255' : 'nullable|string|max:255',
+    //         'image' => 'nullable',
+    //         'gallery_images' => 'nullable|string',
+    //         'video_url' => 'nullable|string',
+    //         'country_id' => 'nullable|integer',
+    //         'state_id' => 'nullable|integer',
+    //         'city_id' => 'nullable|integer',
+    //         'brand_id' => 'nullable|integer',
+    //         'sub_category_id' => 'nullable|integer',
+    //         'child_category_id' => 'nullable|integer',
+    //         'negotiable' => 'nullable|boolean',
+    //         'condition' => 'nullable|string',
+    //         'authenticity' => 'nullable|string',
+    //         'phone' => 'nullable|string',
+    //         'phone_hidden' => 'nullable|boolean',
+    //         'address' => 'nullable|string',
+    //         'latitude' => 'nullable|numeric',
+    //         'longitude' => 'nullable|numeric',
+    //         'is_featured' => 'nullable|boolean',
+    //         'tags' => 'nullable|array',
+    //         'tags.*' => 'integer|exists:tags,id',
+    //         'attributes_title' => 'nullable|array',
+    //         'attributes_description' => 'nullable|array',
+    //     ]);
+
+    //     // Handle image upload if present
+    //     $imageId = null;
+    //     if ($request->hasFile('image')) {
+    //         $request->validate([
+    //             'image' => 'image|mimes:jpg,jpeg,png|max:2048'
+    //         ]);
+
+    //         $file = $request->file('image');
+    //         $path = $file->store('media_uploads', 'public');
+
+    //         $media = MediaUpload::create([
+    //             'user_id' => $user->id,
+    //             'path' => $path,
+    //             'file_name' => $file->getClientOriginalName(),
+    //             'file_size' => $file->getSize(),
+    //             'file_type' => $file->getMimeType(),
+    //             'type' => 'image', // Set the required type field
+    //             'title' => $file->getClientOriginalName(),
+    //             'alt' => '',
+    //             'dimensions' => getimagesize($file->getPathname()) ? implode('x', getimagesize($file->getPathname())) : null,
+    //         ]);
+
+    //         $imageId = $media->id;
+    //     } elseif ($request->filled('image')) {
+    //         $request->validate([
+    //             'image' => 'integer|exists:media_uploads,id'
+    //         ]);
+    //         $imageId = $request->image;
+    //     } else {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Image is required'
+    //         ], 422);
+    //     }
+
+    //     if (moduleExists('Membership') && membershipModuleExistsAndEnable('Membership')) {
+    //         $user_membership = UserMembership::where('user_id', $user->id)->first();
+
+    //         if (!$user_membership || $user_membership->status === 0 || $user_membership->payment_status == 'pending') {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'Your membership is inactive or expired. Please subscribe to a plan before creating listings.'
+    //             ], 403);
+    //         }
+
+    //         if ($user_membership->listing_limit === 0 || $user_membership->expire_date <= Carbon::now()) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'Your membership listing limit is over or expired.'
+    //             ], 403);
+    //         }
+
+    //         // Check gallery images limit
+    //         if ($request->filled('gallery_images')) {
+    //             $gallery_images = explode('|', $request->gallery_images);
+    //             if (count($gallery_images) > $user_membership->initial_gallery_images) {
+    //                 return response()->json([
+    //                     'success' => false,
+    //                     'message' => 'You have exceeded the maximum number of gallery images allowed by your membership package.'
+    //                 ], 403);
+    //             }
+    //         }
+
+    //         // Check featured listing
+    //         if ($request->is_featured && $user_membership->initial_featured_listing != 0 && $user_membership->featured_listing === 0) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'You have exceeded the maximum number of featured listings allowed by your membership package.'
+    //             ], 403);
+    //         }
+    //     }
+
+    //     $status = get_static_option('listing_create_status_settings') == 'approved' ? 1 : 0;
+
+    //     $listing = new Listing();
+    //     $listing->user_id = $user->id;
+    //     $listing->category_id = $validatedData['category_id'];
+    //     $listing->sub_category_id = $request->sub_category_id;
+    //     $listing->child_category_id = $request->child_category_id;
+    //     $listing->country_id = $request->country_id;
+    //     $listing->state_id = $request->state_id;
+    //     $listing->city_id = $request->city_id;
+    //     $listing->brand_id = $request->brand_id;
+    //     $listing->title = $validatedData['title'];
+    //     $listing->slug = Str::slug($validatedData['slug']);
+    //     $listing->description = $validatedData['description'];
+    //     $listing->price = $validatedData['category_id'] == 54 ? null : $validatedData['price'];
+    //     $listing->negotiable = $request->negotiable ?? 0;
+    //     $listing->condition = $request->condition;
+    //     $listing->authenticity = $request->authenticity;
+    //     $listing->phone = $request->phone;
+    //     $listing->phone_hidden = $request->phone_hidden ?? 0;
+    //     $listing->image = $imageId;
+    //     $listing->gallery_images = $request->gallery_images;
+    //     $listing->video_url = $request->video_url ? getYoutubeEmbedUrl($request->video_url) : null;
+    //     $listing->address = $request->address;
+    //     $listing->lat = $request->latitude;
+    //     $listing->lon = $request->longitude;
+    //     $listing->is_featured = $request->is_featured ?? 0;
+    //     $listing->status = $status;
+
+    //     if ($validatedData['category_id'] == 54) {
+    //         $listing->qualification = $validatedData['qualification'];
+    //         $listing->experience = $validatedData['experience'];
+    //         $listing->expected_salary = $validatedData['salary'];
+    //         $listing->job_location = $validatedData['job_location'];
+    //     }
+
+    //     $listing->save();
+
+    //     $responseData = [
+    //         'success' => true,
+    //         'message' => 'Listing added successfully',
+    //         'data' => [
+    //             'listing' => $listing,
+    //             'image_url' => get_attachment_url_by_ids($imageId),
+    //         ]
+    //     ];
+
+    //     // Handle tags
+    //     if ($request->filled('tags')) {
+    //         foreach ($request->tags as $tagId) {
+    //             ListingTag::create([
+    //                 'listing_id' => $listing->id,
+    //                 'tag_id' => $tagId,
+    //             ]);
+    //         }
+    //     }
+
+    //     // Handle attributes
+    //     if ($request->filled('attributes_title')) {
+    //         foreach ($request->input('attributes_title') as $index => $title) {
+    //             $description = $request->input('attributes_description')[$index] ?? null;
+    //             if (!empty($title)) {
+    //                 ListingAttribute::create([
+    //                     'listing_id' => $listing->id,
+    //                     'title' => strip_tags($title),
+    //                     'description' => strip_tags($description),
+    //                 ]);
+    //             }
+    //         }
+    //     }
+
+    //     if (moduleExists('Membership') && membershipModuleExistsAndEnable('Membership')) {
+    //         UserMembership::where('user_id', $user->id)->decrement('listing_limit');
+
+    //         if ($request->is_featured && $user_membership->initial_featured_listing != 0) {
+    //             UserMembership::where('user_id', $user->id)->decrement('featured_listing');
+    //         }
+    //     }
+
+    //     AdminNotification::create([
+    //         'identity' => $listing->id,
+    //         'user_id' => $user->id,
+    //         'type' => 'Create Listing',
+    //         'message' => 'A new listing has been created'
+    //     ]);
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Listing added successfully',
+    //         'data' => $listing
+    //     ], 201);
+    // }
+
     public function addListing(Request $request)
     {
         $request->headers->set('Accept', 'application/json');
@@ -91,7 +302,8 @@ class ListingApiController extends Controller
             'salary' => $request->category_id == 54 ? 'required|numeric' : 'nullable|numeric',
             'job_location' => $request->category_id == 54 ? 'required|string|max:255' : 'nullable|string|max:255',
             'image' => 'nullable',
-            'gallery_images' => 'nullable|string',
+            'gallery_images' => 'nullable|array',
+            'gallery_images.*' => 'image|mimes:jpg,jpeg,png|max:2048', 
             'video_url' => 'nullable|string',
             'country_id' => 'nullable|integer',
             'state_id' => 'nullable|integer',
@@ -130,7 +342,7 @@ class ListingApiController extends Controller
                 'file_name' => $file->getClientOriginalName(),
                 'file_size' => $file->getSize(),
                 'file_type' => $file->getMimeType(),
-                'type' => 'image', // Set the required type field
+                'type' => 'image',
                 'title' => $file->getClientOriginalName(),
                 'alt' => '',
                 'dimensions' => getimagesize($file->getPathname()) ? implode('x', getimagesize($file->getPathname())) : null,
@@ -149,6 +361,34 @@ class ListingApiController extends Controller
             ], 422);
         }
 
+        // Handle gallery images
+        $galleryImageIds = [];
+        if ($request->has('gallery_images') && is_array($request->gallery_images)) {
+            foreach ($request->gallery_images as $galleryImage) {
+                // Validate each gallery image
+                $galleryImagePath = $galleryImage->store('media_uploads', 'public');
+
+                $media = MediaUpload::create([
+                    'user_id' => $user->id,
+                    'path' => $galleryImagePath,
+                    'file_name' => $galleryImage->getClientOriginalName(),
+                    'file_size' => $galleryImage->getSize(),
+                    'file_type' => $galleryImage->getMimeType(),
+                    'type' => 'image',
+                    'title' => $galleryImage->getClientOriginalName(),
+                    'alt' => '',
+                    'dimensions' => getimagesize($galleryImage->getPathname()) ? implode('x', getimagesize($galleryImage->getPathname())) : null,
+                ]);
+
+                // Add the image ID to the gallery image IDs array
+                $galleryImageIds[] = $media->id;
+            }
+        }
+
+        // Convert the gallery image IDs to a string (separated by '|')
+        $galleryImagesString = $galleryImageIds ? implode('|', $galleryImageIds) : null;
+
+        // Check membership conditions if applicable
         if (moduleExists('Membership') && membershipModuleExistsAndEnable('Membership')) {
             $user_membership = UserMembership::where('user_id', $user->id)->first();
 
@@ -166,17 +406,6 @@ class ListingApiController extends Controller
                 ], 403);
             }
 
-            // Check gallery images limit
-            if ($request->filled('gallery_images')) {
-                $gallery_images = explode('|', $request->gallery_images);
-                if (count($gallery_images) > $user_membership->initial_gallery_images) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'You have exceeded the maximum number of gallery images allowed by your membership package.'
-                    ], 403);
-                }
-            }
-
             // Check featured listing
             if ($request->is_featured && $user_membership->initial_featured_listing != 0 && $user_membership->featured_listing === 0) {
                 return response()->json([
@@ -186,6 +415,7 @@ class ListingApiController extends Controller
             }
         }
 
+        // Set the listing status based on approval settings
         $status = get_static_option('listing_create_status_settings') == 'approved' ? 1 : 0;
 
         $listing = new Listing();
@@ -207,7 +437,7 @@ class ListingApiController extends Controller
         $listing->phone = $request->phone;
         $listing->phone_hidden = $request->phone_hidden ?? 0;
         $listing->image = $imageId;
-        $listing->gallery_images = $request->gallery_images;
+        $listing->gallery_images = $galleryImagesString;
         $listing->video_url = $request->video_url ? getYoutubeEmbedUrl($request->video_url) : null;
         $listing->address = $request->address;
         $listing->lat = $request->latitude;
@@ -224,14 +454,14 @@ class ListingApiController extends Controller
 
         $listing->save();
 
-        $responseData = [
-            'success' => true,
-            'message' => 'Listing added successfully',
-            'data' => [
-                'listing' => $listing,
-                'image_url' => get_attachment_url_by_ids($imageId),
-            ]
-        ];
+        // Generate gallery image URLs
+        $galleryImageUrls = [];
+        if ($galleryImagesString) {
+            $galleryImageIds = explode('|', $galleryImagesString);
+            foreach ($galleryImageIds as $id) {
+                $galleryImageUrls[] = render_image_markup_by_attachment_id($id);
+            }
+        }
 
         // Handle tags
         if ($request->filled('tags')) {
@@ -257,39 +487,30 @@ class ListingApiController extends Controller
             }
         }
 
-        if (moduleExists('Membership') && membershipModuleExistsAndEnable('Membership')) {
-            UserMembership::where('user_id', $user->id)->decrement('listing_limit');
-
-            if ($request->is_featured && $user_membership->initial_featured_listing != 0) {
-                UserMembership::where('user_id', $user->id)->decrement('featured_listing');
-            }
-        }
-
-        AdminNotification::create([
-            'identity' => $listing->id,
-            'user_id' => $user->id,
-            'type' => 'Create Listing',
-            'message' => 'A new listing has been created'
-        ]);
-
         return response()->json([
             'success' => true,
             'message' => 'Listing added successfully',
-            'data' => $listing
+            'data' => [
+                'listing' => $listing,
+                'image_url' => render_image_markup_by_attachment_id($imageId),
+                'gallery_image_urls' => $galleryImageUrls,
+                'gallery_image_ids' => $galleryImageIds
+            ]
         ], 201);
     }
+
 
     public function filterListings(Request $request)
     {
         try {
             // Get all input parameters
             $input = $request->all();
-            
+
             // Initialize listing query
             $listing_query = Listing::query()->where("status", 1);
-            
+
             // Apply filters based on input parameters
-            
+
             // Text search
             if (!empty($input['q']) || !empty($input['home_search'])) {
                 $search_text = $input['home_search'] ?? $input['q'];
@@ -298,12 +519,12 @@ class ListingApiController extends Controller
                         ->orWhere("description", "LIKE", "%" . $search_text . "%");
                 });
             }
-            
+
             // Location filters
             if (!empty($input['latitude']) && !empty($input['longitude'])) {
                 $distance_radius_km = $input['distance_kilometers_value'] ?? 50;
                 $radius = $distance_radius_km == 0 ? 50 : $distance_radius_km;
-                
+
                 $listing_query->selectRaw(
                     "listings.*,
                     (6371 * acos(
@@ -312,10 +533,10 @@ class ListingApiController extends Controller
                     )) AS distance",
                     [$input['latitude'], $input['longitude'], $input['latitude']]
                 )
-                ->havingRaw('distance <= ?', [$radius])
-                ->orderBy('distance', 'asc');
+                    ->havingRaw('distance <= ?', [$radius])
+                    ->orderBy('distance', 'asc');
             }
-            
+
             // Price range filter
             if (!empty($input['price_range_value'])) {
                 $priceRange = explode(',', $input['price_range_value']);
@@ -323,7 +544,7 @@ class ListingApiController extends Controller
                     $listing_query->whereBetween('price', [$priceRange[0], $priceRange[1]]);
                 }
             }
-            
+
             // Country filter
             if (!empty($input['country'])) {
                 $listings_country = Country::find($input['country']);
@@ -332,37 +553,37 @@ class ListingApiController extends Controller
                     $listing_query->whereIn("state_id", $listings_country_ids);
                 }
             }
-            
+
             // State filter
             if (!empty($input['state'])) {
                 $listing_query->where("state_id", $input['state']);
             }
-            
+
             // City filter
             if (!empty($input['city'])) {
                 $listing_query->where("city_id", $input['city']);
             }
-            
+
             // Category filters
             if (!empty($input['cat'])) {
                 $listing_query->where("category_id", $input['cat']);
             }
-            
+
             if (!empty($input['subcat'])) {
                 $listing_query->where("sub_category_id", $input['subcat']);
             }
-            
+
             if (!empty($input['child_cat'])) {
                 $listing_query->where("child_category_id", $input['child_cat']);
             }
-            
+
             // Tag filter
             if (!empty($input['tag_id'])) {
                 $tagIds = is_array($input['tag_id']) ? $input['tag_id'] : [$input['tag_id']];
                 $listing_tag_wise_ids = ListingTag::whereIn('tag_id', $tagIds)->pluck('listing_id');
                 $listing_query->whereIn("id", $listing_tag_wise_ids);
             }
-            
+
             // Rating filter
             if (!empty($input['rating'])) {
                 $rating = (int) $input['rating'];
@@ -372,7 +593,7 @@ class ListingApiController extends Controller
                         ->havingRaw("AVG(reviews.rating) < ?", [$rating + 1]);
                 });
             }
-            
+
             // Sort by
             if (!empty($input['sortby'])) {
                 switch ($input['sortby']) {
@@ -387,7 +608,7 @@ class ListingApiController extends Controller
                         break;
                 }
             }
-            
+
             // Listing type preferences
             if (!empty($input['listing_type_preferences'])) {
                 switch ($input['listing_type_preferences']) {
@@ -399,12 +620,12 @@ class ListingApiController extends Controller
                         break;
                 }
             }
-            
+
             // Listing condition
             if (!empty($input['listing_condition'])) {
                 $listing_query->where('condition', $input['listing_condition']);
             }
-            
+
             // Date posted
             if (!empty($input['date_posted_listing'])) {
                 switch ($input['date_posted_listing']) {
@@ -419,13 +640,13 @@ class ListingApiController extends Controller
                         break;
                 }
             }
-            
+
             // Pagination
             $perPage = $input['items'] ?? 10; // Default to 10 items per page
             $all_listings = $listing_query->where('status', 1)
                 ->where('is_published', 1)
                 ->paginate($perPage);
-            
+
             // Format listings for response
             $formatted_listings = $all_listings->map(function ($listing) {
                 return [
@@ -454,45 +675,45 @@ class ListingApiController extends Controller
                     'details_url' => route("frontend.listing.details", $listing->slug),
                 ];
             });
-            
+
             // Get filter options
             $countries = Country::where('status', 1)->select('id', 'country')->get();
             $categories = Category::where('status', 1)->select('id', 'name')->get();
-            
+
             // Get states and cities based on country if provided
             $states = [];
             $cities = [];
             $sub_categories = [];
             $child_categories = [];
-            
+
             if (!empty($input['country'])) {
                 $states = State::where('status', 1)
                     ->where('country_id', $input['country'])
                     ->select('id', 'state')
                     ->get();
             }
-            
+
             if (!empty($input['state'])) {
                 $cities = City::where('status', 1)
                     ->where('state_id', $input['state'])
                     ->select('id', 'city')
                     ->get();
             }
-            
+
             if (!empty($input['cat'])) {
                 $sub_categories = SubCategory::where('status', 1)
                     ->where('category_id', $input['cat'])
                     ->select('id', 'name')
                     ->get();
             }
-            
+
             if (!empty($input['subcat'])) {
                 $child_categories = ChildCategory::where('status', 1)
                     ->where('sub_category_id', $input['subcat'])
                     ->select('id', 'name')
                     ->get();
             }
-            
+
             // Prepare response
             $response = [
                 'success' => true,
@@ -543,9 +764,9 @@ class ListingApiController extends Controller
                     'current_filters' => $input,
                 ],
             ];
-            
+
             return response()->json($response);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -553,6 +774,25 @@ class ListingApiController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function allListingsApi(Request $request)
+    {
+        $user = Auth::guard('sanctum')->user();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized',
+            ], 401);
+        }
+
+        $listings = Listing::where('user_id', $user->id)->latest()->paginate(5);
+
+        return response()->json([
+            'success' => true,
+            'data' => $listings
+        ]);
     }
 }
 

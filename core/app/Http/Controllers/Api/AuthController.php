@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Exception;
 use App\Models\User;
-use App\Models\UsersBv;
 use Modules\Membership\app\Models\Membership;
 use Modules\Wallet\app\Models\Wallet;
 use App\Jobs\SendRegisterUserEmailJob;
 use App\Mail\BasicMail;
+use App\Models\UsersBV;
 
 class AuthController extends Controller
 {
@@ -159,6 +159,28 @@ class AuthController extends Controller
                 'error' => __('An error occurred during registration. Please try again.')
             ], 500);
         }
+    }
+
+
+    // Verify existing partner
+    public function verifyPartner(Request $request)
+    {
+        $partner = User::where('partner_id', $request->partner_id)
+                     ->orWhere('username', $request->partner_id)
+                     ->first();
+
+        if (!$partner) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Partner ID not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'partner_name' => $partner->first_name.' '.$partner->last_name,
+            'partner_id' => $partner->partner_id
+        ]);
     }
 
     public function login(Request $request)

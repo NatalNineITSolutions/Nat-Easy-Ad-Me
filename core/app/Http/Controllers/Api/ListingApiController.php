@@ -17,6 +17,8 @@ use App\Models\Backend\MediaUpload;
 use App\Models\Frontend\ListingAttribute;
 use Modules\CountryManage\app\Models\Country;
 use App\Models\Backend\ListingTag;
+use Modules\CountryManage\app\Models\City;
+use Modules\CountryManage\app\Models\State;
 
 class ListingApiController extends Controller
 {

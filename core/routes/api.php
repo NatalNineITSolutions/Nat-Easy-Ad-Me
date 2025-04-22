@@ -66,7 +66,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/matrimony/requests/accept', [MatrimonyController::class, 'accept']);
     Route::post('/matrimony/user-details', [MatrimonyController::class, 'storeUserDetails']);
     Route::post('/matrimony/preferences', [MatrimonyController::class, 'store']);
-
     Route::get('/user/listings', [ListingApiController::class, 'allListingsApi']);
     Route::get('/user/enquiries', [EnquiryControllerApi::class, 'allEnquiriesApi']);
     Route::get('/user/profile', [EnquiryControllerApi::class, 'showProfileApi']);

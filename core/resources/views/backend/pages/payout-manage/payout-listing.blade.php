@@ -87,7 +87,7 @@
                                     <td>{{ $user->partner_id }}</td>
                                     <td>{{ $user->total_referrals }}</td>
                                     <td>{{ $user->bv_points }}</td>
-                                    <td>{{ number_format($user->payout, 2) }}</td>
+                                    <td>{{ number_format($user->net_amount, 2) }}</td>
                                     <td>
                                         @if($selectedDate)
                                             {{ __('Date: ') }} {{ $selectedDate }}

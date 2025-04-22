@@ -95,8 +95,8 @@
                         <!-- Fourth Row -->
                         <div class="col-md-6">
                             <div class="form__input__single mb-3">
-                                <label for="bp_value" class="form__input__single__label">{{__('Commission Value')}}<span
-                                        class="text-danger">*</span></label>
+                                <label for="bp_value" class="form__input__single__label">{{__('Business Points (BP)')}}<span
+                                        class="text-danger">*</span><small>For one ad</small></label>
                                 <input type="number" step="0.01" name="bp_value" id="bp_value" class="form-control radius-5"
                                     value="{{ get_static_option('bp_value') }}" placeholder="{{ __('Enter BP Value') }}">
                             </div>
@@ -104,7 +104,7 @@
 
                         <div class="col-md-6">
                             <div class="form__input__single mb-3">
-                                <label for="tds_value" class="form__input__single__label">{{__('TDS Value')}}<span
+                                <label for="tds_value" class="form__input__single__label">{{__('TDS Value (%)')}}<span
                                         class="text-danger">*</span></label>
                                 <input type="number" step="0.01" name="tds_value" id="tds_value"
                                     class="form-control radius-5" value="{{ get_static_option('tds_value') }}"
@@ -115,7 +115,7 @@
                         <!-- Fifth row -->
                         <div class="col-md-6">
                             <div class="form__input__single mb-3">
-                                <label for="service_charge" class="form__input__single__label">{{__('Service Charge')}}<span
+                                <label for="service_charge" class="form__input__single__label">{{__('Service Charge (%)')}}<span
                                         class="text-danger">*</span></label>
                                 <input type="number" step="0.01" name="service_charge" id="service_charge"
                                     class="form-control radius-5" value="{{ get_static_option('service_charge') }}"
@@ -126,31 +126,42 @@
                             <div class="form__input__single mb-3">
                                 <label for="bv_flush_time" class="form__input__single__label">{{__('Payout Schedule Time')}}
                                     <span class="text-danger">*</span></label>
+                                <!-- <small class="text-muted">{{ __('Time when payout will be processed daily') }}</small> -->
                                 <input type="time" name="bv_flush_time" id="bv_flush_time" class="form-control radius-5"
                                     value="{{ get_static_option('bv_flush_time') }}"
                                     placeholder="{{ __('Enter schedule time') }}">
-                                <small class="text-muted">{{ __('Time when payout will be processed daily') }}</small>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="maximum_one_pair_income">Maximum Pair Income</label>
-                            <input type="number" name="maximum_one_pair_income" id="maximum_one_pair_income"
-                                class="form-control @error('maximum_one_pair_income') is-invalid @enderror"
-                                value="{{ old('maximum_one_pair_income', get_static_option('maximum_one_pair_income')) }}"
-                                @if($maxAllowed <= 0) disabled @endif>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="bv_flush_time" class="form__input__single__label">{{__('Maximum Pair Income')}}
+                                    <span class="text-danger">*</span></label>
+                                <input type="number" name="maximum_one_pair_income" id="maximum_one_pair_income"
+                                    class="form-control @error('maximum_one_pair_income') is-invalid @enderror"
+                                    value="{{ old('maximum_one_pair_income', get_static_option('maximum_one_pair_income')) }}"
+                                    @if($maxAllowed <= 0) disabled @endif>
 
-                            @error('maximum_one_pair_income')
-                                <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                            @enderror
+                                @error('maximum_one_pair_income')
+                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                                @enderror
 
-                            <small class="text-muted">
-                                @if($maxAllowed > 0)
-                                    {{ __('Maximum allowed based on current BV & Matching Pairs:') }}
-                                    <strong>{{ $maxAllowed }}</strong>
-                                @else
-                                    {{ __('No available BV to distribute. Please check your BV records.') }}
-                                @endif
-                            </small>
+                                <small class="text-muted">
+                                    @if($maxAllowed > 0)
+                                        {{ __('Maximum allowed based on current BV & Matching Pairs:') }}
+                                        <strong>{{ $maxAllowed }}</strong>
+                                    @else
+                                        {{ __('No available BV to distribute. Please check your BV records.') }}
+                                    @endif
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form__input__single mb-3">
+                                <label for="service_charge"
+                                    class="form__input__single__label">{{__('Previous Case on hand')}}</label>
+                                <input type="number" step="0.01" class="form-control radius-5"
+                                    value="{{ $previousCaseOnHand }}" disabled>
+                            </div>
                         </div>
                     </div>
                     <div class="btn_wrapper mt-4">

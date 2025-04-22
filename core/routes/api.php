@@ -71,4 +71,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/enquiries', [EnquiryControllerApi::class, 'allEnquiriesApi']);
     Route::get('/user/profile', [EnquiryControllerApi::class, 'showProfileApi']);
     Route::get('/user/dashboard', [AuthController::class, 'dashboardApi']);
+    Route::get('/payment-success', [MembershipApiController::class, 'handlePaymentSuccess'])
+    ->name('payment.success');
 });

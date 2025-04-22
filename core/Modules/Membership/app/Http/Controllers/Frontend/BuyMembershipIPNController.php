@@ -10,6 +10,7 @@ use App\Models\ProfileListing;
 use App\Models\User;
 use App\Models\UsersBV;
 use App\Services\BVDistributionService;
+use App\Services\MembershipService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -317,245 +318,21 @@ class BuyMembershipIPNController extends Controller
         return $update;
     }
 
-    // private function update_database($last_membership_id, $transaction_id, $membership_history_id, $upgrade_membership_id)
-    // {
-    //     try {
-    //         $last_membership_id = (int) $last_membership_id;
-    //         $membership_history_id = (int) $membership_history_id;
-
-    //         $membership_details = UserMembership::with('membership')->find($last_membership_id);
-    //         $membership_history = MembershipHistory::find($membership_history_id);
-
-    //         if (!$membership_details) {
-    //             throw new \Exception("Membership not found for ID: $last_membership_id");
-    //         }
-
-    //         // Fallback condition
-    //         if (!$upgrade_membership_id) {
-    //             $upgrade_membership_id = $membership_details->membership_id;
-    //             Log::info('Fallback: upgrade_membership_id was null, using membership_id from user record', [
-    //                 'used_membership_id' => $upgrade_membership_id
-    //             ]);
-    //         }
-
-    //         // Get the new membership details to access profile_limit
-    //         $new_membership = Membership::find($upgrade_membership_id);
-    //         if (!$new_membership) {
-    //             throw new \Exception("New membership not found for ID: $upgrade_membership_id");
-    //         }
-
-    //         // Update the original membership record status & transaction
-    //         $updateData = [
-    //             'payment_status' => 'complete',
-    //             'status' => 1,
-    //             'transaction_id' => $transaction_id,
-    //             'profile_limit' => $new_membership->profile_limit, // Add this line
-    //         ];
-
-    //         UserMembership::where('id', $last_membership_id)
-    //             ->where('user_id', $membership_details->user_id)
-    //             ->update($updateData);
-
-    //         // Update membership history record
-    //         MembershipHistory::where('id', $membership_history_id)
-    //             ->where('user_id', $membership_details->user_id)
-    //             ->update([
-    //                 'payment_status' => 'complete',
-    //                 'status' => 1,
-    //                 'transaction_id' => $transaction_id,
-    //                 'profile_limit' => $new_membership->profile_limit, // Add this line
-    //             ]);
-
-    //         if ($new_membership->category == 1) {
-    //             $expire_date = Carbon::now()->addDays(30);
-
-    //             $existingRecord = UserMembership::where('user_id', $membership_details->user_id)
-    //                 ->whereHas('membership', function ($query) {
-    //                     $query->where('category', 1);
-    //                 })
-    //                 ->first();
-
-    //             $updateData = [
-    //                 'membership_id' => $upgrade_membership_id,
-    //                 'payment_status' => 'complete',
-    //                 'status' => 1,
-    //                 'transaction_id' => $transaction_id,
-    //                 'expire_date' => $expire_date,
-    //                 'profile_limit' => $new_membership->profile_limit,
-    //                 'initial_listing_limit' => $new_membership->listing_limit,
-    //                 'listing_limit' => $new_membership->listing_limit,
-    //                 'price' => $new_membership->price,
-    //             ];
-
-    //             if ($existingRecord) {
-    //                 $existingRecord->update($updateData);
-    //             } else {
-    //                 $updateData['user_id'] = $membership_details->user_id;
-    //                 UserMembership::create($updateData);
-    //             }
-    //         } else {
-    //             $check_user_current_membership = UserMembership::where('id', $last_membership_id)
-    //                 ->where('user_id', $membership_details->user_id)
-    //                 ->where('payment_status', 'complete')
-    //                 ->where('status', 1)
-    //                 ->where('expire_date', '>', Carbon::now())
-    //                 ->exists();
-
-    //             if ($membership_history && $check_user_current_membership) {
-    //                 $expire_date = Carbon::now()->addDays(
-    //                     Carbon::parse($membership_details->expire_date)->diffInDays(Carbon::now()) +
-    //                     Carbon::parse($membership_history->expire_date)->diffInDays(Carbon::now())
-    //                 );
-
-    //                 UserMembership::where('id', $last_membership_id)
-    //                     ->where('user_id', $membership_details->user_id)
-    //                     ->update([
-    //                         'membership_id' => $upgrade_membership_id,
-    //                         'payment_status' => 'complete',
-    //                         'status' => 1,
-    //                         'transaction_id' => $transaction_id,
-    //                         'expire_date' => $expire_date,
-    //                         'profile_limit' => $new_membership->profile_limit,
-    //                         'initial_listing_limit' => $new_membership->listing_limit,
-    //                         'listing_limit' => $new_membership->listing_limit,
-    //                         'price' => $new_membership->price,
-    //                     ]);
-    //             }
-    //         }
-
-    //         // Rest of your BV points distribution code remains the same
-    //         if ($new_membership) {
-    //             $usersBv = UsersBV::create([
-    //                 'user_id' => $membership_details->user_id,
-    //                 'membership_id' => $upgrade_membership_id,
-    //                 'bv_points' => $new_membership->bv_points ?? 0,
-    //                 'upgrade_time' => Carbon::now(),
-    //             ]);
-
-    //             $user = User::find($membership_details->user_id);
-    //             $bvService = new BVDistributionService();
-    //             $bvService->distributeBVPoints($user, $usersBv->bv_points, $upgrade_membership_id, $membership_details->user_id);
-    //         }
-
-    //         AdminNotification::create([
-    //             'identity' => $last_membership_id,
-    //             'user_id' => $membership_details->user_id,
-    //             'type' => __('Buy Membership'),
-    //             'message' => __('User membership purchase'),
-    //         ]);
-
-    //         session()->forget(['order_id', 'membership_history_id', 'upgrade_membership_id']);
-    //     } catch (\Exception $e) {
-    //         Log::error('Failed to update membership: ' . $e->getMessage());
-    //     }
-    // }
-
     private function update_database($last_membership_id, $transaction_id, $membership_history_id, $upgrade_membership_id)
     {
         try {
-            $last_membership_id = (int) $last_membership_id;
-            $membership_history_id = (int) $membership_history_id;
-
-            $membership_details = UserMembership::with('membership')->find($last_membership_id);
-            $membership_history = MembershipHistory::find($membership_history_id);
-
-            if (!$membership_details) {
-                throw new \Exception("Membership not found for ID: $last_membership_id");
-            }
-
-            // Fallback: Get upgrade_membership_id from the user record
-            if (!$upgrade_membership_id) {
-                $upgrade_membership_id = $membership_details->membership_id;
-                Log::info('Fallback: upgrade_membership_id was null, using membership_id from user record', [
-                    'used_membership_id' => $upgrade_membership_id
-                ]);
-            }
-
-            // Fetch new membership details
-            $new_membership = Membership::find($upgrade_membership_id);
-            if (!$new_membership) {
-                throw new \Exception("New membership not found for ID: $upgrade_membership_id");
-            }
-
-            // Set common fields
-            $baseData = [
-                'membership_id' => $upgrade_membership_id,
-                'payment_status' => 'complete',
-                'status' => 1,
-                'transaction_id' => $transaction_id,
-                'profile_limit' => $new_membership->profile_limit,
-                'initial_listing_limit' => $new_membership->listing_limit,
-                'listing_limit' => $new_membership->listing_limit,
-                'price' => $new_membership->price,
-            ];
-
-            // MATRIMONY MEMBERSHIP (Category = 1)
-            if ($new_membership->category == 1) {
-                $expire_date = Carbon::now()->addDays(30);
-                $baseData['expire_date'] = $expire_date;
-
-                // Check if matrimony membership already exists
-                $matrimonyMembership = UserMembership::where('user_id', $membership_details->user_id)
-                    ->whereHas('membership', fn($q) => $q->where('category', 1))
-                    ->first();
-
-                if ($matrimonyMembership) {
-                    $matrimonyMembership->update($baseData);
-                } else {
-                    $baseData['user_id'] = $membership_details->user_id;
-                    UserMembership::create($baseData);
-                }
-
-                // NORMAL MEMBERSHIP
-            } else {
-                $expire_date = Carbon::now()->addDays(
-                    Carbon::parse($membership_details->expire_date)->diffInDays(Carbon::now()) +
-                    Carbon::parse(optional($membership_history)->expire_date)->diffInDays(Carbon::now())
-                );
-                $baseData['expire_date'] = $expire_date;
-
-                // Always update the current normal membership row (same as original $last_membership_id)
-                UserMembership::where('id', $last_membership_id)
-                    ->where('user_id', $membership_details->user_id)
-                    ->update($baseData);
-            }
-
-            // Update Membership History as well
-            if ($membership_history) {
-                MembershipHistory::where('id', $membership_history_id)
-                    ->where('user_id', $membership_details->user_id)
-                    ->update([
-                        'payment_status' => 'complete',
-                        'status' => 1,
-                        'transaction_id' => $transaction_id,
-                        'profile_limit' => $new_membership->profile_limit,
-                    ]);
-            }
-
-            // BV POINTS Distribution
-            $usersBv = UsersBV::create([
-                'user_id' => $membership_details->user_id,
-                'membership_id' => $upgrade_membership_id,
-                'bv_points' => $new_membership->bv_points ?? 0,
-                'upgrade_time' => Carbon::now(),
-            ]);
-
-            $user = User::find($membership_details->user_id);
-            $bvService = new BVDistributionService();
-            $bvService->distributeBVPoints($user, $usersBv->bv_points, $upgrade_membership_id, $membership_details->user_id);
-
-            // Admin Notification
-            AdminNotification::create([
-                'identity' => $last_membership_id,
-                'user_id' => $membership_details->user_id,
-                'type' => __('Buy Membership'),
-                'message' => __('User membership purchase'),
-            ]);
+            $membershipService = new MembershipService();
+            $membershipService->updateMembership(
+                $last_membership_id,
+                $transaction_id,
+                $membership_history_id,
+                $upgrade_membership_id
+            );
 
             session()->forget(['order_id', 'membership_history_id', 'upgrade_membership_id']);
-
         } catch (\Exception $e) {
             Log::error('Failed to update membership: ' . $e->getMessage());
+            throw $e;
         }
     }
 }

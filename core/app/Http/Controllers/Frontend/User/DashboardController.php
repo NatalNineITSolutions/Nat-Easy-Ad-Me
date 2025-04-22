@@ -19,6 +19,7 @@ use App\Models\Backend\IdentityVerification;
 use Carbon\Carbon;
 use App\Models\UserPayoutDetail;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Modules\Membership\app\Models\UserMembership;
 
 class DashboardController extends Controller
 {
@@ -37,6 +38,7 @@ class DashboardController extends Controller
             'leftChild.userBvs',
             'rightChild.userBvs'
         ])->findOrFail($user_id);
+        $membership = UserMembership::where('user_id', $user_id)->first();
 
         $current_membership = optional($user->membershipUser);
         $previous_membership = $user->membershipHistory()->latest('created_at')->first();
@@ -55,8 +57,10 @@ class DashboardController extends Controller
         $user_given_reviews = Review::where('reviewer_id', $user_id)->take(500)->get();
         $age = $user->dob ? now()->diffInYears($user->dob) : null;
 
-        // BV and BP configuration
-        $bvvalue = get_static_option('payout_value') ?? 0;
+        // $bvvalue = get_static_option('payout_value') ?? 0;
+        $bvvalue = ($membership && $membership->category == 1)
+            ? get_static_option('matrimony_bv_value') ?? 0
+            : get_static_option('payout_value') ?? 0;
         $bpConversionRate = get_static_option('bp_value') ?? 1;
         $sealingLimit = get_static_option('sealing_limit') ?? 1;
 

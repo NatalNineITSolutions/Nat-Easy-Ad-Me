@@ -7,7 +7,15 @@ use Illuminate\Http\Request;
 use Modules\Membership\app\Models\Membership;
 use Illuminate\Support\Facades\DB;
 use App\Services\RazorpayService;
-
+use Illuminate\Support\Facades\Log;
+use Modules\Membership\app\Models\MembershipHistory;
+use App\Services\BVDistributionService;
+use Illuminate\Support\Carbon;
+use App\Services\MembershipService;
+use Modules\Membership\app\Models\UserMembership;
+use App\Models\User;
+use App\Models\UsersBV;
+use App\Models\Backend\AdminNotification;
 class MembershipApiController extends Controller
 {
     public function getMembershipsByCategory(Request $request)
@@ -133,4 +141,40 @@ class MembershipApiController extends Controller
 
         return DB::table('user_memberships')->where('user_id', $userId)->latest('id')->first();
     }
+
+    public function handlePaymentSuccess($user_membership_id, $transaction_id, $membership_history_id, $upgrade_membership_id)
+    {
+        try {
+            $service = new MembershipService();
+            $result = $service->updateMembership(
+                $user_membership_id,
+                $transaction_id,
+                $membership_history_id,
+                $upgrade_membership_id
+            );
+
+            return $result;
+        } catch (\Exception $e) {
+            Log::error('Failed to update membership database: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    // private function updateDatabase($user_membership_id, $transaction_id, $membership_history_id, $upgrade_membership_id)
+    // {
+    //     try {
+    //         $service = new MembershipService();
+    //         $result = $service->updateMembership(
+    //             $user_membership_id,
+    //             $transaction_id,
+    //             $membership_history_id,
+    //             $upgrade_membership_id
+    //         );
+
+    //         return $result;
+    //     } catch (\Exception $e) {
+    //         Log::error('Failed to update membership database: ' . $e->getMessage());
+    //         throw $e;
+    //     }
+    // }
 }

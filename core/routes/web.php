@@ -30,6 +30,10 @@ Route::get('/razorpay-checkout', function () {
     return view('razorpay-checkout');
 })->name('razorpay.checkout');  // Add this name
 
+Route::get('/payment-success', function () {
+    return view('payment-success');
+}) ->name('payment.success');
+
 Route::group(['middleware' => ['globalVariable', 'setlang']], function () {
     Route::controller(LoginController::class)->group(function () {
         Route::get('/admin', 'showLoginForm')->name('admin.login');

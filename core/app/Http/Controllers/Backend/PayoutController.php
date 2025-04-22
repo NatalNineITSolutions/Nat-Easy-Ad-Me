@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\UsersBV;
 use App\Models\IncomePayoutManage;
 use Carbon\Carbon;
+use App\Models\UserPayoutDetail;
 
 class PayoutController extends Controller
 {
@@ -92,6 +93,54 @@ class PayoutController extends Controller
         return redirect()->route('payout.settings')->with('success', __('Payout settings updated successfully!'));
     }
 
+    // public function userBvReferrals(Request $request)
+    // {
+    //     $payoutMethod = get_static_option('payout_method');
+    //     $payoutValue = get_static_option('payout_value');
+    //     $selectedDate = $request->input('filter_date', null);
+
+    //     $eligibleParents = User::select('parent_id')
+    //         ->groupBy('parent_id')
+    //         ->havingRaw('COUNT(CASE WHEN position = "left" THEN 1 END) > 0')
+    //         ->havingRaw('COUNT(CASE WHEN position = "right" THEN 1 END) > 0')
+    //         ->pluck('parent_id');
+
+    //     $users = User::whereIn('id', $eligibleParents)
+    //         ->select('id', 'first_name', 'last_name', 'partner_id')
+    //         ->with('descendants')
+    //         ->get()
+    //         ->map(function ($user) use ($payoutMethod, $payoutValue, $selectedDate) {
+    //             $user->total_referrals = $this->countTotalReferrals($user);
+
+    //             $bvQuery = UsersBv::where('user_id', $user->id);
+
+    //             if ($selectedDate) {
+    //                 $bvQuery->whereDate('upgrade_time', $selectedDate);
+    //             }
+
+    //             $user->bv_points = $bvQuery->sum('bv_points');
+
+    //             if ($payoutMethod === 'amount') {
+    //                 $user->payout = $user->bv_points * $payoutValue;
+    //             } else {
+    //                 $user->payout = 0;
+    //             }
+
+    //             return $user;
+    //         })
+    //         ->when($selectedDate, function ($collection) {
+    //             return $collection->filter(function ($user) {
+    //                 return $user->bv_points > 0;
+    //             });
+    //         });
+
+    //     return view('backend.pages.payout-manage.payout-listing', compact('users', 'selectedDate'));
+    // }
+
+    /**
+     * Recursively count all descendants of a user
+     */
+
     public function userBvReferrals(Request $request)
     {
         $payoutMethod = get_static_option('payout_method');
@@ -104,29 +153,27 @@ class PayoutController extends Controller
             ->havingRaw('COUNT(CASE WHEN position = "right" THEN 1 END) > 0')
             ->pluck('parent_id');
 
+        // Get users only in payout manage table and eligible
         $users = User::whereIn('id', $eligibleParents)
+            ->whereIn('id', function ($query) {
+                $query->select('user_id')->from('user_payout_details');
+            })
             ->select('id', 'first_name', 'last_name', 'partner_id')
             ->with('descendants')
             ->get()
             ->map(function ($user) use ($payoutMethod, $payoutValue, $selectedDate) {
                 $user->total_referrals = $this->countTotalReferrals($user);
-
-                $bvQuery = UsersBv::where('user_id', $user->id);
-
-                if ($selectedDate) {
-                    $bvQuery->whereDate('upgrade_time', $selectedDate);
-                }
-
-                $user->bv_points = $bvQuery->sum('bv_points');
-
-                if ($payoutMethod === 'amount') {
-                    $user->payout = $user->bv_points * $payoutValue;
-                } else {
-                    $user->payout = 0;
-                }
-
+            
+                // Fetch payout detail for left_bv and right_bv
+                $payoutDetail = UserPayoutDetail::where('user_id', $user->id)->first();
+                $leftBv = $payoutDetail ? $payoutDetail->left_bv : 0;
+                $rightBv = $payoutDetail ? $payoutDetail->right_bv : 0;
+            
+                $user->bv_points = $leftBv + $rightBv; // Sum of left and right
+                $user->net_amount = $payoutDetail ? $payoutDetail->net_amount : 0;
+            
                 return $user;
-            })
+            })            
             ->when($selectedDate, function ($collection) {
                 return $collection->filter(function ($user) {
                     return $user->bv_points > 0;
@@ -136,9 +183,6 @@ class PayoutController extends Controller
         return view('backend.pages.payout-manage.payout-listing', compact('users', 'selectedDate'));
     }
 
-    /**
-     * Recursively count all descendants of a user
-     */
     private function countTotalReferrals(User $user)
     {
         $count = $user->children()->count();

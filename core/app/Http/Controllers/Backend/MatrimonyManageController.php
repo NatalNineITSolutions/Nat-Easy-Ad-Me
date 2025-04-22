@@ -24,11 +24,13 @@ class MatrimonyManageController extends Controller
         $request->validate([
             'price' => 'required|numeric|min:0',
             'bv' => 'required|numeric|min:0',
+            'matrimony_bv_value' => 'required|numeric|min:0',
         ]);
 
         // Store values in the `static_options` table
         set_static_option('matrimony_price', $request->price);
         set_static_option('matrimony_bv_points', $request->bv);
+        set_static_option('matrimony_bv_value', $request->matrimony_bv_value);
 
         return redirect()->back()->with('success', 'Settings updated successfully.');
     }

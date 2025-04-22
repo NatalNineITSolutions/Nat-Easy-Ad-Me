@@ -143,132 +143,79 @@ class MembershipApiController extends Controller
     }
 
     public function handlePaymentSuccess(Request $request)
-    {
-        $payment_id = $request->query('payment_id');
-        $order_id = $request->query('order_id');
-        $amount = $request->query('amount');
-        $membership_id = $request->query('membership_id');
-        $user_id = $request->query('user_id');
+{
+    $payment_id = $request->query('payment_id') ?? $request->query('razorpay_order_id');
+    $order_id = $request->query('order_id');
+    $amount = $request->query('amount');
+    $membership_id = $request->query('membership_id');
+    $user_id = $request->query('user_id');
 
-        try {
-            // First create/update the basic records
-            $membership_history = MembershipHistory::updateOrCreate(
-                ['transaction_id' => $order_id],
-                [
-                    'user_id' => $user_id,
-                    'membership_id' => $membership_id,
-                    'amount' => $amount,
-                    'payment_id' => $payment_id,
-                    'payment_status' => 'completed',
-                    'status' => 1,
-                    'updated_at' => now()
-                ]
-            );
-
-            $user_membership = UserMembership::updateOrCreate(
-                ['user_id' => $user_id, 'membership_id' => $membership_id],
-                [
-                    'price' => $amount,
-                    'payment_status' => 'completed',
-                    'transaction_id' => $payment_id,
-                    'status' => 1,
-                    'expire_date' => now()->addMonth(),
-                    'updated_at' => now()
-                ]
-            );
-
-            // Now call the comprehensive update
-            $this->updateDatabase(
-                $user_membership->id,
-                $payment_id,
-                $membership_history->id,
-                $membership_id
-            );
-
-            return view('payment-success', [
-                'payment_id' => $payment_id,
-                'order_id' => $order_id,
-                'amount' => $amount,
+    try {
+        // 1. Update or create membership history
+        $membership_history = MembershipHistory::updateOrCreate(
+            ['transaction_id' => $payment_id],
+            [
+                'user_id' => $user_id,
                 'membership_id' => $membership_id,
-                'user_id' => $user_id
-            ]);
-
-        } catch (\Exception $e) {
-            Log::error('Payment processing failed: ', [
-                'error' => $e->getMessage(),
+                'amount' => $amount,
                 'payment_id' => $payment_id,
-                'user_id' => $user_id
-            ]);
+                'payment_status' => 'completed',
+                'status' => 1,
+                'updated_at' => now()
+            ]
+        );
 
-            return view('payment-error', [
-                'error' => 'Payment processing failed',
-                'message' => $e->getMessage()
-            ]);
+        // 2. Find existing user membership by user_id only
+        $user_membership = UserMembership::where('user_id', $user_id)->first();
+
+        $updateData = [
+            'membership_id' => $membership_id, // Update membership_id if different
+            'price' => $amount,
+            'payment_status' => 'completed',
+            'transaction_id' => $payment_id,
+            'status' => 1,
+            'expire_date' => now()->addMonth(),
+            'updated_at' => now()
+        ];
+
+        if ($user_membership) {
+            $user_membership->update($updateData);
+        } else {
+            // If no existing record for user, create new
+            $updateData['user_id'] = $user_id;
+            $user_membership = UserMembership::create($updateData);
         }
+
+        // 3. Call MembershipService for further processing
+        $membershipService = new MembershipService();
+        $membershipService->updateMembership(
+            $user_membership->id,
+            $payment_id,
+            $membership_history->id,
+            $membership_id
+        );
+
+        return view('payment-success', [
+            'payment_id' => $payment_id,
+            'order_id' => $order_id,
+            'amount' => $amount,
+            'membership_id' => $membership_id,
+            'user_id' => $user_id
+        ]);
+
+    } catch (\Exception $e) {
+        Log::error('Payment processing failed: ', [
+            'error' => $e->getMessage(),
+            'payment_id' => $payment_id,
+            'user_id' => $user_id
+        ]);
+
+        return view('payment-error', [
+            'error' => 'Payment processing failed',
+            'message' => $e->getMessage()
+        ]);
     }
+}
 
-    // private function updateDatabase($user_membership_id, $transaction_id, $membership_history_id, $upgrade_membership_id)
-    // {
-    //     try {
-    //         $service = new MembershipService();
-    //         $result = $service->updateMembership(
-    //             $user_membership_id,
-    //             $transaction_id,
-    //             $membership_history_id,
-    //             $upgrade_membership_id
-    //         );
-
-    //         return $result;
-    //     } catch (\Exception $e) {
-    //         Log::error('Failed to update membership database: ' . $e->getMessage());
-    //         throw $e;
-    //     }
-    // }
-
-    private function updateDatabase($user_membership_id, $transaction_id, $membership_history_id, $upgrade_membership_id)
-    {
-        try {
-
-            // Update or create the MembershipHistory record
-            $membership_history = MembershipHistory::updateOrCreate(
-                ['transaction_id' => $transaction_id],  // Match on the transaction_id or any unique field
-                [
-                    'user_id' => auth()->id(), // Assuming you have the user_id available
-                    'membership_id' => $upgrade_membership_id,
-                    'payment_status' => 'completed',
-                    'status' => 1,
-                    'updated_at' => now(),
-                ]
-            );
-
-            // Update or create the UserMembership record
-            $user_membership = UserMembership::updateOrCreate(
-                ['user_id' => auth()->id(), 'membership_id' => $upgrade_membership_id],  // Match on user_id and membership_id
-                [
-                    'price' => $membership_history->amount, // Set appropriate amount if needed
-                    'payment_status' => 'completed',
-                    'transaction_id' => $transaction_id,
-                    'status' => 1,
-                    'expire_date' => now()->addMonth(),  // Assuming 1 month expiration
-                    'updated_at' => now(),
-                ]
-            );
-
-            // Call the MembershipService to perform further updates
-            $membershipService = new MembershipService();
-            $result = $membershipService->updateMembership(
-                $user_membership->id,
-                $transaction_id,
-                $membership_history->id,
-                $upgrade_membership_id
-            );
-
-            return $result;
-            
-        } catch (\Exception $e) {
-            Log::error('Failed to update membership database: ' . $e->getMessage());
-            throw $e;
-        }
-    }
 
 }

@@ -335,4 +335,4 @@ class BuyMembershipIPNController extends Controller
             throw $e;
         }
     }
-}
+} 

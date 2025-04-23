@@ -110,23 +110,17 @@ class MLMController extends Controller
 
                 // Generate unique partner ID
                 do {
-                    $year = now()->format('Y');
-                    $month = now()->format('n');
-                    $dateCode = $year . $month;
+                    $dateCode = now()->format('Yn');
                     $randomDigits = rand(1000, 99999);
                     $partnerId = 'GL' . $dateCode . $randomDigits;
                 } while (User::where('partner_id', $partnerId)->exists());
 
                 $partnerName = 'EASYADME-' . strtoupper($request->first_name);
 
-                // Get sponsor and position from URL
-                $placement_id = $request->input('sponsor');
-                $parent_id = $placement_id;
-                $position = $request->input('position');
                 $sponsor_id = auth()->id();
+                $position = $request->input('position');
 
-                Log::info('Creating user under sponsor.', [
-                    'placement_id' => $placement_id,
+                Log::info('Creating user.', [
                     'sponsor_id' => $sponsor_id,
                     'position' => $position
                 ]);
@@ -135,7 +129,6 @@ class MLMController extends Controller
                 $membership_id = $default_membership ? $default_membership->id : 1;
                 $bv_points = $default_membership ? $default_membership->bv_points : 0;
 
-                // Prepare user object (not saved yet)
                 $user = new User([
                     'first_name' => $request->first_name,
                     'last_name' => $request->last_name,
@@ -147,25 +140,13 @@ class MLMController extends Controller
                     'email_verify_token' => $email_verify_token,
                     'partner_id' => $partnerId,
                     'partner_name' => $partnerName,
-                    'parent_id' => $parent_id,
-                    'placement_id' => $placement_id,
                     'sponsor_id' => $sponsor_id,
                     'gender' => $request->gender,
                     'dob' => $request->dob,
                     'position' => $position,
                 ]);
 
-                // Use nested set or normal save
-                if ($placement_id) {
-                    $parent = User::find($placement_id);
-                    if ($parent) {
-                        $parent->appendNode($user); // saves $user automatically
-                    } else {
-                        $user->saveAsRoot(); // fallback
-                    }
-                } else {
-                    $user->saveAsRoot();
-                }
+                $user->saveAsRoot(); // Always save as root now
 
                 UsersBv::create([
                     'user_id' => $user->id,
@@ -197,4 +178,5 @@ class MLMController extends Controller
 
         return view('frontend.user.genology.add-member');
     }
+
 }

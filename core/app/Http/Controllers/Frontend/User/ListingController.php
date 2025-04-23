@@ -84,14 +84,20 @@ class ListingController extends Controller
 
 
                     // check user membership all listing limit
-                    if ($user_membership->listing_limit == 0 && $user_membership->expire_date <= Carbon::now()) {
-                        session()->flash('message', __('Your Membership is expired'));
-                        return redirect()->back();
-                    } elseif ($user_membership->listing_limit === 0) {
-                        toastr_error(__('Your membership listing limit is over!. please renew it'));
-                        return redirect()->back();
-                    } elseif ($user_membership->expire_date <= Carbon::now()) {
-                        toastr_error(__('Your Membership is expired'));
+                    // if ($user_membership->listing_limit == 0 && $user_membership->expire_date <= Carbon::now()) {
+                    //     session()->flash('message', __('Your Membership is expired'));
+                    //     return redirect()->back();
+                    // } elseif ($user_membership->listing_limit === 0) {
+                    //     toastr_error(__('Your membership listing limit is over!. please renew it'));
+                    //     return redirect()->back();
+                    // } elseif ($user_membership->expire_date <= Carbon::now()) {
+                    //     toastr_error(__('Your Membership is expired'));
+                    //     return redirect()->back();
+                    // 
+
+                    // Only check listing limit
+                    if ($user_membership->listing_limit === 0) {
+                        toastr_error(__('Your membership listing limit is over! Please renew or upgrade your plan.'));
                         return redirect()->back();
                     }
 

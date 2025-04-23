@@ -177,14 +177,14 @@
                             </div>
 
                             <!-- @if(get_static_option('site_google_captcha_enable') == 'on')
-                                                                <div class="col-md-12 my-3">
-                                                                    <div class="g-recaptcha" data-sitekey="{{ get_static_option('recaptcha_2_site_key')}}">
-                                                                    </div>
-                                                                    @if ($errors->has('g-recaptcha-response'))
-                                                                        <span class="text-danger">{{ $errors->first('g-recaptcha-response') }}</span>
-                                                                    @endif
-                                                                </div>
-                                                            @endif -->
+                                                                        <div class="col-md-12 my-3">
+                                                                            <div class="g-recaptcha" data-sitekey="{{ get_static_option('recaptcha_2_site_key')}}">
+                                                                            </div>
+                                                                            @if ($errors->has('g-recaptcha-response'))
+                                                                                <span class="text-danger">{{ $errors->first('g-recaptcha-response') }}</span>
+                                                                            @endif
+                                                                        </div>
+                                                                    @endif -->
 
                             <div class="col-sm-12 mt-2">
                                 <div class="btn-wrapper text-center">
@@ -335,8 +335,24 @@
                                 type: "GET",
                                 success: function (response) {
                                     if (response.success) {
-                                        $("#partner_id").val(response.partner_id);
-                                        $("#partner_name").val(response.partner_name);
+                                        // Verify this partner ID exists in admin table
+                                        $.ajax({
+                                            url: "{{ route('verify.admin.partner.id') }}",
+                                            type: "POST",
+                                            data: {
+                                                partner_id: response.partner_id,
+                                                _token: "{{ csrf_token() }}"
+                                            },
+                                            success: function (adminResponse) {
+                                                if (adminResponse.exists) {
+                                                    $("#partner_id").val(response.partner_id);
+                                                    $("#partner_name").val(response.partner_name);
+                                                } else {
+                                                    $("#partner_data").prop("checked", false);
+                                                    toastr_warning_js("Admin partner ID not found");
+                                                }
+                                            }
+                                        });
                                     }
                                 },
                                 error: function (xhr) {
@@ -374,8 +390,24 @@
                                     $('#partner_name').val(response.partner_name);
                                     $('#partner_id_status').text('Partner ID verified ✅').css('color', 'green');
                                 } else {
-                                    $('#partner_name').val('');
-                                    $('#partner_id_status').text(response.message).css('color', 'red');
+                                    // Also check admin table if not found in users
+                                    $.ajax({
+                                        url: "{{ route('verify.admin.partner.id') }}",
+                                        type: "POST",
+                                        data: {
+                                            partner_id: partnerId,
+                                            _token: "{{ csrf_token() }}"
+                                        },
+                                        success: function (adminResponse) {
+                                            if (adminResponse.exists) {
+                                                $('#partner_name').val(adminResponse.partner_name || 'Admin Partner');
+                                                $('#partner_id_status').text('Admin Partner ID verified ✅').css('color', 'green');
+                                            } else {
+                                                $('#partner_name').val('');
+                                                $('#partner_id_status').text('Partner ID not found').css('color', 'red');
+                                            }
+                                        }
+                                    });
                                 }
                             },
                             error: function () {

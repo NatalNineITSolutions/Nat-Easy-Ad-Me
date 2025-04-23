@@ -18,6 +18,7 @@ use Modules\CountryManage\app\Models\State;
 use App\Models\Backend\IdentityVerification;
 use Carbon\Carbon;
 use App\Models\UserPayoutDetail;
+use App\Models\Backend\Admin;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Modules\Membership\app\Models\UserMembership;
 
@@ -68,8 +69,6 @@ class DashboardController extends Controller
         $leftBvPoints = $user->leftChild ? $user->leftChild->userBvs->sum('bv_points') : 0;
         $rightBvPoints = $user->rightChild ? $user->rightChild->userBvs->sum('bv_points') : 0;
 
-
-
         $sealingLimitBv = $sealingLimit * $bpConversionRate;
 
         // Step 1: Deduct one sealing limit if both sides meet it
@@ -115,10 +114,19 @@ class DashboardController extends Controller
         $referralCommission = $referralCommissionRate;
 
         // Self purchased BV
-        $selfPurchasedBv = $current_membership->id ? ($current_membership->membership->bv_points ?? 0) : 0;
+        $selfPurchasedBv = $user->self_purchased_bv ?? 0;
 
         // Calculate BV points
         $directReferralsCount = $user->children()->count();
+
+        if ($user->sponsor) {
+            $referredBy = $user->sponsor->partner_name ?? 'Unknown';
+            $referredById = $user->sponsor->partner_id ?? '';
+        } else {
+            $admin = Admin::first(); // You can customize which admin to use
+            $referredBy = $admin ? $admin->partner_name : 'Admin';
+            $referredById = $admin ? $admin->partner_id ?? '' : ''; // or 'admin_id' if exists
+        }   
 
         // Return the view with updated data
         return view('frontend.user.dashboard.dashboard', [
@@ -156,6 +164,8 @@ class DashboardController extends Controller
             'sealingLimitBv' => $sealingLimitBv,
             'flushedLeft' => $flushedLeft,
             'flushedRight' => $flushedRight,
+            'referredBy' => $referredBy,
+            'referredById' => $referredById,
         ]);
     }
 

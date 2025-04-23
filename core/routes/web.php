@@ -74,6 +74,7 @@ Route::group(['middleware' => ['globalVariable', 'maintains_mode', 'setlang']], 
         Route::match(['get', 'post'], 'email-verify', 'emailVerify')->name('email.verify')->middleware('auth:web');
         Route::get('resend-verify-code-again', 'resendCode')->name('resend.verify.code')->middleware('auth:web');
         Route::get('partner-data-availability', 'partnerAvailability')->name('partner.data.availability');
+        Route::post('verify-admin-partner-id', 'verifyAdminPartnerId')->name('verify.admin.partner.id');
         Route::post('verify-partner-id', 'partneridAvailability')->name('verify.partner.id');
     });
 

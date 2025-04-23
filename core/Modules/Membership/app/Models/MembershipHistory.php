@@ -29,17 +29,21 @@ class MembershipHistory extends Model
         'payment_status',
         'transaction_id',
         'manual_payment_image',
-        'status'
+        'status',
+        'title'
     ];
 
-    protected $casts = ['status'=>'integer'];
+    protected $casts = ['status' => 'integer'];
 
-    public function membership(){
-        return $this->belongsTo(Membership::class,'membership_id','id');
+    public function membership()
+    {
+        return $this->belongsTo(Membership::class, 'membership_id', 'id');
     }
 
-    public function user(){
-        return $this->belongsTo(User::class,'user_id','id');
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
 }

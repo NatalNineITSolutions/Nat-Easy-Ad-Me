@@ -122,14 +122,12 @@
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('Referred by:') }}</span>
                                                     <span class="stat-value">
-                                                        {{ $user->sponsor->fullname ?? 'N/A' }}
-                                                        ({{ $user->sponsor->partner_id ?? '' }})
+                                                        {{ $referredBy }}{{ $referredById ? ' (' . $referredById . ')' : '' }}
                                                     </span>
                                                 </div>
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('My Referrals:') }}</span>
-                                                    <span
-                                                        class="stat-value">{{ $directReferralsCount }}</span>
+                                                    <span class="stat-value">{{ $directReferralsCount }}</span>
                                                 </div>
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('BV from Referrals:') }}</span>
@@ -141,32 +139,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <!-- <div class="stats-card">
-                                            <h4 class="stats-title">{{ __('Business') }}</h4>
-                                            <div class="stats-content">
-                                                <div class="stat-item">
-                                                    <span class="stat-label">{{ __('Status:') }}</span>
-                                                    <span class="stat-value">DISTRIBUTOR</span>
-                                                </div>
-                                                <div class="stat-item">
-                                                    <span class="stat-label">{{ __('Self Purchase BV:') }}</span>
-                                                    <span class="stat-value">{{$selfPurchasedBv}}</span>
-                                                </div>
-                                                <div class="stat-item">
-                                                    <span class="stat-label">{{ __('Team BV Left:') }}</span>
-                                                    <span class="stat-value">{{ number_format($leftBvPoints) }}</span>
-                                                </div>
-                                                <div class="stat-item">
-                                                    <span class="stat-label">{{ __('Team BV Right:') }}</span>
-                                                    <span class="stat-value">{{ $rightBvPoints ?? 0 }}</span>
-                                                </div>
-                                                <div class="stat-item">
-                                                    <span class="stat-label">{{ __('Business Points(BP):') }}</span>
-                                                    <span class="stat-value">{{ $businesspoint }}</span>
-                                                </div>
-                                            </div>
-                                        </div> -->
 
                                         <div class="stats-card">
                                             <h4 class="stats-title">{{ __('Business') }}</h4>
@@ -185,7 +157,7 @@
                                                     <span class="stat-label">{{ __('Team BV Left:') }}</span>
                                                     <div class="stat-value-group">
                                                         <span
-                                                            class="stat-value">{{ number_format($remainingLeftBv) }}</span>
+                                                            class="stat-value">{{ number_format($leftBvPoints) }}</span>
                                                     </div>
                                                 </div>
 
@@ -194,10 +166,10 @@
                                                     <span class="stat-label">{{ __('Team BV Right:') }}</span>
                                                     <div class="stat-value-group">
                                                         <span
-                                                            class="stat-value">{{ number_format($remainingRightBv) }}</span>
+                                                            class="stat-value">{{ number_format($rightBvPoints) }}</span>
                                                     </div>
-                                                </div> 
-                                                
+                                                </div>
+
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('Commission Value (CV):') }}</span>
                                                     <span class="stat-value">{{ $balancedBP }}</span>
@@ -276,7 +248,8 @@
                                         {{ __('My Team View') }}
                                     </a>
                                     <a href="{{ route('user.genology') }}" class="genology">{{ __('Genology') }}</a>
-                                    <a href="{{ route('user.referral.view', auth()->user()->id) }}" class="referral">{{ __('My Referral View') }}</a>
+                                    <a href="{{ route('user.referral.view', auth()->user()->id) }}"
+                                        class="referral">{{ __('My Referral View') }}</a>
                                 </div>
                                 <!--All Reviews-->
                                 <div class="all-reviews box-shadow1 mt-20">

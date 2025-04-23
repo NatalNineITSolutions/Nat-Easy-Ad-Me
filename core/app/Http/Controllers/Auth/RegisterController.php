@@ -175,9 +175,20 @@ class RegisterController extends Controller
                 'country_code' => 'nullable|max:10',
                 'password' => 'required|min:6|max:191',
                 'confirm_password' => 'required|same:password',
-                'partner_id' => 'nullable|exists:users,partner_id',
+                'partner_id' => [
+                    'nullable',
+                    function ($attribute, $value, $fail) {
+                        // Check both users and admins tables
+                        $userExists = User::where('partner_id', $value)->exists();
+                        $adminExists = Admin::where('partner_id', $value)->exists();
+
+                        if (!$userExists && !$adminExists) {
+                            $fail('The selected partner Id is invalid.');
+                        }
+                    },
+                ],
                 'gender' => 'required|in:male,female',
-                'dob' => 'required|date|before:today',
+                'dob' => 'required|date|before:today|before:-18 years',
             ];
 
             if (get_static_option('site_google_captcha_enable') == 'on') {
@@ -199,17 +210,11 @@ class RegisterController extends Controller
                 }
 
                 // Generate a unique partner ID
-                // do {
-                //     $partnerId = 'EAM' . Str::upper(Str::random(6));
-                // } while (User::where('partner_id', $partnerId)->exists());
-
-                // Generate a unique partner ID with format: EAM + date (Y + m + d without leading zeros) + random 4-5 digit number
                 do {
-                    $year = now()->format('Y'); // 2025
-                    $month = now()->format('n'); // 4 (no leading zero)
-                    $dateCode = $year . $month; // 2025410
-
-                    $randomDigits = rand(1000, 99999); // 4-5 digit number
+                    $year = now()->format('Y');
+                    $month = now()->format('n');
+                    $dateCode = $year . $month;
+                    $randomDigits = rand(1000, 99999);
                     $partnerId = 'GL' . $dateCode . $randomDigits;
                 } while (User::where('partner_id', $partnerId)->exists());
 
@@ -218,78 +223,89 @@ class RegisterController extends Controller
                 $sponsor_id = null;
                 $parent_id = null;
                 $position = null;
+                $is_admin_partner = false;
 
                 if ($request->partner_id) {
-                    $partner = User::where('partner_id', $request->partner_id)
-                        ->orWhere('username', $request->partner_id)
-                        ->first();
+                    // First check if this is an admin's partner ID
+                    $adminPartner = Admin::where('partner_id', $request->partner_id)->first();
 
-                    if ($partner) {
-                        $sponsor_id = $partner->id; // Sponsor is always the person whose ID was used
-
-                        // Binary tree placement logic
-                        $placementFound = false;
-
-                        // First try direct placement under partner
-                        if (!$partner->children()->where('position', 'left')->exists()) {
-                            $parent_id = $partner->id;
-                            $position = 'left';
-                            $placementFound = true;
-                        } elseif (!$partner->children()->where('position', 'right')->exists()) {
-                            $parent_id = $partner->id;
-                            $position = 'right';
-                            $placementFound = true;
-                        }
-
-                        // If direct slots are full, find next available spot in Kavya's subtree
-                        if (!$placementFound) {
-                            // Get all of Kavya's descendants in level order
-                            $descendants = $partner->descendants()->with('children')->get();
-
-                            foreach ($descendants as $descendant) {
-                                if (!$descendant->children()->where('position', 'left')->exists()) {
-                                    $parent_id = $descendant->id;
-                                    $position = 'left';
-                                    $placementFound = true;
-                                    break;
-                                } elseif (!$descendant->children()->where('position', 'right')->exists()) {
-                                    $parent_id = $descendant->id;
-                                    $position = 'right';
-                                    $placementFound = true;
-                                    break;
-                                }
-                            }
-
-                            // If still no placement found (unlikely), place under first available spot in tree
-                            if (!$placementFound) {
-                                $firstAvailable = User::whereDoesntHave('children', function ($q) {
-                                    $q->where('position', 'left');
-                                })
-                                    ->orWhereDoesntHave('children', function ($q) {
-                                        $q->where('position', 'right');
-                                    })
-                                    ->first();
-
-                                if ($firstAvailable) {
-                                    $parent_id = $firstAvailable->id;
-                                    $position = !$firstAvailable->children()->where('position', 'left')->exists() ? 'left' : 'right';
-                                }
-                            }
-                        }
-
-                        Log::info('Referral details', [
-                            'entered_partner_id' => $request->partner_id,
-                            'sponsor_id' => $sponsor_id,
-                            'tree_parent_id' => $parent_id,
-                            'position' => $position
+                    if ($adminPartner) {
+                        $is_admin_partner = true;
+                        $sponsor_id = null; // Or set to admin's ID if needed
+                        Log::info('Admin partner used for registration', [
+                            'admin_partner_id' => $request->partner_id,
+                            'admin_id' => $adminPartner->id
                         ]);
+                    } else {
+                        // Check regular users
+                        $partner = User::where('partner_id', $request->partner_id)
+                            ->orWhere('username', $request->partner_id)
+                            ->first();
+
+                        if ($partner) {
+                            $sponsor_id = $partner->id;
+
+                            // Binary tree placement logic
+                            $placementFound = false;
+
+                            // First try direct placement under partner
+                            if (!$partner->children()->where('position', 'left')->exists()) {
+                                $parent_id = $partner->id;
+                                $position = 'left';
+                                $placementFound = true;
+                            } elseif (!$partner->children()->where('position', 'right')->exists()) {
+                                $parent_id = $partner->id;
+                                $position = 'right';
+                                $placementFound = true;
+                            }
+
+                            // If direct slots are full, find next available spot
+                            if (!$placementFound) {
+                                $descendants = $partner->descendants()->with('children')->get();
+
+                                foreach ($descendants as $descendant) {
+                                    if (!$descendant->children()->where('position', 'left')->exists()) {
+                                        $parent_id = $descendant->id;
+                                        $position = 'left';
+                                        $placementFound = true;
+                                        break;
+                                    } elseif (!$descendant->children()->where('position', 'right')->exists()) {
+                                        $parent_id = $descendant->id;
+                                        $position = 'right';
+                                        $placementFound = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!$placementFound) {
+                                    $firstAvailable = User::whereDoesntHave('children', function ($q) {
+                                        $q->where('position', 'left');
+                                    })
+                                        ->orWhereDoesntHave('children', function ($q) {
+                                            $q->where('position', 'right');
+                                        })
+                                        ->first();
+
+                                    if ($firstAvailable) {
+                                        $parent_id = $firstAvailable->id;
+                                        $position = !$firstAvailable->children()->where('position', 'left')->exists() ? 'left' : 'right';
+                                    }
+                                }
+                            }
+
+                            Log::info('Referral details', [
+                                'entered_partner_id' => $request->partner_id,
+                                'sponsor_id' => $sponsor_id,
+                                'tree_parent_id' => $parent_id,
+                                'position' => $position
+                            ]);
+                        }
                     }
                 }
 
                 $default_membership = Membership::find(1);
                 $membership_id = $default_membership ? $default_membership->id : 1;
                 $bv_points = $default_membership ? $default_membership->bv_points : 0;
-                $sponsor = User::where('partner_id', $request->partner_id)->first();
 
                 $user = new User([
                     'first_name' => $request->first_name,
@@ -302,12 +318,12 @@ class RegisterController extends Controller
                     'email_verify_token' => $email_verify_token,
                     'partner_id' => $partnerId,
                     'partner_name' => $partnerName,
-                    'sponsor_id' => $sponsor_id,  // Track who referred this user
-                    'parent_id' => $parent_id,    // Binary tree parent
-                    'position' => $position,     // Left/right position
+                    'sponsor_id' => $sponsor_id,
+                    'parent_id' => $parent_id,
+                    'position' => $position,
                     'gender' => $request->gender,
                     'dob' => $request->dob,
-                    'sponsor_id' => $sponsor->id,
+                    'is_admin_partner' => $is_admin_partner,
                 ]);
 
                 // Save the user within the nested set structure
@@ -327,8 +343,8 @@ class RegisterController extends Controller
                     'upgrade_time' => now(),
                 ]);
 
-                // Add commission to sponsor (not necessarily the binary parent)
-                if ($sponsor_id) {
+                // Add commission to sponsor (if not admin partner)
+                if ($sponsor_id && !$is_admin_partner) {
                     $referrer = User::find($sponsor_id);
                     if ($referrer) {
                         $referrer->bv_points += $bv_points;
@@ -382,6 +398,20 @@ class RegisterController extends Controller
         }
 
         return view('frontend.user.user-register');
+    }
+
+    public function verifyAdminPartnerId(Request $request)
+    {
+        $request->validate([
+            'partner_id' => 'required|string'
+        ]);
+
+        // Check if partner_id exists in admin table
+        $exists = Admin::where('partner_id', $request->partner_id)->exists();
+
+        return response()->json([
+            'exists' => $exists
+        ]);
     }
 
     public function emailVerify(Request $request)

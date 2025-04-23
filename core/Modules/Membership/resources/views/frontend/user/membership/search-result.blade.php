@@ -11,7 +11,7 @@
     <tbody>
     @foreach($all_memberships as $membership)
         <tr>
-            <td>{{ $membership->membership?->membership_type?->type }}</td>
+            <td>{{ $membership->title}}</td>
             <td>{{ float_amount_with_currency_symbol($membership->price) }}</td>
             <td>{{ $membership->created_at->format('Y-m-d') ?? '' }}</td>
             <td>
@@ -35,7 +35,7 @@
                    data-bs-toggle="modal"
                    data-bs-target="#user_membership_payment_history_modal"
                    data-membership_history_id="{{ $membership->id }}"
-                   data-membership_type="{{ $membership->membership?->membership_type?->type }}"
+                   data-membership_type="{{ $membership->title}}"
                    data-membership_purchase_date_history="{{ $membership->created_at->format('Y-m-d') ?? '' }}"
                    data-membership_expire_date_history="{{ Carbon\Carbon::parse($membership->expire_date)->format('Y-m-d') }}"
 

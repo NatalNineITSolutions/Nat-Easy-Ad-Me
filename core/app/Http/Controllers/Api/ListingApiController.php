@@ -399,7 +399,7 @@ class ListingApiController extends Controller
                 ], 403);
             }
 
-            if ($user_membership->listing_limit === 0 || $user_membership->expire_date <= Carbon::now()) {
+            if ($user_membership->listing_limit === 0) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Your membership listing limit is over or expired.'

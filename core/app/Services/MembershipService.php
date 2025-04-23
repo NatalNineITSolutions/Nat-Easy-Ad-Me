@@ -71,7 +71,7 @@ class MembershipService
                     UserMembership::create($baseData);
                 }
 
-                // NORMAL MEMBERSHIP
+            // NORMAL MEMBERSHIP
             } else {
                 $expire_date = Carbon::now()->addDays(
                     Carbon::parse($membership_details->expire_date)->diffInDays(Carbon::now()) +
@@ -79,13 +79,13 @@ class MembershipService
                 );
                 $baseData['expire_date'] = $expire_date;
 
-                // Always update the current normal membership row (same as original $last_membership_id)
+                // Always update the current normal membership row
                 UserMembership::where('id', $last_membership_id)
                     ->where('user_id', $membership_details->user_id)
                     ->update($baseData);
             }
 
-            // Update Membership History as well
+            // Update Membership History
             if ($membership_history) {
                 MembershipHistory::where('id', $membership_history_id)
                     ->where('user_id', $membership_details->user_id)
@@ -94,6 +94,7 @@ class MembershipService
                         'status' => 1,
                         'transaction_id' => $transaction_id,
                         'profile_limit' => $new_membership->profile_limit,
+                        'title' => $new_membership->title,
                     ]);
             }
 
@@ -106,6 +107,13 @@ class MembershipService
             ]);
 
             $user = User::find($membership_details->user_id);
+
+            // Update self_purchased_bv for the user
+            if ($new_membership->bv_points > 0) {
+                $user->self_purchased_bv += $new_membership->bv_points;
+                $user->save();
+            }
+
             $bvService = new BVDistributionService();
             $bvService->distributeBVPoints($user, $usersBv->bv_points, $upgrade_membership_id, $membership_details->user_id);
 

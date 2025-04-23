@@ -580,7 +580,7 @@ class BuyMembershipController extends Controller
                         $charge_customer_method_name = getChargeCustomerMethodNameByPaymentGatewayName($payment_gateway);
 
                         $custom_charge_customer_class_object = new $charge_customer_class_namespace;
-                        
+
                         if (class_exists($charge_customer_class_namespace) && method_exists($custom_charge_customer_class_object, $charge_customer_method_name)) {
                             return $custom_charge_customer_class_object->$charge_customer_method_name($custom_data);
                         } else {

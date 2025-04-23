@@ -16,6 +16,8 @@ use Modules\Membership\app\Models\UserMembership;
 use App\Models\User;
 use App\Models\UsersBV;
 use App\Models\Backend\AdminNotification;
+use Razorpay\Api\Api;
+
 class MembershipApiController extends Controller
 {
     public function getMembershipsByCategory(Request $request)
@@ -44,6 +46,9 @@ class MembershipApiController extends Controller
             'selected_payment_gateway' => 'required|string',
         ]);
 
+        $payment_status = $request->selected_payment_gateway === 'wallet' ? 'complete' : 'pending';
+        $status = $request->selected_payment_gateway === 'wallet' ? 1 : 0;
+
         $user = auth()->user();
         if (!$user) {
             return response()->json(['error' => 'User not authenticated'], 401);
@@ -54,6 +59,7 @@ class MembershipApiController extends Controller
             return response()->json(['error' => 'Membership not found'], 404);
         }
 
+
         if ($membership->category == 1 && $membership->membership_type_id == 4) {
             if ($membership->category_id !== 1) {
                 return response()->json(['error' => 'Invalid membership type for matrimony'], 400);
@@ -63,7 +69,37 @@ class MembershipApiController extends Controller
             $message = 'Membership added successfully.';
         }
 
-        $latest = $this->createUserMembership($user->id, $membership, $request->selected_payment_gateway);
+        if (!empty($membership)) {
+            // Create membership history
+            $new_membership_history = MembershipHistory::create([
+                'membership_id' => $membership->id,
+                'user_id' => $user->id,
+                'payment_status' => $payment_status,
+                'payment_gateway' => $request->selected_payment_gateway,
+                // 'expire_date' => $expire_date_for_user_exits_membership,
+                'listing_limit' => $membership->listing_limit,
+                'gallery_images' => $membership->gallery_images,
+                'featured_listing' => $membership->featured_listing,
+                'enquiry_form' => $membership->enquiry_form,
+                'business_hour' => $membership->business_hour,
+                'membership_badge' => $membership->membership_badge,
+                'price' => $membership->price,
+                'status' => $status,
+            ]);
+
+            $buy_membership = $new_membership_history;
+
+            // membership history ID in session
+            if ($new_membership_history) {
+                \Log::info('New membership history created', [
+                    'membership_history_id' => $new_membership_history->id,
+                    'user_id' => $user->id,
+                ]);
+               
+                $membershipHistoryId = $new_membership_history->id;
+                $upgradeMembershipId = $membership->id;
+            }
+        }
 
         // 🔐 Fetch gateway credentials from payment_gateways table
         $gateway = \DB::table('payment_gateways')->where('name', $request->selected_payment_gateway)->first();
@@ -91,12 +127,14 @@ class MembershipApiController extends Controller
                 'key' => $razorpayService->getKey(),
                 'membership_id' => $membership->id,
                 'user_id' => $user->id,
+                'membership_history_id' => $membershipHistoryId,
+                'upgrade_membership_id' => $upgradeMembershipId,
             ]);
 
             return response()->json([
                 'success' => true,
                 'message' => $message,
-                'membership' => $latest,
+                'membership' => $buy_membership,
                 'payment_url' => $paymentUrl,
                 'razorpay_order_id' => $razorpayOrder['id'],
                 'amount' => $membership->price,
@@ -109,113 +147,117 @@ class MembershipApiController extends Controller
         }
     }
 
-
-    private function createUserMembership($userId, $membership, $gateway)
-    {
-        $data = [
-            'user_id' => $userId,
-            'membership_id' => $membership->id,
-            'price' => $membership->price,
-            'listing_limit' => $membership->listing_limit,
-            'gallery_images' => $membership->gallery_images,
-            'featured_listing' => $membership->featured_listing,
-            'enquiry_form' => $membership->enquiry_form,
-            'business_hour' => $membership->business_hour,
-            'membership_badge' => $membership->membership_badge,
-            'initial_listing_limit' => $membership->listing_limit,
-            'initial_gallery_images' => $membership->gallery_images,
-            'initial_featured_listing' => $membership->featured_listing,
-            'initial_enquiry_form' => $membership->enquiry_form,
-            'initial_business_hour' => $membership->business_hour,
-            'initial_membership_badge' => $membership->membership_badge,
-            'profile_limit' => 0,
-            'expire_date' => now()->addMonths(1),
-            'payment_gateway' => $gateway,
-            'payment_status' => 'paid',
-            'status' => 1,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ];
-
-        DB::table('user_memberships')->insert($data);
-
-        return DB::table('user_memberships')->where('user_id', $userId)->latest('id')->first();
-    }
-
     public function handlePaymentSuccess(Request $request)
-{
-    $payment_id = $request->query('payment_id') ?? $request->query('razorpay_order_id');
-    $order_id = $request->query('order_id');
-    $amount = $request->query('amount');
-    $membership_id = $request->query('membership_id');
-    $user_id = $request->query('user_id');
+    {
+        $paymentId     = $request->query('payment_id');
+        $orderId       = $request->query('order_id');
+        $amount        = $request->query('amount');
+        $membershipId  = $request->query('membership_id');
+        $userId        = $request->query('user_id');
+        $signature     = $request->query('signature');
+        $membershipHistoryId = $request->query('membership_history_id');
+        $upgradeMembershipId = $request->query('upgrade_membership_id');
 
-    try {
-        // 1. Update or create membership history
-        $membership_history = MembershipHistory::updateOrCreate(
-            ['transaction_id' => $payment_id],
-            [
-                'user_id' => $user_id,
-                'membership_id' => $membership_id,
-                'amount' => $amount,
-                'payment_id' => $payment_id,
-                'payment_status' => 'completed',
-                'status' => 1,
-                'updated_at' => now()
-            ]
-        );
+        // 2. Initialize Razorpay API
+        \Log::info('Razorpay payment success', [
+            'payment_id' => $paymentId,
+            'order_id' => $orderId,
+            'amount' => $amount,
+            'membership_id' => $membershipId,
+            'user_id' => $userId,
+            'signature' => $signature,
+        ]);
 
-        // 2. Find existing user membership by user_id only
-        $user_membership = UserMembership::where('user_id', $user_id)->first();
-
-        $updateData = [
-            'membership_id' => $membership_id, // Update membership_id if different
-            'price' => $amount,
-            'payment_status' => 'completed',
-            'transaction_id' => $payment_id,
-            'status' => 1,
-            'expire_date' => now()->addMonth(),
-            'updated_at' => now()
-        ];
-
-        if ($user_membership) {
-            $user_membership->update($updateData);
-        } else {
-            // If no existing record for user, create new
-            $updateData['user_id'] = $user_id;
-            $user_membership = UserMembership::create($updateData);
+        $gateway = \DB::table('payment_gateways')->where('name', 'razorpay')->first();
+        if (!$gateway) {
+            return response()->json(['error' => 'Selected payment gateway not found.'], 404);
         }
 
-        // 3. Call MembershipService for further processing
-        $membershipService = new MembershipService();
-        $membershipService->updateMembership(
-            $user_membership->id,
-            $payment_id,
-            $membership_history->id,
-            $membership_id
-        );
+        $credentials = json_decode($gateway->credentials, true);
+        $apiKey = $credentials['api_key'] ?? null;
+        $apiSecret = $credentials['api_secret'] ?? null;
+        if (!$apiKey || !$apiSecret) {
+            return response()->json(['error' => 'Incomplete gateway credentials.'], 500);
+        }
 
-        return view('payment-success', [
-            'payment_id' => $payment_id,
-            'order_id' => $order_id,
-            'amount' => $amount,
-            'membership_id' => $membership_id,
-            'user_id' => $user_id
+        $api = new Api($apiKey, $apiSecret);
+
+        try {
+            $paymentData = $api->payment->fetch($paymentId)->toArray();
+        } catch (\Exception $e) {
+            Log::error('Error fetching Razorpay payment: ' . $e->getMessage());
+            return $this->cancel_page();
+        }
+
+        Log::info('Razorpay payment data', [
+            'payment_data' => $paymentData,
         ]);
 
-    } catch (\Exception $e) {
-        Log::error('Payment processing failed: ', [
-            'error' => $e->getMessage(),
-            'payment_id' => $payment_id,
-            'user_id' => $user_id
-        ]);
+        if (isset($paymentData['status']) && $paymentData['status'] === 'captured') {
+            // handle your “complete” flow
 
-        return view('payment-error', [
-            'error' => 'Payment processing failed',
-            'message' => $e->getMessage()
-        ]);
+            if (session('payment_type') === 'matrimony') {
+                $method = $paymentData['method'] ?? 'unknown';
+                $this->update_profile_listing($orderId, $method);
+                session()->forget('payment_type');
+
+                toastr_success(__('Profile On Review'));
+                return redirect()->route('matrimony.profile-listing');
+            }
+
+            $sessionUserId         = $userId;
+            $membershipHistoryId   = $membershipHistoryId;
+            $upgradeMembershipId   = $upgradeMembershipId;
+
+            \Log::info('Membership upgrade session data', [
+                'session_user_id'         => $sessionUserId,
+                'membership_history_id'   => $membershipHistoryId,
+                'upgrade_membership_id'   => $upgradeMembershipId,
+            ]);
+            // Fallback: if session didn't have it, pull from UserMembership
+            if (! $upgradeMembershipId && $orderId) {
+                $um = UserMembership::find($orderId);
+                if ($um) {
+                    $upgradeMembershipId = $um->membership_id;
+                    Log::info('Fallback upgrade_membership_id loaded from UserMembership', [
+                        'order_id'                   => $orderId,
+                        'fallback_membership_id'     => $upgradeMembershipId,
+                    ]);
+                }
+            }
+
+
+            $userMembershipExists = UserMembership::where('user_id', $sessionUserId)
+                ->latest('id')
+                ->first();
+
+            $lastMembershipId = $userMembershipExists->id;
+
+            $membershipService = new MembershipService();
+            $updated = $membershipService->update_database(
+                $lastMembershipId,
+                $paymentData['id'],   // razorpay transaction id
+                $membershipHistoryId,
+                $upgradeMembershipId
+            );
+
+            // $this->send_jobs_mail($orderId, $sessionUserId);
+
+            Log::info('Membership update result', [
+                'updated' => $updated,
+                'user_id' => $sessionUserId,
+                'membership_history_id' => $membershipHistoryId,
+                'upgrade_membership_id' => $upgradeMembershipId,
+            ]);
+
+            if ($updated) {
+                return view('payment-success');
+            }
+        }
     }
-}
 
-
+    protected function cancel_page()
+    {
+        return redirect()->route('membership.buy.payment.cancel.static');
+    }
 }

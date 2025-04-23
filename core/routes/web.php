@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\MembershipApiController;
 use App\Http\Controllers\Backend\AdminProfileController;
 use App\Http\Controllers\Common\GetCategoryController;
 use App\Http\Controllers\Common\NewTagAddController;
@@ -30,9 +31,11 @@ Route::get('/razorpay-checkout', function () {
     return view('razorpay-checkout');
 })->name('razorpay.checkout');  // Add this name
 
-Route::get('/payment-success', function () {
-    return view('payment-success');
-}) ->name('payment.success');
+// Route::get('/payment-success', function () {
+//     return view('payment-success');
+// }) ->name('payment.success');
+Route::get('/payment-success', [MembershipApiController::class, 'handlePaymentSuccess'])
+    ->name('payment.success');
 
 Route::group(['middleware' => ['globalVariable', 'setlang']], function () {
     Route::controller(LoginController::class)->group(function () {

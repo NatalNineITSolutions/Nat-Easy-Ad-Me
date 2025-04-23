@@ -322,7 +322,7 @@ class BuyMembershipIPNController extends Controller
     {
         try {
             $membershipService = new MembershipService();
-            $membershipService->updateMembership(
+            $membershipService->update_database(
                 $last_membership_id,
                 $transaction_id,
                 $membership_history_id,

@@ -21,6 +21,7 @@ use App\Models\UserPayoutDetail;
 use App\Models\Backend\Admin;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Modules\Membership\app\Models\UserMembership;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -64,6 +65,22 @@ class DashboardController extends Controller
             : get_static_option('payout_value') ?? 0;
         $bpConversionRate = get_static_option('bp_value') ?? 1;
         $sealingLimit = get_static_option('sealing_limit') ?? 1;
+
+        // --- Add BV Value to user ---
+        $user->self_purchased_bv = ($user->self_purchased_bv ?? 0) + $bvvalue;
+
+        // If user has paid profile, add matrimony BV points
+        $hasPaidProfile = DB::table('profile_listings')
+            ->where('user_id', $user->id)
+            ->where('paid', 1)
+            ->exists();
+
+        if ($hasPaidProfile) {
+            $extraPoints = get_static_option('matrimony_bv_points') ?? 0;
+            $user->self_purchased_bv += $extraPoints;
+        }
+
+        $user->save();
 
         // Calculate BV points
         $leftBvPoints = $user->leftChild ? $user->leftChild->userBvs->sum('bv_points') : 0;
@@ -126,7 +143,7 @@ class DashboardController extends Controller
             $admin = Admin::first(); // You can customize which admin to use
             $referredBy = $admin ? $admin->partner_name : 'Admin';
             $referredById = $admin ? $admin->partner_id ?? '' : ''; // or 'admin_id' if exists
-        }   
+        }
 
         // Return the view with updated data
         return view('frontend.user.dashboard.dashboard', [

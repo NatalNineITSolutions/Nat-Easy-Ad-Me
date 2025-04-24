@@ -19,6 +19,9 @@ use Modules\CountryManage\app\Models\Country;
 use App\Models\Backend\ListingTag;
 use Modules\CountryManage\app\Models\City;
 use Modules\CountryManage\app\Models\State;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\File;
 
 class ListingApiController extends Controller
 {
@@ -68,227 +71,32 @@ class ListingApiController extends Controller
         ]);
     }
 
-    // public function addListing(Request $request)
-    // {
-    //     $request->headers->set('Accept', 'application/json');
-    //     $user = Auth::guard('sanctum')->user();
-
-    //     if (!$user) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Unauthorized access'
-    //         ], 401);
-    //     }
-
-    //     $validatedData = $request->validate([
-    //         'category_id' => 'required|integer|exists:categories,id',
-    //         'title' => 'required|max:191',
-    //         'description' => 'required|min:150',
-    //         'slug' => 'required|max:255|unique:listings',
-    //         'price' => $request->category_id == 54 ? 'nullable|numeric' : 'required|numeric',
-    //         'qualification' => $request->category_id == 54 ? 'required|string|max:255' : 'nullable|string|max:255',
-    //         'experience' => $request->category_id == 54 ? 'required|string|max:255' : 'nullable|string|max:255',
-    //         'salary' => $request->category_id == 54 ? 'required|numeric' : 'nullable|numeric',
-    //         'job_location' => $request->category_id == 54 ? 'required|string|max:255' : 'nullable|string|max:255',
-    //         'image' => 'nullable',
-    //         'gallery_images' => 'nullable|string',
-    //         'video_url' => 'nullable|string',
-    //         'country_id' => 'nullable|integer',
-    //         'state_id' => 'nullable|integer',
-    //         'city_id' => 'nullable|integer',
-    //         'brand_id' => 'nullable|integer',
-    //         'sub_category_id' => 'nullable|integer',
-    //         'child_category_id' => 'nullable|integer',
-    //         'negotiable' => 'nullable|boolean',
-    //         'condition' => 'nullable|string',
-    //         'authenticity' => 'nullable|string',
-    //         'phone' => 'nullable|string',
-    //         'phone_hidden' => 'nullable|boolean',
-    //         'address' => 'nullable|string',
-    //         'latitude' => 'nullable|numeric',
-    //         'longitude' => 'nullable|numeric',
-    //         'is_featured' => 'nullable|boolean',
-    //         'tags' => 'nullable|array',
-    //         'tags.*' => 'integer|exists:tags,id',
-    //         'attributes_title' => 'nullable|array',
-    //         'attributes_description' => 'nullable|array',
-    //     ]);
-
-    //     // Handle image upload if present
-    //     $imageId = null;
-    //     if ($request->hasFile('image')) {
-    //         $request->validate([
-    //             'image' => 'image|mimes:jpg,jpeg,png|max:2048'
-    //         ]);
-
-    //         $file = $request->file('image');
-    //         $path = $file->store('media_uploads', 'public');
-
-    //         $media = MediaUpload::create([
-    //             'user_id' => $user->id,
-    //             'path' => $path,
-    //             'file_name' => $file->getClientOriginalName(),
-    //             'file_size' => $file->getSize(),
-    //             'file_type' => $file->getMimeType(),
-    //             'type' => 'image', // Set the required type field
-    //             'title' => $file->getClientOriginalName(),
-    //             'alt' => '',
-    //             'dimensions' => getimagesize($file->getPathname()) ? implode('x', getimagesize($file->getPathname())) : null,
-    //         ]);
-
-    //         $imageId = $media->id;
-    //     } elseif ($request->filled('image')) {
-    //         $request->validate([
-    //             'image' => 'integer|exists:media_uploads,id'
-    //         ]);
-    //         $imageId = $request->image;
-    //     } else {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Image is required'
-    //         ], 422);
-    //     }
-
-    //     if (moduleExists('Membership') && membershipModuleExistsAndEnable('Membership')) {
-    //         $user_membership = UserMembership::where('user_id', $user->id)->first();
-
-    //         if (!$user_membership || $user_membership->status === 0 || $user_membership->payment_status == 'pending') {
-    //             return response()->json([
-    //                 'success' => false,
-    //                 'message' => 'Your membership is inactive or expired. Please subscribe to a plan before creating listings.'
-    //             ], 403);
-    //         }
-
-    //         if ($user_membership->listing_limit === 0 || $user_membership->expire_date <= Carbon::now()) {
-    //             return response()->json([
-    //                 'success' => false,
-    //                 'message' => 'Your membership listing limit is over or expired.'
-    //             ], 403);
-    //         }
-
-    //         // Check gallery images limit
-    //         if ($request->filled('gallery_images')) {
-    //             $gallery_images = explode('|', $request->gallery_images);
-    //             if (count($gallery_images) > $user_membership->initial_gallery_images) {
-    //                 return response()->json([
-    //                     'success' => false,
-    //                     'message' => 'You have exceeded the maximum number of gallery images allowed by your membership package.'
-    //                 ], 403);
-    //             }
-    //         }
-
-    //         // Check featured listing
-    //         if ($request->is_featured && $user_membership->initial_featured_listing != 0 && $user_membership->featured_listing === 0) {
-    //             return response()->json([
-    //                 'success' => false,
-    //                 'message' => 'You have exceeded the maximum number of featured listings allowed by your membership package.'
-    //             ], 403);
-    //         }
-    //     }
-
-    //     $status = get_static_option('listing_create_status_settings') == 'approved' ? 1 : 0;
-
-    //     $listing = new Listing();
-    //     $listing->user_id = $user->id;
-    //     $listing->category_id = $validatedData['category_id'];
-    //     $listing->sub_category_id = $request->sub_category_id;
-    //     $listing->child_category_id = $request->child_category_id;
-    //     $listing->country_id = $request->country_id;
-    //     $listing->state_id = $request->state_id;
-    //     $listing->city_id = $request->city_id;
-    //     $listing->brand_id = $request->brand_id;
-    //     $listing->title = $validatedData['title'];
-    //     $listing->slug = Str::slug($validatedData['slug']);
-    //     $listing->description = $validatedData['description'];
-    //     $listing->price = $validatedData['category_id'] == 54 ? null : $validatedData['price'];
-    //     $listing->negotiable = $request->negotiable ?? 0;
-    //     $listing->condition = $request->condition;
-    //     $listing->authenticity = $request->authenticity;
-    //     $listing->phone = $request->phone;
-    //     $listing->phone_hidden = $request->phone_hidden ?? 0;
-    //     $listing->image = $imageId;
-    //     $listing->gallery_images = $request->gallery_images;
-    //     $listing->video_url = $request->video_url ? getYoutubeEmbedUrl($request->video_url) : null;
-    //     $listing->address = $request->address;
-    //     $listing->lat = $request->latitude;
-    //     $listing->lon = $request->longitude;
-    //     $listing->is_featured = $request->is_featured ?? 0;
-    //     $listing->status = $status;
-
-    //     if ($validatedData['category_id'] == 54) {
-    //         $listing->qualification = $validatedData['qualification'];
-    //         $listing->experience = $validatedData['experience'];
-    //         $listing->expected_salary = $validatedData['salary'];
-    //         $listing->job_location = $validatedData['job_location'];
-    //     }
-
-    //     $listing->save();
-
-    //     $responseData = [
-    //         'success' => true,
-    //         'message' => 'Listing added successfully',
-    //         'data' => [
-    //             'listing' => $listing,
-    //             'image_url' => get_attachment_url_by_ids($imageId),
-    //         ]
-    //     ];
-
-    //     // Handle tags
-    //     if ($request->filled('tags')) {
-    //         foreach ($request->tags as $tagId) {
-    //             ListingTag::create([
-    //                 'listing_id' => $listing->id,
-    //                 'tag_id' => $tagId,
-    //             ]);
-    //         }
-    //     }
-
-    //     // Handle attributes
-    //     if ($request->filled('attributes_title')) {
-    //         foreach ($request->input('attributes_title') as $index => $title) {
-    //             $description = $request->input('attributes_description')[$index] ?? null;
-    //             if (!empty($title)) {
-    //                 ListingAttribute::create([
-    //                     'listing_id' => $listing->id,
-    //                     'title' => strip_tags($title),
-    //                     'description' => strip_tags($description),
-    //                 ]);
-    //             }
-    //         }
-    //     }
-
-    //     if (moduleExists('Membership') && membershipModuleExistsAndEnable('Membership')) {
-    //         UserMembership::where('user_id', $user->id)->decrement('listing_limit');
-
-    //         if ($request->is_featured && $user_membership->initial_featured_listing != 0) {
-    //             UserMembership::where('user_id', $user->id)->decrement('featured_listing');
-    //         }
-    //     }
-
-    //     AdminNotification::create([
-    //         'identity' => $listing->id,
-    //         'user_id' => $user->id,
-    //         'type' => 'Create Listing',
-    //         'message' => 'A new listing has been created'
-    //     ]);
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Listing added successfully',
-    //         'data' => $listing
-    //     ], 201);
-    // }
-
     public function addListing(Request $request)
     {
+        // Ensure we're working with JSON
+        $request->headers->set('Content-Type', 'application/json');
         $request->headers->set('Accept', 'application/json');
+    
         $user = Auth::guard('sanctum')->user();
-
+    
         if (!$user) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized access'
             ], 401);
+        }
+    
+        // Manually handle JSON input if not automatically decoded
+        if (is_string($request->getContent())) {
+            try {
+                $data = json_decode($request->getContent(), true);
+                $request->merge($data);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid JSON payload'
+                ], 400);
+            }
         }
 
         $validatedData = $request->validate([
@@ -303,14 +111,14 @@ class ListingApiController extends Controller
             'job_location' => $request->category_id == 54 ? 'required|string|max:255' : 'nullable|string|max:255',
             'image' => 'nullable',
             'gallery_images' => 'nullable|array',
-            'gallery_images.*' => 'image|mimes:jpg,jpeg,png|max:2048', 
+            'gallery_images.*' => 'nullable',
             'video_url' => 'nullable|string',
             'country_id' => 'nullable|integer',
             'state_id' => 'nullable|integer',
             'city_id' => 'nullable|integer',
             'brand_id' => 'nullable|integer',
-            'sub_category_id' => 'nullable|integer',
-            'child_category_id' => 'nullable|integer',
+            'sub_category_id' => 'nullable|exists:sub_categories,id,category_id,' . $request->category_id,
+            'child_category_id' => 'nullable|exists:child_categories,id,sub_category_id,' . $request->sub_category_id,
             'negotiable' => 'nullable|boolean',
             'condition' => 'nullable|string',
             'authenticity' => 'nullable|string',
@@ -326,13 +134,9 @@ class ListingApiController extends Controller
             'attributes_description' => 'nullable|array',
         ]);
 
-        // Handle image upload if present
+        // Handle main image
         $imageId = null;
         if ($request->hasFile('image')) {
-            $request->validate([
-                'image' => 'image|mimes:jpg,jpeg,png|max:2048'
-            ]);
-
             $file = $request->file('image');
             $path = $file->store('media_uploads', 'public');
 
@@ -349,46 +153,58 @@ class ListingApiController extends Controller
             ]);
 
             $imageId = $media->id;
-        } elseif ($request->filled('image')) {
-            $request->validate([
-                'image' => 'integer|exists:media_uploads,id'
-            ]);
-            $imageId = $request->image;
-        } else {
+        } elseif ($request->filled('image') && is_numeric($request->image)) {
+            $media = MediaUpload::find($request->image);
+            if ($media) {
+                $imageId = $media->id;
+            }
+        }
+
+        if (!$imageId) {
             return response()->json([
                 'success' => false,
                 'message' => 'Image is required'
             ], 422);
         }
 
-        // Handle gallery images
+        // Handle gallery images (IDs or uploaded files)
         $galleryImageIds = [];
-        if ($request->has('gallery_images') && is_array($request->gallery_images)) {
-            foreach ($request->gallery_images as $galleryImage) {
-                // Validate each gallery image
-                $galleryImagePath = $galleryImage->store('media_uploads', 'public');
 
-                $media = MediaUpload::create([
-                    'user_id' => $user->id,
-                    'path' => $galleryImagePath,
-                    'file_name' => $galleryImage->getClientOriginalName(),
-                    'file_size' => $galleryImage->getSize(),
-                    'file_type' => $galleryImage->getMimeType(),
-                    'type' => 'image',
-                    'title' => $galleryImage->getClientOriginalName(),
-                    'alt' => '',
-                    'dimensions' => getimagesize($galleryImage->getPathname()) ? implode('x', getimagesize($galleryImage->getPathname())) : null,
-                ]);
-
-                // Add the image ID to the gallery image IDs array
-                $galleryImageIds[] = $media->id;
+        if ($request->has('gallery_images')) {
+            if (is_string($request->gallery_images)) {
+                $galleryImageIds = array_map('intval', explode(',', $request->gallery_images));
             }
-        }
+        
+            // ✅ Add this block
+            if (is_array($request->gallery_images) && is_numeric($request->gallery_images[0])) {
+                $galleryImageIds = $request->gallery_images;
+            }
+        
+            // Handle file uploads as array
+            if (is_array($request->gallery_images) && isset($request->gallery_images[0]) && $request->gallery_images[0] instanceof \Illuminate\Http\UploadedFile) {
+                foreach ($request->gallery_images as $galleryImage) {
+                    $galleryImagePath = $galleryImage->store('media_uploads', 'public');
+        
+                    $media = MediaUpload::create([
+                        'user_id' => $user->id,
+                        'path' => $galleryImagePath,
+                        'file_name' => $galleryImage->getClientOriginalName(),
+                        'file_size' => $galleryImage->getSize(),
+                        'file_type' => $galleryImage->getMimeType(),
+                        'type' => 'image',
+                        'title' => $galleryImage->getClientOriginalName(),
+                        'alt' => '',
+                        'dimensions' => getimagesize($galleryImage->getPathname()) ? implode('x', getimagesize($galleryImage->getPathname())) : null,
+                    ]);
+        
+                    $galleryImageIds[] = $media->id;
+                }
+            }
+        }        
 
-        // Convert the gallery image IDs to a string (separated by '|')
         $galleryImagesString = $galleryImageIds ? implode('|', $galleryImageIds) : null;
 
-        // Check membership conditions if applicable
+        // Membership validation
         if (moduleExists('Membership') && membershipModuleExistsAndEnable('Membership')) {
             $user_membership = UserMembership::where('user_id', $user->id)->first();
 
@@ -406,7 +222,6 @@ class ListingApiController extends Controller
                 ], 403);
             }
 
-            // Check featured listing
             if ($request->is_featured && $user_membership->initial_featured_listing != 0 && $user_membership->featured_listing === 0) {
                 return response()->json([
                     'success' => false,
@@ -415,9 +230,10 @@ class ListingApiController extends Controller
             }
         }
 
-        // Set the listing status based on approval settings
+        // Determine listing approval status
         $status = get_static_option('listing_create_status_settings') == 'approved' ? 1 : 0;
 
+        // Save listing
         $listing = new Listing();
         $listing->user_id = $user->id;
         $listing->category_id = $validatedData['category_id'];
@@ -459,11 +275,11 @@ class ListingApiController extends Controller
         if ($galleryImagesString) {
             $galleryImageIds = explode('|', $galleryImagesString);
             foreach ($galleryImageIds as $id) {
-                $galleryImageUrls[] = render_image_markup_by_attachment_id($id);
+                $galleryImageUrls[] = get_attachment_url_by_ids($id);
             }
         }
 
-        // Handle tags
+        // Tags
         if ($request->filled('tags')) {
             foreach ($request->tags as $tagId) {
                 ListingTag::create([
@@ -473,7 +289,7 @@ class ListingApiController extends Controller
             }
         }
 
-        // Handle attributes
+        // Attributes
         if ($request->filled('attributes_title')) {
             foreach ($request->input('attributes_title') as $index => $title) {
                 $description = $request->input('attributes_description')[$index] ?? null;
@@ -492,13 +308,12 @@ class ListingApiController extends Controller
             'message' => 'Listing added successfully',
             'data' => [
                 'listing' => $listing,
-                'image_url' => render_image_markup_by_attachment_id($imageId),
+                'image_url' => get_attachment_url_by_ids($imageId),
                 'gallery_image_urls' => $galleryImageUrls,
                 'gallery_image_ids' => $galleryImageIds
             ]
         ], 201);
     }
-
 
     public function filterListings(Request $request)
     {
@@ -775,7 +590,6 @@ class ListingApiController extends Controller
             ], 500);
         }
     }
-
     public function allListingsApi(Request $request)
     {
         $user = Auth::guard('sanctum')->user();
@@ -787,11 +601,104 @@ class ListingApiController extends Controller
             ], 401);
         }
 
-        $listings = Listing::where('user_id', $user->id)->latest()->paginate(5);
+        $listings = Listing::where('user_id', $user->id)
+            ->latest()
+            ->paginate(5)
+            ->through(function ($listing) {
+                return [
+                    'id' => $listing->id,
+                    'title' => $listing->title,
+                    'slug' => $listing->slug,
+                    'description' => $listing->description,
+                    'price' => $listing->price,
+                    'status' => $listing->status,
+                    'is_published' => $listing->is_published,
+                    'is_featured' => $listing->is_featured,
+                    'image_url' => get_attachment_url_by_ids($listing->image),
+                    'gallery_urls' => get_attachment_url_by_ids($listing->gallery_images, false),
+                    'video_url' => $listing->video_url,
+                    'created_at' => $listing->created_at,
+                    'updated_at' => $listing->updated_at
+                ];
+            });
 
         return response()->json([
             'success' => true,
             'data' => $listings
+        ]);
+    }
+
+    public function uploadImage(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:jpg,jpeg,png,gif,webp|max:10240', // 10MB max
+        ]);
+
+        $image = $request->file('file');
+        $image_extension = $image->getClientOriginalExtension();
+        $image_name_with_ext = $image->getClientOriginalName();
+
+        // Get just the filename without extension
+        $image_name = pathinfo($image_name_with_ext, PATHINFO_FILENAME);
+        $image_name = Str::slug($image_name);
+
+        // Check for duplicate filenames and append counter if needed
+        $image_counter = 1;
+        while (file_exists(base_path('../assets/uploads/media-uploader/' . $image_name . '.' . $image_extension))) {
+            $image_name = Str::slug($image_name) . '-' . $image_counter;
+            $image_counter++;
+        }
+
+        $image_db_name = $image_name . '.' . $image_extension;
+        $image_dimension = getimagesize($image);
+
+        // Define paths - outside core directory
+        $base_upload_path = base_path('../assets/uploads/media-uploader/');
+        $image_path = $base_upload_path . $image_db_name;
+        $thumb_path = $base_upload_path . 'thumbnails/thumb-' . $image_db_name;
+
+        // Create directories if they don't exist
+        if (!File::exists($base_upload_path)) {
+            File::makeDirectory($base_upload_path, 0777, true);
+        }
+        if (!File::exists($base_upload_path . 'thumbnails/')) {
+            File::makeDirectory($base_upload_path . 'thumbnails/', 0777, true);
+        }
+
+        // Resize and save main image
+        $image_resize = Image::make($image);
+        $image_resize->resize(1024, null, function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+        });
+        $image_resize->save($image_path);
+
+        // Create and save thumbnail
+        $image_resize->fit(150, 150);
+        $image_resize->save($thumb_path);
+
+        // Store in database (if using MediaUpload model)
+        $media = MediaUpload::create([
+            'title' => $image_name,
+            'path' => $image_db_name,
+            'size' => formatBytes($image->getSize()),
+            'dimensions' => $image_dimension[0] . ' x ' . $image_dimension[1],
+            'alt' => $image_name,
+            'user_id' => auth()->id(),
+            'type' => 'image',
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Image uploaded successfully',
+            'data' => [
+                'id' => $media->id,
+                'name' => $image_db_name,
+                'path' => 'assets/uploads/media-uploader/' . $image_db_name,
+                'size' => formatBytes($image->getSize()),
+                'dimensions' => $image_dimension[0] . ' x ' . $image_dimension[1],
+                'url' => url('assets/uploads/media-uploader/' . $image_db_name),
+            ]
         ]);
     }
 }

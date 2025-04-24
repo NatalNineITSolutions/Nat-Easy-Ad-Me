@@ -9,7 +9,7 @@
         <div class="col-12">
             <form action="{{ route('admin.matrimony.profile.listing.store') }}" method="POST">
                 @csrf
-                <!-- <div class="mb-3">
+                <div class="mb-3">
                     <label for="price" class="form-label">{{ __('Price') }}</label>
                     <input type="number" class="form-control" id="price" name="price"
                         value="{{ get_static_option('matrimony_price', '') }}" placeholder="{{ __('Enter Price') }}"
@@ -21,7 +21,7 @@
                     <input type="number" class="form-control" id="bv" name="bv"
                         value="{{ get_static_option('matrimony_bv_points', '') }}" placeholder="{{ __('Enter BV Points') }}"
                         required>
-                </div> -->
+                </div>
 
                 <div class="mb-3">
                     <label for="matrimony_bv_value" class="form-label">{{ __('BV Value') }}</label>

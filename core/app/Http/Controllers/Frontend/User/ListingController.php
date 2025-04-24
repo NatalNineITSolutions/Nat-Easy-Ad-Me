@@ -38,6 +38,24 @@ class ListingController extends Controller
         return view('frontend.user.listings.all-listings', compact('listings'));
     }
 
+    public function getSubCategories(Request $request)
+    {
+        $subcategories = SubCategory::where('category_id', $request->category_id)
+            ->where('status', 1)
+            ->get();
+
+        return response()->json($subcategories);
+    }
+
+    public function getChildCategories(Request $request)
+    {
+        $childcategories = ChildCategory::where('sub_category_id', $request->sub_category_id)
+            ->where('status', 1)
+            ->get();
+
+        return response()->json($childcategories);
+    }
+
     // add listing page
     public function addListing(Request $request)
     {
@@ -128,6 +146,8 @@ class ListingController extends Controller
             // Validation rules
             $request->validate([
                 'category_id' => 'required',
+                'sub_category_id' => 'nullable|exists:sub_categories,id,category_id,' . $request->category_id,
+                'child_category_id' => 'nullable|exists:child_categories,id,sub_category_id,' . $request->sub_category_id,
                 'title' => 'required|max:191',
                 'description' => 'required|min:150',
                 'slug' => 'required|max:255|unique:listings',

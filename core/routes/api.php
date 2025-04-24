@@ -49,7 +49,8 @@ Route::post('/listings/filter', [ListingApiController::class, 'filterListings'])
 Route::get('/listing-details/{identifier}', [ProductListingController::class, 'getListingDetails']);
 
 Route::get('/memberships', [MembershipApiController::class, 'getMembershipsByCategory']);
-
+Route::post('/upload', [ListingApiController::class, 'uploadImage']);
+Route::get('/brands', [ProductListingController::class, 'index']);
 
 // Protected Routes (using Sanctum for authentication)
 Route::middleware('auth:sanctum')->group(function () {

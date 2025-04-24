@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Backend\Listing;
 use App\Models\Backend\Advertisement;
 use App\Models\Backend\ReportReason;
+use Modules\Brand\app\Models\Brand;
 
 class ProductListingController extends Controller
 {
@@ -228,7 +229,7 @@ class ProductListingController extends Controller
         }, $galleryImageIds);
 
         $listingData = array_merge($listing->toArray(), [
-            'image'          => get_attachment_url_by_ids($listing->image),
+            'image' => get_attachment_url_by_ids($listing->image),
             'gallery_images' => $galleryImagesUrls,
         ]);
 
@@ -237,7 +238,7 @@ class ProductListingController extends Controller
             'success' => true,
             'message' => 'Listing details fetched successfully',
             'data' => [
-                'listing'             => $listingData,
+                'listing' => $listingData,
                 'related_listings' => $related_listings,
                 'user_total_listings' => $user_total_listings,
                 'report_reasons' => $report_reasons,
@@ -247,6 +248,16 @@ class ProductListingController extends Controller
                     'membership_badge' => $user_membership_badge,
                 ]
             ]
+        ], 200);
+    }
+
+    public function index()
+    {
+        $brands = Brand::all(); 
+
+        return response()->json([
+            'success' => true,
+            'data' => $brands
         ], 200);
     }
 }

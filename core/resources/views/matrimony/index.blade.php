@@ -6,12 +6,17 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
 
 @section('style')
-
     <style>
         .hibiscus {
             width: 90px;
             margin-bottom: 15px;
         }
+
+        /* .blurred {
+            filter: blur(8px);
+            -webkit-filter: blur(8px);
+            transition: filter 0.3s ease;
+        } */
 
         .banner-heading {
             font-family: "Prociono", serif;
@@ -35,7 +40,6 @@
             text-align: center;
             padding: 20px;
             overflow: hidden;
-            /* Prevents horizontal scroll */
         }
 
         .banner-bg {
@@ -45,8 +49,6 @@
             left: 0;
             width: 100%;
             height: 100%;
-
-            /* Zoom-in Animation */
             animation: zoomIn 3s ease-in infinite alternate;
         }
 
@@ -57,7 +59,6 @@
 
             to {
                 transform: scale(1.1);
-                /* Slight zoom-in effect */
             }
         }
 
@@ -73,7 +74,6 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
-            /* Dark overlay for better text visibility */
             z-index: 1;
         }
 
@@ -81,7 +81,6 @@
             width: 100%;
             position: relative;
             z-index: 2;
-            /* Ensures content stays above background */
         }
 
         .search-container {
@@ -94,69 +93,38 @@
             margin: 20px auto;
         }
 
-        .search-container select,
-        .search-container button {
+        /* Card Slider Container - New Addition */
+        .card-slider-container {
+            overflow: hidden;
             width: 100%;
+            position: relative;
         }
 
-        /* Tablet Design - 2 Column Layout */
-        @media (max-width: 992px) {
-            .banner-heading {
-                font-size: 40px;
-            }
-
-            .banner-desp {
-                font-size: 14px;
-            }
-
-            .search-container {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 10px;
-                /* Space between elements */
-                justify-content: space-between;
-            }
-
-            /* Default: 2 items per row for tablets */
-            .search-container select,
-            .search-container button {
-                flex: 1 1 calc(50% - 10px);
-                /* 50% width for 2 items per row */
-                padding: 8px;
-                font-size: 14px;
-            }
-        }
-
-        /* Mobile Design - Full Stack Layout */
-        @media (max-width: 576px) {
-            .banner-heading {
-                font-size: 32px;
-            }
-
-            .banner-desp {
-                font-size: 14px;
-            }
-
-            .hibiscus {
-                width: 60px;
-                margin-bottom: 10px;
-            }
-
-            .search-container {
-                display: flex;
-                flex-direction: column;
-            }
-        }
-
-        /* Product slider */
+        /* Profile Container - Updated */
         .profile-container {
             margin-top: 30px;
             display: flex;
             flex-direction: column;
             align-items: center;
             margin-bottom: 60px;
+            width: 100%;
         }
 
+        /* Card Slider - Updated */
+        .card-slider {
+            min-height: 400px;
+            visibility: hidden;
+            margin: 0 auto;
+            max-width: 1300px;
+            padding: 20px 0;
+        }
+
+        .card-slider.slick-initialized {
+            visibility: visible;
+            min-height: auto;
+        }
+
+        /* Rest of your existing CSS remains the same */
         .dividers {
             display: flex;
             align-items: center;
@@ -209,19 +177,6 @@
             text-decoration: none;
         }
 
-        /* Main container */
-        .profile-container {
-            max-width: 1500px;
-            padding: 0 20px;
-        }
-
-        /* Card slider styles */
-        .card-slider {
-            margin: 0 auto;
-            max-width: 1300px;
-            padding: 20px 0;
-        }
-
         .card-slider .card {
             display: flex;
             flex-direction: column;
@@ -232,10 +187,6 @@
             margin: 0 15px;
             padding: 20px 15px;
         }
-
-        /* .card img {
-                height: 100px;
-            } */
 
         .card h2 {
             font-size: 18px;
@@ -253,25 +204,20 @@
             color: #555;
         }
 
-        /* Slick slider customizations */
         .slick-slide {
             padding: 0 15px;
-            /* This creates the space between cards */
         }
 
         .slick-list {
             margin: 0 -5px;
-            /* Compensate for slide padding */
             padding: 20px 0;
         }
 
         .slick-track {
             display: flex;
             align-items: stretch;
-            /* Make cards equal height */
         }
 
-        /* Navigation arrows */
         .slick-prev,
         .slick-next {
             width: 40px;
@@ -305,7 +251,6 @@
             content: '\f105';
         }
 
-        /* Button styles */
         .btn-profile {
             display: inline-block;
             padding: 8px 20px;
@@ -324,69 +269,6 @@
         .btn-profile:hover {
             background-color: #FF166C;
             color: white;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 1024px) {
-            .card-slider {
-                max-width: 800px;
-            }
-
-            .slick-prev {
-                left: -30px;
-            }
-
-            .slick-next {
-                right: -30px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .card {
-                margin: 0 10px;
-                padding: 15px;
-            }
-
-            .card h2 {
-                font-size: 16px;
-            }
-
-            .card p {
-                font-size: 13px;
-            }
-
-            .card-profile {
-                width: 70px;
-                height: 70px;
-            }
-
-            .card-slider .card {
-                width: 220px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .card-slider {
-                max-width: 300px;
-            }
-
-            .card {
-                margin: 0 5px;
-            }
-
-            .slick-prev,
-            .slick-next {
-                width: 30px;
-                height: 30px;
-            }
-
-            .slick-prev {
-                left: -15px;
-            }
-
-            .slick-next {
-                right: -15px;
-            }
         }
 
         /* Perfect match */
@@ -463,18 +345,13 @@
 
         .illustration-container {
             overflow: hidden;
-            /* Ensures the image stays inside the box */
             position: relative;
-            /* Needed for proper positioning */
             width: 100%;
-            /* Container width */
             height: auto;
-            /* Auto height */
         }
 
         .illustration {
             width: 150%;
-            /* Reduce image width for better fit */
             animation: scrollAnimation 15s linear infinite;
         }
 
@@ -485,37 +362,6 @@
 
             to {
                 transform: translateX(-50%);
-                /* Moves half of the extended width */
-            }
-        }
-
-        @media (max-width: 600px) {
-            .perfect-match-banner h1 {
-                font-size: 22px;
-            }
-
-            .perfect-match-banner p {
-                font-size: 14px;
-            }
-
-            .buttons {
-                flex-direction: column;
-            }
-
-            .dividers img {
-                width: 60px;
-            }
-
-            .trusted-profiles h2 {
-                font-size: 10px;
-            }
-
-            .trusted-profiles p {
-                font-size: 10px;
-            }
-
-            .profile-container-section {
-                gap: 5px;
             }
         }
 
@@ -540,16 +386,6 @@
             align-items: center;
             gap: 8px;
             color: black;
-        }
-
-        /* .card-profile {
-                filter: blur(3px);
-            } */
-
-        .blurred {
-            filter: blur(8px);
-            -webkit-filter: blur(8px);
-            transition: filter 0.3s ease;
         }
 
         .user-details {
@@ -593,12 +429,119 @@
         .card-slider .card {
             width: 220px;
         }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .banner-heading {
+                font-size: 40px;
+            }
+
+            .banner-desp {
+                font-size: 14px;
+            }
+
+            .search-container {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .search-container select,
+            .search-container button {
+                flex: 1 1 calc(50% - 10px);
+                padding: 8px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                margin: 0 10px;
+                padding: 15px;
+            }
+
+            .card h2 {
+                font-size: 16px;
+            }
+
+            .card p {
+                font-size: 13px;
+            }
+
+            .card-slider .card {
+                width: 220px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .banner-heading {
+                font-size: 32px;
+            }
+
+            .banner-desp {
+                font-size: 14px;
+            }
+
+            .hibiscus {
+                width: 60px;
+                margin-bottom: 10px;
+            }
+
+            .search-container {
+                flex-direction: column;
+            }
+
+            .perfect-match-banner h1 {
+                font-size: 22px;
+            }
+
+            .perfect-match-banner p {
+                font-size: 14px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .dividers img {
+                width: 60px;
+            }
+
+            .trusted-profiles h2 {
+                font-size: 10px;
+            }
+
+            .trusted-profiles p {
+                font-size: 10px;
+            }
+
+            .profile-container-section {
+                gap: 5px;
+            }
+
+            .card-slider {
+                max-width: 300px;
+            }
+
+            .slick-prev,
+            .slick-next {
+                width: 30px;
+                height: 30px;
+            }
+
+            .slick-prev {
+                left: -15px;
+            }
+
+            .slick-next {
+                right: -15px;
+            }
+        }
     </style>
 @endsection
 
 @section('content')
     <div class="banner">
-        <div class="banner-bg"></div> <!-- Background for Zoom Effect -->
+        <div class="banner-bg"></div>
         <div class="banner-content">
             <img class="hibiscus" src="/assets/uploads/media-uploader/hibiscus.png" alt="Hibiscus">
             <h2 class="banner-heading">Find your <br> <span class="highlight">Right Match</span> here</h2>
@@ -692,55 +635,80 @@
                 <a href="/matrimony/profile-listing" class="register-link">
                     <button class="register-now">REGISTER NOW</button>
                 </a>
-                {{-- <button class="support">HELP & SUPPORT</button> --}}
             </div>
             <img class="perfect-match-banner-img" src="/assets/uploads/media-uploader/perfect-match-banner.png" alt="">
         </div>
     </div>
-
 @endsection
 
 @section('script')
-
-
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
     <script>
         $(document).ready(function () {
-            $('.card-slider').slick({
-                dots: false,
-                arrows: true,
-                slidesToShow: 4,
-                infinite: false,
-                responsive: [{
-                    breakpoint: 1024,
-                    settings: {
-                        slidesToShow: 3
-                    }
-                },
-                {
-                    breakpoint: 800,
-                    settings: {
-                        slidesToShow: 2
-                    }
-                },
-                {
-                    breakpoint: 600,
-                    settings: {
-                        slidesToShow: 1
-                    }
-                }
-                ]
-            });
-        });
-    </script>
+            // Initialize slider after images are loaded
+            var $slider = $('.card-slider');
 
-    <script>
-        history.pushState(null, null, location.href);
-        window.onpopstate = function () {
+            // First check if images are already loaded
+            if (imagesLoaded($slider)) {
+                initSlider();
+            } else {
+                // Wait for images to load if they're not ready
+                $slider.imagesLoaded().done(function () {
+                    initSlider();
+                });
+            }
+
+            function imagesLoaded($element) {
+                var $images = $element.find('img');
+                if ($images.length === 0) return true;
+
+                var loaded = true;
+                $images.each(function () {
+                    if (!this.complete) {
+                        loaded = false;
+                        return false;
+                    }
+                });
+                return loaded;
+            }
+
+            function initSlider() {
+                $slider.on('init', function () {
+                    $(this).addClass('slick-initialized');
+                }).slick({
+                    dots: false,
+                    arrows: true,
+                    slidesToShow: 4,
+                    infinite: false,
+                    responsive: [{
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 3
+                        }
+                    },
+                    {
+                        breakpoint: 800,
+                        settings: {
+                            slidesToShow: 2
+                        }
+                    },
+                    {
+                        breakpoint: 600,
+                        settings: {
+                            slidesToShow: 1
+                        }
+                    }]
+                });
+            }
+
+            // Prevent back button issue
             history.pushState(null, null, location.href);
-        };
+            window.onpopstate = function () {
+                history.pushState(null, null, location.href);
+            };
+        });
     </script>
 
     {{-- Search --}}

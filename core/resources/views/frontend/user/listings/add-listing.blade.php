@@ -382,7 +382,6 @@
                                                     </div>
                                                 </div>
 
-
                                                 <div class="picture mt-3">
                                                     <div class="row g-3">
                                                         <div class="col-12">

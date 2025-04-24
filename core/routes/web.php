@@ -98,7 +98,7 @@ Route::group(['middleware' => ['globalVariable', 'maintains_mode', 'setlang']], 
 
     // listings
     Route::group(['prefix' => 'listing'], function () {
-        Route::get('/{slug?}', [FrontendListingController::class, 'frontendListingDetails'])->name('frontend.listing.details');    
+        Route::get('/{slug?}', [FrontendListingController::class, 'frontendListingDetails'])->name('frontend.listing.details');
         Route::post('/load-more-relevant', [FrontendListingController::class, 'loadMoreListing'])->name('frontend.listing.load-more-relevant');
         Route::post('/store-location', [FrontendListingController::class, 'store']);
 
@@ -174,17 +174,6 @@ Route::group(['middleware' => ['globalVariable', 'maintains_mode', 'setlang']], 
     Route::get('/job-seekers/{id}', [CategoryWiseListingController::class, 'show'])->name('frontend.jobseeker.details');
     Route::get('/job-seeker/{id}/resume', [CategoryWiseListingController::class, 'showResume'])->name('job-seeker.resume');
 
-    Route::get('/get-subcategories', function (Request $request) {
-        $subcategories = SubCategory::where('category_id', $request->category_id)
-            ->where('status', 1)
-            ->get();
-        return response()->json($subcategories);
-    })->name('get.subcategories');
-
-    Route::get('/get-childcategories', function (Request $request) {
-        $childcategories = ChildCategory::where('sub_category_id', $request->sub_category_id)
-            ->where('status', 1)
-            ->get();
-        return response()->json($childcategories);
-    })->name('get.childcategories');
+    Route::get('/get-subcategories', [ListingController::class, 'getSubCategories'])->name('get.subcategories');
+    Route::get('/get-childcategories', [ListingController::class, 'getChildCategories'])->name('get.childcategories');
 });

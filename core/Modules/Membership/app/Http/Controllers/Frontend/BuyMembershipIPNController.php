@@ -289,6 +289,36 @@ class BuyMembershipIPNController extends Controller
         }
     }
 
+    // private function update_profile_listing($order_id, $payment_method)
+    // {
+    //     // Update the profile listing record
+    //     $update = ProfileListing::where('id', $order_id)->update([
+    //         'paid' => 1,
+    //         'payment_method' => $payment_method,
+    //     ]);
+
+    //     // Retrieve the updated profile listing record
+    //     $profileListing = ProfileListing::find($order_id);
+    //     if (!$profileListing) {
+    //         return $update;
+    //     }
+
+    //     // Create a BV record for the user
+    //     $usersBv = UsersBV::create([
+    //         'user_id' => $profileListing->user_id,
+    //         'bv_points' => get_static_option('matrimony_bv_points') ?? 0,
+    //         'upgrade_time' => \Carbon\Carbon::now(),
+    //     ]);
+
+    //     $user = User::find($profileListing->user_id);
+    //     $bvService = new BVDistributionService();
+
+    //     $bvService->distributeBVPoints($user, $usersBv->bv_points, null, $profileListing->user_id);
+
+    //     return $update;
+    // }
+
+
     private function update_profile_listing($order_id, $payment_method)
     {
         // Update the profile listing record
@@ -303,17 +333,27 @@ class BuyMembershipIPNController extends Controller
             return $update;
         }
 
+        // Get BV points from config
+        $bvPoints = get_static_option('matrimony_bv_points') ?? 0;
+
         // Create a BV record for the user
         $usersBv = UsersBV::create([
             'user_id' => $profileListing->user_id,
-            'bv_points' => get_static_option('matrimony_bv_points') ?? 0,
+            'bv_points' => $bvPoints,
             'upgrade_time' => \Carbon\Carbon::now(),
         ]);
 
+        // Find the user
         $user = User::find($profileListing->user_id);
-        $bvService = new BVDistributionService();
+        if ($user) {
+            // Update user's self purchased BV
+            $user->self_purchased_bv = ($user->self_purchased_bv ?? 0) + $bvPoints;
+            $user->save();
 
-        $bvService->distributeBVPoints($user, $usersBv->bv_points, null, $profileListing->user_id);
+            // Distribute BV
+            $bvService = new BVDistributionService();
+            $bvService->distributeBVPoints($user, $bvPoints, null, $profileListing->user_id);
+        }
 
         return $update;
     }
@@ -335,4 +375,4 @@ class BuyMembershipIPNController extends Controller
             throw $e;
         }
     }
-} 
+}

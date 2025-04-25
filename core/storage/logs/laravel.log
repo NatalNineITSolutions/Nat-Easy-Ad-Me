@@ -1,30 +1,25 @@
-[2025-04-24 19:42:41] production.INFO: MLM new member registration request received. {"request_data":{"_token":"o0KpKCRTiMRC0XB51P4YCRuplFLXcLrzw10J1WcN","position":"left","sponsor_name":"EASYADME-KAVYA","username":"Sri","first_name":"Sri","last_name":"F","email":"sri@gmail.com","country_code":null,"phone":"9102901291","full_number":null,"dob":"1999-02-24","gender":"male","password":"12121212","confirm_password":"12121212","terms_conditions":"1"}} 
-[2025-04-24 21:09:10] production.ERROR: file_put_contents(C:\laragon\www\Nat-Easy-Ad-Me\core\storage\framework/cache/data/0f/8e/0f8e58194be1f086a3ff1cf5352c83a9975e0093): Failed to open stream: Permission denied {"exception":"[object] (ErrorException(code: 0): file_put_contents(C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\storage\\framework/cache/data/0f/8e/0f8e58194be1f086a3ff1cf5352c83a9975e0093): Failed to open stream: Permission denied at C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php:204)
-[stacktrace]
-#0 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'file_put_conten...', 'C:\\\\laragon\\\\www\\\\...', 204)
-#1 [internal function]: Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'file_put_conten...', 'C:\\\\laragon\\\\www\\\\...', 204)
-#2 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(204): file_put_contents('C:\\\\laragon\\\\www\\\\...', '1745509209O:31:...', 2)
-#3 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cache\\FileStore.php(83): Illuminate\\Filesystem\\Filesystem->put('C:\\\\laragon\\\\www\\\\...', '1745509209O:31:...', true)
-#4 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cache\\Repository.php(216): Illuminate\\Cache\\FileStore->put('google_client_s...', Object(App\\Models\\Backend\\StaticOption), 60)
-#5 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cache\\Repository.php(398): Illuminate\\Cache\\Repository->put('google_client_s...', Object(App\\Models\\Backend\\StaticOption), 60)
-#6 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cache\\CacheManager.php(429): Illuminate\\Cache\\Repository->remember('google_client_s...', 60, Object(Closure))
-#7 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Cache\\CacheManager->__call('remember', Array)
-#8 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Helpers\\helpers.php(115): Illuminate\\Support\\Facades\\Facade::__callStatic('remember', Array)
-#9 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Providers\\CustomConfigServiceProvider.php(24): get_static_option('google_client_s...')
-#10 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Providers\\CustomConfigServiceProvider->boot()
-#11 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
-#12 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
-#13 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
-#14 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
-#15 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1034): Illuminate\\Container\\Container->call(Array)
-#16 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1015): Illuminate\\Foundation\\Application->bootProvider(Object(App\\Providers\\CustomConfigServiceProvider))
-#17 [internal function]: Illuminate\\Foundation\\Application->Illuminate\\Foundation\\{closure}(Object(App\\Providers\\CustomConfigServiceProvider), 46)
-#18 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1014): array_walk(Array, Object(Closure))
-#19 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\BootProviders.php(17): Illuminate\\Foundation\\Application->boot()
-#20 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\BootProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
-#21 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(186): Illuminate\\Foundation\\Application->bootstrapWith(Array)
-#22 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(170): Illuminate\\Foundation\\Http\\Kernel->bootstrap()
-#23 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
-#24 C:\\laragon\\www\\Nat-Easy-Ad-Me\\index.php(54): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
-#25 {main}
-"} 
+[2025-04-24 22:14:51] production.INFO: Calculated BV points for node: {"node_id":129,"leftBV":9,"rightBV":48} 
+[2025-04-24 22:14:51] production.INFO: Calculated BV points for node: {"node_id":134,"leftBV":0,"rightBV":0} 
+[2025-04-24 22:14:51] production.INFO: Calculated BV points for node: {"node_id":135,"leftBV":0,"rightBV":0} 
+[2025-04-24 22:15:40] production.INFO: MLM new member registration request received. {"request_data":{"_token":"o0KpKCRTiMRC0XB51P4YCRuplFLXcLrzw10J1WcN","position":"right","sponsor_name":"EASYADME-KAVYA","username":"Gayu","first_name":"Gayu","last_name":"K","email":"gayu@gmail.com","country_code":null,"phone":"9129909091","full_number":null,"dob":"2000-06-23","gender":"female","password":"12121212","confirm_password":"12121212","terms_conditions":"1"}} 
+[2025-04-24 22:19:10] production.INFO: MLM new member registration request received. {"request_data":{"_token":"o0KpKCRTiMRC0XB51P4YCRuplFLXcLrzw10J1WcN","position":"right","sponsor_name":"EASYADME-KAVYA","username":"Kavi","first_name":"Kavi","last_name":"K","email":"kavi@gmail.com","country_code":null,"phone":"9209329101","full_number":null,"dob":"2001-01-10","gender":"male","password":"12121212","confirm_password":"12121212","terms_conditions":"1"}} 
+[2025-04-24 22:19:10] production.INFO: New member referred by existing user. {"referrer_id":null,"position":"right"} 
+[2025-04-24 22:19:10] production.INFO: User BV points recorded. {"user_id":139,"membership_id":1,"bv_points":0} 
+[2025-04-24 22:19:21] production.INFO: Calculated BV points for node: {"node_id":129,"leftBV":9,"rightBV":48} 
+[2025-04-24 22:19:21] production.INFO: Calculated BV points for node: {"node_id":134,"leftBV":0,"rightBV":0} 
+[2025-04-24 22:19:21] production.INFO: Calculated BV points for node: {"node_id":135,"leftBV":0,"rightBV":0} 
+[2025-04-24 22:20:12] production.INFO: Calculated BV points for node: {"node_id":129,"leftBV":9,"rightBV":48} 
+[2025-04-24 22:20:12] production.INFO: Calculated BV points for node: {"node_id":134,"leftBV":0,"rightBV":0} 
+[2025-04-24 22:20:12] production.INFO: Calculated BV points for node: {"node_id":139,"leftBV":0,"rightBV":0} 
+[2025-04-24 22:20:12] production.INFO: Calculated BV points for node: {"node_id":135,"leftBV":0,"rightBV":0} 
+[2025-04-25 10:51:07] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-04-25 10:51:45] production.ERROR: Failed to clear session: Trying to access array offset on value of type null  
+[2025-04-25 10:51:45] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-04-25 10:59:13] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":null,"calculated_profile_limit":0} 
+[2025-04-25 10:59:38] production.ERROR: Failed to clear session: Trying to access array offset on value of type null  
+[2025-04-25 10:59:38] production.INFO: Data to update: {"upgrade_membership_id":2} 
+[2025-04-25 10:59:52] production.INFO: Pending profile requests count for user 129: 0  
+[2025-04-25 10:59:52] production.INFO: Profile ID: 50, First Image ID: 1082, Unlocked: No  
+[2025-04-25 11:00:01] production.INFO: Fetching profile for user ID: 129  
+[2025-04-25 11:00:01] production.INFO: MatrimonyKYC Data: {"id":20,"user_id":129,"marital_status":"married","document":null,"dob":"2007-02-01","family_status":"Middle Class","family_values":"Orthodox","family_type":"Nuclear","disability":"Yes","height":190,"weight":60,"image":"1082","caste":null,"dosham":null,"gothram":null,"education":"BE","occupation":"Doctor","annual_income":"5000000","employed_in":"Private","country":null,"state":null,"city":null,"about":"test","created_at":"2025-04-23 16:42:50","updated_at":"2025-04-23 16:42:50","username":"Kavya"} 
+[2025-04-25 11:00:45] production.INFO: IPN Route, matrimony price: 500  

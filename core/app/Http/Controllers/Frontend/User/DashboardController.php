@@ -67,18 +67,18 @@ class DashboardController extends Controller
         $sealingLimit = get_static_option('sealing_limit') ?? 1;
 
         // --- Add BV Value to user ---
-        $user->self_purchased_bv = ($user->self_purchased_bv ?? 0) + $bvvalue;
+        // $user->self_purchased_bv = ($user->self_purchased_bv ?? 0) + $bvvalue;
 
         // If user has paid profile, add matrimony BV points
-        $hasPaidProfile = DB::table('profile_listings')
-            ->where('user_id', $user->id)
-            ->where('paid', 1)
-            ->exists();
+        // $hasPaidProfile = DB::table('profile_listings')
+        //     ->where('user_id', $user->id)
+        //     ->where('paid', 1)
+        //     ->exists();
 
-        if ($hasPaidProfile) {
-            $extraPoints = get_static_option('matrimony_bv_points') ?? 0;
-            $user->self_purchased_bv += $extraPoints;
-        }
+        // if ($hasPaidProfile) {
+        //     $extraPoints = get_static_option('matrimony_bv_points') ?? 0;
+        //     $user->self_purchased_bv += $extraPoints;
+        // }
 
         $user->save();
 

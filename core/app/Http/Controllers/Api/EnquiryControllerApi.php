@@ -98,6 +98,8 @@ class EnquiryControllerApi extends Controller
         $normal_membership = $userMemberships->firstWhere('membership.category', 0);
         $matrimony_membership = $userMemberships->firstWhere('membership.category', 1);
 
+        $imageUrl = $user->image ? get_attachment_url_by_ids($user->image) : null;
+
         $profile = [
             'profile_id' => $user->partner_id,
             'sponsor_id' => $sponsor?->partner_id,
@@ -115,7 +117,7 @@ class EnquiryControllerApi extends Controller
             'ifsc_code' => $verification->ifsc_code ?? null,
             'account_no' => $verification->bank_account_no ?? null,
             'account_type' => $verification->account_type ?? null,
-            'image' => $user->image,
+            'image' => $imageUrl,
             'user_ads_posted' => $user_ads_posted,
             'average_rating' => $averageRating,
             'review_count' => $user_review_count,
@@ -126,8 +128,8 @@ class EnquiryControllerApi extends Controller
             'state_id' => $user->state_id,
             'city_id' => $user->city_id,
             'phone' => $user->phone,
-            'is_verified' => $user->email_verified_at && $user->phone_verified_at,
-
+            'is_verified' => $verification->verify_by ?? null,
+        
             // Membership info
             'normal_membership' => $normal_membership,
             'matrimony_membership' => $matrimony_membership,

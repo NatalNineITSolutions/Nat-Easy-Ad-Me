@@ -94,7 +94,7 @@ class MatrimonyController extends Controller
             'profile' => $profile
         ], 201);
     }
-
+    
     public function sendRequest(Request $request, $profileId)
     {
 
@@ -159,24 +159,20 @@ class MatrimonyController extends Controller
         ]);
     }
 
+   // In your controller
     public function storeUserDetails(Request $request)
     {
         try {
-
             if (!auth()->check()) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'User must be logged in to submit details.'
                 ], 401);
             }
-
-
-            \Log::info('Incoming request data:', $request->all());
-
-
+    
             $validatedData = $request->validate([
                 'marital_status' => 'required|string',
-                'dob' => 'required|date',
+                'dob' => 'required|date_format:d-m-Y', // Changed validation
                 'family_status' => 'required|string',
                 'family_values' => 'required|string',
                 'family_type' => 'required|string',
@@ -193,39 +189,40 @@ class MatrimonyController extends Controller
                 'country' => 'required|string',
                 'state' => 'required|string',
                 'city' => 'required|string',
-                'about' => 'required|string',
+                'about' => 'required|string|max:500',
+                'image' => 'required|numeric', // Now expecting image ID
+                'gallery_images' => 'sometimes|array',
+                'gallery_images.*' => 'numeric'
             ]);
-
-
-            $validatedData['marital_status'] = strtolower($validatedData['marital_status']);
-
-
+    
+            // Convert date to MySQL format
+            $validatedData['dob'] = \Carbon\Carbon::createFromFormat('d-m-Y', $validatedData['dob'])->format('Y-m-d');
+            
+            // Attach authenticated user ID
             $validatedData['user_id'] = auth()->id();
-
-
-            \Log::info('Validated data with user_id:', $validatedData);
-
-
+            $validatedData['marital_status'] = strtolower($validatedData['marital_status']);
+    
+            // Save to database
             $matrimonyKyc = MatrimonyKyc::create($validatedData);
-
+    
             return response()->json([
                 'status' => 'success',
                 'message' => 'User details saved successfully!',
-                'user_id' => $matrimonyKyc->id
+                'user_id' => 'M' . str_pad($matrimonyKyc->user_id, 6, '0', STR_PAD_LEFT),
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Validation failed',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
             \Log::error('User Details Store Error: ' . $e->getMessage());
             \Log::error('Stack Trace: ' . $e->getTraceAsString());
-
+    
             return response()->json([
                 'status' => 'error',
-                'message' => 'An error occurred. Please try again.'
+                'message' => 'An error occurred. Please try again.',
             ], 500);
         }
     }

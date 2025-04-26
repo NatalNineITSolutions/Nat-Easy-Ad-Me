@@ -2,9 +2,6 @@
 
 @section('title', 'Matrimony Home')
 
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
-
 @section('style')
     <style>
         .hibiscus {
@@ -12,11 +9,11 @@
             margin-bottom: 15px;
         }
 
-        /* .blurred {
+        .blurred {
             filter: blur(8px);
             -webkit-filter: blur(8px);
             transition: filter 0.3s ease;
-        } */
+        }
 
         .banner-heading {
             font-family: "Prociono", serif;
@@ -93,13 +90,6 @@
             margin: 20px auto;
         }
 
-        /* Card Slider Container - New Addition */
-        .card-slider-container {
-            overflow: hidden;
-            width: 100%;
-            position: relative;
-        }
-
         /* Profile Container - Updated */
         .profile-container {
             margin-top: 30px;
@@ -110,18 +100,14 @@
             width: 100%;
         }
 
-        /* Card Slider - Updated */
-        .card-slider {
-            min-height: 400px;
-            visibility: hidden;
-            margin: 0 auto;
+        /* Cards Grid Layout */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
             max-width: 1300px;
-            padding: 20px 0;
-        }
-
-        .card-slider.slick-initialized {
-            visibility: visible;
-            min-height: auto;
+            margin: 0 auto;
+            padding: 20px;
         }
 
         /* Rest of your existing CSS remains the same */
@@ -177,15 +163,16 @@
             text-decoration: none;
         }
 
-        .card-slider .card {
+        .card {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             border-radius: 8px;
             transition: all 0.3s ease;
-            margin: 0 15px;
             padding: 20px 15px;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .card h2 {
@@ -202,53 +189,6 @@
             margin: 5px 0;
             text-align: center;
             color: #555;
-        }
-
-        .slick-slide {
-            padding: 0 15px;
-        }
-
-        .slick-list {
-            margin: 0 -5px;
-            padding: 20px 0;
-        }
-
-        .slick-track {
-            display: flex;
-            align-items: stretch;
-        }
-
-        .slick-prev,
-        .slick-next {
-            width: 40px;
-            height: 40px;
-            background: #C48C46;
-            border-radius: 50%;
-            z-index: 1;
-        }
-
-        .slick-prev {
-            left: -50px;
-        }
-
-        .slick-next {
-            right: -50px;
-        }
-
-        .slick-prev:before,
-        .slick-next:before {
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
-            color: white;
-            font-size: 20px;
-        }
-
-        .slick-prev:before {
-            content: '\f104';
-        }
-
-        .slick-next:before {
-            content: '\f105';
         }
 
         .btn-profile {
@@ -418,19 +358,13 @@
             font-weight: 600;
         }
 
-        .slick-prev:hover {
-            background: #C48C46;
-        }
-
-        .slick-next:hover {
-            background: #C48C46;
-        }
-
-        .card-slider .card {
-            width: 220px;
-        }
-
         /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .cards-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
         @media (max-width: 992px) {
             .banner-heading {
                 font-size: 40px;
@@ -451,11 +385,14 @@
                 padding: 8px;
                 font-size: 14px;
             }
+
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 768px) {
             .card {
-                margin: 0 10px;
                 padding: 15px;
             }
 
@@ -466,11 +403,9 @@
             .card p {
                 font-size: 13px;
             }
-
-            .card-slider .card {
-                width: 220px;
-            }
         }
+
+
 
         @media (max-width: 576px) {
             .banner-heading {
@@ -518,22 +453,23 @@
                 gap: 5px;
             }
 
-            .card-slider {
-                max-width: 300px;
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+                padding: 10px;
             }
 
-            .slick-prev,
-            .slick-next {
-                width: 30px;
-                height: 30px;
+            .user-details {
+                width: 100%;
             }
 
-            .slick-prev {
-                left: -15px;
+            .details{
+                display: flex;
+                flex-direction: column;
             }
 
-            .slick-next {
-                right: -15px;
+            .location{
+                margin-top: 8px;
             }
         }
     </style>
@@ -585,42 +521,40 @@
             </div>
             <img class="profile-container-section-img" src="/assets/uploads/media-uploader/profile-design.png" alt="">
         </div>
-        <div class="card-slider-container">
-            <div class="card-slider">
-                @forelse($profiles as $profile)
-                    <div class="card">
-                        @if (Str::startsWith($profile->first_image_url, '<img'))
-                            <div>{!! str_replace('<img', '<img style="height: 100px;"', $profile->first_image_url) !!}</div>
-                        @else
-                            <img src="{{ $profile->first_image_url }}" alt="{{ $profile->name }}" style="height: 100px;">
-                        @endif
-                        <div class="mt-3 user-details">
-                            <h2>{{ $profile->name }}</h2>
-                            <div class="details">
-                                <div class="age">
-                                    <img src="/assets/uploads/matrimony/age.png" alt="">
-                                    <p>{{ $profile->age }} Years</p>
-                                </div>
-                                <div class="occupation">
-                                    <img src="/assets/uploads/matrimony/occupation.png" alt="">
-                                    <p>{{ $profile->occupation ?? 'Not specified' }}</p>
-                                </div>
+        <div class="cards-grid">
+            @forelse($profiles as $profile)
+                <div class="card">
+                    @if (Str::startsWith($profile->first_image_url, '<img'))
+                        <div>{!! str_replace('<img', '<img style="height: 100px;"', $profile->first_image_url) !!}</div>
+                    @else
+                        <img src="{{ $profile->first_image_url }}" alt="{{ $profile->name }}" style="height: 100px;">
+                    @endif
+                    <div class="mt-3 user-details">
+                        <h2>{{ $profile->name }}</h2>
+                        <div class="details">
+                            <div class="age">
+                                <img src="/assets/uploads/matrimony/age.png" alt="">
+                                <p>{{ $profile->age }} Years</p>
                             </div>
-                            <div class="location">
-                                <img src="/assets/uploads/matrimony/location.png" alt="">
-                                <p>{{ $profile->city ?? 'Location not specified' }}</p>
+                            <div class="occupation">
+                                <img src="/assets/uploads/matrimony/occupation.png" alt="">
+                                <p>{{ $profile->occupation ?? 'Not specified' }}</p>
                             </div>
-                            <a href="{{ route('matrimony.profile-details', ['id' => $profile->id]) }}" class="btn-profile">View
-                                Profile</a>
                         </div>
+                        <div class="location">
+                            <img src="/assets/uploads/matrimony/location.png" alt="">
+                            <p>{{ $profile->city ?? 'Location not specified' }}</p>
+                        </div>
+                        <a href="{{ route('matrimony.profile-details', ['id' => $profile->id]) }}" class="btn-profile">View
+                            Profile</a>
                     </div>
-                @empty
-                    <div class="card">
-                        <h2>No Profiles Available</h2>
-                        <p>Check back later for new matches</p>
-                    </div>
-                @endforelse
-            </div>
+                </div>
+            @empty
+                <div class="card">
+                    <h2>No Profiles Available</h2>
+                    <p>Check back later for new matches</p>
+                </div>
+            @endforelse
         </div>
     </div>
 
@@ -643,66 +577,9 @@
 
 @section('script')
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
     <script>
         $(document).ready(function () {
-            // Initialize slider after images are loaded
-            var $slider = $('.card-slider');
-
-            // First check if images are already loaded
-            if (imagesLoaded($slider)) {
-                initSlider();
-            } else {
-                // Wait for images to load if they're not ready
-                $slider.imagesLoaded().done(function () {
-                    initSlider();
-                });
-            }
-
-            function imagesLoaded($element) {
-                var $images = $element.find('img');
-                if ($images.length === 0) return true;
-
-                var loaded = true;
-                $images.each(function () {
-                    if (!this.complete) {
-                        loaded = false;
-                        return false;
-                    }
-                });
-                return loaded;
-            }
-
-            function initSlider() {
-                $slider.on('init', function () {
-                    $(this).addClass('slick-initialized');
-                }).slick({
-                    dots: false,
-                    arrows: true,
-                    slidesToShow: 4,
-                    infinite: false,
-                    responsive: [{
-                        breakpoint: 1024,
-                        settings: {
-                            slidesToShow: 3
-                        }
-                    },
-                    {
-                        breakpoint: 800,
-                        settings: {
-                            slidesToShow: 2
-                        }
-                    },
-                    {
-                        breakpoint: 600,
-                        settings: {
-                            slidesToShow: 1
-                        }
-                    }]
-                });
-            }
-
             // Prevent back button issue
             history.pushState(null, null, location.href);
             window.onpopstate = function () {

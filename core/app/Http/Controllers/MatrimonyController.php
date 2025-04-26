@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\UnlockedProfile;
 use Modules\Membership\app\Models\Membership;
 use Modules\Membership\app\Models\MembershipHistory;
+use Modules\Membership\app\Models\UserMembership;
 use App\Models\ProfileListing;
 use Illuminate\Support\Str;
 use App\Models\Gothram;
@@ -25,6 +26,7 @@ use Modules\CountryManage\app\Models\Country;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\ProfileRequest;
+
 
 class MatrimonyController extends Controller
 {
@@ -46,12 +48,12 @@ class MatrimonyController extends Controller
 
         $notificationCount = ProfileRequest::whereHas('profile', function ($query) use ($user) {
             $query->where('user_id', $user->id);
-            })
+        })
             ->where('status', 'pending')
             ->count();
-            
-            // Log the notification count
-            Log::info("Pending profile requests count for user {$user->id}: {$notificationCount}");
+
+        // Log the notification count
+        Log::info("Pending profile requests count for user {$user->id}: {$notificationCount}");
 
         $profiles = ProfileListing::where('is_verified', 1)
             ->where('id', '!=', $user->id)
@@ -91,7 +93,7 @@ class MatrimonyController extends Controller
                 return $profile;
             });
 
-            return view('matrimony.index', compact('profiles', 'notificationCount'));
+        return view('matrimony.index', compact('profiles', 'notificationCount'));
     }
 
     public function searchresults(Request $request)
@@ -104,7 +106,7 @@ class MatrimonyController extends Controller
         [$minAge, $maxAge] = explode('-', $ageRange);
 
         $userIds = User::when($gender, fn($q) => $q->where('gender', $gender))
-                    ->pluck('id');
+            ->pluck('id');
 
         $matchedProfiles = ProfileListing::where(function ($query) use ($userIds, $minAge, $maxAge, $occupation, $location) {
             $query->when($userIds->isNotEmpty(), fn($q) => $q->orWhereIn('user_id', $userIds))
@@ -112,11 +114,11 @@ class MatrimonyController extends Controller
                 ->orWhere('occupation', 'LIKE', "%$occupation%")
                 ->orWhere('city', 'LIKE', "%$location%");
         })
-        ->get(['id', 'name', 'age', 'occupation', 'city']);
+            ->get(['id', 'name', 'age', 'occupation', 'city']);
 
         return view('matrimony.search-results', compact('matchedProfiles'));
     }
-    
+
     public function price()
     {
         $memberships = Membership::where('category', 1)->get();
@@ -135,25 +137,42 @@ class MatrimonyController extends Controller
     public function profileDetails($id)
     {
         $user = Auth::user();
-        $profileRequests = ProfileRequest::all();
 
         if (!$user) {
             return redirect()->route('user.login')->with('error', 'Please log in to view profile details');
         }
 
         $profile = ProfileListing::with(['user', 'caste', 'city'])->findOrFail($id);
-
-        $isOwnProfile = $profile->user_id === $user->id; // Add this line to check if it's the user's own profile
+        $isOwnProfile = $profile->user_id === $user->id;
 
         $isUnlocked = UnlockedProfile::where('user_id', $user->id)
             ->where('profile_id', $id)
             ->exists();
 
-        $hasRemainingViews = MembershipHistory::where('user_id', $user->id)
-            ->where('profile_limit', '>', 0)
-            ->exists();
+        if (!$isUnlocked) {
+            // Pick the user's active membership (from user_memberships table)
+            $membership = UserMembership::where('user_id', $user->id)
+                ->where('profile_limit', '>', 0)
+                ->orderBy('id', 'desc') // pick latest if multiple entries
+                ->first();
 
-        $shouldBlur = !$isUnlocked && !$hasRemainingViews;
+            if ($membership) {
+                DB::transaction(function () use ($membership, $user, $id) {
+                    // Deduct profile limit
+                    $membership->decrement('profile_limit');
+
+                    // Save unlocked profile
+                    UnlockedProfile::create([
+                        'user_id' => $user->id,
+                        'profile_id' => $id,
+                    ]);
+                });
+
+                $isUnlocked = true; // Now unlocked after transaction
+            }
+        }
+
+        $shouldBlur = !$isUnlocked;
 
         $mainImageHtml = null;
         $galleryImagesHtml = [];
@@ -165,8 +184,6 @@ class MatrimonyController extends Controller
             );
 
             if (!empty($imageIds)) {
-                $galleryImagesHtml = [];
-
                 $mainImageHtml = $shouldBlur
                     ? '<img src="' . get_attachment_url_by_id(trim($imageIds[0])) . '" class="blurred" alt="Profile Image">'
                     : render_image_markup_by_attachment_id(trim($imageIds[0]));
@@ -190,9 +207,8 @@ class MatrimonyController extends Controller
             'mainImageHtml' => $mainImageHtml,
             'galleryImagesHtml' => $galleryImagesHtml,
             'isUnlocked' => $isUnlocked,
-            'hasRemainingViews' => $hasRemainingViews,
             'shouldBlur' => $shouldBlur,
-            'userEmail' => $profile->user->email ?? null,  
+            'userEmail' => $profile->user->email ?? null,
             'userPhone' => $profile->user->phone ?? null,
             'isOwnProfile' => $isOwnProfile,
             'isRequestAccepted' => $isRequestAccepted,
@@ -210,9 +226,11 @@ class MatrimonyController extends Controller
         }
 
         // Check for existing request
-        if (ProfileRequest::where('sender_id', auth()->id())
-                        ->where('profile_id', $profile->id)
-                        ->exists()) {
+        if (
+            ProfileRequest::where('sender_id', auth()->id())
+                ->where('profile_id', $profile->id)
+                ->exists()
+        ) {
             return response()->json([
                 'message' => 'You have already sent a request to this profile'
             ], 422);
@@ -354,7 +372,7 @@ class MatrimonyController extends Controller
             'city' => 'required|integer',
             'about' => 'required|string|max:500',
             'document' => 'nullable|file|mimes:pdf|max:2048',
-            'image' => 'required|string', 
+            'image' => 'required|string',
         ]);
 
         try {
@@ -663,6 +681,7 @@ class MatrimonyController extends Controller
 
         return response()->json(['status' => 'error', 'message' => 'No profiles remaining']);
     }
+
     public function unlockProfile(Request $request)
     {
         $user = Auth::user();
@@ -689,8 +708,8 @@ class MatrimonyController extends Controller
                 return response()->json(['status' => 'success']);
             }
 
-            // Check membership
-            $membership = MembershipHistory::where('user_id', $user->id)
+            // Check in user_memberships table
+            $membership = UserMembership::where('user_id', $user->id)
                 ->where('profile_limit', '>', 0)
                 ->first();
 
@@ -709,7 +728,7 @@ class MatrimonyController extends Controller
                     'profile_id' => $request->profile_id
                 ]);
 
-                // Deduct from limit
+                // Deduct from profile_limit
                 $membership->decrement('profile_limit');
 
                 return response()->json([
@@ -725,24 +744,24 @@ class MatrimonyController extends Controller
             }
         });
     }
-    
+
     public function dashboard()
     {
         $userId = auth()->id();
-    
+
         // Get user preferences
         $userPreferences = MatrimonyPreference::where('user_id', $userId)->first();
-    
+
         // Get potential matches (only verified users)
         $matchesQuery = ProfileListing::where('user_id', '!=', $userId)
-                        ->where('is_verified', 1);
-    
+            ->where('is_verified', 1);
+
         if ($userPreferences && $userPreferences->occupation) {
             $matchesQuery->where('occupation', $userPreferences->occupation);
         }
-    
+
         $matches = $matchesQuery->inRandomOrder()->limit(4)->get();
-    
+
         // Add first image URL to each profile
         $matches->each(function ($profile) {
             $firstImageId = $profile->image;
@@ -750,46 +769,45 @@ class MatrimonyController extends Controller
                 ? render_image_markup_by_attachment_id($firstImageId)
                 : '/assets/uploads/media-uploader/profile.png';
         });
-    
+
         // Get all requests for current user's profiles
-        $receivedRequests = ProfileRequest::with(['sender.identity_verify','sender.kyc', 'profile'])
-            ->whereHas('profile', function($query) use ($userId) {
+        $receivedRequests = ProfileRequest::with(['sender.identity_verify', 'sender.kyc', 'profile'])
+            ->whereHas('profile', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
             })
             ->where('status', 'pending')
             ->latest()
             ->get();
-    
-        $acceptedRequests = ProfileRequest::with(['sender.identity_verify','sender.kyc', 'profile'])
-            ->whereHas('profile', function($query) use ($userId) {
+
+        $acceptedRequests = ProfileRequest::with(['sender.identity_verify', 'sender.kyc', 'profile'])
+            ->whereHas('profile', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
             })
             ->where('status', 'accepted')
             ->latest()
             ->get();
-    
-        $rejectedRequests = ProfileRequest::with(['sender.identity_verify','sender.kyc', 'profile'])
-            ->whereHas('profile', function($query) use ($userId) {
+
+        $rejectedRequests = ProfileRequest::with(['sender.identity_verify', 'sender.kyc', 'profile'])
+            ->whereHas('profile', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
             })
             ->where('status', 'rejected')
             ->latest()
             ->get();
-    
-        // Get the most recently created membership
-        $latestMembership = MembershipHistory::with('membership')
-        ->where('user_id', $userId)
-        ->latest('created_at') // Get the most recently created plan
-        ->first();
+
+        $userMembership = UserMembership::where('user_id', $userId)
+            ->latest('created_at')
+            ->first();
 
         $membershipInfo = null;
-        if ($latestMembership && $latestMembership->membership) {
+        if ($userMembership && $userMembership->membership && $userMembership->membership->category == 1) {
+            // Only if membership exists and its category is 1
             $membershipInfo = [
-                'title' => $latestMembership->membership->title,
-                'profile_limit' => $latestMembership->membership->profile_limit
+                'title' => $userMembership->membership->title, // Title from Membership
+                'profile_limit' => $userMembership->profile_limit // Limit from UserMembership
             ];
         }
-
+        
         return view('matrimony.dashboard', compact(
             'matches',
             'receivedRequests',

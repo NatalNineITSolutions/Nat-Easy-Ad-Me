@@ -18,6 +18,13 @@ class MembershipService
     public function update_database($last_membership_id, $transaction_id, $membership_history_id, $upgrade_membership_id)
     {
         try {
+            \Log::info('Updating membership database', [
+                'last_membership_id' => $last_membership_id,
+                'transaction_id' => $transaction_id,
+                'membership_history_id' => $membership_history_id,
+                'upgrade_membership_id' => $upgrade_membership_id,
+            ]);
+
             $last_membership_id = (int) $last_membership_id;
             $membership_history_id = (int) $membership_history_id;
 
@@ -48,10 +55,24 @@ class MembershipService
                 'payment_status' => 'complete',
                 'status' => 1,
                 'transaction_id' => $transaction_id,
+                'initial_profile_limit' => $new_membership->profile_limit,
                 'profile_limit' => $new_membership->profile_limit,
                 'initial_listing_limit' => $new_membership->listing_limit,
+                'initial_gallery_images' => $new_membership->gallery_images,
+                'initial_featured_listing' => $new_membership->featured_listing,
+                'initial_enquiry_form' => $new_membership->enquiry_form,
+                'initial_business_hour' => $new_membership->business_hour,
+                'initial_membership_badge' => $new_membership->membership_badge,
+
                 'listing_limit' => $new_membership->listing_limit,
                 'price' => $new_membership->price,
+                'gallery_images' => $new_membership->gallery_images ,
+                'featured_listing' => $new_membership->featured_listing ,
+
+                'enquiry_form' => $new_membership->enquiry_form  ? 1 : 0,
+                'business_hour' => $new_membership->business_hour ? 1 : 0,
+                'membership_badge' => $new_membership->membership_badge ? 1 : 0,
+    
             ];
 
             // MATRIMONY MEMBERSHIP (Category = 1)
@@ -71,18 +92,32 @@ class MembershipService
                     UserMembership::create($baseData);
                 }
 
-            // NORMAL MEMBERSHIP
+                // NORMAL MEMBERSHIP
             } else {
                 $expire_date = Carbon::now()->addDays(
                     Carbon::parse($membership_details->expire_date)->diffInDays(Carbon::now()) +
-                    Carbon::parse(optional($membership_history)->expire_date)->diffInDays(Carbon::now())
+                        Carbon::parse(optional($membership_history)->expire_date)->diffInDays(Carbon::now())
                 );
                 $baseData['expire_date'] = $expire_date;
 
-                // Always update the current normal membership row
-                UserMembership::where('id', $last_membership_id)
+                $overlap_matrimony_membership = UserMembership::where('user_id',  $membership_details->user_id)
+                    ->whereHas('membership', fn($q) => $q->where('category', 0))
+                    ->first();
+
+                \Log::info('Overlap Matrimony Membership', [
+                    'overlap_matrimony_membership' => $overlap_matrimony_membership->id ?? 0,
+                ]);
+             
+                if ($overlap_matrimony_membership) {
+                    UserMembership::where('id', $overlap_matrimony_membership->id)
                     ->where('user_id', $membership_details->user_id)
                     ->update($baseData);
+                   
+                } else {
+                    $baseData['user_id'] = $membership_details->user_id;
+                    UserMembership::create($baseData);
+                }
+               
             }
 
             // Update Membership History
@@ -127,7 +162,6 @@ class MembershipService
 
             session()->forget(['order_id', 'membership_history_id', 'upgrade_membership_id']);
             return true;
-
         } catch (\Exception $e) {
             Log::error('Failed to update membership: ' . $e->getMessage());
             return false;

@@ -63,6 +63,10 @@ class BuyMembershipIPNController extends Controller
     {
         $razorpay = PaymentGatewayCredential::get_razorpay_credential();
         $payment_data = $razorpay->ipn_response();
+
+
+        Log::info('Razorpay IPN Data: ', $payment_data);
+
         return $this->common_ipn_data($payment_data);
     }
 
@@ -247,48 +251,84 @@ class BuyMembershipIPNController extends Controller
     {
         return $this->common_ipn_data($data);
     }
-
+    
     public function send_jobs_mail($last_membership_id, $user_id)
     {
-        if (empty($last_membership_id)) {
+        if (! $last_membership_id) {
             return redirect()->route('homepage');
         }
-        $user = User::select(['id', 'first_name', 'last_name', 'email'])->where('id', $user_id)->first();
-        if ($user) {
-            $name = $user->first_name . ' ' . $user->last_name;
-        } else {
-            $name = 'Guest';
-        }
-        $email = $user->email;
-
+    
+        $user = User::find($user_id, ['first_name','last_name','email']);
+        $name = $user 
+            ? trim("{$user->first_name} {$user->last_name}") 
+            : 'Guest';
+        $email = $user->email ?? null;
+    
         $membership = UserMembership::find($last_membership_id);
-        $membership_type = $membership->membership?->membership_type?->type;
-        $membership_price = float_amount_with_currency_symbol($membership->price);
-        $membership_expire_date = isset($membership->expire_date) ? Carbon::parse($membership->expire_date)->toFormattedDateString() : '';
-
+        if (! $membership) {
+            Log::error("Membership #{$last_membership_id} not found");
+            return;
+        }
+    
+        // Safely compute price
+        $symbols = get_static_option('site_currency_symbol') ?: [];
+        $currency = $membership->price_currency ?? 'INR';
+        $symbol   = $symbols[$currency] ?? '₹';
+        $membership_price = $symbol . number_format($membership->price, 2);
+    
+        $membership_type        = $membership->membership?->membership_type?->type ?: '—';
+        $membership_expire_date = optional($membership->expire_date)
+            ? Carbon::parse($membership->expire_date)->toFormattedDateString()
+            : '';
+    
+        // Prepare user email
+        $userSubject = get_static_option('user_membership_purchase_email_subject')
+                       ?? __('Membership purchase email');
+        $userMessage = get_static_option('user_membership_purchase_message')
+                       ?? __('Your membership purchase successfully completed.');
+        $userMessage = str_replace(
+            ["@membership_id","@membership_type","@membership_price","@membership_expire_date"],
+            [$last_membership_id,$membership_type,$membership_price,$membership_expire_date],
+            $userMessage
+        );
+    
+        // Send user email
         try {
-            //Send membership email to user
-            $subject = get_static_option('user_membership_purchase_email_subject') ?? __('Membership purchase email');
-            $message = get_static_option('user_membership_purchase_message') ?? __('Your membership purchase successfully completed.');
-            $message = str_replace(["@membership_id", "@membership_type", "@membership_price", "@membership_expire_date"], [$last_membership_id, $membership_type, $membership_price, $membership_expire_date], $message);
-            Mail::to($user->email)->send(new BasicMail([
-                'subject' => $subject,
-                'message' => $message
-            ]));
-
-            //Send membership email to admin
-            $subject = get_static_option('user_membership_purchase_email_subject') ?? __('Membership purchase email');
-            $message = get_static_option('user_membership_purchase_message_for_admin') ?? __('A user just purchase a membership.');
-            $message = str_replace(["@membership_id", "@membership_type", "@membership_price", "@membership_expire_date", "@name", "@email"], [$last_membership_id, $membership_type, $membership_price, $membership_expire_date, $name, $email], $message);
-            Mail::to(get_static_option('site_global_email'))->send(new BasicMail([
-                'subject' => $subject,
-                'message' => $message
-            ]));
+            Mail::to($email)
+                ->send(new BasicMail([
+                    'subject' => $userSubject,
+                    'message' => $userMessage,
+                ]));
+            Log::info("Membership email sent to user #{$user_id}");
         } catch (\Exception $e) {
-            Log::error('Failed to clear session: ' . $e->getMessage());
+            Log::error('Failed to send user membership email: ' . $e->getMessage());
+        }
+    
+        // Prepare admin email
+        $adminEmail   = get_static_option('site_global_email');
+        $adminSubject = get_static_option('user_membership_purchase_email_subject')
+                        ?? __('Membership purchase email');
+        $adminMessage = get_static_option('user_membership_purchase_message_for_admin')
+                        ?? __('A user just purchased a membership.');
+        $adminMessage = str_replace(
+            ["@membership_id","@membership_type","@membership_price","@membership_expire_date","@name","@email"],
+            [$last_membership_id,$membership_type,$membership_price,$membership_expire_date,$name,$email],
+            $adminMessage
+        );
+    
+        // Send admin email
+        try {
+            Mail::to($adminEmail)
+                ->send(new BasicMail([
+                    'subject' => $adminSubject,
+                    'message' => $adminMessage,
+                ]));
+            Log::info("Membership notification sent to admin ({$adminEmail})");
+        } catch (\Exception $e) {
+            Log::error('Failed to send admin membership email: ' . $e->getMessage());
         }
     }
-
+    
     // private function update_profile_listing($order_id, $payment_method)
     // {
     //     // Update the profile listing record

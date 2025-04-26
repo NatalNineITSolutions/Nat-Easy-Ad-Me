@@ -42,7 +42,7 @@ class DashboardController extends Controller
         ])->findOrFail($user_id);
         $membership = UserMembership::where('user_id', $user_id)->first();
 
-        $current_membership = optional($user->membershipUser);
+        $current_membership = optional($user->adsMembership);
         $previous_membership = $user->membershipHistory()->latest('created_at')->first();
 
         // Basic user stats

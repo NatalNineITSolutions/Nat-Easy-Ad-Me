@@ -14,8 +14,8 @@
                             @include('frontend.user.layout.partials.sidebar')
                             <div class="main-body">
                                 <x-frontend.user.responsive-icon />
-                                @if(moduleExists('Membership'))
-                                    @if(membershipModuleExistsAndEnable('Membership'))
+                                @if (moduleExists('Membership'))
+                                    @if (membershipModuleExistsAndEnable('Membership'))
                                         @include('membership::frontend.user.membership.user-dashboard-membership-message')
                                     @endif
                                 @endif
@@ -25,7 +25,7 @@
                                         <div class="seller-details">
                                             <div class="seller-details-wraper">
                                                 <div class="seller-img">
-                                                    @if(!empty($user->image))
+                                                    @if (!empty($user->image))
                                                     {!! render_image_markup_by_attachment_id($user->image) !!}
                                                     @else
                                                     <img src="{{ asset('assets/frontend/img/static/user-no-image.webp') }}"
@@ -44,7 +44,7 @@
                                                         {{ optional($user->created_at)->format('Y') }}
                                                     </div>
                                                     <div class="seller-ratings mt-3">
-                                                        @if($averageRating >= 1)
+                                                        @if ($averageRating >= 1)
                                                         <a href="javascript:void(0)" class="author_tag__review__star">
                                                             {!! ratting_star(round($averageRating, 1)) !!}
                                                         </a>
@@ -68,8 +68,7 @@
                                         <div class="devider"></div>
 
                                         <div class="seller-contact">
-                                            @if(!empty($user->address) || !empty($user->country_id) ||
-                                            !empty($user->state_id) || !empty($user->city_id))
+                                            @if (!empty($user->address) || !empty($user->country_id) || !empty($user->state_id) || !empty($user->city_id))
                                             <div class="locations">
                                                 <svg width="16" height="17" viewBox="0 0 16 17" fill="none"
                                                     xmlns="http://www.w3.org/2000/svg">
@@ -131,7 +130,7 @@
                                                 </div>
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('BV from Referrals:') }}</span>
-                                                    <span class="stat-value">{{number_format($bvFromReferrals)}}</span>
+                                                    <span class="stat-value">{{ number_format($bvFromReferrals) }}</span>
                                                 </div>
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('Referral Commission:') }}</span>
@@ -156,8 +155,7 @@
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('Team BV Left:') }}</span>
                                                     <div class="stat-value-group">
-                                                        <span
-                                                            class="stat-value">{{ number_format($leftBvPoints) }}</span>
+                                                        <span class="stat-value">{{ number_format($leftBvPoints) }}</span>
                                                     </div>
                                                 </div>
 
@@ -165,8 +163,7 @@
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('Team BV Right:') }}</span>
                                                     <div class="stat-value-group">
-                                                        <span
-                                                            class="stat-value">{{ number_format($rightBvPoints) }}</span>
+                                                        <span class="stat-value">{{ number_format($rightBvPoints) }}</span>
                                                     </div>
                                                 </div>
 
@@ -192,7 +189,7 @@
                                                     <span class="stat-label">{{ __('Balanced BP:') }}</span>
                                                     <span class="stat-value">{{ $balancedBP }}</span>
                                                 </div>
-                                                @if($showIncome)
+                                                @if ($showIncome)
                                                     <div class="stat-item">
                                                         <span class="stat-label">{{ __('Income:') }}</span>
                                                         <span class="stat-value">{{ number_format($income) }}</span>
@@ -225,7 +222,7 @@
                                         </div>
                                         <div class="col-md-3 col-6">
                                             <div class="list-state bg-orange text-white">
-                                                <h4 class="list-head">{{ $remaining_listings}}</h4>
+                                                <h4 class="list-head">{{ $remaining_listings }}</h4>
                                                 <p class="post-state">{{ __('Remaining Listings') }}</p>
                                             </div>
                                         </div>
@@ -261,22 +258,20 @@
                                             data-target="#review-given">{{ __('Reviews Given') }}</button>
                                     </div>
                                     <div class="review-wraper mt-20 active" id="review-recived">
-                                        @if($user->reviews)
-                                                                            @php
-                                                                                $review_type = 'received';
-                                                                            @endphp
-                                                                            <x-user.user-reviews :reviews="$user->reviews" :user="$user"
-                                                                                :reviewtype="$review_type" />
+                                        @if ($user->reviews)
+                                            @php
+                                                $review_type = 'received';
+                                            @endphp
+                                            <x-user.user-reviews :reviews="$user->reviews" :user="$user" :reviewtype="$review_type" />
                                         @endif
                                     </div>
 
                                     <div class="review-wraper mt-20" id="review-given">
-                                        @if($user_given_reviews)
-                                                                            @php
-                                                                                $review_type = 'given';
-                                                                            @endphp
-                                                                            <x-user.user-reviews :reviews="$user_given_reviews" :user="$user"
-                                                                                :reviewtype="$review_type" />
+                                        @if ($user_given_reviews)
+                                            @php
+                                                $review_type = 'given';
+                                            @endphp
+                                            <x-user.user-reviews :reviews="$user_given_reviews" :user="$user" :reviewtype="$review_type" />
                                         @endif
                                     </div>
                                 </div>
@@ -289,7 +284,7 @@
     </div>
 @endsection
 @section('scripts')
-    <script src="{{asset('assets/backend/js/sweetalert2.js')}}"></script>
+    <script src="{{ asset('assets/backend/js/sweetalert2.js') }}"></script>
 @endsection
 
 @section('style')

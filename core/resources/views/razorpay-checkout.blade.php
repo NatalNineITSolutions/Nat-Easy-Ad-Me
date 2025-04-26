@@ -64,8 +64,8 @@
                 </div>
 
                 <div class="mt-6 flex items-center justify-center space-x-4">
-                    <img src="https://razorpay.com/assets/razorpay-digital.svg" alt="Secure" class="h-8">
-                    <img src="https://razorpay.com/assets/pci-dss-compliant.svg" alt="PCI DSS Compliant" class="h-8">
+                    <img src="https://bsmedia.business-standard.com/_media/bs/img/article/2022-07/04/full/1656922506-9167.jpg?im=FeatureCrop,size=(826,465)" alt="Secure" class="h-8">
+                    <img src="https://dnapayments.com/storage/app/media/PCI%20DSS/PCI-DSS-1.png" alt="PCI DSS Compliant" class="h-8">
                 </div>
             </div>
         </div>
@@ -91,6 +91,7 @@
 
             const membershipHistoryId = urlParams.get('membership_history_id');
             const upgradeMembershipId = urlParams.get('upgrade_membership_id');
+            const lastMembershipId = urlParams.get('last_membership_id');
 
             const options = {
                 key: key,
@@ -110,6 +111,7 @@
                         signature: response.razorpay_signature,
                         membership_history_id: membershipHistoryId,
                         upgrade_membership_id: upgradeMembershipId,
+                        last_membership_id: lastMembershipId,
                     });
                     window.location.href = `/payment-success?${params.toString()}`;
                     // window.location.href = `/payment-success?payment_id=${response.razorpay_payment_id}&order_id=${order_id}&amount=${amount}&membership_id=${membership_id}&user_id=${user_id}`;

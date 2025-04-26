@@ -248,6 +248,10 @@ class BuyMembershipController extends Controller
                                 $this->adminNotification($this->last_membership_id, $user->id);
                                 $this->sendEmailToUpgrade($name, $this->last_membership_id, $membership_history_id, $email);
 
+                                \Log::info('last1:', [
+                                    'membership_id' => $this->last_membership_id,
+
+                                ]);
                                 return redirect()->route('user.membership.all')->with(toastr_warning(__('Membership upgrade success. Your membership will be usable after admin approval')));
                             } else {
                                 // create membership
@@ -391,7 +395,6 @@ class BuyMembershipController extends Controller
                                     'type' => 'Buy Membership',
                                     'message' => __('User membership Upgrade'),
                                 ]);
-
                             }
                         } else {
                             // create membership
@@ -453,7 +456,6 @@ class BuyMembershipController extends Controller
                                     'type' => 'Buy Membership',
                                     'message' => __('User membership purchase'),
                                 ]);
-
                             }
                         }
 
@@ -464,6 +466,11 @@ class BuyMembershipController extends Controller
                         }
 
                         $this->last_membership_id = $membership_id ?? $buy_membership->id;
+
+                        \Log::info('last2:', [
+                            'membership_id' => $this->last_membership_id,
+
+                        ]);
                         Wallet::where('user_id', $user->id)->update(['balance' => $wallet_balance->balance - $this->total]);
                         $this->sendEmail($name, $this->last_membership_id, $email);
                     } else {
@@ -473,7 +480,7 @@ class BuyMembershipController extends Controller
                     toastr_success('Membership purchase success.');
                     return redirect()->route('user.membership.all');
                 } else {
-                    if (!empty($user_membership_exits)) {
+                    if (!empty($user_membership_exits)) { //membership exist in usermembership table
                         // notes:: payment gateway pay if user membership already exits create membership history then updater if payment status done user membership table update
                         if (!empty($membership_details)) {
                             // Create membership history
@@ -546,13 +553,12 @@ class BuyMembershipController extends Controller
                             if ($new_membership_history) {
                                 session()->put('membership_history_id', $new_membership_history->id);
                             }
-
-
                         }
                     }
 
                     $this->last_membership_id = $membership_id ?? $buy_membership->id;
 
+                  
                     if (!empty($user_membership_exits)) {
                         if (!empty($membership_details)) {
                             if (!empty($buy_membership)) {
@@ -560,6 +566,11 @@ class BuyMembershipController extends Controller
                             }
                         }
                     }
+
+                    \Log::info('last3:', [
+                        'membership_id' => $this->last_membership_id,
+
+                    ]);
 
                     $this->description = sprintf(__('Order id #%1$d Email: %2$s, Name: %3$s'), $this->last_membership_id, $email, $name);
 
@@ -605,7 +616,18 @@ class BuyMembershipController extends Controller
                 $this->common_charge_customer_data($payment_gateway_name)
             );
 
+            \Log::info('last4:', [
+                'membership_id' => $this->last_membership_id,
+                'order_id' => session()->get('order_id'),
+            ]);
+
             session()->put('order_id', $this->last_membership_id);
+
+            \Log::info('after-charge:', [
+                'membership_id' => $this->last_membership_id,
+                'order_id'      => session('order_id'),
+              ]);
+              
             return $redirect_url;
         } catch (\Exception $e) {
             return back()->with(['msg' => $e->getMessage(), 'type' => 'danger']);
@@ -623,6 +645,11 @@ class BuyMembershipController extends Controller
         } else {
             $ipn_route = route('user.' . strtolower($payment_gateway_name) . '.ipn.membership');
         }
+
+        \Log::info('last5:', [
+            'membership_id' => $this->last_membership_id,
+
+        ]);
 
         return [
             'amount' => $this->total,
@@ -667,7 +694,6 @@ class BuyMembershipController extends Controller
                 'subject' => $subject,
                 'message' => $message
             ]));
-
         } catch (\Exception $e) {
             Log::error('Failed to clear session: ' . $e->getMessage());
         }
@@ -701,7 +727,6 @@ class BuyMembershipController extends Controller
                 'subject' => $subject,
                 'message' => $message
             ]));
-
         } catch (\Exception $e) {
             Log::error('Failed to clear session: ' . $e->getMessage());
         }

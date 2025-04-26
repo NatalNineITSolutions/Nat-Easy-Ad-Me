@@ -126,9 +126,10 @@ class MatrimonyController extends Controller
         // Get the user's most recent membership if logged in
         $user_current_membership = null;
         if (Auth::check()) {
-            $user_current_membership = Auth::user()->membershipHistory()
-                ->latest()
-                ->first();
+            $user_current_membership = UserMembership::where('user_id', Auth::id())
+            ->where('status', 1)
+            ->whereHas('membership', fn($q) => $q->where('category', 1))
+            ->first();
         }
 
         return view('matrimony.price', compact('memberships', 'user_current_membership'));

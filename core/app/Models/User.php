@@ -135,6 +135,13 @@ class User extends Authenticatable
         return $this->hasOne(UserMembership::class, 'user_id', 'id');
     }
 
+    public function adsMembership()
+    {
+        return $this->hasOne(UserMembership::class, 'user_id', 'id')
+            ->whereRelation('membership', 'category', 0);
+    }
+
+
     public function listings()
     {
         return $this->hasMany(Listing::class, 'user_id', 'id');

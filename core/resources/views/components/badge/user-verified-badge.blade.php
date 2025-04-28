@@ -4,7 +4,7 @@
         $verificationUrl = route('user.account.settings');
     @endphp
 
-    <span class="verification-badge {{ $isVerified ? 'verified' : 'not-verified' }}"
+    {{-- <span class="verification-badge {{ $isVerified ? 'verified' : 'not-verified' }}"
         @if (!$isVerified) onclick="window.location.href='{{ $verificationUrl }}'" style="cursor: pointer;" @endif>
         <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -12,7 +12,7 @@
                 fill="{{ $isVerified ? 'white' : '#ff0000' }}" />
         </svg>
         {{ $isVerified ? __('VERIFIED') : __('NOT VERIFIED') }}
-    </span>
+    </span> --}}
 
     <x-badge.membership-badge :user="$user" />
 @endif

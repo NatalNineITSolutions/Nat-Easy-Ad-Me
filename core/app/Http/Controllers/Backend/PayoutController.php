@@ -71,7 +71,7 @@ class PayoutController extends Controller
             'bv_flush_time' => 'required|date_format:H:i',
             'tds_value' => 'required|numeric|min:0',
             'service_charge' => 'required|numeric|min:0',
-            'maximum_one_pair_income' => 'required|numeric|min:0',
+            'maximum_one_pair_income' => 'nullable|numeric|min:0',
         ]);
 
         if ($validator->fails()) {

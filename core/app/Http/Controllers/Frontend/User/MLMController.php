@@ -122,7 +122,8 @@ class MLMController extends Controller
 
                 Log::info('Creating user.', [
                     'sponsor_id' => $sponsor_id,
-                    'position' => $position
+                    'position' => $position,
+                    'partner_id' => $partnerId,
                 ]);
 
                 $default_membership = Membership::find(1);
@@ -146,7 +147,9 @@ class MLMController extends Controller
                     'position' => $position,
                 ]);
 
-                $user->saveAsRoot(); // Always save as root now
+                $user->save(); // Always save as root now
+
+                Log::info('User created ID: '.$user->id, $user->toArray());
 
                 UsersBv::create([
                     'user_id' => $user->id,

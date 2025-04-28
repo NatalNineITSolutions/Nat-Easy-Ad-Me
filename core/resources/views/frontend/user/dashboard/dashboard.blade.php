@@ -108,10 +108,20 @@
                                 <div class="referral-business-stats">
                                     <div class="stats-grid">
                                         <div class="stats-card">
-                                            <h4 class="stats-title">{{ __('Referrals') }}</h4>
+                                            <h4 class="stats-title">{{ __('Direct Business') }}</h4>
                                             <div class="stats-content">
                                                 <div class="stat-item">
-                                                    <span class="stat-label">{{ __('Sponsor ID:') }}</span>
+                                                    <span class="stat-label">{{ __('ID Number:') }}</span>
+                                                    <span class="stat-value">{{ $user->partner_id ?? __('N/A') }}</span>
+                                                </div>
+                                                <div class="stat-item">
+                                                    <span class="stat-label">{{ __('Sponser ID:') }}</span>
+                                                    <span class="stat-value">
+                                                        {{ $referredBy }}{{ $referredById ? ' (' . $referredById . ')' : '' }}
+                                                    </span>
+                                                </div>
+                                                <div class="stat-item">
+                                                    <span class="stat-label">{{ __('Placement ID:') }}</span>
                                                     <span class="stat-value">{{ $user->partner_id ?? __('N/A') }}</span>
                                                 </div>
                                                 <div class="stat-item">
@@ -119,28 +129,22 @@
                                                     <span class="stat-value">{{ $user->fullname }}</span>
                                                 </div>
                                                 <div class="stat-item">
-                                                    <span class="stat-label">{{ __('Referred by:') }}</span>
-                                                    <span class="stat-value">
-                                                        {{ $referredBy }}{{ $referredById ? ' (' . $referredById . ')' : '' }}
-                                                    </span>
-                                                </div>
-                                                <div class="stat-item">
-                                                    <span class="stat-label">{{ __('My Referrals:') }}</span>
+                                                    <span class="stat-label">{{ __('Direct Business:') }}</span>
                                                     <span class="stat-value">{{ $directReferralsCount }}</span>
                                                 </div>
                                                 <div class="stat-item">
-                                                    <span class="stat-label">{{ __('BV from Referrals:') }}</span>
+                                                    <span class="stat-label">{{ __('BV from Direct Business:') }}</span>
                                                     <span class="stat-value">{{ number_format($bvFromReferrals) }}</span>
                                                 </div>
                                                 <div class="stat-item">
-                                                    <span class="stat-label">{{ __('Referral Commission:') }}</span>
+                                                    <span class="stat-label">{{ __('Direct Business Income:') }}</span>
                                                     <span class="stat-value">{{ $referralCommission }}</span>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div class="stats-card">
-                                            <h4 class="stats-title">{{ __('Business') }}</h4>
+                                            <h4 class="stats-title">{{ __('Team Business') }}</h4>
                                             <div class="stats-content">
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('Status:') }}</span>
@@ -168,7 +172,7 @@
                                                 </div>
 
                                                 <div class="stat-item">
-                                                    <span class="stat-label">{{ __('Commission Value (CV):') }}</span>
+                                                    <span class="stat-label">{{ __('Business Point (BP):') }}</span>
                                                     <span class="stat-value">{{ $balancedBP }}</span>
                                                 </div>
                                             </div>

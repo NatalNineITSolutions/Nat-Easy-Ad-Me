@@ -167,6 +167,9 @@
                                 </label>
                             </div>
 
+                            <input type="hidden" name="parent_id" value="{{ $parentUser->id }}">
+                            <input type="hidden" name="root_id" value="{{ $rootUser->id }}">
+
                             <div class="col-sm-12 mt-2">
                                 <div class="btn-wrapper text-center">
                                     <button type="submit"

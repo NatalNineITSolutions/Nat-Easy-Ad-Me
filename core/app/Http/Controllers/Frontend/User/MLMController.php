@@ -52,7 +52,7 @@ class MLMController extends Controller
         $sponsorId = $request->query('sponsor');
         $position = $request->query('position');
 
-        // Validate the parameters.
+        // Validate the parameters
         if (!$sponsorId || !in_array($position, ['left', 'right'])) {
             return redirect()->back()->withErrors(['error' => __('Invalid sponsor or position provided.')]);
         }
@@ -62,14 +62,14 @@ class MLMController extends Controller
             return redirect()->back()->withErrors(['error' => __('Sponsor user not found.')]);
         }
 
-        // Ensure the sponsor is the root user (the top-most user in the MLM system)
+        // Get the root user (the top-most user in the MLM system)
         $rootUser = auth()->user();
 
-        if (!$rootUser) {
-            return redirect()->back()->withErrors(['error' => __('Root user not found.')]);
-        }
-
-        return view('frontend.user.genology.add-member', compact('rootUser', 'position'));
+        return view('frontend.user.genology.add-member', [
+            'parentUser' => $sponsor,  // Immediate parent (the user under whom we're adding)
+            'rootUser' => $rootUser,     // The root user of the MLM tree
+            'position' => $position
+        ]);
     }
 
     public function registerNewMember(Request $request)
@@ -85,7 +85,8 @@ class MLMController extends Controller
                 'phone' => 'required|max:191',
                 'password' => 'required|min:6|max:191',
                 'confirm_password' => 'required|same:password',
-                'sponsor' => 'nullable|exists:users,id',
+                'parent_id' => 'required|exists:users,id',  // Immediate parent (the node clicked)
+                'root_id' => 'required|exists:users,id',    // Root user of the tree
                 'position' => 'required|in:left,right',
                 'gender' => 'required|in:male,female',
                 'dob' => 'required|date|before:today',
@@ -117,19 +118,6 @@ class MLMController extends Controller
 
                 $partnerName = 'EASYADME-' . strtoupper($request->first_name);
 
-                $sponsor_id = auth()->id();
-                $position = $request->input('position');
-
-                Log::info('Creating user.', [
-                    'sponsor_id' => $sponsor_id,
-                    'position' => $position,
-                    'partner_id' => $partnerId,
-                ]);
-
-                $default_membership = Membership::find(1);
-                $membership_id = $default_membership ? $default_membership->id : 1;
-                $bv_points = $default_membership ? $default_membership->bv_points : 0;
-
                 $user = new User([
                     'first_name' => $request->first_name,
                     'last_name' => $request->last_name,
@@ -141,15 +129,20 @@ class MLMController extends Controller
                     'email_verify_token' => $email_verify_token,
                     'partner_id' => $partnerId,
                     'partner_name' => $partnerName,
-                    'sponsor_id' => $sponsor_id,
+                    'sponsor_id' => $request->root_id,      // The root user who owns this tree
+                    'parent_id' => $request->parent_id,     // The immediate parent (node clicked)
                     'gender' => $request->gender,
                     'dob' => $request->dob,
-                    'position' => $position,
+                    'position' => $request->position,
                 ]);
 
-                $user->save(); // Always save as root now
+                $user->save();
 
-                Log::info('User created ID: '.$user->id, $user->toArray());
+                Log::info('User created ID: ' . $user->id, $user->toArray());
+
+                $default_membership = Membership::find(1);
+                $membership_id = $default_membership ? $default_membership->id : 1;
+                $bv_points = $default_membership ? $default_membership->bv_points : 0;
 
                 UsersBv::create([
                     'user_id' => $user->id,
@@ -181,5 +174,4 @@ class MLMController extends Controller
 
         return view('frontend.user.genology.add-member');
     }
-
 }

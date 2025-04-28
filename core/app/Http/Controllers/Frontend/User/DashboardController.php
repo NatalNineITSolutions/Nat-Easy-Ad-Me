@@ -66,41 +66,28 @@ class DashboardController extends Controller
         $bpConversionRate = get_static_option('bp_value') ?? 1;
         $sealingLimit = get_static_option('sealing_limit') ?? 1;
 
-        // --- Add BV Value to user ---
-        // $user->self_purchased_bv = ($user->self_purchased_bv ?? 0) + $bvvalue;
-
-        // If user has paid profile, add matrimony BV points
-        // $hasPaidProfile = DB::table('profile_listings')
-        //     ->where('user_id', $user->id)
-        //     ->where('paid', 1)
-        //     ->exists();
-
-        // if ($hasPaidProfile) {
-        //     $extraPoints = get_static_option('matrimony_bv_points') ?? 0;
-        //     $user->self_purchased_bv += $extraPoints;
-        // }
-
         $user->save();
 
-        // Calculate BV points
-        $leftBvPoints = $user->leftChild ? $user->leftChild->userBvs->sum('bv_points') : 0;
-        $rightBvPoints = $user->rightChild ? $user->rightChild->userBvs->sum('bv_points') : 0;
+        // Get NET BV points (sum of all positive and negative entries)
+        $leftBvPoints = $user->leftChild ? $user->leftChild->userBvs()->sum('bv_points') : 0;
+        $rightBvPoints = $user->rightChild ? $user->rightChild->userBvs()->sum('bv_points') : 0;
 
+        // Calculate current flushable amount
         $sealingLimitBv = $sealingLimit * $bpConversionRate;
+        $flushableAmount = floor(min($leftBvPoints, $rightBvPoints) / $sealingLimitBv) * $sealingLimitBv;
 
-        // Step 1: Deduct one sealing limit if both sides meet it
-        if ($leftBvPoints >= $sealingLimitBv && $rightBvPoints >= $sealingLimitBv) {
-            $leftBvPoints -= $sealingLimitBv;
-            $rightBvPoints -= $sealingLimitBv;
-        }
+        // Points that will remain after next flush
+        $remainingLeft = $leftBvPoints - $flushableAmount;
+        $remainingRight = $rightBvPoints - $flushableAmount;
 
-        // Step 2: Keep only multiples of sealingLimitBv
-        $remainingLeftBv = floor($leftBvPoints / $sealingLimitBv) * $sealingLimitBv;
-        $remainingRightBv = floor($rightBvPoints / $sealingLimitBv) * $sealingLimitBv;
+        // For display - show current state
+        $businesspoint = "$leftBvPoints <> $rightBvPoints";
+        $willFlushNextTime = "$flushableAmount <> $flushableAmount";
+        $willRemainAfterFlush = "$remainingLeft <> $remainingRight";
 
         // Step 3: Calculate flushed BVs
-        $flushedLeft = $leftBvPoints - $remainingLeftBv;
-        $flushedRight = $rightBvPoints - $remainingRightBv;
+        $flushedLeft = $leftBvPoints - $remainingLeft;
+        $flushedRight = $rightBvPoints - $remainingRight;
 
         // Apply sealing limit to the BV points
         $sealingLimitBv = $sealingLimit * $bpConversionRate;
@@ -121,7 +108,7 @@ class DashboardController extends Controller
         // Format display values
         $businesspoint = "$leftBvPoints <> $rightBvPoints";
         $totalBP = "$leftBP <> $rightBP";
-        $balancedBP = "$remainingLeftBv <> $remainingRightBv";
+        $balancedBP = "$remainingLeft <> $remainingRight";
 
         // BV from direct referrals
         $bvFromReferrals = $user->children()->with('userBvs')->get()->sum(fn($child) => $child->userBvs->sum('bv_points'));
@@ -176,8 +163,8 @@ class DashboardController extends Controller
             'sealingLimit' => $sealingLimit,
             'sealedLeftBv' => $sealedLeftBv,
             'sealedRightBv' => $sealedRightBv,
-            'remainingLeftBv' => $remainingLeftBv,
-            'remainingRightBv' => $remainingRightBv,
+            'remainingLeftBv' => $remainingLeft,
+            'remainingRightBv' => $remainingRight,
             'sealingLimitBv' => $sealingLimitBv,
             'flushedLeft' => $flushedLeft,
             'flushedRight' => $flushedRight,

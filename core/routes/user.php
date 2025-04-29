@@ -94,6 +94,12 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
             });
         });
 
+        Route::controller(DashboardController::class)->group(function () {
+            Route::group(['prefix' => 'info'], function () {
+                Route::get('/bv-history', 'bvhistory')->name('bv.history');
+            });
+        });
+
         // add listing
         Route::controller(ListingController::class)->group(function () {
             Route::group(['prefix' => 'listing'], function () {

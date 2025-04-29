@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Frontend\ListingFavorite;
 use App\Models\Frontend\Review;
 use App\Models\User;
+use App\Models\UsersBV;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -742,4 +743,14 @@ class DashboardController extends Controller
         return $pdf->download('income-statement.pdf');
     }
 
+    public function bvhistory()
+    {
+        $user = auth()->user();
+
+        $bvHistory = UsersBv::where('user_id', $user->id)
+            ->latest()
+            ->paginate(10);
+
+        return view('frontend.user.bv_history', compact('bvHistory'));
+    }
 }

@@ -81,6 +81,12 @@
                 <li class="dashboard__bottom__list__item has-children @if (request()->is('admin/matrimony/*')) active open show @endif">
                     <a href="javascript:void(0)"> <i class="las la-th-list"></i> {{ __('Matrimony Manage') }} </a>
                     <ul class="submenu">
+                        <li class="dashboard__bottom__list__item @if (request()->is('admin/matrimony/zodiac-sign')) selected @endif">
+                            <a href="{{ route('admin.matrimony.zodiac-sign') }}"> {{ __('Zodiac Sign') }} </a>
+                        </li>
+                        <li class="dashboard__bottom__list__item @if (request()->is('admin/matrimony/star')) selected @endif">
+                            <a href="{{ route('admin.matrimony.star') }}"> {{ __('Star') }} </a>
+                        </li>
                         <li class="dashboard__bottom__list__item @if (request()->is('admin/matrimony/castes')) selected @endif">
                             <a href="{{ route('admin.matrimony.castes') }}"> {{ __('Castes') }} </a>
                         </li>

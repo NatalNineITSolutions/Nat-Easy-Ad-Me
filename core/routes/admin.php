@@ -62,6 +62,24 @@ Route::middleware(['setlang'])->group(function () {
             Route::post('/store-caste', 'storecaste')->name('admin.matrimony.store-caste')->permission('matrimony-store-caste');
             Route::delete('/delete-caste/{id}', 'deleteCaste')->name('admin.matrimony.delete-caste');
 
+            // Zodiac Sign
+            Route::get('/zodiac-sign', 'zodiacsign')->name('admin.matrimony.zodiac-sign')->permission('matrimony-zodiac-sign');
+            Route::get('/add-zodiac-sign', 'addZodiacSign')->name('admin.matrimony.add-zodiac-sign')->permission('matrimony-add-zodiac-sign');
+            // Edit Zodiac Sign
+            Route::get('/edit-zodiac-sign/{id?}', 'editZodiacSign')->name('admin.matrimony.edit-zodiac-sign');
+            Route::put('/update-zodiac-sign/{id}', 'updateZodiacSign')->name('admin.matrimony.update-zodiac-sign');
+            Route::post('/store-zodiac-sign', 'storeZodiacSign')->name('admin.matrimony.store-zodiac-sign')->permission('matrimony-store-zodiac-sign');
+            Route::delete('/delete-zodiac-sign/{id}', 'deleteZodiacSign')->name('admin.matrimony.delete-zodiac-sign');
+
+            // Star
+            Route::get('/star', 'star')->name('admin.matrimony.star')->permission('matrimony-star');
+            Route::get('/add-star', 'addStar')->name('admin.matrimony.add-star')->permission('matrimony-add-star');
+            // Edit Star
+            Route::get('/edit-star/{id?}', 'editStar')->name('admin.matrimony.edit-star');
+            Route::put('/update-star/{id}', 'updateStar')->name('admin.matrimony.update-star');
+            Route::post('/store-star', 'storeStar')->name('admin.matrimony.store-star')->permission('matrimony-store-star');
+            Route::delete('/delete-star/{id}', 'deleteStar')->name('admin.matrimony.delete-star');
+
             // Mother Tongue
             Route::get('/mother-tongues', 'motherTongues')->name('admin.matrimony.mother-tongues')->permission('matrimony-mother-tongues');
             Route::get('/add-mother-tongue', 'addMotherTongue')->name('admin.matrimony.add-mother-tongue')->permission('matrimony-add-mother-tongue');

@@ -355,6 +355,28 @@
                                     @endforeach
                                 </select>
                             </div>
+
+                            <!-- Zodiac Sign -->
+                            <div class="col-md-6">
+                                <label class="form-label">Zodiac Sign</label>
+                                <select class="form-select" name="zodiac_sign" id="zodiac_sign">
+                                    <option value="" selected>Choose Zodiac Sign</option>
+                                    @foreach($zodiacsigns as $zodiacsign)
+                                        <option value="{{ $zodiacsign->id }}">{{ $zodiacsign->zodiac_sign }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Star -->
+                            <div class="col-md-6">
+                                <label class="form-label">Mother Tongue</label>
+                                <select class="form-select" name="mother_tongue" id="mother_tongue">
+                                    <option value="" selected>Choose Mother Tongue</option>
+                                    @foreach($motherTongues as $tongue)
+                                        <option value="{{ $tongue->id }}">{{ $tongue->mother_tongue }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                 
                             <!-- Religion -->
                             <div class="col-md-6">
@@ -443,6 +465,8 @@
                 { id: 'mother_tongue', name: "Mother Tongue" },
                 { id: 'religion', name: "Religion" },
                 { id: 'caste', name: "Caste" },
+                { id: 'zodiac_sign', name: "Zodiac Sign" },
+                { id: 'star', name: "Star" },
                 { id: 'height', name: "Height" },
                 { id: 'weight', name: "Weight" },
                 { id: 'occupation', name: "Occupation" },

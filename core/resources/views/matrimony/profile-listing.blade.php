@@ -275,7 +275,26 @@
                                     </select>
                                 </div>
                             </div>
-
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">Zodiac Sign</label>
+                                    <select class="form-select" name="zodiac_sign" id="zodiac_sign" required>
+                                        <option value="" selected disabled>Choose Zodiac Sign</option>
+                                        @foreach($zodiacsign as $zodiac)
+                                            <option value="{{ $zodiac->id }}">{{ $zodiac->zodiac_sign }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="star" class="form-label">Star</label>
+                                    <select class="form-select" id="star" name="star" required>
+                                        <option value="" selected disabled>Choose Star</option>
+                                        @foreach($stars as $star)
+                                            <option value="{{ $star->id }}">{{ $star->star }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                             <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label for="country" class="form-label">Country</label>
@@ -296,7 +315,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                
+
                                 <div class="col-md-4">
                                     <label for="city" class="form-label">City</label>
                                     <select class="form-select" id="city" name="city" required>
@@ -397,25 +416,25 @@
 
                     // Create new image preview
                     let newImage = $(`
-                        <div class="image-container">
-                            <img src="${data.url}" class="uploaded-image" alt="${data.name}">
-                            <button type="button" class="delete-image-btn" data-id="${data.id}">×</button>
-                        </div>
-                    `);
+                                                <div class="image-container">
+                                                    <img src="${data.url}" class="uploaded-image" alt="${data.name}">
+                                                    <button type="button" class="delete-image-btn" data-id="${data.id}">×</button>
+                                                </div>
+                                            `);
 
                     previewContainer.append(newImage);
 
                     // Update main preview to show the first image
                     if (currentValue.length === 1) {
                         wrapper.find('.new_image_add_listing').html(`
-                            <div class="attachment-preview">
-                                <div class="thumbnail">
-                                    <div class="centered">
-                                        <img src="${data.url}" alt="${data.name}">
-                                    </div>
-                                </div>
-                            </div>
-                        `);
+                                                    <div class="attachment-preview">
+                                                        <div class="thumbnail">
+                                                            <div class="centered">
+                                                                <img src="${data.url}" alt="${data.name}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                `);
                     }
                 }
             }
@@ -438,8 +457,8 @@
             // Update main preview if needed
             if (currentValue.length === 0) {
                 wrapper.find('.new_image_add_listing').html(`
-                    <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}" alt="images" class="w-100">
-                `);
+                                            <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}" alt="images" class="w-100">
+                                        `);
             }
         });
     </script>
@@ -452,7 +471,7 @@
 
             chooseMembershipBtn.addEventListener('click', function () {
                 const requiredFields = ['name', 'age', 'occupation', 'annual_income', 'caste',
-                    'motherTongue', 'country', 'state', 'city', 'description',
+                    'motherTongue', 'country', 'state', 'city', 'description', 'zodiac_sign', 'star'
                 ];
 
                 let missingFields = [];
@@ -489,6 +508,8 @@
                 document.getElementById('modal_city').value = document.getElementById('city').value;
                 document.getElementById('modal_description').value = document.getElementById('description').value;
                 document.getElementById('modal_images').value = imagesInput.value;
+                document.getElementById('modal_zodiac_sign').value = document.getElementById('zodiac_sign').value;
+                document.getElementById('modal_star').value = document.getElementById('star').value;
             });
         });
     </script>

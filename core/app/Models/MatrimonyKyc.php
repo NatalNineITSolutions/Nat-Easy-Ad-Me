@@ -36,6 +36,8 @@ class MatrimonyKyc extends Authenticatable
         'image', 
         'matrimony_id',
         'document',
+        'zodiac_sign',
+        'star'
     ];
 
     protected $hidden = ['password']; // Hide password from JSON responses

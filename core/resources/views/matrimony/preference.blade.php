@@ -369,11 +369,11 @@
 
                             <!-- Star -->
                             <div class="col-md-6">
-                                <label class="form-label">Mother Tongue</label>
-                                <select class="form-select" name="mother_tongue" id="mother_tongue">
-                                    <option value="" selected>Choose Mother Tongue</option>
-                                    @foreach($motherTongues as $tongue)
-                                        <option value="{{ $tongue->id }}">{{ $tongue->mother_tongue }}</option>
+                                <label class="form-label">Star</label>
+                                <select class="form-select" name="star" id="star">
+                                    <option value="" selected>Choose Star</option>
+                                    @foreach($stars as $star)
+                                        <option value="{{ $star->id }}">{{ $star->star }}</option>
                                     @endforeach
                                 </select>
                             </div>

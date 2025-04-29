@@ -108,20 +108,24 @@ class GeneralSettingsController extends Controller
             'site_title' => 'nullable|string',
             'site_tag_line' => 'nullable|string',
             'site_footer_copyright' => 'nullable|string',
+            'gst_number' => 'nullable|string',
         ]);
 
         $this->validate($request, [
             'site_title' => 'nullable|string',
             'site_tag_line' => 'nullable|string',
             'site_footer_copyright' => 'nullable|string',
+            'gst_number' => 'nullable|string',
         ]);
         $_title = 'site_title';
         $_tag_line = 'site_tag_line';
         $_footer_copyright = 'site_footer_copyright';
+        $_gst_number = 'gst_number';
         update_static_option($_title, $request->$_title);
         update_static_option($_tag_line, $request->$_tag_line);
         update_static_option($_footer_copyright, $request->$_footer_copyright);
-
+        update_static_option($_gst_number, $request->$_gst_number);
+        
 
         $all_fields = [
             'language_select_option',

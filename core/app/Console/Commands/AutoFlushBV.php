@@ -9,11 +9,19 @@ use App\Models\UsersBv;
 use App\Models\IncomePayoutManage;
 use Illuminate\Support\Facades\Log;
 use App\Models\UserPayoutDetail;
+use Illuminate\Support\Facades\DB;
 
 class AutoFlushBV extends Command
 {
     protected $signature = 'bv:flush';
     protected $description = 'Flush extra BV based on sealing limit at scheduled time';
+
+    // Define protected BV types that shouldn't be flushed
+    protected $protectedTypes = [
+        'direct_referral',  // BV from direct referrals
+        'genology',         // BV from genology
+        'purchase'          // Self-purchased BV
+    ];
 
     public function handle()
     {
@@ -22,40 +30,46 @@ class AutoFlushBV extends Command
 
         Log::info("Checking for BV flush. Now: $now, Configured: $flushTime");
 
-        // if ($now === $flushTime) {
-        //     $bpConversionRate = get_static_option('bp_value') ?? 1;
-        //     $sealingLimit = get_static_option('sealing_limit') ?? 1;
-        //     $sealingLimitBv = $sealingLimit * $bpConversionRate;
-        //     $pairIncome = get_static_option('maximum_one_pair_income');
-        //     $tdsPercentage = get_static_option('tds_value');
-        //     $serviceCharge = get_static_option('service_charge');
-
-        //     User::with(['leftChild.userBvs', 'rightChild.userBvs'])
-        //         ->chunk(200, function ($users) use ($sealingLimitBv) {
-        //             foreach ($users as $user) {
-        //                 $this->processUserBvFlush($user, $sealingLimitBv);
-        //             }
-        //         });
-        //     $this->recordPayoutSummary($sealingLimitBv);
-        //     $payoutRecord = $this->recordPayoutSummary($sealingLimitBv);
-        //     $this->recordUserPayoutDetails($payoutRecord->id, $sealingLimitBv, $pairIncome, $tdsPercentage, $serviceCharge);
-
-        //     $this->info('BV flushed and deducted successfully.');
-        // } else {
-        //     $this->info("No flush — it's not time yet.");
-        // }
-
-        if ($now === $flushTime) {
-            $sealingLimit = get_static_option('sealing_limit') ?? 1;
-            $bpConversionRate = get_static_option('bp_value') ?? 1;
-            $sealingLimitBv = $sealingLimit * $bpConversionRate;
-
-            $this->recordPayoutSummary($sealingLimitBv); // Just record payout calculations
-            $this->info('Payout calculations recorded without modifying BV data');
-        } else {
-            $this->info("Not yet flush time");
+        if ($now !== $flushTime) {
+            $this->info("No flush — it's not time yet.");
+            return 0;
         }
-        return 0;
+
+        try {
+            DB::transaction(function () {
+                $bpConversionRate = get_static_option('bp_value') ?? 1;
+                $sealingLimit = get_static_option('sealing_limit') ?? 1;
+                $sealingLimitBv = $sealingLimit * $bpConversionRate;
+                $pairIncome = get_static_option('maximum_one_pair_income');
+                $tdsPercentage = get_static_option('tds_value');
+                $serviceCharge = get_static_option('service_charge');
+
+                // Process BV flush for all users
+                User::with(['leftChild.userBvs', 'rightChild.userBvs'])
+                    ->chunk(200, function ($users) use ($sealingLimitBv) {
+                        foreach ($users as $user) {
+                            $this->processUserBvFlush($user, $sealingLimitBv);
+                        }
+                    });
+
+                // Record payout summary and details
+                $payoutRecord = $this->recordPayoutSummary($sealingLimitBv);
+                $this->recordUserPayoutDetails(
+                    $payoutRecord->id, 
+                    $sealingLimitBv, 
+                    $pairIncome, 
+                    $tdsPercentage, 
+                    $serviceCharge
+                );
+            });
+
+            $this->info('BV flushed and deducted successfully.');
+            return 0;
+        } catch (\Exception $e) {
+            Log::error("BV Flush Error: " . $e->getMessage());
+            $this->error('Error during BV flush: ' . $e->getMessage());
+            return 1;
+        }
     }
 
     protected function processUserBvFlush(User $user, $sealingLimitBv)
@@ -68,9 +82,16 @@ class AutoFlushBV extends Command
             return;
         }
 
-        // Get current BV points (only counts positive BV entries)
-        $leftBv = $leftChild->userBvs()->where('bv_points', '>', 0)->sum('bv_points');
-        $rightBv = $rightChild->userBvs()->where('bv_points', '>', 0)->sum('bv_points');
+        // Get current BV points excluding protected types
+        $leftBv = $leftChild->userBvs()
+            ->where('bv_points', '>', 0)
+            ->whereNotIn('type', $this->protectedTypes)
+            ->sum('bv_points');
+            
+        $rightBv = $rightChild->userBvs()
+            ->where('bv_points', '>', 0)
+            ->whereNotIn('type', $this->protectedTypes)
+            ->sum('bv_points');
 
         // Calculate flushable pairs (common multiples of sealing limit)
         $flushablePairs = floor(min($leftBv, $rightBv) / $sealingLimitBv);
@@ -78,7 +99,7 @@ class AutoFlushBV extends Command
         if ($flushablePairs > 0) {
             $totalFlushAmount = $flushablePairs * $sealingLimitBv;
 
-            // Create deduction records (negative BV) instead of deleting
+            // Create deduction records (negative BV)
             $leftChild->userBvs()->create([
                 'bv_points' => -$totalFlushAmount,
                 'type' => 'flush_deduction',
@@ -106,25 +127,15 @@ class AutoFlushBV extends Command
         }
     }
 
-    protected function updateBvRecords($childUser, $remainingBv)
-    {
-        if (!$childUser)
-            return;
-
-        // Create new BV record with remaining points
-        $childUser->userBvs()->create([
-            'bv_points' => $remainingBv,
-            'type' => 'post_flush',
-            'created_at' => now(),
-            'updated_at' => now()
-        ]);
-    }
-
     protected function recordPayoutSummary($sealingLimitBv)
     {
         $payoutDateTime = now();
 
-        $currentDayBV = UsersBv::whereDate('created_at', Carbon::today())->sum('bv_points');
+        // Get BV before the flush operation (excluding protected types)
+        $currentDayBV = UsersBv::where('bv_points', '>', 0)
+            ->whereNotIn('type', $this->protectedTypes)
+            ->where('created_at', '<', $payoutDateTime)
+            ->sum('bv_points');
 
         $pairIncome = get_static_option('maximum_one_pair_income') ?? 1;
         $dailyCeiling = get_static_option('sealing_limitation') ?? 1;
@@ -143,7 +154,7 @@ class AutoFlushBV extends Command
 
         // Create the payout record
         $payoutRecord = IncomePayoutManage::create([
-            'payout_date' => $payoutDateTime, // full datetime
+            'payout_date' => $payoutDateTime,
             'previous_case_on_hand' => $previousBalance,
             'current_day_bv' => $currentDayBV,
             'total_bv' => $previousBalance + $currentDayBV,
@@ -170,8 +181,17 @@ class AutoFlushBV extends Command
         $matchingPairs = 0;
 
         foreach ($users as $user) {
-            $leftBv = $user->leftChild ? $user->leftChild->userBvs->sum('bv_points') : 0;
-            $rightBv = $user->rightChild ? $user->rightChild->userBvs->sum('bv_points') : 0;
+            $leftBv = $user->leftChild ? 
+                $user->leftChild->userBvs()
+                    ->where('bv_points', '>', 0)
+                    ->whereNotIn('type', $this->protectedTypes)
+                    ->sum('bv_points') : 0;
+                    
+            $rightBv = $user->rightChild ? 
+                $user->rightChild->userBvs()
+                    ->where('bv_points', '>', 0)
+                    ->whereNotIn('type', $this->protectedTypes)
+                    ->sum('bv_points') : 0;
 
             $matchingPairs += floor(min($leftBv, $rightBv) / $sealingLimitBv);
         }
@@ -192,59 +212,49 @@ class AutoFlushBV extends Command
             $leftChild = $user->leftChild;
             $rightChild = $user->rightChild;
 
-            $today = Carbon::now()->startOfDay();
-
-            $leftBv = $leftChild?->userBvs()->whereDate('created_at', $today)->sum('bv_points') ?? 0;
-            $rightBv = $rightChild?->userBvs()->whereDate('created_at', $today)->sum('bv_points') ?? 0;
+            // Get BV before flush operation (excluding protected types)
+            $leftBv = $leftChild?->userBvs()
+                ->where('bv_points', '>', 0)
+                ->whereNotIn('type', $this->protectedTypes)
+                ->where('created_at', '<', now())
+                ->sum('bv_points') ?? 0;
+                
+            $rightBv = $rightChild?->userBvs()
+                ->where('bv_points', '>', 0)
+                ->whereNotIn('type', $this->protectedTypes)
+                ->where('created_at', '<', now())
+                ->sum('bv_points') ?? 0;
 
             $userPairs = floor(min($leftBv, $rightBv) / $sealingLimitBv);
             $userPayout = $userPairs * $pairIncome;
 
-            Log::info("User ID: {$user->id} | Left BV: {$leftBv} | Right BV: {$rightBv} | Pairs: {$userPairs} | Payout: {$userPayout}");
+            // Calculate deductions
+            $tdsDeduction = $userPayout * ($tdsPercentage / 100);
+            $serviceChargeAmount = $userPayout * ($serviceCharge / 100);
+            $netAmount = $userPayout > 0 ? ($userPayout - $tdsDeduction - $serviceChargeAmount) : 0;
 
-            if ($userPayout > 0) {
-                $tdsDeduction = $userPayout * ($tdsPercentage / 100);
-                $serviceChargeAmount = $userPayout * ($serviceCharge / 100);
-                $netAmount = $userPayout - $tdsDeduction - $serviceChargeAmount;
+            // Create payout detail record regardless of payout amount
+            UserPayoutDetail::create([
+                'user_id' => $user->id,
+                'payout_summary_id' => $payoutSummaryId,
+                'left_bv' => $leftBv,
+                'right_bv' => $rightBv,
+                'matching_pairs' => $userPairs,
+                'payout_amount' => $userPayout,
+                'tds_deduction' => $tdsDeduction,
+                'service_charge' => $serviceChargeAmount,
+                'net_amount' => $netAmount,
+                'status' => $userPayout > 0 ? 'processed' : 'no_payout'
+            ]);
 
-                // Calculate flushed BV
-                $flushedLeft = $leftBv - ($userPairs * $sealingLimitBv);
-                $flushedRight = $rightBv - ($userPairs * $sealingLimitBv);
-
-                // Assuming a balance exists in payout_details or user table
-                $previousBalance = $user->payout_details->balance ?? 0; // adjust if needed
-                $newBalance = $previousBalance + $netAmount;
-
-                // Create payout record
-                UserPayoutDetail::create([
-                    'user_id' => $user->id,
-                    'payout_summary_id' => $payoutSummaryId,
-                    'left_bv' => $leftBv,
-                    'right_bv' => $rightBv,
-                    'matching_pairs' => $userPairs,
-                    'payout_amount' => $userPayout,
-                    'tds_deduction' => $tdsDeduction,
-                    'service_charge' => $serviceChargeAmount,
-                    'net_amount' => $netAmount,
-                    'status' => 'processed'
-                ]);
-
-                // Log the update
-                Log::info("Updating payout detail for user ID: {$user->id}", [
-                    'user_id' => $user->id,
-                    'payout_summary_id' => $payoutSummaryId,
-                    'left_bv' => $leftBv,
-                    'right_bv' => $rightBv,
-                    'matching_pairs' => $userPairs,
-                    'payout_amount' => $userPayout,
-                    'tds_deduction' => $tdsDeduction,
-                    'service_charge' => $serviceChargeAmount,
-                    'net_amount' => $netAmount,
-                    'status' => 'processed'
-                ]);
-
-                Log::info("Payout stored successfully for user ID: {$user->id}");
-            }
+            Log::info("User Payout Detail Created", [
+                'user_id' => $user->id,
+                'left_bv' => $leftBv,
+                'right_bv' => $rightBv,
+                'pairs' => $userPairs,
+                'payout' => $userPayout,
+                'net_amount' => $netAmount
+            ]);
         }
 
         Log::info("Payout detail recording completed.");

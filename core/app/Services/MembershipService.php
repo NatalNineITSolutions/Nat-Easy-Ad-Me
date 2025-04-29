@@ -139,6 +139,7 @@ class MembershipService
                 'membership_id' => $upgrade_membership_id,
                 'bv_points' => $new_membership->bv_points ?? 0,
                 'upgrade_time' => Carbon::now(),
+                'type' => 'Self-Purchased',
             ]);
 
             $user = User::find($membership_details->user_id);

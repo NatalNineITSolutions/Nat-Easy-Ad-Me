@@ -1,7 +1,57 @@
-[2025-04-28 21:37:11] production.INFO: Calculated BV points for node: {"node_id":160,"leftBV":0,"rightBV":900} 
-[2025-04-28 21:37:11] production.INFO: Calculated BV points for node: {"node_id":161,"leftBV":900,"rightBV":0} 
-[2025-04-28 21:37:11] production.INFO: Calculated BV points for node: {"node_id":163,"leftBV":0,"rightBV":0} 
-[2025-04-28 21:37:11] production.INFO: Calculated BV points for node: {"node_id":164,"leftBV":0,"rightBV":0} 
-[2025-04-28 21:37:11] production.INFO: Calculated BV points for node: {"node_id":162,"leftBV":-900,"rightBV":-900} 
-[2025-04-28 21:37:11] production.INFO: Calculated BV points for node: {"node_id":165,"leftBV":0,"rightBV":0} 
-[2025-04-28 21:37:11] production.INFO: Calculated BV points for node: {"node_id":166,"leftBV":0,"rightBV":0} 
+[2025-04-29 18:22:32] production.INFO: User membership purchase completed. {"user_id":177,"membership_id":3,"type":"Self-Purchased"}
+[2025-04-29 18:22:32] production.INFO: Referral BV points distributed. {"user_id":177,"bv_points":900,"type":"Referral"}
+[2025-04-29 18:24:17] production.INFO: Calculated BV points for node: {"node_id":177,"leftBV":900,"rightBV":0} 
+[2025-04-29 18:24:17] production.INFO: Calculated BV points for node: {"node_id":181,"leftBV":0,"rightBV":0} 
+[2025-04-29 18:29:07] production.INFO: MLM new member registration request received. {"request_data":{"_token":"Sad56ZYaC145qeCdB76gAK4oq9tcBDA7j02Ei4b7","position":"right","sponsor_name":"EASYADME-HARISHMITHA","username":"Kavya","first_name":"Kavya","last_name":"S","email":"kavya@gmail.com","country_code":null,"phone":"9029301234","full_number":null,"dob":"2006-06-28","gender":"female","password":"12121212","confirm_password":"12121212","terms_conditions":"1","parent_id":"177","root_id":"177"}} 
+[2025-04-29 18:29:08] production.INFO: User created ID: 182 {"first_name":"Kavya","last_name":"S","email":"kavya@gmail.com","username":"Kavya","phone":"+ - 9029301234","email_verify_token":"862787","partner_id":"GL2025497702","partner_name":"EASYADME-KAVYA","sponsor_id":"177","parent_id":177,"gender":"female","dob":"2006-06-28","position":"right","_lft":10,"_rgt":11,"updated_at":"2025-04-29T12:59:08.000000Z","created_at":"2025-04-29T12:59:08.000000Z","id":182} 
+[2025-04-29 18:29:08] production.INFO: BV points initialized. {"user_id":182,"bv":0} 
+[2025-04-29 18:29:17] production.INFO: Calculated BV points for node: {"node_id":177,"leftBV":900,"rightBV":0} 
+[2025-04-29 18:29:17] production.INFO: Calculated BV points for node: {"node_id":181,"leftBV":0,"rightBV":0} 
+[2025-04-29 18:29:17] production.INFO: Calculated BV points for node: {"node_id":182,"leftBV":0,"rightBV":0} 
+[2025-04-29 18:30:07] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-04-29 18:30:08] production.INFO: last3: {"membership_id":189} 
+[2025-04-29 18:30:08] production.INFO: last5: {"membership_id":189} 
+[2025-04-29 18:30:08] production.INFO: last4: {"membership_id":189,"order_id":null} 
+[2025-04-29 18:30:08] production.INFO: after-charge: {"membership_id":189,"order_id":189} 
+[2025-04-29 18:30:28] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"189","payment_amount":5000,"transaction_id":"pay_QOskODWz2hYeKD"} 
+[2025-04-29 18:30:28] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-04-29 18:30:28] production.INFO: Updating membership database {"last_membership_id":"189","transaction_id":"pay_QOskODWz2hYeKD","membership_history_id":368,"upgrade_membership_id":3} 
+[2025-04-29 18:30:28] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":189} 
+[2025-04-29 18:30:29] production.ERROR: Failed to update membership: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'bv_points' in 'field list' (Connection: mysql, SQL: update `users` set `bv_points` = 900, `users`.`updated_at` = 2025-04-29 18:30:29 where `id` = 177)  
+[2025-04-29 18:30:31] production.ERROR: Failed to send user membership email: Trying to access array offset on value of type null  
+[2025-04-29 18:30:34] production.ERROR: Failed to send admin membership email: Trying to access array offset on value of type null  
+[2025-04-29 18:30:34] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-04-29 18:33:05] production.INFO: User registration request received. {"request_data":{"_token":"rKIB4pWWbpxLidzhCVILMD9SHn4HQzphTo9hJvYS","partner_id":"GL2025417350","partner_name":"EASYADME-HARISHMITHA","first_name":"Ahana","last_name":"S","username":"Ahana","email":"ahana@gmail.com","country_code":"91","phone":"9128912898","full_number":null,"dob":"2000-02-29","gender":"female","password":"12121212","confirm_password":"12121212","terms_conditions":"1"}} 
+[2025-04-29 18:33:07] production.INFO: Referral details {"entered_partner_id":"GL2025417350","sponsor_id":177,"tree_parent_id":181,"position":"left"} 
+[2025-04-29 18:33:07] production.INFO: User created successfully. {"user_id":183} 
+[2025-04-29 18:33:07] production.ERROR: Error during user registration. {"error":"SQLSTATE[42S22]: Column not found: 1054 Unknown column 'bv_points' in 'field list' (Connection: mysql, SQL: update `users` set `referral_commission` = 1050, `bv_points` = 0, `users`.`updated_at` = 2025-04-29 18:33:07 where `id` = 177)"} 
+[2025-04-29 18:36:45] production.INFO: User registration request received. {"request_data":{"_token":"WTik7BgtiPIzwH8vZRmyzQxoLhtCEOARIxjSGqRD","partner_id":"GL2025417350","partner_name":"EASYADME-HARISHMITHA","first_name":"Shoba","last_name":"S","username":"Shoba","email":"shoba@gmail.com","country_code":"91","phone":"9820920112","full_number":null,"dob":"2001-02-28","gender":"female","password":"12121212","confirm_password":"12121212","terms_conditions":"1"}} 
+[2025-04-29 18:36:45] production.INFO: Referral details {"entered_partner_id":"GL2025417350","sponsor_id":177,"tree_parent_id":177,"position":"left"} 
+[2025-04-29 18:36:46] production.INFO: User created successfully. {"user_id":184} 
+[2025-04-29 18:36:46] production.INFO: Commission added to sponsor {"sponsor_id":177,"sponsor_partner_id":"GL2025417350","amount":"350"} 
+[2025-04-29 18:37:17] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-04-29 18:37:17] production.INFO: last3: {"membership_id":190} 
+[2025-04-29 18:37:17] production.INFO: last5: {"membership_id":190} 
+[2025-04-29 18:37:17] production.INFO: last4: {"membership_id":190,"order_id":null} 
+[2025-04-29 18:37:17] production.INFO: after-charge: {"membership_id":190,"order_id":190} 
+[2025-04-29 18:37:35] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"190","payment_amount":5000,"transaction_id":"pay_QOsruvb0JTWlgK"} 
+[2025-04-29 18:37:35] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-04-29 18:37:35] production.INFO: Updating membership database {"last_membership_id":"190","transaction_id":"pay_QOsruvb0JTWlgK","membership_history_id":369,"upgrade_membership_id":3} 
+[2025-04-29 18:37:35] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":190} 
+[2025-04-29 18:37:36] production.INFO: Distributed BV points to parent user: {"user_id":177,"bv_points":900} 
+[2025-04-29 18:37:39] production.ERROR: Failed to send user membership email: Trying to access array offset on value of type null  
+[2025-04-29 18:37:42] production.ERROR: Failed to send admin membership email: Trying to access array offset on value of type null  
+[2025-04-29 18:37:42] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-04-29 18:40:00] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-04-29 18:40:00] production.INFO: last3: {"membership_id":191} 
+[2025-04-29 18:40:00] production.INFO: last5: {"membership_id":191} 
+[2025-04-29 18:40:00] production.INFO: last4: {"membership_id":191,"order_id":null} 
+[2025-04-29 18:40:00] production.INFO: after-charge: {"membership_id":191,"order_id":191} 
+[2025-04-29 18:40:20] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"191","payment_amount":5000,"transaction_id":"pay_QOsupSJAfVakLS"} 
+[2025-04-29 18:40:20] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-04-29 18:40:20] production.INFO: Updating membership database {"last_membership_id":"191","transaction_id":"pay_QOsupSJAfVakLS","membership_history_id":370,"upgrade_membership_id":3} 
+[2025-04-29 18:40:20] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":191} 
+[2025-04-29 18:40:21] production.INFO: Distributed BV points to parent user: {"user_id":177,"bv_points":900} 
+[2025-04-29 18:40:24] production.ERROR: Failed to send user membership email: Trying to access array offset on value of type null  
+[2025-04-29 18:40:28] production.ERROR: Failed to send admin membership email: Trying to access array offset on value of type null  
+[2025-04-29 18:40:28] production.INFO: Data to update: {"upgrade_membership_id":3} 

@@ -75,6 +75,7 @@ class User extends Authenticatable
         'referral_commission',
         'sponsor_id',
         'placement_id',
+        'deleted_at',
     ];
 
     /**

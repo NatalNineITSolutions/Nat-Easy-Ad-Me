@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Frontend\ListingFavorite;
 use App\Models\Frontend\Review;
 use App\Models\User;
+use App\Models\UsersBV;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -108,20 +109,24 @@ class DashboardController extends Controller
         // Format display values
         $businesspoint = "$leftBvPoints <> $rightBvPoints";
         $totalBP = "$leftBP <> $rightBP";
-        $balancedBP = "$remainingLeft <> $remainingRight";
+        $balancedBP = "$leftBvPoints <> $rightBvPoints";
 
         // BV from direct referrals
         $bvFromReferrals = $user->children()->with('userBvs')->get()->sum(fn($child) => $child->userBvs->sum('bv_points'));
 
         // Referral commission
-        $referralCommissionRate = $user->referral_commission ?? 0;
-        $referralCommission = $referralCommissionRate;
+        $referralValue = (float) get_static_option('referral_value'); // e.g., 350
+        $referralPercentage = (float) get_static_option('referral_percentage'); // e.g., 2
+
+        $perReferralCommission = ($referralPercentage / 100) * $referralValue;
 
         // Self purchased BV
         $selfPurchasedBv = $user->self_purchased_bv ?? 0;
 
         // Calculate BV points
-        $directReferralsCount = $user->children()->count();
+        $directReferralsCount = User::where('sponsor_id', $user->id)->count();
+
+        $referralCommission = $perReferralCommission * $directReferralsCount;
 
         if ($user->sponsor) {
             $referredBy = $user->sponsor->partner_name ?? 'Unknown';
@@ -151,7 +156,7 @@ class DashboardController extends Controller
             'totalBvPoints' => $businesspoint,
             'directReferralsCount' => $directReferralsCount,
             'referralCommission' => $referralCommission,
-            'referralCommissionRate' => $referralCommissionRate,
+            'referralCommissionRate' => $referralPercentage,
             'totalBP' => $totalBP,
             'equalizedBP' => $equalizedBP,
             'balancedBP' => $balancedBP,
@@ -219,18 +224,8 @@ class DashboardController extends Controller
         // Calculate BV for the parent and its immediate children if needed
         $this->calculateBV($parent);
 
-        // Redirect to a new page that displays the parent's node and its children
-        // Create a dedicated view for this, e.g. "frontend.user.genology.show_children"
         return view('frontend.user.genology.show_children', compact('parent'));
     }
-
-
-    /**
-     * Recursively calculate BV points for each user in the MLM tree.
-     */
-    /**
-     * Recursively calculate BV points for each user in the MLM tree.
-     */
     private function calculateBV(&$node)
     {
         if (!$node) {
@@ -616,42 +611,6 @@ class DashboardController extends Controller
         ]);
     }
 
-    // public function viewincome()
-    // {
-    //     $user = auth()->user();
-    //     $user->load(['kycRecord.user_country', 'kycRecord.user_state', 'kycRecord.user_city']);
-
-    //     // Get payment type from static option
-    //     $paymentType = get_static_option('payment_type') ?? 'day';
-    //     $tdsPercentage = get_static_option('tds_value') ?? 0;
-    //     $servicecharge = get_static_option('service_charge') ?? 0;
-
-    //     // Get income data and filter
-    //     $allDays = $this->getIncomeDays($user->id);
-    //     $filteredDays = $this->filterIncomeDays($allDays, $paymentType);
-
-
-    //     $totalIncome = collect($filteredDays)->sum('income');
-
-    //     $incomeData = [
-    //         'name' => $user->full_name,
-    //         'rank' => $user->rank,
-    //         'address' => $user->address,
-    //         'bank_details' => $user->bank_details,
-    //         'days' => $filteredDays,
-    //         'total_income' => $totalIncome,
-    //         'product_coupon' => 0,
-    //         'tds' => $tdsPercentage,
-    //         'service_charge' => $servicecharge,
-    //         'net_amount' => $totalIncome * (1 - (10 + 5 + 2) / 100),
-    //         'direct_business_bv' => 150,
-    //         'kyc' => $user->kycRecord,
-    //     ];
-
-    //     return view('frontend.user.income.income', compact('incomeData'));
-    // }
-
-
     public function viewincome()
     {
         $user = auth()->user();
@@ -671,6 +630,7 @@ class DashboardController extends Controller
         $tdsAmount = $totalIncome * ($tdsPercentage / 100);
         $serviceChargeAmount = $totalIncome * ($serviceChargePercentage / 100);
         $netAmount = $totalIncome - $tdsAmount - $serviceChargeAmount;
+        $bvFromReferrals = $user->children()->with('userBvs')->get()->sum(fn($child) => $child->userBvs->sum('bv_points'));
 
         $incomeData = [
             'name' => $user->full_name,
@@ -687,6 +647,7 @@ class DashboardController extends Controller
             'kyc' => $user->kycRecord,
             'tds_percentage' => $tdsPercentage,
             'service_charge_percentage' => $serviceChargePercentage,
+            'direct_business' => $bvFromReferrals,
         ];
 
         return view('frontend.user.income.income', compact('incomeData'));
@@ -755,6 +716,8 @@ class DashboardController extends Controller
             return $dateField && Carbon::parse($dateField)->toDateString() === $today;
         });
 
+        $bvFromReferrals = $user->children()->with('userBvs')->get()->sum(fn($child) => $child->userBvs->sum('bv_points'));
+
         $incomeData = [
             'name' => $user->full_name,
             'rank' => $user->rank,
@@ -772,6 +735,7 @@ class DashboardController extends Controller
             'tds_percentage' => $tdsPercentage,
             'service_charge_percentage' => $serviceChargePercentage,
             'today' => $today,
+            'bv_from_referrals' => $bvFromReferrals,
         ];
 
         $pdf = Pdf::loadView('frontend.user.income.income-pdf', compact('incomeData', 'user'));
@@ -779,4 +743,14 @@ class DashboardController extends Controller
         return $pdf->download('income-statement.pdf');
     }
 
+    public function bvhistory()
+    {
+        $user = auth()->user();
+
+        $bvHistory = UsersBv::where('user_id', $user->id)
+            ->latest()
+            ->paginate(10);
+
+        return view('frontend.user.bv_history', compact('bvHistory'));
+    }
 }

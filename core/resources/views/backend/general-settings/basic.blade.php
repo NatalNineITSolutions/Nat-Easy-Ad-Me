@@ -31,6 +31,11 @@
                     </div>
 
                     <div class="form__input__single">
+                        <label for="gst_number" class="form__input__single__label">{{ __('GST Number') }}</label>
+                        <input type="text" name="gst_number"  class="form__control radius-5" value="{{get_static_option('gst_number')}}" id="gst_number">
+                    </div>
+
+                    <div class="form__input__single">
                         <label for="site_canonical_url_type" class="form__input__single__label">{{__('Canonical URL Type')}}</label>
                         <select name="site_canonical_url_type" class="form__control radius-5">
                             <option @if(get_static_option('site_canonical_url_type') === 'self') selected @endif value="self">{{__('Self')}}</option>

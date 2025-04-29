@@ -46,6 +46,7 @@ class BVDistributionService
             'membership_id' => $upgradeMembershipId,
             'bv_points'     => $bvPoints,
             'upgrade_time'  => Carbon::now(),
+            'type'         => 'Referral',
         ]);
         
         Log::info('Distributed BV points to parent user:', [

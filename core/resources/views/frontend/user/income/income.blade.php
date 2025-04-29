@@ -1,14 +1,11 @@
 @php
     use Illuminate\Support\Carbon;
 
-    // Get today's date
-    $today = now()->toDateString(); // e.g. "2025-04-16"
+    $today = now()->toDateString(); 
 
-    // Filter the records for today's date using 'created_at'
     $todayIncome = collect($incomeData['days'] ?? [])->filter(function ($item) use ($today) {
     if (!is_array($item)) return false;
     
-    // Try multiple possible date field names
     $dateField = $item['created_at'] ?? $item['date'] ?? $item['day'] ?? null;
     
     if (!$dateField) return false;
@@ -20,7 +17,6 @@
     }
 });
 
-// Set default values when no income data exists for today
 $isEmpty = $todayIncome->isEmpty();
 @endphp
 
@@ -174,13 +170,13 @@ $isEmpty = $todayIncome->isEmpty();
                                                     </div>
                                                 </div>
 
-                                            </div> <!-- tab-content-wraper -->
-                                        </div> <!-- tab-pane -->
-                                    </div> <!-- setting-tab-content -->
-                                </div> <!-- setting-btn-part -->
-                            </div> <!-- main-body -->
-                        </div> <!-- down-body-wraper -->
-                    </div> <!-- profile-setting-wraper -->
+                                            </div> 
+                                        </div> 
+                                    </div> 
+                                </div> 
+                            </div> 
+                        </div> 
+                    </div> 
                 </div>
             </div>
         </div>

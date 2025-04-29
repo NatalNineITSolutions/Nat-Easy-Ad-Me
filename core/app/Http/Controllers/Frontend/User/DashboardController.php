@@ -223,8 +223,6 @@ class DashboardController extends Controller
         // Calculate BV for the parent and its immediate children if needed
         $this->calculateBV($parent);
 
-        // Redirect to a new page that displays the parent's node and its children
-        // Create a dedicated view for this, e.g. "frontend.user.genology.show_children"
         return view('frontend.user.genology.show_children', compact('parent'));
     }
     private function calculateBV(&$node)

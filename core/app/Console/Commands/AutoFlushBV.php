@@ -16,11 +16,10 @@ class AutoFlushBV extends Command
     protected $signature = 'bv:flush';
     protected $description = 'Flush extra BV based on sealing limit at scheduled time';
 
-    // Define protected BV types that shouldn't be flushed
     protected $protectedTypes = [
-        'direct_referral',  // BV from direct referrals
-        'genology',         // BV from genology
-        'purchase'          // Self-purchased BV
+        'direct_referral', 
+        'genology',         
+        'purchase'         
     ];
 
     public function handle()

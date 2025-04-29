@@ -18,6 +18,7 @@ class UsersBV extends Model
         'bv_points',
         'upgrade_time',
         'created_at',
+        'type'
     ];
 
     public function user()

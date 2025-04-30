@@ -381,6 +381,7 @@ class BuyMembershipIPNController extends Controller
             'user_id' => $profileListing->user_id,
             'bv_points' => $bvPoints,
             'upgrade_time' => \Carbon\Carbon::now(),
+            'type'=> 'Profile Listing',
         ]);
 
         // Find the user

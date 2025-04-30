@@ -389,6 +389,10 @@ class MatrimonyController extends Controller
                 $documentPath = $request->file('document')->store('matrimony/documents', 'public');
             }
 
+            // 🪐 Fetch Zodiac Sign and Star names
+            $zodiacSignName = ZodiacSign::find($validated['zodiac_sign'])?->zodiac_sign ?? null;
+            $starName = Star::find($validated['star'])?->star ?? null;
+
             // Create KYC record
             $kyc = MatrimonyKyc::create([
                 'user_id' => Auth::id(),
@@ -412,13 +416,21 @@ class MatrimonyController extends Controller
                 'city_id' => $validated['city'],
                 'about' => $validated['about'],
                 'document_path' => $documentPath,
-                'image' => $validated['image'], // Store the media IDs
-                'status' => 'pending', // Default status
+                'image' => $validated['image'], 
+                'status' => 'pending',
                 'zodiac_sign_id' => $validated['zodiac_sign'],
+                'zodiac_sign' => $zodiacSignName,
                 'star_id' => $validated['star'],
+                'star' => $starName, 
             ]);
 
-            Log::info('Incoming KYC image IDs:', ['image' => $validated['image']]);
+            Log::info('Incoming KYC image IDs:', [
+                'image' => $validated['image'],
+                'zodiac_sign_id' => $validated['zodiac_sign'],
+                'star_id' => $validated['star'],
+                'zodiac_sign' => $zodiacSignName,
+                'star' => $starName,
+            ]);
 
             return response()->json([
                 'status' => 'success',
@@ -466,6 +478,16 @@ class MatrimonyController extends Controller
 
         // Assign the user_id
         $validatedData['user_id'] = $user->id;
+
+        if (is_numeric($validatedData['zodiac_sign'])) {
+            $zodiac = ZodiacSign::find($validatedData['zodiac_sign']);
+            $validatedData['zodiac_sign'] = $zodiac?->zodiac_sign ?? null;
+        }
+    
+        if (is_numeric($validatedData['star'])) {
+            $star = Star::find($validatedData['star']);
+            $validatedData['star'] = $star?->star ?? null;
+        }
 
         // Store data in the MatrimonyPreference table
         MatrimonyPreference::updateOrCreate(

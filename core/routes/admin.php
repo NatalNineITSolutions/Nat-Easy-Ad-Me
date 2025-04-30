@@ -80,6 +80,24 @@ Route::middleware(['setlang'])->group(function () {
             Route::post('/store-star', 'storeStar')->name('admin.matrimony.store-star')->permission('matrimony-store-star');
             Route::delete('/delete-star/{id}', 'deleteStar')->name('admin.matrimony.delete-star');
 
+            // Age
+            Route::get('/age', 'age')->name('admin.matrimony.age')->permission('matrimony-age');
+            Route::get('/add-age', 'addAge')->name('admin.matrimony.add-age')->permission('matrimony-add-age');
+            // Edit Age
+            Route::get('/edit-age/{id?}', 'editAge')->name('admin.matrimony.edit-age');
+            Route::put('/update-age/{id}', 'updateAge')->name('admin.matrimony.update-age');
+            Route::post('/store-age', 'storeAge')->name('admin.matrimony.store-age')->permission('matrimony-store-age');
+            Route::delete('/delete-age/{id}', 'deleteAge')->name('admin.matrimony.delete-age');
+
+            // Income
+            Route::get('/income', 'income')->name('admin.matrimony.income')->permission('matrimony-income');
+            Route::get('/add-income', 'addIncome')->name('admin.matrimony.add-income')->permission('matrimony-add-income');
+            // Edit Income
+            Route::get('/edit-income/{id?}', 'editIncome')->name('admin.matrimony.edit-income');
+            Route::put('/update-income/{id}', 'updateIncome')->name('admin.matrimony.update-income');
+            Route::post('/store-income', 'storeIncome')->name('admin.matrimony.store-income')->permission('matrimony-store-income');
+            Route::delete('/delete-income/{id}', 'deleteIncome')->name('admin.matrimony.delete-income');
+
             // Mother Tongue
             Route::get('/mother-tongues', 'motherTongues')->name('admin.matrimony.mother-tongues')->permission('matrimony-mother-tongues');
             Route::get('/add-mother-tongue', 'addMotherTongue')->name('admin.matrimony.add-mother-tongue')->permission('matrimony-add-mother-tongue');

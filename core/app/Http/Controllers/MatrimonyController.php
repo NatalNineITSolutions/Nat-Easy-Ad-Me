@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Helpers\PaymentGatewayCredential;
 use App\Http\Controllers\Controller;
+use App\Models\AgeRange;
+use App\Models\IncomeRange;
 use App\Models\MatrimonyPreference;
 use DB;
 use Illuminate\Http\Request;
@@ -416,21 +418,15 @@ class MatrimonyController extends Controller
                 'city_id' => $validated['city'],
                 'about' => $validated['about'],
                 'document_path' => $documentPath,
-                'image' => $validated['image'], 
-                'status' => 'pending',
+                'image' => $validated['image'], // Store the media IDs
+                'status' => 'pending', // Default status
                 'zodiac_sign_id' => $validated['zodiac_sign'],
                 'zodiac_sign' => $zodiacSignName,
                 'star_id' => $validated['star'],
-                'star' => $starName, 
-            ]);
-
-            Log::info('Incoming KYC image IDs:', [
-                'image' => $validated['image'],
-                'zodiac_sign_id' => $validated['zodiac_sign'],
-                'star_id' => $validated['star'],
-                'zodiac_sign' => $zodiacSignName,
                 'star' => $starName,
             ]);
+
+            Log::info('Incoming KYC image IDs:', ['image' => $validated['image']]);
 
             return response()->json([
                 'status' => 'success',
@@ -452,62 +448,67 @@ class MatrimonyController extends Controller
         $castes = Caste::all();
         $zodiacsigns = ZodiacSign::all();
         $stars = Star::all();
+        $ages = AgeRange::all();
+        $income = IncomeRange::all();
 
-        return view('matrimony.preference', compact('motherTongues', 'castes', 'zodiacsigns', 'stars'));
+
+        $preferences = MatrimonyPreference::where('user_id', auth()->id())->first();
+
+        $selectedZodiac = $preferences ? (array) $preferences->zodiac_sign : [];
+        $selectedStars = $preferences ? (array) $preferences->star : [];
+
+        return view('matrimony.preference', compact('motherTongues', 'castes', 'zodiacsigns', 'stars', 'ages', 'income'), [
+            'selectedZodiac' => $preferences ? $preferences->zodiac_sign : [],
+            'selectedStars' => $preferences ? $preferences->star : []
+        ]);
     }
 
     public function storePreference(Request $request)
     {
-        // Validate the request data
-        $validatedData = $request->validate([
-            'partner_age' => 'required|integer|min:18|max:100',
-            'mother_tongue' => 'required|string',
-            'religion' => 'required|string',
-            'caste' => 'required|string',
-            'height' => 'required|string',
-            'weight' => 'required|string',
-            'occupation' => 'required|string',
-            'location' => 'required|string',
-            'income' => 'required|string',
-            'zodiac_sign' => 'required|string',
-            'star' => 'required|string',
-        ]);
+        try {
+            // Validate the request data
+            $validatedData = $request->validate([
+                'partner_age' => 'required|string',
+                'income' => 'required|string',
+                'mother_tongue' => 'required|string',
+                'religion' => 'required|string',
+                'caste' => 'required|string',
+                'height' => 'required|string',
+                'weight' => 'required|string',
+                'occupation' => 'required|string',
+                'location' => 'required|string',
+                'zodiac_sign' => 'nullable|array',
+                'zodiac_sign.*' => 'integer|exists:zodiac_signs,id',
+                'star' => 'nullable|array',
+                'star.*' => 'integer|exists:stars,id',
+            ]);
 
-        // Get the authenticated user
-        $user = auth()->user();
+            // Convert arrays to JSON
+            $validatedData['zodiac_sign'] = is_array($request->zodiac_sign) ? implode('|', $request->zodiac_sign) : null;
+            $validatedData['star'] = is_array($request->star) ? implode('|', $request->star) : null;
 
-        // Assign the user_id
-        $validatedData['user_id'] = $user->id;
+            // Get the authenticated user
+            $user = auth()->user();
 
-        if (is_numeric($validatedData['zodiac_sign'])) {
-            $zodiac = ZodiacSign::find($validatedData['zodiac_sign']);
-            $validatedData['zodiac_sign'] = $zodiac?->zodiac_sign ?? null;
+            // Store data
+            MatrimonyPreference::updateOrCreate(
+                ['user_id' => $user->id],
+                $validatedData
+            );
+            Log::info('User preferences saved:', $validatedData);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Preferences saved successfully!',
+                'redirect_url' => url('/matrimony'),
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
         }
-    
-        if (is_numeric($validatedData['star'])) {
-            $star = Star::find($validatedData['star']);
-            $validatedData['star'] = $star?->star ?? null;
-        }
-
-        // Store data in the MatrimonyPreference table
-        MatrimonyPreference::updateOrCreate(
-            ['user_id' => $user->id], // Ensure only one record per user
-            $validatedData
-        );
-
-        // Check if both forms are completed
-        if ($user->kyc && $user->matrimonyPreference) {
-            $user->update(['profile_completed' => 1]); // Update profile completion status
-        }
-
-        // Log the response for debugging
-        \Log::info('Preferences saved successfully for user: ' . $user->id);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Preferences saved successfully!',
-            'redirect_url' => url('/matrimony'),
-        ]);
     }
 
     public function profile()
@@ -790,21 +791,97 @@ class MatrimonyController extends Controller
     public function dashboard()
     {
         $userId = auth()->id();
+        \Log::info("Starting dashboard matching process for user ID: {$userId}");
 
         // Get user preferences
         $userPreferences = MatrimonyPreference::where('user_id', $userId)->first();
+        \Log::debug('User preferences:', $userPreferences ? $userPreferences->toArray() : ['message' => 'No preferences found']);
 
-        // Get potential matches (only verified users)
+        // Start base query for verified profiles excluding current user
         $matchesQuery = ProfileListing::where('user_id', '!=', $userId)
             ->where('is_verified', 1);
 
-        if ($userPreferences && $userPreferences->occupation) {
-            $matchesQuery->where('occupation', $userPreferences->occupation);
+        if ($userPreferences) {
+            $matchesQuery->where(function ($query) use ($userPreferences) {
+                $totalCriteria = 0;
+                $matchedCriteria = 0;
+                $criteriaDetails = [];
+                
+
+                // Age matching
+                if ($userPreferences->from_age && $userPreferences->to_age) {
+                    $totalCriteria++;
+                    $query->whereBetween('age', [$userPreferences->from_age, $userPreferences->to_age]);
+                    $matchedCriteria++;
+                    $criteriaDetails['age'] = "Between {$userPreferences->from_age} and {$userPreferences->to_age}";
+                }
+
+                // Income matching
+                if ($userPreferences->annual_income) {
+                    $totalCriteria++;
+                    $query->where('income', '>=', $userPreferences->annual_income);
+                    $matchedCriteria++;
+                    $criteriaDetails['income'] = "Minimum {$userPreferences->annual_income}";
+                }
+
+                // Occupation matching (partial or multiple values)
+                if ($userPreferences->occupation) {
+                    $totalCriteria++;
+                    $occupations = explode('|', $userPreferences->occupation);
+                    $query->where(function ($q) use ($occupations) {
+                        foreach ($occupations as $occupation) {
+                            $q->orWhere('occupation', 'LIKE', "%$occupation%");
+                        }
+                    });
+                    $matchedCriteria++;
+                    $criteriaDetails['occupation'] = $occupations;
+                }
+
+                // Star matching (any match from list)
+                if ($userPreferences->star) {
+                    $totalCriteria++;
+                    $stars = explode('|', $userPreferences->star);
+                    $query->whereIn('star', $stars);
+                    $matchedCriteria++;
+                    $criteriaDetails['star'] = $stars;
+                }
+
+                // Zodiac sign matching (any match from list)
+                if ($userPreferences->zodiac_sign) {
+                    $totalCriteria++;
+                    $zodiacs = explode('|', $userPreferences->zodiac_sign);
+                    $query->whereIn('zodiac_sign', $zodiacs);
+                    $matchedCriteria++;
+                    $criteriaDetails['zodiac_sign'] = $zodiacs;
+                }
+
+                \Log::debug("Matching criteria details:", [
+                    'total_criteria' => $totalCriteria,
+                    'matched_criteria' => $matchedCriteria,
+                    'criteria_details' => $criteriaDetails
+                ]);
+
+                if ($totalCriteria > 0) {
+                    $matchPercentage = ($matchedCriteria / $totalCriteria) * 100;
+                    \Log::info("Match percentage calculated: {$matchPercentage}%");
+
+                    if ($matchPercentage < 50) {
+                        \Log::warning("Match percentage below 50%, no results will be returned");
+                        $query->whereRaw('1 = 0'); // Cancel the query
+                    }
+                } else {
+                    \Log::warning("No matching criteria specified in preferences");
+                }
+            });
+        } else {
+            \Log::warning("No user preferences found, showing all verified profiles");
         }
 
+        // Fetch 4 random matches
         $matches = $matchesQuery->inRandomOrder()->limit(4)->get();
+        \Log::info("Found " . $matches->count() . " potential matches");
 
-        // Add first image URL to each profile
+        // Attach first image URL to each profile
         $matches->each(function ($profile) {
             $firstImageId = $profile->image;
             $profile->first_image_url = $firstImageId
@@ -812,7 +889,22 @@ class MatrimonyController extends Controller
                 : '/assets/uploads/media-uploader/profile.png';
         });
 
-        // Get all requests for current user's profiles
+        // Log match details
+        if ($matches->isNotEmpty()) {
+            \Log::debug("Matching profiles found:", $matches->map(function ($match) {
+                return [
+                    'profile_id' => $match->id,
+                    'user_id' => $match->user_id,
+                    'age' => $match->age,
+                    'occupation' => $match->occupation,
+                    'income' => $match->income,
+                    'star' => $match->star,
+                    'zodiac_sign' => $match->zodiac_sign
+                ];
+            })->toArray());
+        }
+
+        // Fetch received profile requests
         $receivedRequests = ProfileRequest::with(['sender.identity_verify', 'sender.kyc', 'profile'])
             ->whereHas('profile', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
@@ -820,7 +912,9 @@ class MatrimonyController extends Controller
             ->where('status', 'pending')
             ->latest()
             ->get();
+        \Log::info("Found " . $receivedRequests->count() . " received requests");
 
+        // Fetch accepted requests
         $acceptedRequests = ProfileRequest::with(['sender.identity_verify', 'sender.kyc', 'profile'])
             ->whereHas('profile', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
@@ -828,7 +922,9 @@ class MatrimonyController extends Controller
             ->where('status', 'accepted')
             ->latest()
             ->get();
+        \Log::info("Found " . $acceptedRequests->count() . " accepted requests");
 
+        // Fetch rejected requests
         $rejectedRequests = ProfileRequest::with(['sender.identity_verify', 'sender.kyc', 'profile'])
             ->whereHas('profile', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
@@ -836,19 +932,25 @@ class MatrimonyController extends Controller
             ->where('status', 'rejected')
             ->latest()
             ->get();
+        \Log::info("Found " . $rejectedRequests->count() . " rejected requests");
 
+        // Membership details
         $userMembership = UserMembership::where('user_id', $userId)
             ->latest('created_at')
             ->first();
 
         $membershipInfo = null;
         if ($userMembership && $userMembership->membership && $userMembership->membership->category == 1) {
-            // Only if membership exists and its category is 1
             $membershipInfo = [
-                'title' => $userMembership->membership->title, // Title from Membership
-                'profile_limit' => $userMembership->profile_limit // Limit from UserMembership
+                'title' => $userMembership->membership->title,
+                'profile_limit' => $userMembership->profile_limit
             ];
+            \Log::debug("User membership info:", $membershipInfo);
+        } else {
+            \Log::info("No valid membership found for user");
         }
+
+        \Log::info("Completed dashboard processing for user ID: {$userId}");
 
         return view('matrimony.dashboard', compact(
             'matches',

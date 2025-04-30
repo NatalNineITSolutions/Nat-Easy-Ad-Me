@@ -10,6 +10,8 @@ use App\Models\MotherTongue;
 use App\Models\Dosham;
 use App\Models\Gothram;
 use App\Models\ZodiacSign;
+use App\Models\AgeRange;
+use App\Models\IncomeRange;
 use App\Models\Star;
 use Illuminate\Support\Facades\Log;
 
@@ -472,5 +474,116 @@ class MatrimonyManageController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Star deleted successfully!']);
     }
+
+    public function age()
+    {
+        $ages = AgeRange::paginate(10);
+        return view('backend.pages.matrimony.age', compact('ages'));
+    }
+
+    public function addAge()
+    {
+        return view('backend.pages.matrimony.add-age');
+    }
+
+    public function editAge($id = null)
+    {
+        $age = $id ? AgeRange::find($id) : null;
+        return view('backend.pages.matrimony.add-age', compact('age'));
+    }
+
+    public function storeAge(Request $request)
+    {
+        $request->validate([
+            'from_age' => 'required|integer|min:1',
+            'to_age' => 'required|integer|gt:from_age',
+        ]);
+
+        AgeRange::create($request->only('from_age', 'to_age'));
+        return redirect()->route('admin.matrimony.age')->with('success', 'Age range added successfully!');
+    }
+
+    public function updateAge(Request $request, $id)
+    {
+        $request->validate([
+            'from_age' => 'required|integer|min:1',
+            'to_age' => 'required|integer|gt:from_age',
+        ]);
+
+        $age = AgeRange::find($id);
+        if (!$age) {
+            return redirect()->route('admin.matrimony.age')->with('error', 'Age range not found.');
+        }
+
+        $age->update($request->only('from_age', 'to_age'));
+        return redirect()->route('admin.matrimony.age')->with('success', 'Age range updated successfully!');
+    }
+
+    public function deleteAge($id)
+    {
+        $age = AgeRange::find($id);
+        if (!$age) {
+            return response()->json(['success' => false, 'message' => 'Age range not found.'], 404);
+        }
+
+        $age->delete();
+        return response()->json(['success' => true, 'message' => 'Age range deleted successfully!']);
+    }
+
+    public function income()
+    {
+        $incomes = IncomeRange::paginate(10);
+        return view('backend.pages.matrimony.income', compact('incomes'));
+    }
+
+    public function addIncome()
+    {
+        return view('backend.pages.matrimony.add-income');
+    }
+
+    public function editIncome($id = null)
+    {
+        $income = $id ? IncomeRange::find($id) : null;
+        return view('backend.pages.matrimony.add-income', compact('income'));
+    }
+
+    public function storeIncome(Request $request)
+    {
+        $request->validate([
+            'from_income' => 'required|integer|min:0',
+            'to_income' => 'required|integer|gt:from_income',
+        ]);
+
+        IncomeRange::create($request->only('from_income', 'to_income'));
+        return redirect()->route('admin.matrimony.income')->with('success', 'Income range added successfully!');
+    }
+
+    public function updateIncome(Request $request, $id)
+    {
+        $request->validate([
+            'from_income' => 'required|integer|min:0',
+            'to_income' => 'required|integer|gt:from_income',
+        ]);
+
+        $income = IncomeRange::find($id);
+        if (!$income) {
+            return redirect()->route('admin.matrimony.income')->with('error', 'Income range not found.');
+        }
+
+        $income->update($request->only('from_income', 'to_income'));
+        return redirect()->route('admin.matrimony.income')->with('success', 'Income range updated successfully!');
+    }
+
+    public function deleteIncome($id)
+    {
+        $income = IncomeRange::find($id);
+        if (!$income) {
+            return response()->json(['success' => false, 'message' => 'Income range not found.'], 404);
+        }
+
+        $income->delete();
+        return response()->json(['success' => true, 'message' => 'Income range deleted successfully!']);
+    }
+
 
 }

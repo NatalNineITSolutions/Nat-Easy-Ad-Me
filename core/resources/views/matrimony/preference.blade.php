@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,25 +10,29 @@
 
     {{-- Bootstrap --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
 
     {{-- Google Fonts --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
 
     {{-- Font awesome --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
-
         * {
             padding: 0;
             margin: 0;
             box-sizing: border-box;
             font-family: "Montserrat", sans-serif;
-        } 
+        }
 
         .form-select {
             cursor: pointer;
@@ -132,7 +137,8 @@
             background-color: #e6ffe6;
         }
 
-        .delete, .tick {
+        .delete,
+        .tick {
             width: 16px;
             height: 16px;
             vertical-align: middle;
@@ -140,26 +146,31 @@
         }
 
         .badge .delete {
-            display: inline; /* Show delete icon by default */
+            display: inline;
+            /* Show delete icon by default */
         }
 
         .badge .tick {
-            display: none; /* Hide tick icon by default */
+            display: none;
+            /* Hide tick icon by default */
         }
 
         .badge.selected .delete {
-            display: none; /* Hide delete icon when selected */
+            display: none;
+            /* Hide delete icon when selected */
         }
 
         .badge.selected .tick {
-            display: inline; /* Show tick icon when selected */
+            display: inline;
+            /* Show tick icon when selected */
         }
 
         .next-button {
-            background-color: #FF0066; /* Pink */
+            background-color: #FF0066;
+            /* Pink */
             color: white;
             font-size: 13px;
-            font-weight: 600;   
+            font-weight: 600;
             padding: 8px 15px;
             border: none;
             cursor: pointer;
@@ -168,7 +179,8 @@
         }
 
         .next-button:hover {
-            background-color: #E6005C; /* Slightly darker pink */
+            background-color: #E6005C;
+            /* Slightly darker pink */
         }
 
         .text {
@@ -296,6 +308,38 @@
             max-width: 300px;
         }
 
+        /* Dropdown with checkboxes styling */
+        .dropdown-checkbox {
+            position: relative;
+        }
+
+        .dropdown-checkbox .dropdown-menu {
+            width: 100%;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .dropdown-checkbox .dropdown-menu li {
+            padding: 5px 0;
+        }
+
+        .dropdown-checkbox .form-check-input {
+            margin-right: 8px;
+        }
+
+        .dropdown-checkbox .form-check-label {
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .selected-options-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+        }
+
         @media (max-width: 991px) {
 
             .left {
@@ -329,12 +373,13 @@
     </style>
 
 </head>
+
 <body>
     <div class="login-container">
         <div class="container d-flex">
             <div class="left"></div>
             <div class="right">
-               <div class="user-detail-form">
+                <div class="user-detail-form">
                     <h3>Let's get your partner preferences!</h3>
 
                     <form class="user-form" id="preferenceForm">
@@ -342,9 +387,14 @@
                             <!-- Partner's Age -->
                             <div class="col-md-6">
                                 <label class="form-label">Partner's Age</label>
-                                <input type="number" class="form-control" name="partner_age" id="partner_age" placeholder="Enter Partner's Age" min="18" max="100">
+                                <select class="form-select" name="partner_age" id="partner_age">
+                                    <option value="" selected>Choose Partner's Age</option>
+                                    @foreach($ages as $age)
+                                        <option value="{{ $age->id }}">{{ $age->from_age }} - {{ $age->to_age }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                
+
                             <!-- Mother Tongue -->
                             <div class="col-md-6">
                                 <label class="form-label">Mother Tongue</label>
@@ -359,10 +409,11 @@
                             <!-- Zodiac Sign -->
                             <div class="col-md-6">
                                 <label class="form-label">Zodiac Sign</label>
-                                <select class="form-select" name="zodiac_sign" id="zodiac_sign">
-                                    <option value="" selected>Choose Zodiac Sign</option>
+                                <select id="zodiac_sign" name="zodiac_sign[]" multiple>
                                     @foreach($zodiacsigns as $zodiacsign)
-                                        <option value="{{ $zodiacsign->id }}">{{ $zodiacsign->zodiac_sign }}</option>
+                                        <option value="{{ $zodiacsign->id }}" @if(is_array($selectedZodiac) && in_array($zodiacsign->id, $selectedZodiac)) selected @endif>
+                                            {{ $zodiacsign->zodiac_sign }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -370,20 +421,22 @@
                             <!-- Star -->
                             <div class="col-md-6">
                                 <label class="form-label">Star</label>
-                                <select class="form-select" name="star" id="star">
-                                    <option value="" selected>Choose Star</option>
+                                <select id="star" name="star[]" multiple>
                                     @foreach($stars as $star)
-                                        <option value="{{ $star->id }}">{{ $star->star }}</option>
+                                        <option value="{{ $star->id }}" @if(is_array($selectedStars) && in_array($star->id, $selectedStars)) selected @endif>
+                                            {{ $star->star }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
-                
+
                             <!-- Religion -->
                             <div class="col-md-6">
                                 <label class="form-label">Religion</label>
-                                <input type="text" class="form-control" name="religion" id="religion" placeholder="Enter Religion">
+                                <input type="text" class="form-control" name="religion" id="religion"
+                                    placeholder="Enter Religion">
                             </div>
-                
+
                             <!-- Caste -->
                             <div class="col-md-6">
                                 <label class="form-label">Caste</label>
@@ -394,43 +447,51 @@
                                     @endforeach
                                 </select>
                             </div>
-                
+
                             <!-- Height -->
                             <div class="col-md-6">
                                 <label class="form-label">Height</label>
                                 <input type="text" class="form-control" name="height" id="height" placeholder="152cm">
                             </div>
-                
+
                             <!-- Weight -->
                             <div class="col-md-6">
                                 <label class="form-label">Weight</label>
                                 <input type="text" class="form-control" name="weight" id="weight" placeholder="56kg">
                             </div>
-                
+
                             <!-- Occupation -->
                             <div class="col-md-6">
                                 <label class="form-label">Occupation</label>
-                                <input type="text" class="form-control" name="occupation" id="occupation" placeholder="Enter the Occupation">
+                                <input type="text" class="form-control" name="occupation" id="occupation"
+                                    placeholder="Enter the Occupation">
                             </div>
-                
+
                             <!-- Location -->
                             <div class="col-md-6">
                                 <label class="form-label">Location</label>
-                                <input type="text" class="form-control" name="location" id="location" placeholder="Enter the Location">
+                                <input type="text" class="form-control" name="location" id="location"
+                                    placeholder="Enter the Location">
                             </div>
-                
+
                             <!-- Monthly Income -->
                             <div class="col-md-12">
                                 <label class="form-label">Monthly Income</label>
-                                <input type="text" class="form-control" name="income" id="income" placeholder="Enter the Income">
+                                <select class="form-select" name="income" id="income">
+                                    <option value="" selected>Choose Monthly Income</option>
+                                    @foreach($income as $inc)
+                                        <option value="{{ $inc->id }}">{{ $inc->from_income }} - {{ $inc->to_income }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
-                
+
                             <div class="col-12 text-end">
                                 <button type="submit" class="next-button">Submit</button>
                             </div>
                         </div>
                     </form>
-               </div>
+                </div>
             </div>
         </div>
     </div>
@@ -440,6 +501,8 @@
 
     <!-- Include jQuery (required for Toastr) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
     <!-- Include Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
@@ -459,9 +522,36 @@
         document.getElementById('preferenceForm').addEventListener('submit', function (event) {
             event.preventDefault();
 
-            // Validation logic
-            const fields = [
+            // Get all selected values
+            const formData = new FormData(this);
+            const jsonData = {};
+
+            // Convert FormData to object, handling arrays
+            for (let [key, value] of formData.entries()) {
+                if (key.endsWith('[]')) {
+                    const fieldName = key.replace('[]', '');
+                    if (!jsonData[fieldName]) {
+                        jsonData[fieldName] = [];
+                    }
+                    jsonData[fieldName].push(value);
+                } else {
+                    // Special handling for select dropdowns with display text (like ranges)
+                    if (key === 'partner_age' || key === 'income') {
+                        const selectElement = document.getElementById(key);
+                        jsonData[key] = selectElement.options[selectElement.selectedIndex].text;
+                    } else {
+                        jsonData[key] = value;
+                    }
+                }
+            }
+
+            // Add CSRF token
+            jsonData['_token'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            // Validation
+            const requiredFields = [
                 { id: 'partner_age', name: "Partner's Age" },
+                { id: 'income', name: "Monthly Income" },
                 { id: 'mother_tongue', name: "Mother Tongue" },
                 { id: 'religion', name: "Religion" },
                 { id: 'caste', name: "Caste" },
@@ -475,50 +565,65 @@
             ];
 
             let missingFields = [];
-            fields.forEach(field => {
-                const input = document.getElementById(field.id);
-                if (!input.value.trim()) {
+            requiredFields.forEach(field => {
+                if (!jsonData[field.id]) {
                     missingFields.push(field.name);
                 }
             });
 
             if (missingFields.length > 0) {
-                const errorMessage = `${missingFields.join(', ')} is required.`;
-                toastr.error(errorMessage, 'Validation Error');
-                return; // Stop further execution if validation fails
+                toastr.error(`${missingFields.join(', ')} ${missingFields.length > 1 ? 'are' : 'is'} required.`, 'Validation Error');
+                return;
             }
 
-            // AJAX submission logic
-            const formData = new FormData(this);
-            const jsonData = {};
-            formData.forEach((value, key) => {
-                jsonData[key] = value;
-            });
-
+            // AJAX request
             fetch('/matrimony/preference', {
                 method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': jsonData['_token']
                 },
                 body: JSON.stringify(jsonData)
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    toastr.success('Preferences saved successfully! Redirecting...');
-                    setTimeout(() => {
-                        window.location.href = data.redirect_url;
-                    }, 2000);
-                } else {
-                    toastr.error('Error: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                toastr.error('An unexpected error occurred.');
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => { throw err; });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        toastr.success(data.message);
+                        setTimeout(() => {
+                            window.location.href = data.redirect_url;
+                        }, 2000);
+                    } else {
+                        toastr.error(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    toastr.error(error.message || 'An unexpected error occurred.');
+                });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            new Choices('#zodiac_sign', {
+                removeItemButton: true,
+                placeholderValue: 'Select Zodiac Signs',
+                searchPlaceholderValue: 'Search Zodiac...'
+            });
+
+            new Choices('#star', {
+                removeItemButton: true,
+                placeholderValue: 'Select Stars',
+                searchPlaceholderValue: 'Search Star...'
             });
         });
-    </script>   
+    </script>
+
 </body>
+
 </html>

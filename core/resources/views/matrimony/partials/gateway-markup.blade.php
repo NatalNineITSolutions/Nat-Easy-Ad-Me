@@ -8,6 +8,8 @@
             <input type="hidden" name="occupation" id="modal_occupation">
             <input type="hidden" name="annual_income" id="modal_annual_income">
             <input type="hidden" name="caste" id="modal_caste">
+            <input type="hidden" name="zodiac_sign" id="modal_zodiac_sign">
+            <input type="hidden" name="star" id="modal_star">
             <input type="hidden" name="motherTongue" id="modal_motherTongue">
             <input type="hidden" name="country" id="modal_country">
             <input type="hidden" name="state" id="modal_state">

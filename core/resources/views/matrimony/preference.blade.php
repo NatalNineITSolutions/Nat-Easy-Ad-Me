@@ -355,6 +355,28 @@
                                     @endforeach
                                 </select>
                             </div>
+
+                            <!-- Zodiac Sign -->
+                            <div class="col-md-6">
+                                <label class="form-label">Zodiac Sign</label>
+                                <select class="form-select" name="zodiac_sign" id="zodiac_sign">
+                                    <option value="" selected>Choose Zodiac Sign</option>
+                                    @foreach($zodiacsigns as $zodiacsign)
+                                        <option value="{{ $zodiacsign->id }}">{{ $zodiacsign->zodiac_sign }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Star -->
+                            <div class="col-md-6">
+                                <label class="form-label">Star</label>
+                                <select class="form-select" name="star" id="star">
+                                    <option value="" selected>Choose Star</option>
+                                    @foreach($stars as $star)
+                                        <option value="{{ $star->id }}">{{ $star->star }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                 
                             <!-- Religion -->
                             <div class="col-md-6">
@@ -443,6 +465,8 @@
                 { id: 'mother_tongue', name: "Mother Tongue" },
                 { id: 'religion', name: "Religion" },
                 { id: 'caste', name: "Caste" },
+                { id: 'zodiac_sign', name: "Zodiac Sign" },
+                { id: 'star', name: "Star" },
                 { id: 'height', name: "Height" },
                 { id: 'weight', name: "Weight" },
                 { id: 'occupation', name: "Occupation" },

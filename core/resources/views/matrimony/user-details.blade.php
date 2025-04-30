@@ -553,6 +553,28 @@
 
                     <form class="user-form section-2" style="display: none;">
                         <div class="row g-3">
+                            <!-- Zodiac Sign -->
+                            <div class="col-md-12">
+                                <label class="form-label">Zodiac Sign</label>
+                                <select class="form-select" name="zodiac_sign" id="zodiac_sign">
+                                    <option value="" selected>Choose zodiac sign</option>
+                                    @foreach($zodiacsigns as $zodiac)
+                                        <option value="{{ $zodiac->id }}">{{ $zodiac->zodiac_sign }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Star -->
+                            <div class="col-md-12">
+                                <label class="form-label">Star</label>
+                                <select class="form-select" name="star" id="star">
+                                    <option value="" selected>Choose star</option>
+                                    @foreach($stars as $star)
+                                        <option value="{{ $star->id }}">{{ $star->star }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
                             <!-- Caste -->
                             <div class="col-md-12">
                                 <label class="form-label">Caste</label>
@@ -1020,6 +1042,14 @@
                 {
                     id: 'gothram',
                     name: 'Gothram'
+                },
+                {
+                    id: 'zodiac_sign',
+                    name: 'Zodiac Sign'
+                },
+                {
+                    id: 'star',
+                    name: 'Star'
                 }
                 ],
                 3: [{
@@ -1118,6 +1148,8 @@
             formData.append('city', document.querySelector('[name="city"]').value);
             formData.append('about', document.querySelector('[name="about"]').value);
             formData.append('image', document.querySelector('[name="image"]').value);
+            formData.append('zodiac_sign', document.querySelector('[name="zodiac_sign"]').value);
+            formData.append('star', document.querySelector('[name="star"]').value);
 
             // 👉 Add Divorce Order document if applicable
             const maritalStatus = getValue('[name="marital_status"]');

@@ -20,6 +20,8 @@ use App\Models\Gothram;
 use App\Models\Caste;
 use App\Models\MotherTongue;
 use App\Models\Dosham;
+use App\Models\ZodiacSign;
+use App\Models\Star;
 use Modules\CountryManage\app\Models\City;
 use Modules\CountryManage\app\Models\State;
 use Modules\CountryManage\app\Models\Country;
@@ -127,9 +129,9 @@ class MatrimonyController extends Controller
         $user_current_membership = null;
         if (Auth::check()) {
             $user_current_membership = UserMembership::where('user_id', Auth::id())
-            ->where('status', 1)
-            ->whereHas('membership', fn($q) => $q->where('category', 1))
-            ->first();
+                ->where('status', 1)
+                ->whereHas('membership', fn($q) => $q->where('category', 1))
+                ->first();
         }
 
         return view('matrimony.price', compact('memberships', 'user_current_membership'));
@@ -256,8 +258,10 @@ class MatrimonyController extends Controller
         $countries = Country::all();
         $states = State::all();
         $cities = City::all();
+        $zodiacsigns = ZodiacSign::all();
+        $stars = Star::all();
 
-        return view('matrimony.user-details', compact('castes', 'gothrams', 'doshams', 'countries', 'states', 'cities'));
+        return view('matrimony.user-details', compact('castes', 'gothrams', 'doshams', 'countries', 'states', 'cities', 'zodiacsigns', 'stars'));
     }
 
     public function getStates($country_id)
@@ -374,6 +378,8 @@ class MatrimonyController extends Controller
             'about' => 'required|string|max:500',
             'document' => 'nullable|file|mimes:pdf|max:2048',
             'image' => 'required|string',
+            'zodiac_sign' => 'required|integer',
+            'star' => 'required|integer',
         ]);
 
         try {
@@ -382,6 +388,10 @@ class MatrimonyController extends Controller
             if ($request->hasFile('document')) {
                 $documentPath = $request->file('document')->store('matrimony/documents', 'public');
             }
+
+            // 🪐 Fetch Zodiac Sign and Star names
+            $zodiacSignName = ZodiacSign::find($validated['zodiac_sign'])?->zodiac_sign ?? null;
+            $starName = Star::find($validated['star'])?->star ?? null;
 
             // Create KYC record
             $kyc = MatrimonyKyc::create([
@@ -406,11 +416,21 @@ class MatrimonyController extends Controller
                 'city_id' => $validated['city'],
                 'about' => $validated['about'],
                 'document_path' => $documentPath,
-                'image' => $validated['image'], // Store the media IDs
-                'status' => 'pending', // Default status
+                'image' => $validated['image'], 
+                'status' => 'pending',
+                'zodiac_sign_id' => $validated['zodiac_sign'],
+                'zodiac_sign' => $zodiacSignName,
+                'star_id' => $validated['star'],
+                'star' => $starName, 
             ]);
 
-            Log::info('Incoming KYC image IDs:', ['image' => $validated['image']]);
+            Log::info('Incoming KYC image IDs:', [
+                'image' => $validated['image'],
+                'zodiac_sign_id' => $validated['zodiac_sign'],
+                'star_id' => $validated['star'],
+                'zodiac_sign' => $zodiacSignName,
+                'star' => $starName,
+            ]);
 
             return response()->json([
                 'status' => 'success',
@@ -430,8 +450,10 @@ class MatrimonyController extends Controller
     {
         $motherTongues = MotherTongue::all();
         $castes = Caste::all();
+        $zodiacsigns = ZodiacSign::all();
+        $stars = Star::all();
 
-        return view('matrimony.preference', compact('motherTongues', 'castes'));
+        return view('matrimony.preference', compact('motherTongues', 'castes', 'zodiacsigns', 'stars'));
     }
 
     public function storePreference(Request $request)
@@ -447,6 +469,8 @@ class MatrimonyController extends Controller
             'occupation' => 'required|string',
             'location' => 'required|string',
             'income' => 'required|string',
+            'zodiac_sign' => 'required|string',
+            'star' => 'required|string',
         ]);
 
         // Get the authenticated user
@@ -454,6 +478,16 @@ class MatrimonyController extends Controller
 
         // Assign the user_id
         $validatedData['user_id'] = $user->id;
+
+        if (is_numeric($validatedData['zodiac_sign'])) {
+            $zodiac = ZodiacSign::find($validatedData['zodiac_sign']);
+            $validatedData['zodiac_sign'] = $zodiac?->zodiac_sign ?? null;
+        }
+    
+        if (is_numeric($validatedData['star'])) {
+            $star = Star::find($validatedData['star']);
+            $validatedData['star'] = $star?->star ?? null;
+        }
 
         // Store data in the MatrimonyPreference table
         MatrimonyPreference::updateOrCreate(
@@ -499,6 +533,8 @@ class MatrimonyController extends Controller
     {
         $castes = Caste::all();
         $motherTongues = MotherTongue::all();
+        $zodiacsign = ZodiacSign::all();
+        $stars = Star::all();
         $countries = Country::all();
         $states = State::all();
         $cities = City::all();
@@ -509,7 +545,7 @@ class MatrimonyController extends Controller
             $profile = ProfileListing::find($request->profile_id);
         }
 
-        return view('matrimony.profile-listing', compact('castes', 'motherTongues', 'countries', 'states', 'cities', 'profile'));
+        return view('matrimony.profile-listing', compact('castes', 'motherTongues', 'countries', 'states', 'cities', 'profile', 'zodiacsign', 'stars'));
     }
 
     // Update Profile Listing
@@ -545,7 +581,7 @@ class MatrimonyController extends Controller
 
     public function storeProfileListing(Request $request)
     {
-
+        \Log::info('Form submission data:', $request->all());
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('profile_images', 'public');
@@ -556,6 +592,8 @@ class MatrimonyController extends Controller
         $stateName = State::find($request->state)?->state ?? null;
         $cityName = City::find($request->city)?->city ?? null;
         $casteName = Caste::find($request->caste)?->caste ?? null;
+        $zodiacSignName = ZodiacSign::find($request->zodiac_sign)?->zodiac_sign ?? null;
+        $starName = Star::find($request->star)?->star ?? null;
 
         $profileListing = ProfileListing::create([
             'user_id' => Auth::id(),
@@ -572,7 +610,10 @@ class MatrimonyController extends Controller
             'description' => $request->description,
             'paid' => 0,
             'payment_method' => null,
+            'zodiac_sign' => $zodiacSignName,
+            'star' => $starName,
         ]);
+        Log::info('Profile Listing Created:', $profileListing->toArray());
 
         session()->put('profile_listing_id', $profileListing->id);
 
@@ -808,7 +849,7 @@ class MatrimonyController extends Controller
                 'profile_limit' => $userMembership->profile_limit // Limit from UserMembership
             ];
         }
-        
+
         return view('matrimony.dashboard', compact(
             'matches',
             'receivedRequests',

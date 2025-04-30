@@ -27,6 +27,8 @@ class ProfileListing extends Model
         'paid',
         'payment_method',
         'is_verified',
+        'zodiac_sign',
+        'star'
     ];
 
 
@@ -50,4 +52,18 @@ class ProfileListing extends Model
         return $this->belongsTo(City::class, 'city');
     }
 
+    public function state()
+    {
+        return $this->belongsTo(City::class, 'state');
+    }
+
+    public function zodiacSign()
+    {
+        return $this->belongsTo(ZodiacSign::class, 'zodiac_sign');
+    }
+    public function star()
+    {
+        return $this->belongsTo(Star::class, 'star');
+    }
+    
 }

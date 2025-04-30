@@ -9,6 +9,8 @@ use App\Models\Caste;
 use App\Models\MotherTongue;
 use App\Models\Dosham;
 use App\Models\Gothram;
+use App\Models\ZodiacSign;
+use App\Models\Star;
 use Illuminate\Support\Facades\Log;
 
 class MatrimonyManageController extends Controller
@@ -104,7 +106,7 @@ class MatrimonyManageController extends Controller
 
     public function castes()
     {
-        $castes = Caste::paginate(10); 
+        $castes = Caste::paginate(10);
         return view('backend.pages.matrimony.caste', compact('castes'));
     }
 
@@ -143,7 +145,7 @@ class MatrimonyManageController extends Controller
     public function deleteCaste($id)
     {
         $caste = Caste::find($id);
-        
+
         if (!$caste) {
             return response()->json(['success' => false, 'message' => 'Caste not found.'], 404);
         }
@@ -221,7 +223,7 @@ class MatrimonyManageController extends Controller
         $motherTongue = $id ? MotherTongue::find($id) : null;
         return view('backend.pages.matrimony.add-mother-tongue', compact('motherTongue'));
     }
-    
+
     public function doshams()
     {
         $doshams = Dosham::paginate(10); // Show 10 records per page
@@ -343,6 +345,132 @@ class MatrimonyManageController extends Controller
         $gothram->update(['gothram' => $request->gothram]);
 
         return redirect()->route('admin.matrimony.gothrams')->with('success', 'Gothram updated successfully!');
+    }
+
+    // Zodiac Sign Methods
+    public function zodiacsign()
+    {
+        $zodiacSigns = ZodiacSign::paginate(10);
+        return view('backend.pages.matrimony.zodiac-sign', compact('zodiacSigns'));
+    }
+
+    public function addZodiacSign()
+    {
+        return view('backend.pages.matrimony.add-zodiac-sign');
+    }
+
+    public function storeZodiacSign(Request $request)
+    {
+        $request->validate([
+            'zodiac_sign' => 'required|string|max:255|unique:zodiac_signs,zodiac_sign'
+        ], [
+            'zodiac_sign.unique' => 'This Zodiac Sign already exists!'
+        ]);
+
+        ZodiacSign::create(['zodiac_sign' => $request->zodiac_sign]);
+
+        return redirect()->route('admin.matrimony.zodiac-sign')->with('success', 'Zodiac Sign added successfully!');
+    }
+
+    public function editZodiacSign($id = null)
+    {
+        $zodiacSign = $id ? ZodiacSign::find($id) : null;
+        return view('backend.pages.matrimony.add-zodiac-sign', compact('zodiacSign'));
+    }
+
+    public function updateZodiacSign(Request $request, $id)
+    {
+        $request->validate([
+            'zodiac_sign' => 'required|string|max:255|unique:zodiac_signs,zodiac_sign,' . $id
+        ], [
+            'zodiac_sign.unique' => 'This Zodiac Sign already exists!'
+        ]);
+
+        $zodiacSign = ZodiacSign::find($id);
+
+        if (!$zodiacSign) {
+            return redirect()->route('admin.matrimony.zodiac-sign')->with('error', 'Zodiac Sign not found.');
+        }
+
+        $zodiacSign->update(['zodiac_sign' => $request->zodiac_sign]);
+
+        return redirect()->route('admin.matrimony.zodiac-sign')->with('success', 'Zodiac Sign updated successfully!');
+    }
+
+    public function deleteZodiacSign($id)
+    {
+        $zodiacSign = ZodiacSign::find($id);
+
+        if (!$zodiacSign) {
+            return response()->json(['success' => false, 'message' => 'Zodiac Sign not found.'], 404);
+        }
+
+        $zodiacSign->delete();
+
+        return response()->json(['success' => true, 'message' => 'Zodiac Sign deleted successfully!']);
+    }
+
+    // Star Methods
+    public function star()
+    {
+        $stars = Star::paginate(10);
+        return view('backend.pages.matrimony.star', compact('stars'));
+    }
+
+    public function addStar()
+    {
+        return view('backend.pages.matrimony.add-star');
+    }
+
+    public function storeStar(Request $request)
+    {
+        $request->validate([
+            'star' => 'required|string|max:255|unique:stars,star'
+        ], [
+            'star.unique' => 'This Star already exists!'
+        ]);
+
+        Star::create(['star' => $request->star]);
+
+        return redirect()->route('admin.matrimony.star')->with('success', 'Star added successfully!');
+    }
+
+    public function editStar($id = null)
+    {
+        $star = $id ? Star::find($id) : null;
+        return view('backend.pages.matrimony.add-star', compact('star'));
+    }
+
+    public function updateStar(Request $request, $id)
+    {
+        $request->validate([
+            'star' => 'required|string|max:255|unique:stars,star,' . $id
+        ], [
+            'star.unique' => 'This Star already exists!'
+        ]);
+
+        $star = Star::find($id);
+
+        if (!$star) {
+            return redirect()->route('admin.matrimony.star')->with('error', 'Star not found.');
+        }
+
+        $star->update(['star' => $request->star]);
+
+        return redirect()->route('admin.matrimony.star')->with('success', 'Star updated successfully!');
+    }
+
+    public function deleteStar($id)
+    {
+        $star = Star::find($id);
+
+        if (!$star) {
+            return response()->json(['success' => false, 'message' => 'Star not found.'], 404);
+        }
+
+        $star->delete();
+
+        return response()->json(['success' => true, 'message' => 'Star deleted successfully!']);
     }
 
 }

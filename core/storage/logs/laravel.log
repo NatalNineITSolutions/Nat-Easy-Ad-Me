@@ -1,6 +1,0 @@
-
-[2025-04-30 11:11:41] production.INFO: Incoming KYC image IDs: {"image":"1158","zodiac_sign_id":"14","star_id":"9","zodiac_sign":"Sagittarius (Dhanusu)","star":"Pushya (Poosam)"} 
-[2025-04-30 11:12:54] production.INFO: Preferences saved successfully for user: 177  
-[2025-04-30 11:12:57] production.INFO: Pending profile requests count for user 177: 0  
-[2025-04-30 11:16:31] production.INFO: Preferences saved successfully for user: 177  
-[2025-04-30 11:16:36] production.INFO: Pending profile requests count for user 177: 0  

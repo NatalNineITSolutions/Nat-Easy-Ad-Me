@@ -17,9 +17,9 @@ class AutoFlushBV extends Command
     protected $description = 'Flush extra BV based on sealing limit at scheduled time';
 
     protected $protectedTypes = [
-        'direct_referral', 
-        'genology',         
-        'purchase'         
+        'direct_referral',
+        'genology',
+        'purchase'
     ];
 
     public function handle()
@@ -54,10 +54,10 @@ class AutoFlushBV extends Command
                 // Record payout summary and details
                 $payoutRecord = $this->recordPayoutSummary($sealingLimitBv);
                 $this->recordUserPayoutDetails(
-                    $payoutRecord->id, 
-                    $sealingLimitBv, 
-                    $pairIncome, 
-                    $tdsPercentage, 
+                    $payoutRecord->id,
+                    $sealingLimitBv,
+                    $pairIncome,
+                    $tdsPercentage,
                     $serviceCharge
                 );
             });
@@ -86,7 +86,7 @@ class AutoFlushBV extends Command
             ->where('bv_points', '>', 0)
             ->whereNotIn('type', $this->protectedTypes)
             ->sum('bv_points');
-            
+
         $rightBv = $rightChild->userBvs()
             ->where('bv_points', '>', 0)
             ->whereNotIn('type', $this->protectedTypes)
@@ -180,19 +180,22 @@ class AutoFlushBV extends Command
         $matchingPairs = 0;
 
         foreach ($users as $user) {
-            $leftBv = $user->leftChild ? 
+            $leftBv = $user->leftChild ?
                 $user->leftChild->userBvs()
                     ->where('bv_points', '>', 0)
                     ->whereNotIn('type', $this->protectedTypes)
                     ->sum('bv_points') : 0;
-                    
-            $rightBv = $user->rightChild ? 
+
+            $rightBv = $user->rightChild ?
                 $user->rightChild->userBvs()
                     ->where('bv_points', '>', 0)
                     ->whereNotIn('type', $this->protectedTypes)
                     ->sum('bv_points') : 0;
 
-            $matchingPairs += floor(min($leftBv, $rightBv) / $sealingLimitBv);
+            // If this user qualifies (has at least one match), count just 1
+            if (floor(min($leftBv, $rightBv) / $sealingLimitBv) >= 1) {
+                $matchingPairs += 1;
+            }
         }
 
         return $matchingPairs;
@@ -217,7 +220,7 @@ class AutoFlushBV extends Command
                 ->whereNotIn('type', $this->protectedTypes)
                 ->where('created_at', '<', now())
                 ->sum('bv_points') ?? 0;
-                
+
             $rightBv = $rightChild?->userBvs()
                 ->where('bv_points', '>', 0)
                 ->whereNotIn('type', $this->protectedTypes)

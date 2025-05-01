@@ -416,12 +416,12 @@ class MatrimonyController extends Controller
                 'city_id' => $validated['city'],
                 'about' => $validated['about'],
                 'document_path' => $documentPath,
-                'image' => $validated['image'], 
+                'image' => $validated['image'],
                 'status' => 'pending',
                 'zodiac_sign_id' => $validated['zodiac_sign'],
                 'zodiac_sign' => $zodiacSignName,
                 'star_id' => $validated['star'],
-                'star' => $starName, 
+                'star' => $starName,
             ]);
 
             Log::info('Incoming KYC image IDs:', [
@@ -483,7 +483,7 @@ class MatrimonyController extends Controller
             $zodiac = ZodiacSign::find($validatedData['zodiac_sign']);
             $validatedData['zodiac_sign'] = $zodiac?->zodiac_sign ?? null;
         }
-    
+
         if (is_numeric($validatedData['star'])) {
             $star = Star::find($validatedData['star']);
             $validatedData['star'] = $star?->star ?? null;
@@ -908,4 +908,74 @@ class MatrimonyController extends Controller
         return view('matrimony.requests-lists', compact('requests'));
     }
 
+    public function filter(Request $request)
+    {
+        // Start with base query for verified profiles excluding current user
+        $query = ProfileListing::where('user_id', '!=', auth()->id())
+            ->where('is_verified', 1);
+
+        // Apply filters only if request is POST or has any filter in GET
+        if ($request->isMethod('post') || $request->query()) {
+            if ($request->filled('gender')) {
+                $query->where('gender', $request->gender);
+            }
+
+            if ($request->filled('age_range')) {
+                $ages = explode('-', $request->age_range);
+                if (count($ages) === 2) {
+                    $query->whereBetween('age', [(int) $ages[0], (int) $ages[1]]);
+                }
+            }
+
+            if ($request->filled('marital_status')) {
+                $query->whereHas('kyc', function ($q) use ($request) {
+                    $q->where('marital_status', $request->marital_status);
+                });
+            }
+
+            if ($request->filled('income')) {
+                $query->where('income', '>=', (int) $request->income);
+            }
+
+            if ($request->filled('occupation')) {
+                $query->where('occupation', 'LIKE', "%{$request->occupation}%");
+            }
+
+            if ($request->filled('religion')) {
+                $query->where('religion', $request->religion);
+            }
+
+            if ($request->filled('caste')) {
+                $query->where('caste', $request->caste);
+            }
+
+            if ($request->filled('star')) {
+                $query->where('star', $request->star);
+            }
+
+            if ($request->filled('zodiac_sign')) {
+                $query->where('zodiac_sign', $request->zodiac_sign);
+            }
+
+            if ($request->filled('country')) {
+                $query->where('country', $request->country);
+            }
+
+            if ($request->filled('state')) {
+                $query->where('state', $request->state);
+            }
+
+            if ($request->filled('city')) {
+                $query->where('city', $request->city);
+            }
+        }
+
+        // Get paginated results
+        $profiles = $query->paginate(12);
+
+        return view('matrimony.filter', [
+            'profiles' => $profiles,
+            'filters' => $request->all()
+        ]);
+    }
 }

@@ -1,6 +1,9 @@
+<<<<<<< HEAD
 [2025-05-01 09:09:17] production.INFO: Starting dashboard matching process for user ID: 194  
 [2025-05-01 09:09:17] production.DEBUG: User preferences: {"id":27,"zodiac_sign":"6|8|15","star":"3|7|10","user_id":194,"partner_age":"18 - 21","mother_tongue":"1","religion":"Hindhu","caste":"1","height":170,"weight":70,"occupation":"Doctor","location":"Coimbatore","income":"400000 - 600000","created_at":"2025-04-30T13:52:41.000000Z","updated_at":"2025-04-30T13:52:41.000000Z"} 
 [2025-05-01 09:11:44] production.INFO: Starting dashboard matching process for user ID: 194  
 [2025-05-01 09:11:44] production.DEBUG: User preferences: {"id":27,"zodiac_sign":"6|8|15","star":"3|7|10","user_id":194,"partner_age":"18 - 21","mother_tongue":"1","religion":"Hindhu","caste":"1","height":170,"weight":70,"occupation":"Doctor","location":"Coimbatore","income":"400000 - 600000","created_at":"2025-04-30T13:52:41.000000Z","updated_at":"2025-04-30T13:52:41.000000Z"} 
 [2025-05-01 09:13:40] production.INFO: Starting dashboard matching process for user ID: 194  
 [2025-05-01 09:13:40] production.DEBUG: User preferences: {"id":27,"zodiac_sign":"6|8|15","star":"3|7|10","user_id":194,"partner_age":"18 - 21","mother_tongue":"1","religion":"Hindhu","caste":"1","height":170,"weight":70,"occupation":"Doctor","location":"Coimbatore","income":"400000 - 600000","created_at":"2025-04-30T13:52:41.000000Z","updated_at":"2025-04-30T13:52:41.000000Z"} 
+=======
+>>>>>>> 4ff509a0e8490d65ab576415723b997bebc3af49

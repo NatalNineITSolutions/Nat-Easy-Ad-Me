@@ -78,8 +78,8 @@ class DashboardController extends Controller
         $flushableAmount = floor(min($leftBvPoints, $rightBvPoints) / $sealingLimitBv) * $sealingLimitBv;
 
         // Points that will remain after next flush
-        $remainingLeft = $leftBvPoints - $flushableAmount;
-        $remainingRight = $rightBvPoints - $flushableAmount;
+        $remainingLeft = max(0, $leftBvPoints - $flushableAmount);
+        $remainingRight = max(0, $rightBvPoints - $flushableAmount);
 
         // For display - show current state
         $businesspoint = "$leftBvPoints <> $rightBvPoints";
@@ -98,18 +98,18 @@ class DashboardController extends Controller
         $sealedRightBv = min($rightBvPoints, $sealingLimitBv);
 
         // Update the retained BP points for display
-        $leftBP = floor($sealedLeftBv / $bpConversionRate);
-        $rightBP = floor($sealedRightBv / $bpConversionRate);
-        $equalizedBP = min($leftBP, $rightBP);
+        $leftBP = max(0, floor($sealedLeftBv / $bpConversionRate));
+        $rightBP = max(0, floor($sealedRightBv / $bpConversionRate));
+        $equalizedBP = max(0, min($leftBP, $rightBP));
 
         // Calculate income
         $income = $equalizedBP * $bvvalue;
         $showIncome = $equalizedBP > 0;
 
         // Format display values
-        $businesspoint = "$leftBvPoints <> $rightBvPoints";
-        $totalBP = "$leftBP <> $rightBP";
-        $balancedBP = "$leftBvPoints <> $rightBvPoints";
+        $businesspoint = max(0, $leftBvPoints) . " <> " . max(0, $rightBvPoints);
+        $totalBP = max(0, $leftBP) . " <> " . max(0, $rightBP);
+        $balancedBP = max(0, $leftBvPoints) . " <> " . max(0, $rightBvPoints);
 
         // BV from direct referrals
         $bvFromReferrals = $user->children()->with('userBvs')->get()->sum(fn($child) => $child->userBvs->sum('bv_points'));

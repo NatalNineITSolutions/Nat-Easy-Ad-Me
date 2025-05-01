@@ -76,54 +76,62 @@ class AutoFlushBV extends Command
         $leftChild = $user->leftChild;
         $rightChild = $user->rightChild;
 
-        // Only process if both legs exist
         if (!$leftChild || !$rightChild) {
             return;
         }
 
-        // Get current BV points excluding protected types
+        // Get total BV for left and right, excluding protected types
         $leftBv = $leftChild->userBvs()
-            ->where('bv_points', '>', 0)
             ->whereNotIn('type', $this->protectedTypes)
             ->sum('bv_points');
 
         $rightBv = $rightChild->userBvs()
-            ->where('bv_points', '>', 0)
             ->whereNotIn('type', $this->protectedTypes)
             ->sum('bv_points');
 
-        // Calculate flushable pairs (common multiples of sealing limit)
-        $flushablePairs = floor(min($leftBv, $rightBv) / $sealingLimitBv);
+        // If both sides are less than sealing limit, no flush
+        if ($leftBv < $sealingLimitBv && $rightBv < $sealingLimitBv) {
+            return;
+        }
 
-        if ($flushablePairs > 0) {
-            $totalFlushAmount = $flushablePairs * $sealingLimitBv;
+        // Calculate flushable amount: lowest side that is >= sealing limit
+        $flushableAmount = min(
+            $leftBv >= $sealingLimitBv ? $leftBv : 0,
+            $rightBv >= $sealingLimitBv ? $rightBv : 0,
+            $sealingLimitBv
+        );
 
-            // Create deduction records (negative BV)
+        $flushableAmount = 0;
+        if ($leftBv >= $sealingLimitBv) {
+            $flushableAmount = $sealingLimitBv;
             $leftChild->userBvs()->create([
-                'bv_points' => -$totalFlushAmount,
+                'bv_points' => -$flushableAmount,
                 'type' => 'flush_deduction',
-                'description' => 'BV flush at ' . now(),
+                'description' => 'Left BV flush at ' . now(),
                 'created_at' => now(),
                 'updated_at' => now()
-            ]);
-
-            $rightChild->userBvs()->create([
-                'bv_points' => -$totalFlushAmount,
-                'type' => 'flush_deduction',
-                'description' => 'BV flush at ' . now(),
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
-
-            Log::info("BV Flush Completed", [
-                'user_id' => $user->id,
-                'left_bv_before' => $leftBv,
-                'right_bv_before' => $rightBv,
-                'flushed_amount' => $totalFlushAmount,
-                'left_remaining' => $leftBv - $totalFlushAmount,
-                'right_remaining' => $rightBv - $totalFlushAmount
             ]);
         }
+
+        if ($rightBv >= $sealingLimitBv) {
+            $flushableAmount = $sealingLimitBv;
+            $rightChild->userBvs()->create([
+                'bv_points' => -$flushableAmount,
+                'type' => 'flush_deduction',
+                'description' => 'Right BV flush at ' . now(),
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+        }
+
+        Log::info("BV Flush Completed", [
+            'user_id' => $user->id,
+            'left_bv_before' => $leftBv,
+            'right_bv_before' => $rightBv,
+            'flushed_amount' => $flushableAmount,
+            'left_remaining' => $leftBv >= $sealingLimitBv ? $leftBv - $flushableAmount : $leftBv,
+            'right_remaining' => $rightBv >= $sealingLimitBv ? $rightBv - $flushableAmount : $rightBv,
+        ]);
     }
 
     protected function recordPayoutSummary($sealingLimitBv)

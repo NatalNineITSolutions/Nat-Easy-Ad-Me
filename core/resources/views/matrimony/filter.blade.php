@@ -29,12 +29,12 @@
                                 <label class="form-label fw-semibold small">Age Range</label>
                                 <select name="age_range" class="form-select form-select-sm">
                                     <option value="">Any Age</option>
-                                    <option value="18-25" {{ request('age_range') == '18-25' ? 'selected' : '' }}>18-25 Years</option>
-                                    <option value="26-30" {{ request('age_range') == '26-30' ? 'selected' : '' }}>26-30 Years</option>
-                                    <option value="31-35" {{ request('age_range') == '31-35' ? 'selected' : '' }}>31-35 Years</option>
-                                    <option value="36-40" {{ request('age_range') == '36-40' ? 'selected' : '' }}>36-40 Years</option>
-                                    <option value="41-50" {{ request('age_range') == '41-50' ? 'selected' : '' }}>41-50 Years</option>
-                                    <option value="51-60" {{ request('age_range') == '51-60' ? 'selected' : '' }}>51-60 Years</option>
+                                    @foreach($filterOptions['ages'] as $age)
+                                        <option value="{{ $age->id }}" 
+                                            {{ request('age_range') == $age->id ? 'selected' : '' }}>
+                                            {{ $age->from_age }} - {{ $age->to_age }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
 
@@ -43,9 +43,12 @@
                                 <label class="form-label fw-semibold small">Marital Status</label>
                                 <select name="marital_status" class="form-select form-select-sm">
                                     <option value="">Any Status</option>
-                                    <option value="single" {{ request('marital_status') == 'single' ? 'selected' : '' }}>Single</option>
-                                    <option value="divorced" {{ request('marital_status') == 'divorced' ? 'selected' : '' }}>Divorced</option>
-                                    <option value="widowed" {{ request('marital_status') == 'widowed' ? 'selected' : '' }}>Widowed</option>
+                                    @foreach($filterOptions['maritalStatuses'] as $status)
+                                        <option value="{{ Str::slug($status) }}"
+                                            {{ request('marital_status') == Str::slug($status) ? 'selected' : '' }}>
+                                            {{ $status }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
 
@@ -54,11 +57,12 @@
                                 <label class="form-label fw-semibold small">Minimum Income</label>
                                 <select name="income" class="form-select form-select-sm">
                                     <option value="">Any Income</option>
-                                    <option value="100000" {{ request('income') == '100000' ? 'selected' : '' }}>₹1 Lakh+</option>
-                                    <option value="300000" {{ request('income') == '300000' ? 'selected' : '' }}>₹3 Lakh+</option>
-                                    <option value="500000" {{ request('income') == '500000' ? 'selected' : '' }}>₹5 Lakh+</option>
-                                    <option value="1000000" {{ request('income') == '1000000' ? 'selected' : '' }}>₹10 Lakh+</option>
-                                    <option value="2000000" {{ request('income') == '2000000' ? 'selected' : '' }}>₹20 Lakh+</option>
+                                    @foreach($filterOptions['income'] as $inc)
+                                        <option value="{{ $inc->id }}" 
+                                            {{ request('income') == $inc->id ? 'selected' : '' }}>
+                                            {{ $inc->from_income }} - {{ $inc->to_income }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
 
@@ -69,23 +73,32 @@
                                        placeholder="Doctor, Engineer, etc." value="{{ request('occupation') }}">
                             </div>
 
-                            <!-- Religion/Caste -->
+                            <!-- Religion -->
                             <div class="mb-3">
                                 <label class="form-label fw-semibold small">Religion</label>
-                                <select name="religion" class="form-select form-select-sm">
+                                <select name="religion" class="form-select form-select-sm" id="religion-select">
                                     <option value="">Any Religion</option>
-                                    <option value="hindu" {{ request('religion') == 'hindu' ? 'selected' : '' }}>Hindu</option>
-                                    <option value="muslim" {{ request('religion') == 'muslim' ? 'selected' : '' }}>Muslim</option>
-                                    <option value="christian" {{ request('religion') == 'christian' ? 'selected' : '' }}>Christian</option>
-                                    <option value="sikh" {{ request('religion') == 'sikh' ? 'selected' : '' }}>Sikh</option>
-                                    <option value="other" {{ request('religion') == 'other' ? 'selected' : '' }}>Other</option>
+                                    @foreach($filterOptions['religions'] as $religion)
+                                        <option value="{{ $religion->id }}" 
+                                            {{ request('religion') == $religion->id ? 'selected' : '' }}>
+                                            {{ $religion->religion }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
 
+                            <!-- Caste -->
                             <div class="mb-3">
                                 <label class="form-label fw-semibold small">Caste</label>
-                                <input type="text" name="caste" class="form-control form-control-sm" 
-                                       placeholder="Enter caste" value="{{ request('caste') }}">
+                                <select name="caste" class="form-select form-select-sm" id="caste-select">
+                                    <option value="">Any Caste</option>
+                                    @foreach($filterOptions['castes'] as $caste)
+                                        <option value="{{ $caste->id }}" 
+                                            {{ request('caste') == $caste->id ? 'selected' : '' }}>
+                                            {{ $caste->caste }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <!-- Star/Zodiac -->
@@ -93,8 +106,11 @@
                                 <label class="form-label fw-semibold small">Star Sign</label>
                                 <select name="star" class="form-select form-select-sm">
                                     <option value="">Any Star</option>
-                                    @foreach(['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'] as $star)
-                                        <option value="{{ $star }}" {{ request('star') == $star ? 'selected' : '' }}>{{ $star }}</option>
+                                    @foreach($filterOptions['stars'] as $star)
+                                        <option value="{{ $star->id }}" 
+                                            {{ request('star') == $star->id ? 'selected' : '' }}>
+                                            {{ $star->star }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -103,8 +119,11 @@
                                 <label class="form-label fw-semibold small">Zodiac Sign</label>
                                 <select name="zodiac_sign" class="form-select form-select-sm">
                                     <option value="">Any Zodiac</option>
-                                    @foreach(['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'] as $zodiac)
-                                        <option value="{{ $zodiac }}" {{ request('zodiac_sign') == $zodiac ? 'selected' : '' }}>{{ $zodiac }}</option>
+                                    @foreach($filterOptions['zodiacSigns'] as $zodiacsign)
+                                        <option value="{{ $zodiacsign->id }}" 
+                                            {{ request('zodiac_sign') == $zodiacsign->id ? 'selected' : '' }}>
+                                            {{ $zodiacsign->zodiac_sign }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -112,18 +131,35 @@
                             <!-- Location -->
                             <div class="mb-4">
                                 <label class="form-label fw-semibold small">Location</label>
-                                <select name="country" class="form-select form-select-sm mb-2">
+                                <select name="country" class="form-select form-select-sm mb-2" id="country-select">
                                     <option value="">Any Country</option>
-                                    <option value="India" {{ request('country') == 'India' ? 'selected' : '' }}>India</option>
-                                    <option value="USA" {{ request('country') == 'USA' ? 'selected' : '' }}>USA</option>
-                                    <option value="UK" {{ request('country') == 'UK' ? 'selected' : '' }}>UK</option>
+                                    @foreach($filterOptions['countries'] as $country)
+                                        <option value="{{ $country->id }}" 
+                                            {{ request('country') == $country->id ? 'selected' : '' }}>
+                                            {{ $country->country }}
+                                        </option>
+                                    @endforeach
                                 </select>
                                 
-                                <input type="text" name="state" class="form-control form-control-sm mb-2" 
-                                       placeholder="State" value="{{ request('state') }}">
-                                
-                                <input type="text" name="city" class="form-control form-control-sm" 
-                                       placeholder="City" value="{{ request('city') }}">
+                                <select name="state" class="form-select form-select-sm mb-2" id="state-select">
+                                    <option value="">Any State</option>
+                                    @foreach($filterOptions['states'] as $state)
+                                        <option value="{{ $state->id }}" 
+                                            {{ request('state') == $state->id ? 'selected' : '' }}>
+                                            {{ $state->state }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                <select name="city" class="form-select form-select-sm" id="city-select">
+                                    <option value="">Any City</option>
+                                    @foreach($filterOptions['cities'] as $city)
+                                        <option value="{{ $city->id }}" 
+                                            {{ request('city') == $city->id ? 'selected' : '' }}>
+                                            {{ $city->city }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <!-- Action Buttons -->
@@ -146,53 +182,47 @@
                     <div class="card-body py-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 class="mb-0 fw-bold text-primary">
-                                <i class="fas fa-users me-2"></i>Search Results
+                                <i class="fas fa-users me-2"></i>
+                                @if($hasFilters)
+                                    Filtered Profiles
+                                @else
+                                    All Verified Profiles
+                                @endif
                             </h5>
                             <span class="badge bg-primary rounded-pill">{{ $profiles->total() }} profiles</span>
                         </div>
+                        
+                        @if($hasFilters)
+                            <div class="mt-2">
+                                <a href="{{ route('matrimony.filter') }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-undo me-1"></i> Show All Profiles
+                                </a>
+                            </div>
+                        @endif
                     </div>
                 </div>
 
                 @if($profiles->count() > 0)
                     <div class="row g-4">
                         @foreach($profiles as $profile)
+                            <!-- Profile cards here -->
                             <div class="col-md-6 col-lg-4">
                                 <div class="card profile-card h-100 border-0 shadow-sm">
-                                    <a href="{{ route('matrimony.profile-details', $profile->id) }}" class="text-decoration-none text-dark">
-                                        <div class="profile-image-container">
-                                            @if($profile->image)
-                                                <img src="{{ get_attachment_image_by_id($profile->image)['img_url'] }}" 
-                                                     class="card-img-top profile-image" 
-                                                     alt="{{ $profile->name }}"
-                                                     loading="lazy">
-                                            @else
-                                                <img src="/assets/uploads/media-uploader/profile.png" 
-                                                     class="card-img-top profile-image" 
-                                                     alt="Default profile"
-                                                     loading="lazy">
-                                            @endif
-                                            <div class="profile-overlay"></div>
+                                    <div class="card-body text-center">
+                                        <div class="profile-img mb-3">
+                                            {!! render_image_markup_by_attachment_id($profile->image, 'rounded-circle', '120x120') 
+                                                ?? '<img src="' . asset('images/default-profile.jpg') . '" class="rounded-circle" width="120" height="120" alt="Profile">' !!}
                                         </div>
-                                        <div class="card-body">
-                                            <h5 class="card-title mb-1">{{ $profile->name }}</h5>
-                                            <div class="d-flex align-items-center mb-2">
-                                                <span class="badge bg-light text-dark me-2">
-                                                    <i class="fas fa-birthday-cake me-1"></i> {{ $profile->age }} yrs
-                                                </span>
-                                                @if($profile->occupation)
-                                                <span class="badge bg-light text-dark">
-                                                    <i class="fas fa-briefcase me-1"></i> {{ $profile->occupation }}
-                                                </span>
-                                                @endif
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <i class="fas fa-map-marker-alt text-muted me-2"></i>
-                                                <small class="text-muted">
-                                                    {{ $profile->city ?? '' }} {{ $profile->state ?? '' }}
-                                                </small>
-                                            </div>
-                                        </div>
-                                    </a>
+                                        <h5 class="mb-1">{{ $profile->name }}</h5>
+                                        <p class="text-muted small mb-2">
+                                            {{ $profile->age }} years • {{ ucfirst($profile->gender) }}
+                                        </p>
+                                        <p class="small text-truncate mb-3">{{ $profile->occupation }}</p>
+                                        <a href="{{ route('matrimony.profile-details', $profile->id) }}" 
+                                           class="btn btn-sm btn-outline-primary">
+                                            View Profile
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         @endforeach
@@ -208,11 +238,8 @@
                             <div class="empty-state-icon">
                                 <i class="fas fa-user-slash fa-3x text-muted"></i>
                             </div>
-                            <h5 class="mt-3 mb-2">No profiles found</h5>
-                            <p class="text-muted mb-4">Try adjusting your search filters to find more matches</p>
-                            <a href="{{ route('matrimony.filter') }}" class="btn btn-sm btn-outline-primary">
-                                <i class="fas fa-undo me-1"></i> Reset Filters
-                            </a>
+                            <h5 class="mt-3 mb-2">No matching profiles found</h5>
+                            <p class="text-muted mb-4">Try adjusting your search filters or <a href="{{ route('matrimony.filter') }}">show all profiles</a></p>
                         </div>
                     </div>
                 @endif
@@ -222,70 +249,58 @@
 </div>
 @endsection
 
-@push('styles')
-<style>
-    .matrimony-filter-page {
-        background-color: #f8f9fa;
-    }
-    
-    .profile-card {
-        transition: all 0.3s ease;
-        border-radius: 10px;
-        overflow: hidden;
-    }
-    
-    .profile-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    }
-    
-    .profile-image-container {
-        position: relative;
-        height: 200px;
-        overflow: hidden;
-    }
-    
-    .profile-image {
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
-        transition: transform 0.5s ease;
-    }
-    
-    .profile-card:hover .profile-image {
-        transform: scale(1.05);
-    }
-    
-    .profile-overlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 50%;
-        background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
-    }
-    
-    .empty-state-icon {
-        opacity: 0.6;
-        margin-bottom: 20px;
-    }
-    
-    .form-select-sm, .form-control-sm {
-        font-size: 0.85rem;
-        padding: 0.25rem 0.5rem;
-    }
-    
-    .card-header {
-        padding: 0.75rem 1.25rem;
-    }
-</style>
-@endpush
-
 @push('scripts')
 <script>
-    // Add any necessary JavaScript here
     document.addEventListener('DOMContentLoaded', function() {
-        // You can add filter interaction enhancements here
+        // Dynamic caste loading based on religion
+        $('#religion-select').change(function() {
+            const religionId = $(this).val();
+            const casteSelect = $('#caste-select');
+            
+            casteSelect.empty().append('<option value="">Any Caste</option>');
+            
+            if (religionId) {
+                $.get(`/api/castes?religion_id=${religionId}`, function(data) {
+                    data.forEach(caste => {
+                        casteSelect.append(`<option value="${caste.id}">${caste.caste}</option>`);
+                    });
+                });
+            }
+        });
+
+        // Dynamic state loading based on country
+        $('#country-select').change(function() {
+            const countryId = $(this).val();
+            const stateSelect = $('#state-select');
+            const citySelect = $('#city-select');
+            
+            stateSelect.empty().append('<option value="">Any State</option>');
+            citySelect.empty().append('<option value="">Any City</option>');
+            
+            if (countryId) {
+                $.get(`/api/states?country_id=${countryId}`, function(data) {
+                    data.forEach(state => {
+                        stateSelect.append(`<option value="${state.id}">${state.state}</option>`);
+                    });
+                });
+            }
+        });
+
+        // Dynamic city loading based on state
+        $('#state-select').change(function() {
+            const stateId = $(this).val();
+            const citySelect = $('#city-select');
+            
+            citySelect.empty().append('<option value="">Any City</option>');
+            
+            if (stateId) {
+                $.get(`/api/cities?state_id=${stateId}`, function(data) {
+                    data.forEach(city => {
+                        citySelect.append(`<option value="${city.id}">${city.city}</option>`);
+                    });
+                });
+            }
+        });
     });
 </script>
 @endpush

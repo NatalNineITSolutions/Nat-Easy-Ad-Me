@@ -335,7 +335,6 @@ class MatrimonyController extends Controller
                 'city_id' => $validated['city'],
                 'about' => $validated['about'],
                 'document_path' => $documentPath,
-<<<<<<< HEAD
                 'image' => $validated['image'],
                 'status' => 'pending',
                 'zodiac_sign_id' => $validated['zodiac_sign'],
@@ -349,13 +348,6 @@ class MatrimonyController extends Controller
                 'zodiac_sign_id' => $validated['zodiac_sign'],
                 'star_id' => $validated['star'],
                 'zodiac_sign' => $zodiacSignName,
-=======
-                'image' => $validated['image'], // Store the media IDs
-                'status' => 'pending', // Default status
-                'zodiac_sign_id' => $validated['zodiac_sign'],
-                'zodiac_sign' => $zodiacSignName,
-                'star_id' => $validated['star'],
->>>>>>> 07736c6d41e92fd02c4a972e23b5991c397609a6
                 'star' => $starName,
             ]);
 
@@ -443,7 +435,6 @@ class MatrimonyController extends Controller
                 'message' => 'Error: ' . $e->getMessage()
             ], 500);
         }
-<<<<<<< HEAD
 
         if (is_numeric($validatedData['star'])) {
             $star = Star::find($validatedData['star']);
@@ -469,8 +460,6 @@ class MatrimonyController extends Controller
             'message' => 'Preferences saved successfully!',
             'redirect_url' => url('/matrimony'),
         ]);
-=======
->>>>>>> 07736c6d41e92fd02c4a972e23b5991c397609a6
     }
 
     public function profile()
@@ -1000,25 +989,41 @@ class MatrimonyController extends Controller
         return view('matrimony.requests-lists', compact('requests'));
     }
 
-<<<<<<< HEAD
-    public function filter(Request $request)
-    {
-        // Start with base query for verified profiles excluding current user
-        $query = ProfileListing::where('user_id', '!=', auth()->id())
-            ->where('is_verified', 1);
+    public function filter(Request $request, $profileId = null)
+{
+    // Start with base query for verified profiles excluding current user
+    $query = ProfileListing::where('user_id', '!=', auth()->id())
+        ->where('is_verified', 1);
 
-        // Apply filters only if request is POST or has any filter in GET
-        if ($request->isMethod('post') || $request->query()) {
+    // Check if we're viewing a single profile
+    $isSingleProfile = $profileId !== null;
+    
+    if ($isSingleProfile) {
+        // Handle single profile view
+        $profile = $query->findOrFail($profileId);
+        
+        // Ensure the profile is verified and not the current user's
+        if ($profile->user_id == auth()->id() || !$profile->is_verified) {
+            abort(404);
+        }
+        
+        $profiles = collect([$profile]);
+    } else {
+        // Apply filters only if at least one filter is present
+        if ($request->anyFilled(['gender', 'age_range', 'marital_status', 'income', 'occupation', 
+                               'religion', 'caste', 'star', 'zodiac_sign', 'country', 'state', 'city'])) {
+            
+            // Apply all filters (same as your existing logic)
             if ($request->filled('gender')) {
                 $query->where('gender', $request->gender);
             }
 
             if ($request->filled('age_range')) {
-                $ages = explode('-', $request->age_range);
-                if (count($ages) === 2) {
-                    $query->whereBetween('age', [(int) $ages[0], (int) $ages[1]]);
+                $ageRange = AgeRange::find($request->age_range);
+                if ($ageRange) {
+                    $query->whereBetween('age', [$ageRange->from_age, $ageRange->to_age]);
                 }
-            }
+            }}
 
             if ($request->filled('marital_status')) {
                 $query->whereHas('kyc', function ($q) use ($request) {
@@ -1027,7 +1032,10 @@ class MatrimonyController extends Controller
             }
 
             if ($request->filled('income')) {
-                $query->where('income', '>=', (int) $request->income);
+                $incomeRange = IncomeRange::find($request->income);
+                if ($incomeRange) {
+                    $query->where('income', '>=', $incomeRange->from_income);
+                }
             }
 
             if ($request->filled('occupation')) {
@@ -1066,22 +1074,38 @@ class MatrimonyController extends Controller
         // Get paginated results
         $profiles = $query->paginate(12);
 
+        // Fetch all filter options from database
+        $filterOptions = [
+            'ages' => AgeRange::orderBy('from_age')->orderBy('to_age')->get(),
+            'income' => IncomeRange::orderBy('from_income')->orderBy('to_income')->get(),
+            'religions' => Religion::orderBy('religion')->get(),
+            'castes' => Caste::orderBy('caste')->get(),
+            'stars' => Star::orderBy('star')->get(),
+            'zodiacSigns' => ZodiacSign::orderBy('zodiac_sign')->get(),
+            'countries' => Country::orderBy('country')->get(),
+            'states' => State::orderBy('state')->get(),
+            'cities' => City::orderBy('city')->get(),
+            'maritalStatuses' => ['Married', 'Unmarried', 'Divorced', 'Widowed'],
+        ];
+
         return view('matrimony.filter', [
             'profiles' => $profiles,
-            'filters' => $request->all()
+            'filters' => $request->all(),
+            'filterOptions' => $filterOptions,
+            'hasFilters' => $request->anyFilled([
+                'gender',
+                'age_range',
+                'marital_status',
+                'income',
+                'occupation',
+                'religion',
+                'caste',
+                'star',
+                'zodiac_sign',
+                'country',
+                'state',
+                'city'
+            ])
         ]);
-=======
-    public function deleteProfile($id)
-    {
-        $profile = ProfileListing::find($id);
-
-        if (!$profile) {
-            return redirect()->back()->with('error', 'Profile not found.');
-        }
-
-        $profile->delete();
-
-        return redirect()->back()->with('success', 'Profile deleted successfully.');
->>>>>>> 07736c6d41e92fd02c4a972e23b5991c397609a6
     }
 }

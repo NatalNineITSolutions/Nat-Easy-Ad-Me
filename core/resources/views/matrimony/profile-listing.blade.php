@@ -332,6 +332,15 @@
                                     </select>
                                 </div>
                                 <div class="col-md-4">
+                                    <label for="marital_status" class="form-label">Marital Status</label>
+                                    <select class="form-select" id="marital_status" name="marital_status" required>
+                                        <option value="" selected disabled>Choose Marital Status</option>
+                                        @foreach($marital_status as $status)
+                                            <option value="{{ $status }}">{{ $status }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
                                     <label for="country" class="form-label">Country</label>
                                     <select class="form-select" id="country" name="country" required>
                                         <option value="" selected>Choose Country</option>
@@ -340,7 +349,8 @@
                                         @endforeach
                                     </select>
                                 </div>
-
+                            </div>
+                            <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label for="state" class="form-label">State</label>
                                     <select class="form-select" id="state" name="state" required>
@@ -350,8 +360,6 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
-                            <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label for="city" class="form-label">City</label>
                                     <select class="form-select" id="city" name="city" required>
@@ -463,25 +471,25 @@
 
                     // Create new image preview
                     let newImage = $(`
-                                                                            <div class="image-container">
-                                                                                <img src="${data.url}" class="uploaded-image" alt="${data.name}">
-                                                                                <button type="button" class="delete-image-btn" data-id="${data.id}">×</button>
-                                                                            </div>
-                                                                        `);
+                                                                                    <div class="image-container">
+                                                                                        <img src="${data.url}" class="uploaded-image" alt="${data.name}">
+                                                                                        <button type="button" class="delete-image-btn" data-id="${data.id}">×</button>
+                                                                                    </div>
+                                                                                `);
 
                     previewContainer.append(newImage);
 
                     // Update main preview to show the first image
                     if (currentValue.length === 1) {
                         wrapper.find('.new_image_add_listing').html(`
-                                                                                <div class="attachment-preview">
-                                                                                    <div class="thumbnail">
-                                                                                        <div class="centered">
-                                                                                            <img src="${data.url}" alt="${data.name}">
+                                                                                        <div class="attachment-preview">
+                                                                                            <div class="thumbnail">
+                                                                                                <div class="centered">
+                                                                                                    <img src="${data.url}" alt="${data.name}">
+                                                                                                </div>
+                                                                                            </div>
                                                                                         </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            `);
+                                                                                    `);
                     }
                 }
             }
@@ -504,8 +512,8 @@
             // Update main preview if needed
             if (currentValue.length === 0) {
                 wrapper.find('.new_image_add_listing').html(`
-                                                                        <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}" alt="images" class="w-100">
-                                                                    `);
+                                                                                <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}" alt="images" class="w-100">
+                                                                            `);
             }
         });
     </script>

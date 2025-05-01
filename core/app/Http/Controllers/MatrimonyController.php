@@ -62,38 +62,31 @@ class MatrimonyController extends Controller
 
         $profiles = ProfileListing::where('is_verified', 1)
             ->where('id', '!=', $user->id)
-            ->select('id', 'name', 'age', 'occupation', 'city', 'image', 'mother_tongue')
+            ->select('id', 'name', 'date_of_birth', 'occupation', 'city', 'image', 'mother_tongue', 'visibility')
             ->inRandomOrder()
             ->limit(7)
             ->get()
             ->map(function ($profile) use ($unlockedProfileIds) {
                 $isUnlocked = in_array($profile->id, $unlockedProfileIds);
-
                 $firstImageId = null;
+
                 if (!empty($profile->image)) {
                     $imageIds = explode('|', $profile->image);
                     $firstImageId = trim($imageIds[0]) ?? null;
                 }
 
-                Log::info("Profile ID: {$profile->id}, First Image ID: {$firstImageId}, Unlocked: " . ($isUnlocked ? 'Yes' : 'No'));
+                $shouldBlur = !$isUnlocked && $profile->visibility == 1;
 
                 if ($firstImageId) {
-                    if ($isUnlocked) {
-                        $profile->first_image_url = render_image_markup_by_attachment_id($firstImageId); // Returns full <img> tag
+                    $imageUrl = get_attachment_url_by_ids($firstImageId);
+                    if ($imageUrl) {
+                        $profile->first_image_url = "<img src=\"{$imageUrl}\"" . ($shouldBlur ? " class=\"blurred\"" : "") . " alt=\"Profile Image\">";
                     } else {
-                        $imageUrl = get_attachment_url_by_ids($firstImageId);
-
-                        if ($imageUrl) {
-                            $profile->first_image_url = "<img src=\"{$imageUrl}\" class=\"blurred\" alt=\"Profile Image\">";
-                        } else {
-                            $profile->first_image_url = "<img src=\"/assets/uploads/media-uploader/profile.png\" class=\"blurred\" alt=\"Profile Image\">";
-                        }
+                        $profile->first_image_url = "<img src=\"/assets/uploads/media-uploader/profile.png\"" . ($shouldBlur ? " class=\"blurred\"" : "") . " alt=\"Profile Image\">";
                     }
                 } else {
-                    $blurClass = $isUnlocked ? '' : 'class="blurred"';
-                    $profile->first_image_url = "<img src=\"/assets/uploads/media-uploader/profile.png\" {$blurClass} alt=\"Profile Image\">";
+                    $profile->first_image_url = "<img src=\"/assets/uploads/media-uploader/profile.png\"" . ($shouldBlur ? " class=\"blurred\"" : "") . " alt=\"Profile Image\">";
                 }
-
 
                 return $profile;
             });
@@ -279,84 +272,6 @@ class MatrimonyController extends Controller
         return response()->json(['cities' => $cities]);
     }
 
-    // public function storeUserDetails(Request $request)
-    // {
-    //     try {
-    //         // Ensure the user is logged in
-    //         if (!auth()->check()) {
-    //             return response()->json([
-    //                 'status' => 'error',
-    //                 'message' => 'User must be logged in to submit details.'
-    //             ], 401);
-    //         }
-
-    //         // Log the incoming request data
-    //         \Log::info('Incoming request data:', $request->all());
-
-    //         // Validate the request data
-    //         $validatedData = $request->validate([
-    //             'marital_status' => 'required|string|in:Unmarried,Married,Second Marriage',
-    //             'dob' => 'required|date',
-    //             'family_status' => 'required|string',
-    //             'family_values' => 'required|string',
-    //             'family_type' => 'required|string',
-    //             'disability' => 'required|string',
-    //             'height' => 'required|numeric|min:50|max:250',
-    //             'weight' => 'required|string',
-    //             'caste' => 'required|string',
-    //             'dosham' => 'required|string',
-    //             'gothram' => 'required|string',
-    //             'education' => 'required|string',
-    //             'occupation' => 'required|string',
-    //             'annual_income' => 'required|string',
-    //             'employed_in' => 'required|string',
-    //             'country' => 'required|string',
-    //             'state' => 'required|string',
-    //             'city' => 'required|string',
-    //             'about' => 'required|string',
-    //         ]);
-
-    //         // Convert marital_status to lowercase (to match ENUM values in DB)
-    //         $validatedData['marital_status'] = strtolower($validatedData['marital_status']);
-
-    //         // Assign the logged-in user's ID
-    //         $validatedData['user_id'] = auth()->id();
-
-    //         // Log validated data
-    //         \Log::info('Validated data with user_id:', $validatedData);
-
-    //         // Check and store divorce document if marital status is second marriage
-    //         if ($validatedData['marital_status'] === 'second marriage' && $request->hasFile('document')) {
-    //             $file = $request->file('document');
-    //             $path = $file->store('documents/divorce_orders', 'public'); // Store in storage/app/public/documents/divorce_orders
-    //             $validatedData['document'] = $path;
-    //         }
-
-    //         // Store Data in MatrimonyKyc table
-    //         $matrimonyKyc = MatrimonyKyc::create($validatedData);
-
-    //         return response()->json([
-    //             'status' => 'success',
-    //             'message' => 'User details saved successfully!',
-    //             'user_id' => $matrimonyKyc->id
-    //         ]);
-    //     } catch (\Illuminate\Validation\ValidationException $e) {
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'message' => 'Validation failed',
-    //             'errors' => $e->errors()
-    //         ], 422);
-    //     } catch (\Exception $e) {
-    //         \Log::error('User Details Store Error: ' . $e->getMessage());
-    //         \Log::error('Stack Trace: ' . $e->getTraceAsString());
-
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'message' => 'An error occurred. Please try again.'
-    //         ], 500);
-    //     }
-    // }
-
     public function storeUserDetails(Request $request)
     {
         $validated = $request->validate([
@@ -451,14 +366,15 @@ class MatrimonyController extends Controller
         $stars = Star::all();
         $ages = AgeRange::all();
         $income = IncomeRange::all();
-
+        $religions = Religion::all();
+        $marital_status = ['Married', 'Unmarried', 'Divorced', 'Widowed'];
 
         $preferences = MatrimonyPreference::where('user_id', auth()->id())->first();
 
         $selectedZodiac = $preferences ? (array) $preferences->zodiac_sign : [];
         $selectedStars = $preferences ? (array) $preferences->star : [];
 
-        return view('matrimony.preference', compact('motherTongues', 'castes', 'zodiacsigns', 'stars', 'ages', 'income'), [
+        return view('matrimony.preference', compact('motherTongues', 'castes', 'zodiacsigns', 'stars', 'ages', 'income', 'religions', 'marital_status'), [
             'selectedZodiac' => $preferences ? $preferences->zodiac_sign : [],
             'selectedStars' => $preferences ? $preferences->star : []
         ]);
@@ -540,7 +456,8 @@ class MatrimonyController extends Controller
         $countries = Country::all();
         $states = State::all();
         $cities = City::all();
-        $religions = Religion::all(); 
+        $religions = Religion::all();
+        $marital_status = ['Married', 'Unmarried', 'Divorced', 'Widowed'];
 
         $profile = null;
 
@@ -548,7 +465,7 @@ class MatrimonyController extends Controller
             $profile = ProfileListing::find($request->profile_id);
         }
 
-        return view('matrimony.profile-listing', compact('castes', 'motherTongues', 'countries', 'states', 'cities', 'profile', 'zodiacsign', 'stars', 'religions'));
+        return view('matrimony.profile-listing', compact('castes', 'motherTongues', 'countries', 'states', 'cities', 'profile', 'zodiacsign', 'stars', 'religions', 'marital_status'));
     }
 
     // Update Profile Listing
@@ -590,7 +507,7 @@ class MatrimonyController extends Controller
             $imagePath = $request->file('image')->store('profile_images', 'public');
             \Log::info('Uploaded profile image path: ' . $imagePath);
         }
-    
+
         $countryName = Country::find($request->country)?->country ?? null;
         $stateName = State::find($request->state)?->state ?? null;
         $cityName = City::find($request->city)?->city ?? null;
@@ -598,7 +515,7 @@ class MatrimonyController extends Controller
         $zodiacSignName = ZodiacSign::find($request->zodiac_sign)?->zodiac_sign ?? null;
         $starName = Star::find($request->star)?->star ?? null;
         $religion = Religion::find($request->religion)?->religion ?? null;
-    
+
         $profileListing = ProfileListing::create([
             'user_id' => Auth::id(),
             'name' => $request->name,
@@ -606,6 +523,7 @@ class MatrimonyController extends Controller
             'gender' => $request->gender,
             'religion' => $religion,
             'occupation' => $request->occupation,
+            'marital_status' => $request->marital_status,
             'annual_income' => $request->annual_income,
             'caste' => $casteName,
             'mother_tongue' => $request->motherTongue,
@@ -620,9 +538,9 @@ class MatrimonyController extends Controller
             'star' => $starName,
             'visibility' => $request->visibility ?? 0,
         ]);
-        
+
         Log::info('Profile Listing Created:', $profileListing->toArray());
-    
+
         session()->put('profile_listing_id', $profileListing->id);
 
         // Handle payment gateway if selected
@@ -706,7 +624,7 @@ class MatrimonyController extends Controller
         $userId = auth()->id(); // Get the current logged-in user's ID
 
         $profiles = ProfileListing::where('user_id', $userId)
-            ->select('id', 'name', 'age', 'is_verified', 'rejection_reason')
+            ->select('id', 'name', 'date_of_birth', 'is_verified', 'rejection_reason')
             ->get();
 
         return view('matrimony.profile-lists', compact('profiles'));
@@ -798,106 +716,167 @@ class MatrimonyController extends Controller
     public function dashboard()
     {
         $userId = auth()->id();
-        \Log::info("Starting dashboard matching process for user ID: {$userId}");
+        \Log::info("[MATCHING] Starting matching process for user ID: {$userId}");
 
         // Get user preferences
         $userPreferences = MatrimonyPreference::where('user_id', $userId)->first();
-        \Log::debug('User preferences:', $userPreferences ? $userPreferences->toArray() : ['message' => 'No preferences found']);
 
-        // Start base query for verified profiles excluding current user
+        \Log::debug("[MATCHING] User preferences:", $userPreferences ? [
+            'age_range' => "{$userPreferences->from_age}-{$userPreferences->to_age}",
+            'gender' => $userPreferences->gender,
+            'religion' => $userPreferences->religion,
+            'zodiac_signs' => $userPreferences->zodiac_sign,
+            'stars' => $userPreferences->star,
+            'occupations' => $userPreferences->occupation,
+            'min_income' => $userPreferences->annual_income,
+            'caste' => $userPreferences->caste,
+            'mother_tongue' => $userPreferences->mother_tongue
+        ] : ['message' => 'No preferences found']);
+
+        // Start base query
         $matchesQuery = ProfileListing::where('user_id', '!=', $userId)
             ->where('is_verified', 1);
 
-        // Total possible criteria (5 in this case)
-        $totalPossibleCriteria = 5;
-
         if ($userPreferences) {
             $matchesQuery->where(function ($query) use ($userPreferences) {
-                // Criteria checks remain the same for initial filtering
+                if ($userPreferences->gender) {
+                    $query->where('gender', $userPreferences->gender);
+                }
+                if ($userPreferences->religion) {
+                    $query->where('religion', $userPreferences->religion);
+                }
                 if ($userPreferences->from_age && $userPreferences->to_age) {
                     $query->whereBetween('age', [$userPreferences->from_age, $userPreferences->to_age]);
-                }
-                if ($userPreferences->annual_income) {
-                    $query->where('income', '>=', $userPreferences->annual_income);
-                }
-                if ($userPreferences->occupation) {
-                    $occupations = explode('|', $userPreferences->occupation);
-                    $query->where(function ($q) use ($occupations) {
-                        foreach ($occupations as $occupation) {
-                            $q->orWhere('occupation', 'LIKE', "%$occupation%");
-                        }
-                    });
-                }
-                if ($userPreferences->star) {
-                    $stars = explode('|', $userPreferences->star);
-                    $query->whereIn('star', $stars);
-                }
-                if ($userPreferences->zodiac_sign) {
-                    $zodiacs = explode('|', $userPreferences->zodiac_sign);
-                    $query->whereIn('zodiac_sign', $zodiacs);
                 }
             });
         }
 
-        // Fetch 4 random matches
-        $matches = $matchesQuery->inRandomOrder()->limit(4)->get();
+        $potentialMatches = $matchesQuery->inRandomOrder()->limit(20)->get();
+        \Log::info("[MATCHING] Found {$potentialMatches->count()} potential matches for initial filtering");
 
-        // Calculate match percentage for each profile
-        $matches->each(function ($profile) use ($userPreferences, $totalPossibleCriteria) {
-            // Attach first image
-            $profile->first_image_url = $profile->image
-                ? render_image_markup_by_attachment_id($profile->image)
-                : '/assets/uploads/media-uploader/profile.png';
+        $finalMatches = [];
+        $criteriaWeights = [
+            'age' => 15,
+            'gender' => 10,
+            'religion' => 15,
+            'zodiac_sign' => 10,
+            'star' => 10,
+            'occupation' => 10,
+            'annual_income' => 15,
+            'caste' => 10,
+            'mother_tongue' => 5
+        ];
 
-            // Initialize matched criteria count
-            $matchedCriteria = 0;
+        foreach ($potentialMatches as $profile) {
+            $matchDetails = [
+                'profile_id' => $profile->id,
+                'profile_name' => $profile->name,
+                'criteria_matches' => [],
+                'raw_scores' => [],
+                'total_score' => 0
+            ];
 
             if ($userPreferences) {
-                // Age check
+                // Age matching
+                $ageScore = 0;
                 if ($userPreferences->from_age && $userPreferences->to_age) {
-                    if ($profile->age >= $userPreferences->from_age && $profile->age <= $userPreferences->to_age) {
-                        $matchedCriteria++;
-                    }
+                    $ageDiff = abs($profile->age - (($userPreferences->from_age + $userPreferences->to_age) / 2));
+                    $maxAgeDiff = $userPreferences->to_age - $userPreferences->from_age;
+                    $ageScore = max(0, $criteriaWeights['age'] * (1 - ($ageDiff / $maxAgeDiff)));
+                    $matchDetails['criteria_matches']['age'] = "{$profile->age} years (preferred: {$userPreferences->from_age}-{$userPreferences->to_age})";
+                    $matchDetails['raw_scores']['age'] = $ageScore;
                 }
 
-                // Income check
-                if ($userPreferences->annual_income) {
-                    if ($profile->income >= $userPreferences->annual_income) {
-                        $matchedCriteria++;
-                    }
+                // Gender matching
+                $genderScore = ($userPreferences->gender && $profile->gender == $userPreferences->gender)
+                    ? $criteriaWeights['gender'] : 0;
+                $matchDetails['criteria_matches']['gender'] = $profile->gender;
+                $matchDetails['raw_scores']['gender'] = $genderScore;
+
+                // Religion matching
+                $religionScore = ($userPreferences->religion && $profile->religion == $userPreferences->religion)
+                    ? $criteriaWeights['religion'] : 0;
+                $matchDetails['criteria_matches']['religion'] = $profile->religion;
+                $matchDetails['raw_scores']['religion'] = $religionScore;
+
+                // Zodiac sign matching
+                $zodiacScore = 0;
+                if ($userPreferences->zodiac_sign) {
+                    $zodiacs = explode('|', $userPreferences->zodiac_sign);
+                    $zodiacScore = in_array($profile->zodiac_sign, $zodiacs) ? $criteriaWeights['zodiac_sign'] : 0;
+                    $matchDetails['criteria_matches']['zodiac_sign'] = "{$profile->zodiac_sign} (preferred: " . implode(', ', $zodiacs) . ")";
+                    $matchDetails['raw_scores']['zodiac_sign'] = $zodiacScore;
                 }
 
-                // Occupation check
+                // Star matching
+                $starScore = 0;
+                if ($userPreferences->star) {
+                    $stars = explode('|', $userPreferences->star);
+                    $starScore = in_array($profile->star, $stars) ? $criteriaWeights['star'] : 0;
+                    $matchDetails['criteria_matches']['star'] = "{$profile->star} (preferred: " . implode(', ', $stars) . ")";
+                    $matchDetails['raw_scores']['star'] = $starScore;
+                }
+
+                // Occupation matching
+                $occupationScore = 0;
                 if ($userPreferences->occupation) {
                     $occupations = explode('|', $userPreferences->occupation);
                     foreach ($occupations as $occupation) {
-                        if (str_contains($profile->occupation, $occupation)) {
-                            $matchedCriteria++;
+                        if (str_contains(strtolower($profile->occupation), strtolower($occupation))) {
+                            $occupationScore = $criteriaWeights['occupation'];
                             break;
                         }
                     }
+                    $matchDetails['criteria_matches']['occupation'] = "{$profile->occupation} (preferred: " . implode(', ', $occupations) . ")";
+                    $matchDetails['raw_scores']['occupation'] = $occupationScore;
                 }
 
-                // Star check
-                if ($userPreferences->star) {
-                    $stars = explode('|', $userPreferences->star);
-                    if (in_array($profile->star, $stars)) {
-                        $matchedCriteria++;
-                    }
+                // Income matching
+                $incomeScore = 0;
+                if ($userPreferences->annual_income && $profile->annual_income) {
+                    $incomeRatio = min(1, $profile->annual_income / $userPreferences->annual_income);
+                    $incomeScore = $criteriaWeights['annual_income'] * $incomeRatio;
+                    $matchDetails['criteria_matches']['annual_income'] = "{$profile->annual_income} (preferred min: {$userPreferences->annual_income})";
+                    $matchDetails['raw_scores']['annual_income'] = $incomeScore;
                 }
 
-                // Zodiac check
-                if ($userPreferences->zodiac_sign) {
-                    $zodiacs = explode('|', $userPreferences->zodiac_sign);
-                    if (in_array($profile->zodiac_sign, $zodiacs)) {
-                        $matchedCriteria++;
-                    }
-                }
+                // Caste matching
+                $casteScore = ($userPreferences->caste && $profile->caste == $userPreferences->caste)
+                    ? $criteriaWeights['caste'] : 0;
+                $matchDetails['criteria_matches']['caste'] = $profile->caste;
+                $matchDetails['raw_scores']['caste'] = $casteScore;
+
+                // Mother tongue matching
+                $motherTongueScore = ($userPreferences->mother_tongue && $profile->mother_tongue == $userPreferences->mother_tongue)
+                    ? $criteriaWeights['mother_tongue'] : 0;
+                $matchDetails['criteria_matches']['mother_tongue'] = $profile->mother_tongue;
+                $matchDetails['raw_scores']['mother_tongue'] = $motherTongueScore;
+
+                // Calculate total score
+                $totalScore = $ageScore + $genderScore + $religionScore + $zodiacScore +
+                    $starScore + $occupationScore + $incomeScore +
+                    $casteScore + $motherTongueScore;
+
+                $matchPercentage = round(($totalScore / array_sum($criteriaWeights)) * 100 / 5) * 5;
+
+                $matchDetails['total_score'] = $totalScore;
+                $matchDetails['match_percentage'] = $matchPercentage;
+                $profile->match_percentage = $matchPercentage;
+
+                $finalMatches[] = $matchDetails;
             }
+        }
 
-            // Calculate percentage (each criteria = 20%)
-            $profile->match_percentage = $matchedCriteria * 20;
-        });
+        // Log detailed matching results
+        \Log::info("[MATCHING] Detailed matching results:", [
+            'total_profiles_evaluated' => count($finalMatches),
+            'matching_details' => $finalMatches
+        ]);
+
+        // Sort and get top matches
+        $matches = $potentialMatches->sortByDesc('match_percentage')->take(4);
+        \Log::info("[MATCHING] Top 4 matches selected with percentages: " .
+            $matches->pluck('match_percentage')->implode(', '));
 
         // Rest of your existing code for requests and membership...
         $receivedRequests = ProfileRequest::with(['sender.identity_verify', 'sender.kyc', 'profile'])
@@ -994,4 +973,16 @@ class MatrimonyController extends Controller
         return view('matrimony.requests-lists', compact('requests'));
     }
 
+    public function deleteProfile($id)
+    {
+        $profile = ProfileListing::find($id);
+
+        if (!$profile) {
+            return redirect()->back()->with('error', 'Profile not found.');
+        }
+
+        $profile->delete();
+
+        return redirect()->back()->with('success', 'Profile deleted successfully.');
+    }
 }

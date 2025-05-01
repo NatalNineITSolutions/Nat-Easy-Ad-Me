@@ -395,6 +395,17 @@
                                 </select>
                             </div>
 
+                            <!-- Gender -->
+                            <div class="col-md-6">
+                                <label for="gender" class="form-label">Gender</label>
+                                <select class="form-select" id="gender" name="gender" required>
+                                    <option value="" selected disabled>Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+
                             <!-- Mother Tongue -->
                             <div class="col-md-6">
                                 <label class="form-label">Mother Tongue</label>
@@ -404,6 +415,13 @@
                                         <option value="{{ $tongue->id }}">{{ $tongue->mother_tongue }}</option>
                                     @endforeach
                                 </select>
+                            </div>
+
+                            <!-- Location -->
+                            <div class="col-md-6">
+                                <label class="form-label">Location</label>
+                                <input type="text" class="form-control" name="location" id="location"
+                                    placeholder="Enter the Location">
                             </div>
 
                             <!-- Zodiac Sign -->
@@ -433,8 +451,12 @@
                             <!-- Religion -->
                             <div class="col-md-6">
                                 <label class="form-label">Religion</label>
-                                <input type="text" class="form-control" name="religion" id="religion"
-                                    placeholder="Enter Religion">
+                                <select class="form-select" name="religion" id="religion">
+                                    <option value="" selected>Choose Religion</option>
+                                    @foreach($religions as $religion)
+                                        <option value="{{ $religion->id }}">{{ $religion->religion }}</option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <!-- Caste -->
@@ -467,11 +489,15 @@
                                     placeholder="Enter the Occupation">
                             </div>
 
-                            <!-- Location -->
+                            <!-- Marital Status -->
                             <div class="col-md-6">
-                                <label class="form-label">Location</label>
-                                <input type="text" class="form-control" name="location" id="location"
-                                    placeholder="Enter the Location">
+                                <label for="marital_status" class="form-label">Marital Status</label>
+                                <select class="form-select" id="marital_status" name="marital_status" required>
+                                    <option value="" selected disabled>Choose Marital Status</option>
+                                    @foreach($marital_status as $status)
+                                        <option value="{{ $status }}">{{ $status }}</option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <!-- Monthly Income -->

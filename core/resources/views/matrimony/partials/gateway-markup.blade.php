@@ -1,4 +1,5 @@
-<div class="modal fade" id="paymentGatewayModal" tabindex="-1" aria-labelledby="paymentGatewayModalLabel" aria-hidden="true">
+<div class="modal fade" id="paymentGatewayModal" tabindex="-1" aria-labelledby="paymentGatewayModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
         <form action="{{ route('matrimony.profilelisting.store') }}" method="post" enctype="multipart/form-data">
             @csrf
@@ -15,7 +16,11 @@
             <input type="hidden" name="state" id="modal_state">
             <input type="hidden" name="city" id="modal_city">
             <input type="hidden" name="description" id="modal_description">
-            
+            <input type="hidden" name="date_of_birth" id="modal_date_of_birth">
+            <input type="hidden" name="gender" id="modal_gender">
+            <input type="hidden" name="religion" id="modal_religion">
+            <input type="hidden" name="visibility" id="modal_visibility" value="0">
+
             <input type="hidden" name="images" id="modal_images">
 
             <!-- Optionally add image file handling if needed -->
@@ -39,7 +44,8 @@
                                             {!! \App\Helpers\PaymentGatewayRenderHelper::renderWalletForm() !!}
                                         @endif
                                         <span class="wallet-balance mt-2 d-block">{{ __('Wallet Balance:') }}
-                                            <strong class="main-balance">{{ float_amount_with_currency_symbol(Auth::user()->user_wallet?->balance) }}</strong></span>
+                                            <strong
+                                                class="main-balance">{{ float_amount_with_currency_symbol(Auth::user()->user_wallet?->balance) }}</strong></span>
                                         <br>
                                         <span class="display_balance"></span>
                                         <br>
@@ -53,9 +59,11 @@
                 </div>
                 <div class="modal-footer">
                     <div class="btn-wrapper">
-                        <button type="button" class="red-global-close-btn" data-bs-dismiss="modal">{{ __('Close') }}</button>
+                        <button type="button" class="red-global-close-btn"
+                            data-bs-dismiss="modal">{{ __('Close') }}</button>
                         @if (Auth::guard('web')->check())
-                            <button type="submit" class="red-global-btn buy_membership" id="confirm_buy_membership_load_spinner">
+                            <button type="submit" class="red-global-btn buy_membership"
+                                id="confirm_buy_membership_load_spinner">
                                 {{ __('List Now') }} <span id="buy_membership_load_spinner"></span>
                             </button>
                         @endif
@@ -68,4 +76,4 @@
 
 <script src="{{ asset('assets/common/js/jquery-3.7.1.min.js') }}"></script>
 
-<x-payment.payment-gateway-js/>
+<x-payment.payment-gateway-js />

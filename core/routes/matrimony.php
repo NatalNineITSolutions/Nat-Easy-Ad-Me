@@ -43,6 +43,7 @@ Route::middleware(['web'])->group(function () {
         // Edit profile
         Route::get('/edit-profile/{id}', [MatrimonyController::class, 'editProfile'])->name('edit-profile');
         Route::put('/update-profile/{id}', [MatrimonyController::class, 'updateMainProfile'])->name('update-profile');
+        Route::delete('/delete-profile/{id}', [MatrimonyController::class, 'deleteProfile'])->name('delete-profile');
 
         Route::get('/profile-listing', [MatrimonyController::class, 'profilelisting'])->name('profile-listing');
         Route::post('/profile-listing/store', [MatrimonyController::class, 'storeProfileListing'])->name('profilelisting.store');

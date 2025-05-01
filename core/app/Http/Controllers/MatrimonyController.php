@@ -503,18 +503,18 @@ class MatrimonyController extends Controller
     public function storeProfileListing(Request $request)
     {
         Log::info('Form submission data:', $request->all());
-    
+
         // Handle image upload
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('profile_images', 'public');
             Log::info('Uploaded profile image path: ' . $imagePath);
         }
-    
+
         // Calculate age from date of birth
         $dob = Carbon::parse($request->date_of_birth);
         $age = $dob->age;
-    
+
         // Create profile with IDs and calculated age
         $profileListing = ProfileListing::create([
             'user_id' => Auth::id(),
@@ -539,16 +539,16 @@ class MatrimonyController extends Controller
             'star' => $request->star,
             'visibility' => $request->visibility ?? 0,
         ]);
-    
+
         Log::info('Profile Listing Created:', $profileListing->toArray());
-    
+
         session()->put('profile_listing_id', $profileListing->id);
-    
+
         // Handle payment gateway if selected
         if ($request->filled('selected_payment_gateway')) {
             $payment_gateway = $request->selected_payment_gateway;
             $credential_function = 'get_' . $payment_gateway . '_credential';
-    
+
             if (!method_exists((new PaymentGatewayCredential()), $credential_function)) {
                 $custom_data = [
                     'request' => $request->all(),
@@ -557,14 +557,16 @@ class MatrimonyController extends Controller
                     'payment_for' => "membership",
                     'success_url' => route('user.membership.all'),
                 ];
-    
+
                 $charge_customer_class_namespace = getChargeCustomerMethodNameByPaymentGatewayNameSpace($payment_gateway);
                 $charge_customer_method_name = getChargeCustomerMethodNameByPaymentGatewayName($payment_gateway);
-    
+
                 $custom_charge_customer_class_object = new $charge_customer_class_namespace;
-    
-                if (class_exists($charge_customer_class_namespace) &&
-                    method_exists($custom_charge_customer_class_object, $charge_customer_method_name)) {
+
+                if (
+                    class_exists($charge_customer_class_namespace) &&
+                    method_exists($custom_charge_customer_class_object, $charge_customer_method_name)
+                ) {
                     return $custom_charge_customer_class_object->$charge_customer_method_name($custom_data);
                 } else {
                     return back()->with(toastr_error('Incorrect Class or Method'));
@@ -573,12 +575,12 @@ class MatrimonyController extends Controller
                 return $this->payment_with_gateway($payment_gateway);
             }
         }
-    
+
         return response()->json([
             'success' => true,
             'message' => 'Profile Listing Saved Successfully!',
         ]);
-    }    
+    }
 
     public function payment_with_gateway($payment_gateway_name)
     {
@@ -846,7 +848,11 @@ class MatrimonyController extends Controller
             }
         }
 
-        $matches = $potentialMatches->sortByDesc('match_percentage')->take(4);
+        $matches = $potentialMatches->sortByDesc('match_percentage')
+            ->filter(function ($profile) {
+                return $profile->match_percentage > 50;
+            })
+            ->take(4);
 
         // Add first image URL to each profile
         $matches->each(function ($profile) {

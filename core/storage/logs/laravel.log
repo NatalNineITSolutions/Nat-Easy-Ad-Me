@@ -1,6 +1,6 @@
-
-[2025-04-30 11:11:41] production.INFO: Incoming KYC image IDs: {"image":"1158","zodiac_sign_id":"14","star_id":"9","zodiac_sign":"Sagittarius (Dhanusu)","star":"Pushya (Poosam)"} 
-[2025-04-30 11:12:54] production.INFO: Preferences saved successfully for user: 177  
-[2025-04-30 11:12:57] production.INFO: Pending profile requests count for user 177: 0  
-[2025-04-30 11:16:31] production.INFO: Preferences saved successfully for user: 177  
-[2025-04-30 11:16:36] production.INFO: Pending profile requests count for user 177: 0  
+[2025-05-01 09:09:17] production.INFO: Starting dashboard matching process for user ID: 194  
+[2025-05-01 09:09:17] production.DEBUG: User preferences: {"id":27,"zodiac_sign":"6|8|15","star":"3|7|10","user_id":194,"partner_age":"18 - 21","mother_tongue":"1","religion":"Hindhu","caste":"1","height":170,"weight":70,"occupation":"Doctor","location":"Coimbatore","income":"400000 - 600000","created_at":"2025-04-30T13:52:41.000000Z","updated_at":"2025-04-30T13:52:41.000000Z"} 
+[2025-05-01 09:11:44] production.INFO: Starting dashboard matching process for user ID: 194  
+[2025-05-01 09:11:44] production.DEBUG: User preferences: {"id":27,"zodiac_sign":"6|8|15","star":"3|7|10","user_id":194,"partner_age":"18 - 21","mother_tongue":"1","religion":"Hindhu","caste":"1","height":170,"weight":70,"occupation":"Doctor","location":"Coimbatore","income":"400000 - 600000","created_at":"2025-04-30T13:52:41.000000Z","updated_at":"2025-04-30T13:52:41.000000Z"} 
+[2025-05-01 09:13:40] production.INFO: Starting dashboard matching process for user ID: 194  
+[2025-05-01 09:13:40] production.DEBUG: User preferences: {"id":27,"zodiac_sign":"6|8|15","star":"3|7|10","user_id":194,"partner_age":"18 - 21","mother_tongue":"1","religion":"Hindhu","caste":"1","height":170,"weight":70,"occupation":"Doctor","location":"Coimbatore","income":"400000 - 600000","created_at":"2025-04-30T13:52:41.000000Z","updated_at":"2025-04-30T13:52:41.000000Z"} 

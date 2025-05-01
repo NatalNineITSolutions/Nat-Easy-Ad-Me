@@ -801,110 +801,98 @@ class MatrimonyController extends Controller
         $matchesQuery = ProfileListing::where('user_id', '!=', $userId)
             ->where('is_verified', 1);
 
+        // Total possible criteria (5 in this case)
+        $totalPossibleCriteria = 5;
+
         if ($userPreferences) {
             $matchesQuery->where(function ($query) use ($userPreferences) {
-                $totalCriteria = 0;
-                $matchedCriteria = 0;
-                $criteriaDetails = [];
-                
-
-                // Age matching
+                // Criteria checks remain the same for initial filtering
                 if ($userPreferences->from_age && $userPreferences->to_age) {
-                    $totalCriteria++;
                     $query->whereBetween('age', [$userPreferences->from_age, $userPreferences->to_age]);
-                    $matchedCriteria++;
-                    $criteriaDetails['age'] = "Between {$userPreferences->from_age} and {$userPreferences->to_age}";
                 }
-
-                // Income matching
                 if ($userPreferences->annual_income) {
-                    $totalCriteria++;
                     $query->where('income', '>=', $userPreferences->annual_income);
-                    $matchedCriteria++;
-                    $criteriaDetails['income'] = "Minimum {$userPreferences->annual_income}";
                 }
-
-                // Occupation matching (partial or multiple values)
                 if ($userPreferences->occupation) {
-                    $totalCriteria++;
                     $occupations = explode('|', $userPreferences->occupation);
                     $query->where(function ($q) use ($occupations) {
                         foreach ($occupations as $occupation) {
                             $q->orWhere('occupation', 'LIKE', "%$occupation%");
                         }
                     });
-                    $matchedCriteria++;
-                    $criteriaDetails['occupation'] = $occupations;
                 }
-
-                // Star matching (any match from list)
                 if ($userPreferences->star) {
-                    $totalCriteria++;
                     $stars = explode('|', $userPreferences->star);
                     $query->whereIn('star', $stars);
-                    $matchedCriteria++;
-                    $criteriaDetails['star'] = $stars;
                 }
-
-                // Zodiac sign matching (any match from list)
                 if ($userPreferences->zodiac_sign) {
-                    $totalCriteria++;
                     $zodiacs = explode('|', $userPreferences->zodiac_sign);
                     $query->whereIn('zodiac_sign', $zodiacs);
-                    $matchedCriteria++;
-                    $criteriaDetails['zodiac_sign'] = $zodiacs;
-                }
-
-                \Log::debug("Matching criteria details:", [
-                    'total_criteria' => $totalCriteria,
-                    'matched_criteria' => $matchedCriteria,
-                    'criteria_details' => $criteriaDetails
-                ]);
-
-                if ($totalCriteria > 0) {
-                    $matchPercentage = ($matchedCriteria / $totalCriteria) * 100;
-                    \Log::info("Match percentage calculated: {$matchPercentage}%");
-
-                    if ($matchPercentage < 50) {
-                        \Log::warning("Match percentage below 50%, no results will be returned");
-                        $query->whereRaw('1 = 0'); // Cancel the query
-                    }
-                } else {
-                    \Log::warning("No matching criteria specified in preferences");
                 }
             });
-        } else {
-            \Log::warning("No user preferences found, showing all verified profiles");
         }
 
         // Fetch 4 random matches
         $matches = $matchesQuery->inRandomOrder()->limit(4)->get();
-        \Log::info("Found " . $matches->count() . " potential matches");
 
-        // Attach first image URL to each profile
-        $matches->each(function ($profile) {
-            $firstImageId = $profile->image;
-            $profile->first_image_url = $firstImageId
-                ? render_image_markup_by_attachment_id($firstImageId)
+        // Calculate match percentage for each profile
+        $matches->each(function ($profile) use ($userPreferences, $totalPossibleCriteria) {
+            // Attach first image
+            $profile->first_image_url = $profile->image
+                ? render_image_markup_by_attachment_id($profile->image)
                 : '/assets/uploads/media-uploader/profile.png';
+
+            // Initialize matched criteria count
+            $matchedCriteria = 0;
+
+            if ($userPreferences) {
+                // Age check
+                if ($userPreferences->from_age && $userPreferences->to_age) {
+                    if ($profile->age >= $userPreferences->from_age && $profile->age <= $userPreferences->to_age) {
+                        $matchedCriteria++;
+                    }
+                }
+
+                // Income check
+                if ($userPreferences->annual_income) {
+                    if ($profile->income >= $userPreferences->annual_income) {
+                        $matchedCriteria++;
+                    }
+                }
+
+                // Occupation check
+                if ($userPreferences->occupation) {
+                    $occupations = explode('|', $userPreferences->occupation);
+                    foreach ($occupations as $occupation) {
+                        if (str_contains($profile->occupation, $occupation)) {
+                            $matchedCriteria++;
+                            break;
+                        }
+                    }
+                }
+
+                // Star check
+                if ($userPreferences->star) {
+                    $stars = explode('|', $userPreferences->star);
+                    if (in_array($profile->star, $stars)) {
+                        $matchedCriteria++;
+                    }
+                }
+
+                // Zodiac check
+                if ($userPreferences->zodiac_sign) {
+                    $zodiacs = explode('|', $userPreferences->zodiac_sign);
+                    if (in_array($profile->zodiac_sign, $zodiacs)) {
+                        $matchedCriteria++;
+                    }
+                }
+            }
+
+            // Calculate percentage (each criteria = 20%)
+            $profile->match_percentage = $matchedCriteria * 20;
         });
 
-        // Log match details
-        if ($matches->isNotEmpty()) {
-            \Log::debug("Matching profiles found:", $matches->map(function ($match) {
-                return [
-                    'profile_id' => $match->id,
-                    'user_id' => $match->user_id,
-                    'age' => $match->age,
-                    'occupation' => $match->occupation,
-                    'income' => $match->income,
-                    'star' => $match->star,
-                    'zodiac_sign' => $match->zodiac_sign
-                ];
-            })->toArray());
-        }
-
-        // Fetch received profile requests
+        // Rest of your existing code for requests and membership...
         $receivedRequests = ProfileRequest::with(['sender.identity_verify', 'sender.kyc', 'profile'])
             ->whereHas('profile', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
@@ -912,9 +900,7 @@ class MatrimonyController extends Controller
             ->where('status', 'pending')
             ->latest()
             ->get();
-        \Log::info("Found " . $receivedRequests->count() . " received requests");
 
-        // Fetch accepted requests
         $acceptedRequests = ProfileRequest::with(['sender.identity_verify', 'sender.kyc', 'profile'])
             ->whereHas('profile', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
@@ -922,9 +908,7 @@ class MatrimonyController extends Controller
             ->where('status', 'accepted')
             ->latest()
             ->get();
-        \Log::info("Found " . $acceptedRequests->count() . " accepted requests");
 
-        // Fetch rejected requests
         $rejectedRequests = ProfileRequest::with(['sender.identity_verify', 'sender.kyc', 'profile'])
             ->whereHas('profile', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
@@ -932,9 +916,7 @@ class MatrimonyController extends Controller
             ->where('status', 'rejected')
             ->latest()
             ->get();
-        \Log::info("Found " . $rejectedRequests->count() . " rejected requests");
 
-        // Membership details
         $userMembership = UserMembership::where('user_id', $userId)
             ->latest('created_at')
             ->first();
@@ -945,12 +927,7 @@ class MatrimonyController extends Controller
                 'title' => $userMembership->membership->title,
                 'profile_limit' => $userMembership->profile_limit
             ];
-            \Log::debug("User membership info:", $membershipInfo);
-        } else {
-            \Log::info("No valid membership found for user");
         }
-
-        \Log::info("Completed dashboard processing for user ID: {$userId}");
 
         return view('matrimony.dashboard', compact(
             'matches',

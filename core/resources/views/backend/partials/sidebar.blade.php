@@ -87,6 +87,9 @@
                         <li class="dashboard__bottom__list__item @if (request()->is('admin/matrimony/income')) selected @endif">
                             <a href="{{ route('admin.matrimony.income') }}"> {{ __('Income') }} </a>
                         </li>
+                        <li class="dashboard__bottom__list__item @if (request()->is('admin/matrimony/religion')) selected @endif">
+                            <a href="{{ route('admin.matrimony.religion') }}"> {{ __('Religion') }} </a>
+                        </li>
                         <li class="dashboard__bottom__list__item @if (request()->is('admin/matrimony/zodiac-sign')) selected @endif">
                             <a href="{{ route('admin.matrimony.zodiac-sign') }}"> {{ __('Zodiac Sign') }} </a>
                         </li>

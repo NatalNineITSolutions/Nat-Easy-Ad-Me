@@ -13,6 +13,7 @@ use App\Models\ZodiacSign;
 use App\Models\AgeRange;
 use App\Models\IncomeRange;
 use App\Models\Star;
+use App\Models\Religion;
 use Illuminate\Support\Facades\Log;
 
 class MatrimonyManageController extends Controller
@@ -585,5 +586,63 @@ class MatrimonyManageController extends Controller
         return response()->json(['success' => true, 'message' => 'Income range deleted successfully!']);
     }
 
+    public function religion()
+    {
+        $religions = Religion::latest()->paginate(10);
+        return view('backend.pages.matrimony.religion', compact('religions'));
+    }
 
+    public function addReligion()
+    {
+        return view('backend.pages.matrimony.add-religion');
+    }
+
+    public function editReligion($id)
+    {
+        $religion = Religion::findOrFail($id);
+        return view('backend.pages.matrimony.add-religion', compact('religion'));
+    }
+
+    public function storeReligion(Request $request)
+    {
+        $request->validate([
+            'religion' => 'required|string|max:255|unique:religions,religion'
+        ]);
+
+        Religion::create($request->only('religion'));
+
+        return redirect()->route('admin.matrimony.religion')
+            ->with('success', 'Religion added successfully');
+    }
+
+    public function updateReligion(Request $request, $id)
+    {
+        $request->validate([
+            'religion' => 'required|string|max:255|unique:religions,religion,' . $id
+        ]);
+
+        $religion = Religion::findOrFail($id);
+        $religion->update($request->only('religion'));
+
+        return redirect()->route('admin.matrimony.religion')
+            ->with('success', 'Religion updated successfully');
+    }
+
+    public function deleteReligion($id)
+    {
+        try {
+            $religion = Religion::findOrFail($id);
+            $religion->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Religion deleted successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete religion: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

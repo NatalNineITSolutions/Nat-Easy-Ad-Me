@@ -28,7 +28,11 @@ class ProfileListing extends Model
         'payment_method',
         'is_verified',
         'zodiac_sign',
-        'star'
+        'star',
+        'date_of_birth',
+        'religion',
+        'gender',
+        'visibility'
     ];
 
 

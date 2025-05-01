@@ -26,6 +26,22 @@
             margin-top: 25px;
         }
 
+        /* Add this to your CSS file */
+        .form-switch .form-check-input {
+            width: 3em;
+            height: 1.5em;
+            margin-right: 10px;
+        }
+
+        .form-switch .form-check-input:checked {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+
+        #visibilityLabel {
+            font-weight: semibold;
+        }
+
         form {
             margin-top: 30px;
         }
@@ -239,23 +255,44 @@
                                         required>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="age" class="form-label">Age</label>
-                                    <input type="number" id="age" name="age" class="form-control" placeholder="Enter Age"
+                                    <label for="date_of_birth" class="form-label">Date of Birth</label>
+                                    <input type="date" id="date_of_birth" name="date_of_birth" class="form-control"
                                         required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="gender" class="form-label">Gender</label>
+                                    <select class="form-select" id="gender" name="gender" required>
+                                        <option value="" selected disabled>Select Gender</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">Religion</label>
+                                    <select class="form-select" name="religion" id="religion">
+                                        <option value="" selected>Choose Religion</option>
+                                        @foreach($religions as $religion)
+                                            <option value="{{ $religion->id }}">{{ $religion->religion }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="occupation" class="form-label">Occupation</label>
                                     <input type="text" id="occupation" name="occupation" class="form-control"
                                         placeholder="Enter Occupation" required>
                                 </div>
-                            </div>
-
-                            <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label for="annual_income" class="form-label">Annual Income</label>
                                     <input type="number" id="annual_income" name="annual_income" class="form-control"
                                         placeholder="Enter Annual Income" required>
                                 </div>
+                            </div>
+
+                            <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label class="form-label">Caste</label>
                                     <select class="form-select" name="caste" id="caste">
@@ -274,8 +311,6 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
-                            <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label class="form-label">Zodiac Sign</label>
                                     <select class="form-select" name="zodiac_sign" id="zodiac_sign" required>
@@ -285,6 +320,8 @@
                                         @endforeach
                                     </select>
                                 </div>
+                            </div>
+                            <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label for="star" class="form-label">Star</label>
                                     <select class="form-select" id="star" name="star" required>
@@ -294,8 +331,6 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
-                            <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label for="country" class="form-label">Country</label>
                                     <select class="form-select" id="country" name="country" required>
@@ -315,16 +350,28 @@
                                         @endforeach
                                     </select>
                                 </div>
-
+                            </div>
+                            <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label for="city" class="form-label">City</label>
                                     <select class="form-select" id="city" name="city" required>
                                         <option value="" selected>Choose City</option>
                                     </select>
                                 </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label">Profile Visibility</label>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="visibilityToggle"
+                                            name="visibility" value="1">
+                                        <label class="form-check-label" for="visibilityToggle">
+                                            <span id="visibilityLabel">Public</span>
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="row g-3">
+                            <div class="row mb-3">
                                 <div class="col-12">
                                     <label class="form-label fw-bold">Upload Images</label>
                                     <p class="text-muted">Please upload files in jpg, jpeg, or png format and make sure the
@@ -416,25 +463,25 @@
 
                     // Create new image preview
                     let newImage = $(`
-                                                <div class="image-container">
-                                                    <img src="${data.url}" class="uploaded-image" alt="${data.name}">
-                                                    <button type="button" class="delete-image-btn" data-id="${data.id}">×</button>
-                                                </div>
-                                            `);
+                                                                            <div class="image-container">
+                                                                                <img src="${data.url}" class="uploaded-image" alt="${data.name}">
+                                                                                <button type="button" class="delete-image-btn" data-id="${data.id}">×</button>
+                                                                            </div>
+                                                                        `);
 
                     previewContainer.append(newImage);
 
                     // Update main preview to show the first image
                     if (currentValue.length === 1) {
                         wrapper.find('.new_image_add_listing').html(`
-                                                    <div class="attachment-preview">
-                                                        <div class="thumbnail">
-                                                            <div class="centered">
-                                                                <img src="${data.url}" alt="${data.name}">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                `);
+                                                                                <div class="attachment-preview">
+                                                                                    <div class="thumbnail">
+                                                                                        <div class="centered">
+                                                                                            <img src="${data.url}" alt="${data.name}">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            `);
                     }
                 }
             }
@@ -457,21 +504,30 @@
             // Update main preview if needed
             if (currentValue.length === 0) {
                 wrapper.find('.new_image_add_listing').html(`
-                                            <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}" alt="images" class="w-100">
-                                        `);
+                                                                        <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}" alt="images" class="w-100">
+                                                                    `);
             }
         });
     </script>
 
     {{-- Store function --}}
     <script>
+        document.getElementById('visibilityToggle').addEventListener('change', function () {
+            const label = document.getElementById('visibilityLabel');
+            if (this.checked) {
+                label.textContent = 'Private';
+            } else {
+                label.textContent = 'Public';
+            }
+        });
         document.addEventListener("DOMContentLoaded", function () {
             const profileForm = document.getElementById('profileForm');
             const chooseMembershipBtn = document.querySelector('.choose_membership_plan');
 
             chooseMembershipBtn.addEventListener('click', function () {
-                const requiredFields = ['name', 'age', 'occupation', 'annual_income', 'caste',
-                    'motherTongue', 'country', 'state', 'city', 'description', 'zodiac_sign', 'star'
+                const requiredFields = ['name', 'date_of_birth', 'gender', 'religion', 'occupation',
+                    'annual_income', 'caste', 'motherTongue', 'country', 'state', 'city',
+                    'description', 'zodiac_sign', 'star'
                 ];
 
                 let missingFields = [];
@@ -488,17 +544,18 @@
                     missingFields.push('image');
                 }
 
-                // if (missingFields.length > 0) {
-                //     toastr.error('Please fill all required fields including at least one image.', 'Validation Error');
-                //     return false;
-                // }
+                if (missingFields.length > 0) {
+                    toastr.error('Please fill all required fields including at least one image.', 'Validation Error');
+                    return false;
+                }
 
-                // Debug: Log image IDs before setting modal value
-                console.log("Image IDs before submitting: ", imagesInput.value);
+                const visibilityToggle = document.getElementById('visibilityToggle');
 
                 // Populate hidden fields in the modal form
                 document.getElementById('modal_name').value = document.getElementById('name').value;
-                document.getElementById('modal_age').value = document.getElementById('age').value;
+                document.getElementById('modal_date_of_birth').value = document.getElementById('date_of_birth').value;
+                document.getElementById('modal_gender').value = document.getElementById('gender').value;
+                document.getElementById('modal_religion').value = document.getElementById('religion').value;
                 document.getElementById('modal_occupation').value = document.getElementById('occupation').value;
                 document.getElementById('modal_annual_income').value = document.getElementById('annual_income').value;
                 document.getElementById('modal_caste').value = document.getElementById('caste').value;
@@ -510,6 +567,7 @@
                 document.getElementById('modal_images').value = imagesInput.value;
                 document.getElementById('modal_zodiac_sign').value = document.getElementById('zodiac_sign').value;
                 document.getElementById('modal_star').value = document.getElementById('star').value;
+                document.getElementById('modal_visibility').value = visibilityToggle.checked ? 1 : 0;
             });
         });
     </script>

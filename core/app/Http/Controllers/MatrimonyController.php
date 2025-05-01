@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AgeRange;
 use App\Models\IncomeRange;
 use App\Models\MatrimonyPreference;
+use App\Models\Religion;
 use DB;
 use Illuminate\Http\Request;
 use App\Models\MatrimonyKyc;
@@ -539,6 +540,7 @@ class MatrimonyController extends Controller
         $countries = Country::all();
         $states = State::all();
         $cities = City::all();
+        $religions = Religion::all(); 
 
         $profile = null;
 
@@ -546,7 +548,7 @@ class MatrimonyController extends Controller
             $profile = ProfileListing::find($request->profile_id);
         }
 
-        return view('matrimony.profile-listing', compact('castes', 'motherTongues', 'countries', 'states', 'cities', 'profile', 'zodiacsign', 'stars'));
+        return view('matrimony.profile-listing', compact('castes', 'motherTongues', 'countries', 'states', 'cities', 'profile', 'zodiacsign', 'stars', 'religions'));
     }
 
     // Update Profile Listing
@@ -588,18 +590,21 @@ class MatrimonyController extends Controller
             $imagePath = $request->file('image')->store('profile_images', 'public');
             \Log::info('Uploaded profile image path: ' . $imagePath);
         }
-
+    
         $countryName = Country::find($request->country)?->country ?? null;
         $stateName = State::find($request->state)?->state ?? null;
         $cityName = City::find($request->city)?->city ?? null;
         $casteName = Caste::find($request->caste)?->caste ?? null;
         $zodiacSignName = ZodiacSign::find($request->zodiac_sign)?->zodiac_sign ?? null;
         $starName = Star::find($request->star)?->star ?? null;
-
+        $religion = Religion::find($request->religion)?->religion ?? null;
+    
         $profileListing = ProfileListing::create([
             'user_id' => Auth::id(),
             'name' => $request->name,
-            'age' => $request->age,
+            'date_of_birth' => $request->date_of_birth,
+            'gender' => $request->gender,
+            'religion' => $religion,
             'occupation' => $request->occupation,
             'annual_income' => $request->annual_income,
             'caste' => $casteName,
@@ -613,9 +618,11 @@ class MatrimonyController extends Controller
             'payment_method' => null,
             'zodiac_sign' => $zodiacSignName,
             'star' => $starName,
+            'visibility' => $request->visibility ?? 0,
         ]);
+        
         Log::info('Profile Listing Created:', $profileListing->toArray());
-
+    
         session()->put('profile_listing_id', $profileListing->id);
 
         // Handle payment gateway if selected

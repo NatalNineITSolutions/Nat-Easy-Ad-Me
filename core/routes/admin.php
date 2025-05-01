@@ -62,6 +62,15 @@ Route::middleware(['setlang'])->group(function () {
             Route::post('/store-caste', 'storecaste')->name('admin.matrimony.store-caste')->permission('matrimony-store-caste');
             Route::delete('/delete-caste/{id}', 'deleteCaste')->name('admin.matrimony.delete-caste');
 
+            // Religion
+            Route::get('/religion', 'religion')->name('admin.matrimony.religion')->permission('matrimony-religion');
+            Route::get('/add-religion', 'addReligion')->name('admin.matrimony.add-religion')->permission('matrimony-add-religion');
+            // Edit religion
+            Route::get('/edit-religion/{id?}', 'editReligion')->name('admin.matrimony.edit-religion');
+            Route::put('/update-religion/{id}', 'updateReligion')->name('admin.matrimony.update-religion');
+            Route::post('/store-religion', 'storeReligion')->name('admin.matrimony.store-religion')->permission('matrimony-store-religion');
+            Route::delete('/delete-religion/{id}', 'deleteReligion')->name('admin.matrimony.delete-religion');
+
             // Zodiac Sign
             Route::get('/zodiac-sign', 'zodiacsign')->name('admin.matrimony.zodiac-sign')->permission('matrimony-zodiac-sign');
             Route::get('/add-zodiac-sign', 'addZodiacSign')->name('admin.matrimony.add-zodiac-sign')->permission('matrimony-add-zodiac-sign');

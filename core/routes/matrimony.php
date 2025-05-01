@@ -28,6 +28,9 @@ Route::middleware(['web'])->group(function () {
         // Profile
         Route::get('/profile', [MatrimonyController::class, 'profile'])->name('profile');
 
+        // Filter
+        Route::match(['get', 'post'], '/filter', [MatrimonyController::class, 'filter'])->name('filter');
+        
         // Send profile request
         Route::post('/profile/send-request/{profile}', [MatrimonyController::class, 'sendRequest'])
         ->name('profile.send-request')

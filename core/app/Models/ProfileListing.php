@@ -6,7 +6,9 @@ use App\Models\Backend\MediaUpload;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Caste;
+use App\Models\Religion;
 use Modules\CountryManage\app\Models\City;
+use Modules\CountryManage\app\Models\Country;
 
 class ProfileListing extends Model
 {
@@ -38,9 +40,14 @@ class ProfileListing extends Model
         'age',
     ];
 
-    public function profileImage()
+    public function imageAttachment()
     {
-        return $this->hasOne(MediaUpload::class, 'id');
+        return $this->belongsTo(MediaUpload::class, 'image');
+    }
+
+    public function religion()
+    {
+        return $this->belongsTo(Religion::class);
     }
 
     public function user()
@@ -66,6 +73,11 @@ class ProfileListing extends Model
     public function state()
     {
         return $this->belongsTo(City::class, 'state');
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country');
     }
 
     public function zodiacSign()

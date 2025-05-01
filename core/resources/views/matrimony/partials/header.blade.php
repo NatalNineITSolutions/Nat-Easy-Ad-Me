@@ -10,6 +10,7 @@
             <ul class="nav-links">
                 <li><a href="/matrimony">Home</a></li>
                 <li><a href="#">About</a></li>
+                <li><a href="/matrimony/filter">Filter</a></li>
                 <li><a href="/matrimony/profile">Profile</a></li>
                 <li><a href="#">Contact</a></li>
             </ul>

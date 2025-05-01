@@ -335,11 +335,19 @@ class MatrimonyController extends Controller
                 'city_id' => $validated['city'],
                 'about' => $validated['about'],
                 'document_path' => $documentPath,
-                'image' => $validated['image'], // Store the media IDs
-                'status' => 'pending', // Default status
+                'image' => $validated['image'],
+                'status' => 'pending',
                 'zodiac_sign_id' => $validated['zodiac_sign'],
                 'zodiac_sign' => $zodiacSignName,
                 'star_id' => $validated['star'],
+                'star' => $starName,
+            ]);
+
+            Log::info('Incoming KYC image IDs:', [
+                'image' => $validated['image'],
+                'zodiac_sign_id' => $validated['zodiac_sign'],
+                'star_id' => $validated['star'],
+                'zodiac_sign' => $zodiacSignName,
                 'star' => $starName,
             ]);
 
@@ -427,6 +435,31 @@ class MatrimonyController extends Controller
                 'message' => 'Error: ' . $e->getMessage()
             ], 500);
         }
+
+        if (is_numeric($validatedData['star'])) {
+            $star = Star::find($validatedData['star']);
+            $validatedData['star'] = $star?->star ?? null;
+        }
+
+        // Store data in the MatrimonyPreference table
+        MatrimonyPreference::updateOrCreate(
+            ['user_id' => $user->id], // Ensure only one record per user
+            $validatedData
+        );
+
+        // Check if both forms are completed
+        if ($user->kyc && $user->matrimonyPreference) {
+            $user->update(['profile_completed' => 1]); // Update profile completion status
+        }
+
+        // Log the response for debugging
+        \Log::info('Preferences saved successfully for user: ' . $user->id);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Preferences saved successfully!',
+            'redirect_url' => url('/matrimony'),
+        ]);
     }
 
     public function profile()
@@ -956,16 +989,123 @@ class MatrimonyController extends Controller
         return view('matrimony.requests-lists', compact('requests'));
     }
 
-    public function deleteProfile($id)
-    {
-        $profile = ProfileListing::find($id);
+    public function filter(Request $request, $profileId = null)
+{
+    // Start with base query for verified profiles excluding current user
+    $query = ProfileListing::where('user_id', '!=', auth()->id())
+        ->where('is_verified', 1);
 
-        if (!$profile) {
-            return redirect()->back()->with('error', 'Profile not found.');
+    // Check if we're viewing a single profile
+    $isSingleProfile = $profileId !== null;
+    
+    if ($isSingleProfile) {
+        // Handle single profile view
+        $profile = $query->findOrFail($profileId);
+        
+        // Ensure the profile is verified and not the current user's
+        if ($profile->user_id == auth()->id() || !$profile->is_verified) {
+            abort(404);
+        }
+        
+        $profiles = collect([$profile]);
+    } else {
+        // Apply filters only if at least one filter is present
+        if ($request->anyFilled(['gender', 'age_range', 'marital_status', 'income', 'occupation', 
+                               'religion', 'caste', 'star', 'zodiac_sign', 'country', 'state', 'city'])) {
+            
+            // Apply all filters (same as your existing logic)
+            if ($request->filled('gender')) {
+                $query->where('gender', $request->gender);
+            }
+
+            if ($request->filled('age_range')) {
+                $ageRange = AgeRange::find($request->age_range);
+                if ($ageRange) {
+                    $query->whereBetween('age', [$ageRange->from_age, $ageRange->to_age]);
+                }
+            }}
+
+            if ($request->filled('marital_status')) {
+                $query->whereHas('kyc', function ($q) use ($request) {
+                    $q->where('marital_status', $request->marital_status);
+                });
+            }
+
+            if ($request->filled('income')) {
+                $incomeRange = IncomeRange::find($request->income);
+                if ($incomeRange) {
+                    $query->where('income', '>=', $incomeRange->from_income);
+                }
+            }
+
+            if ($request->filled('occupation')) {
+                $query->where('occupation', 'LIKE', "%{$request->occupation}%");
+            }
+
+            if ($request->filled('religion')) {
+                $query->where('religion', $request->religion);
+            }
+
+            if ($request->filled('caste')) {
+                $query->where('caste', $request->caste);
+            }
+
+            if ($request->filled('star')) {
+                $query->where('star', $request->star);
+            }
+
+            if ($request->filled('zodiac_sign')) {
+                $query->where('zodiac_sign', $request->zodiac_sign);
+            }
+
+            if ($request->filled('country')) {
+                $query->where('country', $request->country);
+            }
+
+            if ($request->filled('state')) {
+                $query->where('state', $request->state);
+            }
+
+            if ($request->filled('city')) {
+                $query->where('city', $request->city);
+            }
         }
 
-        $profile->delete();
+        // Get paginated results
+        $profiles = $query->paginate(12);
 
-        return redirect()->back()->with('success', 'Profile deleted successfully.');
+        // Fetch all filter options from database
+        $filterOptions = [
+            'ages' => AgeRange::orderBy('from_age')->orderBy('to_age')->get(),
+            'income' => IncomeRange::orderBy('from_income')->orderBy('to_income')->get(),
+            'religions' => Religion::orderBy('religion')->get(),
+            'castes' => Caste::orderBy('caste')->get(),
+            'stars' => Star::orderBy('star')->get(),
+            'zodiacSigns' => ZodiacSign::orderBy('zodiac_sign')->get(),
+            'countries' => Country::orderBy('country')->get(),
+            'states' => State::orderBy('state')->get(),
+            'cities' => City::orderBy('city')->get(),
+            'maritalStatuses' => ['Married', 'Unmarried', 'Divorced', 'Widowed'],
+        ];
+
+        return view('matrimony.filter', [
+            'profiles' => $profiles,
+            'filters' => $request->all(),
+            'filterOptions' => $filterOptions,
+            'hasFilters' => $request->anyFilled([
+                'gender',
+                'age_range',
+                'marital_status',
+                'income',
+                'occupation',
+                'religion',
+                'caste',
+                'star',
+                'zodiac_sign',
+                'country',
+                'state',
+                'city'
+            ])
+        ]);
     }
 }

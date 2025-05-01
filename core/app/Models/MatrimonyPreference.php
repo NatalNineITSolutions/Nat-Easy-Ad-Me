@@ -9,6 +9,11 @@ class MatrimonyPreference extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'zodiac_sign' => 'array',
+        'star' => 'array',
+    ];
+
     protected $fillable = [
         'user_id',
         'partner_age',
@@ -21,7 +26,9 @@ class MatrimonyPreference extends Model
         'location',
         'income',
         'zodiac_sign',
-        'star'
+        'star',
+        'marital_status',
+        'gender',
     ];
 
     public function user()

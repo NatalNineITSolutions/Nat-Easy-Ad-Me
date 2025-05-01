@@ -27,6 +27,8 @@ class MatrimonyPreference extends Model
         'income',
         'zodiac_sign',
         'star',
+        'marital_status',
+        'gender',
     ];
 
     public function user()

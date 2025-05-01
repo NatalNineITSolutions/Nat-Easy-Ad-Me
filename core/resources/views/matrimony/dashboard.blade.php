@@ -15,6 +15,7 @@
             padding: 20px 20px;
         }
 
+        /* Match percentage styles */
         .match-percentage {
             margin-top: 8px;
             font-size: 12px;
@@ -31,14 +32,49 @@
 
         .percentage-fill {
             height: 100%;
-            background-color: rgb(27, 241, 34);
-            /* Green color for match */
             transition: width 0.3s ease;
         }
 
+        /* Color based on percentage */
+        .percentage-fill.high {
+            background-color: rgb(27, 241, 34);
+            /* Green for >80% */
+        }
+
+        .percentage-fill.medium-high {
+            background-color: rgb(255, 193, 7);
+            /* Yellow for 60-80% */
+        }
+
+        .percentage-fill.medium {
+            background-color: rgb(255, 152, 0);
+            /* Orange for 40-60% */
+        }
+
+        .percentage-fill.low {
+            background-color: rgb(220, 53, 69);
+            /* Red for <40% */
+        }
+
+        .percentage-text.high {
+            color: rgb(27, 241, 34);
+        }
+
+        .percentage-text.medium-high {
+            color: rgb(255, 193, 7);
+        }
+
+        .percentage-text.medium {
+            color: rgb(255, 152, 0);
+        }
+
+        .percentage-text.low {
+            color: rgb(220, 53, 69);
+        }
+
         .percentage-text {
-            color:rgb(27, 241, 34);
             font-weight: bold;
+            font-size: 15px
         }
 
         /* Profile matches */
@@ -424,7 +460,7 @@
     <div class="profile-container">
         <div class="container ">
             <div class="row gx-3">
-                @include('matrimony.partials.sidebar') <!-- Include the sidebar -->
+                @include('matrimony.partials.sidebar')
 
                 <main class="col-md-8 col-lg-9 px-md-4">
                     <div class="main">
@@ -432,32 +468,41 @@
                             <h2>Profiles Matched</h2>
                             <div class="profile-container">
                                 @forelse($matches as $match)
-                                    <a href="{{ route('matrimony.profile-details', ['id' => $match->id]) }}"
-                                        class="profile-card-link">
-                                        <div class="profile-card">
-                                            @if (Str::startsWith($match->first_image_url, '<img'))
-                                                <div class="card-profile">{!! $match->first_image_url !!}</div>
-                                            @else
-                                                <img class="card-profile" src="{{ $match->first_image_url }}"
-                                                    alt="{{ $match->name }}">
-                                            @endif
-                                            <div class="overlay"></div>
-                                            <div class="profile-info">
-                                                <h3>{{ $match->name }}</h3>
-                                                @if($match->occupation)
-                                                    <p class="occupation-match mb-0">{{ $match->occupation }}</p>
-                                                @endif
-                                                <!-- Add match percentage display -->
-                                                <div class="match-percentage">
-                                                    <div class="percentage-bar">
-                                                        <div class="percentage-fill"
-                                                            style="width: {{ $match->match_percentage }}%"></div>
-                                                    </div>
-                                                    <span class="percentage-text">{{ $match->match_percentage }}% Match</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
+                                                            <a href="{{ route('matrimony.profile-details', ['id' => $match->id]) }}"
+                                                                class="profile-card-link">
+                                                                <div class="profile-card">
+                                                                    @if (Str::startsWith($match->first_image_url, '<img'))
+                                                                        <div class="card-profile">{!! $match->first_image_url !!}</div>
+                                                                    @else
+                                                                        <img class="card-profile" src="{{ $match->first_image_url }}"
+                                                                            alt="{{ $match->name }}">
+                                                                    @endif
+                                                                    <div class="overlay"></div>
+                                                                    <div class="profile-info">
+                                                                        <h3>{{ $match->name }}</h3>
+                                                                        @if($match->occupation)
+                                                                            <p class="occupation-match mb-0">{{ $match->occupation }}</p>
+                                                                        @endif
+                                                                        <!-- Add match percentage display -->
+                                                                        <div class="match-percentage">
+                                                                            <div class="percentage-bar">
+                                                                                <div class="percentage-fill 
+                                                                                    @if($match->match_percentage > 80) high
+                                                                                    @elseif($match->match_percentage > 60) medium-high
+                                                                                    @elseif($match->match_percentage > 40) medium
+                                                                                    @else low @endif
+                                                                                " style="width: {{ $match->match_percentage }}%"></div>
+                                                                                </div>
+                                                                            <span class="percentage-text 
+                                                                                    @if($match->match_percentage > 80) high
+                                                                                    @elseif($match->match_percentage > 60) medium-high
+                                                                                    @elseif($match->match_percentage > 40) medium
+                                                                                    @else low @endif
+                                                                                ">{{ $match->match_percentage }}% Match</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </a>
                                 @empty
                                     <div class="no-matches">
                                         <p>No profiles found matching your preferred occupation</p>
@@ -703,11 +748,11 @@
                     $badge.text(count);
                 } else {
                     $('.fa-bell').after(`
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                    ${count}
-                                    <span class="visually-hidden">unread notifications</span>
-                                </span>
-                            `);
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                            ${count}
+                                            <span class="visually-hidden">unread notifications</span>
+                                        </span>
+                                    `);
                 }
             } else {
                 $badge.remove();

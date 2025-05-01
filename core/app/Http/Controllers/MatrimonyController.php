@@ -31,6 +31,7 @@ use Modules\CountryManage\app\Models\Country;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\ProfileRequest;
+use Carbon\Carbon;
 
 
 class MatrimonyController extends Controller
@@ -501,69 +502,69 @@ class MatrimonyController extends Controller
 
     public function storeProfileListing(Request $request)
     {
-        \Log::info('Form submission data:', $request->all());
+        Log::info('Form submission data:', $request->all());
+    
+        // Handle image upload
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('profile_images', 'public');
-            \Log::info('Uploaded profile image path: ' . $imagePath);
+            Log::info('Uploaded profile image path: ' . $imagePath);
         }
-
-        $countryName = Country::find($request->country)?->country ?? null;
-        $stateName = State::find($request->state)?->state ?? null;
-        $cityName = City::find($request->city)?->city ?? null;
-        $casteName = Caste::find($request->caste)?->caste ?? null;
-        $zodiacSignName = ZodiacSign::find($request->zodiac_sign)?->zodiac_sign ?? null;
-        $starName = Star::find($request->star)?->star ?? null;
-        $religion = Religion::find($request->religion)?->religion ?? null;
-
+    
+        // Calculate age from date of birth
+        $dob = Carbon::parse($request->date_of_birth);
+        $age = $dob->age;
+    
+        // Create profile with IDs and calculated age
         $profileListing = ProfileListing::create([
             'user_id' => Auth::id(),
             'name' => $request->name,
             'date_of_birth' => $request->date_of_birth,
+            'age' => $age,
             'gender' => $request->gender,
-            'religion' => $religion,
+            'religion' => $request->religion,
             'occupation' => $request->occupation,
             'marital_status' => $request->marital_status,
             'annual_income' => $request->annual_income,
-            'caste' => $casteName,
+            'caste' => $request->caste,
             'mother_tongue' => $request->motherTongue,
-            'country' => $countryName,
-            'state' => $stateName,
-            'city' => $cityName,
-            'image' => $request->images,
+            'country' => $request->country,
+            'state' => $request->state,
+            'city' => $request->city,
+            'image' => $imagePath,
             'description' => $request->description,
             'paid' => 0,
             'payment_method' => null,
-            'zodiac_sign' => $zodiacSignName,
-            'star' => $starName,
+            'zodiac_sign' => $request->zodiac_sign,
+            'star' => $request->star,
             'visibility' => $request->visibility ?? 0,
         ]);
-
+    
         Log::info('Profile Listing Created:', $profileListing->toArray());
-
+    
         session()->put('profile_listing_id', $profileListing->id);
-
+    
         // Handle payment gateway if selected
         if ($request->filled('selected_payment_gateway')) {
             $payment_gateway = $request->selected_payment_gateway;
-
             $credential_function = 'get_' . $payment_gateway . '_credential';
-
+    
             if (!method_exists((new PaymentGatewayCredential()), $credential_function)) {
-
                 $custom_data = [
                     'request' => $request->all(),
                     'total' => get_static_option('matrimony_price'),
                     'payment_type' => "deposit",
                     'payment_for' => "membership",
-                    'success_url' => route('user.membership.all')
+                    'success_url' => route('user.membership.all'),
                 ];
-
+    
                 $charge_customer_class_namespace = getChargeCustomerMethodNameByPaymentGatewayNameSpace($payment_gateway);
                 $charge_customer_method_name = getChargeCustomerMethodNameByPaymentGatewayName($payment_gateway);
-
+    
                 $custom_charge_customer_class_object = new $charge_customer_class_namespace;
-                if (class_exists($charge_customer_class_namespace) && method_exists($custom_charge_customer_class_object, $charge_customer_method_name)) {
+    
+                if (class_exists($charge_customer_class_namespace) &&
+                    method_exists($custom_charge_customer_class_object, $charge_customer_method_name)) {
                     return $custom_charge_customer_class_object->$charge_customer_method_name($custom_data);
                 } else {
                     return back()->with(toastr_error('Incorrect Class or Method'));
@@ -572,12 +573,12 @@ class MatrimonyController extends Controller
                 return $this->payment_with_gateway($payment_gateway);
             }
         }
-
+    
         return response()->json([
             'success' => true,
             'message' => 'Profile Listing Saved Successfully!',
         ]);
-    }
+    }    
 
     public function payment_with_gateway($payment_gateway_name)
     {
@@ -718,37 +719,27 @@ class MatrimonyController extends Controller
         $userId = auth()->id();
         \Log::info("[MATCHING] Starting matching process for user ID: {$userId}");
 
-        // Get user preferences
         $userPreferences = MatrimonyPreference::where('user_id', $userId)->first();
 
         \Log::debug("[MATCHING] User preferences:", $userPreferences ? [
-            'age_range' => "{$userPreferences->from_age}-{$userPreferences->to_age}",
+            'age_range' => "$userPreferences->partner_age",
             'gender' => $userPreferences->gender,
             'religion' => $userPreferences->religion,
             'zodiac_signs' => $userPreferences->zodiac_sign,
             'stars' => $userPreferences->star,
             'occupations' => $userPreferences->occupation,
-            'min_income' => $userPreferences->annual_income,
+            'annual_income' => $userPreferences->income,
             'caste' => $userPreferences->caste,
             'mother_tongue' => $userPreferences->mother_tongue
         ] : ['message' => 'No preferences found']);
 
-        // Start base query
         $matchesQuery = ProfileListing::where('user_id', '!=', $userId)
             ->where('is_verified', 1);
 
         if ($userPreferences) {
-            $matchesQuery->where(function ($query) use ($userPreferences) {
-                if ($userPreferences->gender) {
-                    $query->where('gender', $userPreferences->gender);
-                }
-                if ($userPreferences->religion) {
-                    $query->where('religion', $userPreferences->religion);
-                }
-                if ($userPreferences->from_age && $userPreferences->to_age) {
-                    $query->whereBetween('age', [$userPreferences->from_age, $userPreferences->to_age]);
-                }
-            });
+            if ($userPreferences->gender) {
+                $matchesQuery->where('gender', $userPreferences->gender);
+            }
         }
 
         $potentialMatches = $matchesQuery->inRandomOrder()->limit(20)->get();
@@ -777,29 +768,26 @@ class MatrimonyController extends Controller
             ];
 
             if ($userPreferences) {
-                // Age matching
                 $ageScore = 0;
                 if ($userPreferences->from_age && $userPreferences->to_age) {
-                    $ageDiff = abs($profile->age - (($userPreferences->from_age + $userPreferences->to_age) / 2));
+                    $profileAge = Carbon::parse($profile->date_of_birth)->age;
+                    $ageDiff = abs($profileAge - (($userPreferences->from_age + $userPreferences->to_age) / 2));
                     $maxAgeDiff = $userPreferences->to_age - $userPreferences->from_age;
                     $ageScore = max(0, $criteriaWeights['age'] * (1 - ($ageDiff / $maxAgeDiff)));
-                    $matchDetails['criteria_matches']['age'] = "{$profile->age} years (preferred: {$userPreferences->from_age}-{$userPreferences->to_age})";
+                    $matchDetails['criteria_matches']['age'] = "{$profile->age} (preferred: {$userPreferences->from_age}-{$userPreferences->to_age})";
                     $matchDetails['raw_scores']['age'] = $ageScore;
                 }
 
-                // Gender matching
                 $genderScore = ($userPreferences->gender && $profile->gender == $userPreferences->gender)
                     ? $criteriaWeights['gender'] : 0;
                 $matchDetails['criteria_matches']['gender'] = $profile->gender;
                 $matchDetails['raw_scores']['gender'] = $genderScore;
 
-                // Religion matching
                 $religionScore = ($userPreferences->religion && $profile->religion == $userPreferences->religion)
                     ? $criteriaWeights['religion'] : 0;
                 $matchDetails['criteria_matches']['religion'] = $profile->religion;
                 $matchDetails['raw_scores']['religion'] = $religionScore;
 
-                // Zodiac sign matching
                 $zodiacScore = 0;
                 if ($userPreferences->zodiac_sign) {
                     $zodiacs = explode('|', $userPreferences->zodiac_sign);
@@ -808,7 +796,6 @@ class MatrimonyController extends Controller
                     $matchDetails['raw_scores']['zodiac_sign'] = $zodiacScore;
                 }
 
-                // Star matching
                 $starScore = 0;
                 if ($userPreferences->star) {
                     $stars = explode('|', $userPreferences->star);
@@ -817,12 +804,11 @@ class MatrimonyController extends Controller
                     $matchDetails['raw_scores']['star'] = $starScore;
                 }
 
-                // Occupation matching
                 $occupationScore = 0;
                 if ($userPreferences->occupation) {
                     $occupations = explode('|', $userPreferences->occupation);
                     foreach ($occupations as $occupation) {
-                        if (str_contains(strtolower($profile->occupation), strtolower($occupation))) {
+                        if (stripos($profile->occupation, trim($occupation)) !== false) {
                             $occupationScore = $criteriaWeights['occupation'];
                             break;
                         }
@@ -831,7 +817,6 @@ class MatrimonyController extends Controller
                     $matchDetails['raw_scores']['occupation'] = $occupationScore;
                 }
 
-                // Income matching
                 $incomeScore = 0;
                 if ($userPreferences->annual_income && $profile->annual_income) {
                     $incomeRatio = min(1, $profile->annual_income / $userPreferences->annual_income);
@@ -840,23 +825,17 @@ class MatrimonyController extends Controller
                     $matchDetails['raw_scores']['annual_income'] = $incomeScore;
                 }
 
-                // Caste matching
                 $casteScore = ($userPreferences->caste && $profile->caste == $userPreferences->caste)
                     ? $criteriaWeights['caste'] : 0;
                 $matchDetails['criteria_matches']['caste'] = $profile->caste;
                 $matchDetails['raw_scores']['caste'] = $casteScore;
 
-                // Mother tongue matching
                 $motherTongueScore = ($userPreferences->mother_tongue && $profile->mother_tongue == $userPreferences->mother_tongue)
                     ? $criteriaWeights['mother_tongue'] : 0;
                 $matchDetails['criteria_matches']['mother_tongue'] = $profile->mother_tongue;
                 $matchDetails['raw_scores']['mother_tongue'] = $motherTongueScore;
 
-                // Calculate total score
-                $totalScore = $ageScore + $genderScore + $religionScore + $zodiacScore +
-                    $starScore + $occupationScore + $incomeScore +
-                    $casteScore + $motherTongueScore;
-
+                $totalScore = array_sum($matchDetails['raw_scores']);
                 $matchPercentage = round(($totalScore / array_sum($criteriaWeights)) * 100 / 5) * 5;
 
                 $matchDetails['total_score'] = $totalScore;
@@ -867,18 +846,16 @@ class MatrimonyController extends Controller
             }
         }
 
-        // Log detailed matching results
-        \Log::info("[MATCHING] Detailed matching results:", [
-            'total_profiles_evaluated' => count($finalMatches),
-            'matching_details' => $finalMatches
-        ]);
-
-        // Sort and get top matches
         $matches = $potentialMatches->sortByDesc('match_percentage')->take(4);
-        \Log::info("[MATCHING] Top 4 matches selected with percentages: " .
-            $matches->pluck('match_percentage')->implode(', '));
 
-        // Rest of your existing code for requests and membership...
+        // Add first image URL to each profile
+        $matches->each(function ($profile) {
+            $firstImageId = $profile->image;
+            $profile->first_image_url = $firstImageId
+                ? render_image_markup_by_attachment_id($firstImageId)
+                : '/assets/uploads/media-uploader/profile.png';
+        });
+
         $receivedRequests = ProfileRequest::with(['sender.identity_verify', 'sender.kyc', 'profile'])
             ->whereHas('profile', function ($query) use ($userId) {
                 $query->where('user_id', $userId);

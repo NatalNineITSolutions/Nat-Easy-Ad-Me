@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Backend\MediaUpload;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Caste;
@@ -32,9 +33,15 @@ class ProfileListing extends Model
         'date_of_birth',
         'religion',
         'gender',
-        'visibility'
+        'visibility',
+        'marital_status',
+        'age',
     ];
 
+    public function profileImage()
+    {
+        return $this->hasOne(MediaUpload::class, 'id');
+    }
 
     public function user()
     {
@@ -69,5 +76,5 @@ class ProfileListing extends Model
     {
         return $this->belongsTo(Star::class, 'star');
     }
-    
+
 }

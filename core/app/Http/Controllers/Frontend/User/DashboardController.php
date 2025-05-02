@@ -123,6 +123,10 @@ class DashboardController extends Controller
         // Self purchased BV
         $selfPurchasedBv = $user->self_purchased_bv ?? 0;
 
+        $bp_value = get_static_option('bp_value') ?? 0;
+
+        $check_active_distributor = $selfPurchasedBv >= $bp_value ? 1 : 0;
+
         // Calculate BV points
         $directReferralsCount = User::where('sponsor_id', $user->id)->count();
 
@@ -140,6 +144,7 @@ class DashboardController extends Controller
         // Return the view with updated data
         return view('frontend.user.dashboard.dashboard', [
             'user' => $user,
+            'check_active_distributor' => $check_active_distributor,
             'user_ads_posted' => $user_ads_posted,
             'user_active_listings' => $user_active_listings,
             'user_deactivated_ads' => $user_deactivated_ads,

@@ -94,7 +94,7 @@
                                                                         class="pending-btn">{{ __('PENDING') }}</a>
                                                                 @endif
                                                                 <a href="javascript:void(0)" class="listing-view-btn"><i
-                                                                        class="fa-regular fa-eye"></i>{{ $listing->view }}</a>
+                                                                        class="fa-regular fa-eye"></i>Watched Count: {{ $listing->view }}</a>
                                                             </div>
                                                         </div>
                                                     </div>

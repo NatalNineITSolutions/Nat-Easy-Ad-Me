@@ -12,37 +12,45 @@
                 <thead class="thead-dark">
                     <tr>
                         <th>S.No</th>
-                        <th>Referral ID</th>
-                        <th>Parent ID</th>
+                        <th>Sponsor ID</th>
+                        <th>Placement ID</th>
                         <th>Distributor ID</th>
                         <th>Distributor Name</th>
-                        <th>Position</th>
+                        <th>Status</th>
                         <th>City</th>
+                        <th>Date of Joining</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($teamMembers as $index => $member)
-                                    <tr>
-                                        <td>{{ $index + 1 }}</td>
-                                        <td>
-                                            @if($member->sponsor_id)
-                                                {{ optional($allUsers->get($member->sponsor_id))->partner_id ?? $member->sponsor_id }}
-                                            @else
-                                                N/A
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if($member->parent_id)
-                                                {{ optional($allUsers->get($member->parent_id))->partner_id ?? $member->parent_id }}
-                                            @else
-                                                N/A
-                                            @endif
-                                        </td>
-                                        <td>{{ $member->partner_id }}</td>
-                                        <td>{{ $member->full_name }}</td>
-                                        <td>{{ $member->position ?? 'N/A' }}</td>
-                                        <td>{{ $user->user_city->city ?? 'N/A' }}</td>
-                                    </tr>
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>
+                                @if ($member->sponsor_id)
+                                    {{ optional($allUsers->get($member->sponsor_id))->partner_id ?? $member->sponsor_id }}
+                                @else
+                                    N/A
+                                @endif
+                            </td>
+                            <td>
+                                @if ($member->parent_id)
+                                    {{ optional($allUsers->get($member->parent_id))->partner_id ?? $member->parent_id }}
+                                @else
+                                    N/A
+                                @endif
+                            </td>
+                            <td>{{ $member->partner_id }}</td>
+                            <td>{{ $member->full_name }}</td>
+                            @php
+                                $bvThreshold = is_numeric($raw = get_static_option('bp_value')) ? (int) $raw : 0;
+                                $d = $member->self_purchased_bv >= $bvThreshold ? 'Active Distributor' : 'Distributor';
+                            @endphp
+                            <td>
+                                {{ $d }}
+                            </td>
+                            <td>{{ $user->user_city->city ?? 'N/A' }}</td>
+                            <td>{{ $member->created_at ? $member->created_at->format('F j, Y, g:i a') : 'N/A' }}</td>
+                        </tr>
                     @empty
                         <tr>
                             <td colspan="8" class="text-center">No team members found under this user.</td>

@@ -118,12 +118,12 @@
                                     <div class="seller-part-inner style-01 box-shadow1">
                                         <div class="seller-details">
                                             <div class="seller-details-wraper">
-                                                <div class="seller-img">
+                                                <div class="seller-img" style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden;">
                                                     @if(!empty($user->image))
-                                                        {!! render_image_markup_by_attachment_id($user->image) !!}
+                                                        {!! render_image_markup_by_attachment_id($user->image, '', 'thumb', ['style' => 'width: 100%; height: 100%; object-fit: cover;']) !!}
                                                     @else
                                                         <img src="{{ asset('assets/frontend/img/static/user-no-image.webp') }}"
-                                                            alt="No Image">
+                                                            alt="No Image" style="width: 100%; height: 100%; object-fit: cover;">
                                                     @endif
                                                 </div>
                                                 <div class="seller-name">
@@ -205,7 +205,7 @@
                                             <h5>Basic Info</h5>
                                             <p><strong>Full Name:</strong> {{ $profile['full_name'] }}</p>
                                             <p><strong>DOB:</strong> {{ $profile['dob'] }}</p>
-                                            <p><strong>Mobile Number:</strong> {{ $profile['mobile_number'] }}</p>
+                                            <p><strong>Contact Number:</strong> {{ $profile['mobile_number'] }}</p>
                                             <p><strong>Email:</strong> {{ $profile['email'] }}</p>
                                         </div>
                                     </div>
@@ -215,7 +215,6 @@
                                         <div class="profile-info">
                                             <h5>Personal Info</h5>
                                             <p><strong>Gender:</strong> {{ $profile['gender'] }}</p>
-                                            <p><strong>Whatsapp No:</strong> {{ $profile['whatsapp_no'] }}</p>
                                             <p><strong>Father/Husband:</strong> {{ $profile['father_husband_name'] }}</p>
                                         </div>
                                     </div>

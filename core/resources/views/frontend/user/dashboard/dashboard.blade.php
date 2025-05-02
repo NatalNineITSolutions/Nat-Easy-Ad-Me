@@ -60,7 +60,17 @@
                                         </div>
 
                                         <div class="stats-card">
-                                            <h4 class="stats-title">{{ __('Team Business') }}</h4>
+                                            <h4 class="stats-title">
+                                                {{ __('Team Business') }}
+                                                @if ($check_active_distributor == 1)
+                                                    <span style="color: green; display: inline-flex; align-items: center; margin-left: 5px;">
+                                                        Active Distributor
+                                                        <span
+                                                            style="width: 8px; height: 8px; margin-left: 5px; background-color: green; border-radius: 50%; animation: pulse 1.5s infinite;"></span>
+                                                    </span>
+                                                @endif
+                                            </h4>
+                                          
                                             <div class="stats-content">
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('Status:') }}</span>
@@ -209,6 +219,23 @@
 
 @section('style')
     <style>
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.5);
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
         .referral-business-stats {
             max-width: 1200px;
             margin: 0 auto;

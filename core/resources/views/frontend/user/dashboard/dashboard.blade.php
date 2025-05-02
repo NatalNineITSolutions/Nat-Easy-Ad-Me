@@ -153,7 +153,7 @@
                                         </div>
                                         <div class="col-md-3 col-6">
                                             <div class="list-state bg-orange text-white">
-                                                <h4 class="list-head">{{ $remaining_listings }}</h4>
+                                                <h4 class="list-head">{{ $remaining_listings ?? 0}}</h4>
                                                 <p class="post-state">{{ __('Remaining Ad Listings') }}</p>
                                             </div>
                                         </div>
@@ -177,7 +177,7 @@
                                         </div>
                                         <div class="col-md-3 col-6">
                                             <div class="list-state bg-red text-white">
-                                                <h4 class="list-head">{{ $membershipInfo['profile_limit'] }}</h4>
+                                            <h4 class="list-head">{{ $membershipInfo['profile_limit'] ?? 0 }}</h4>
                                                 <p class="post-state">{{ __('Remaining Profile Limit') }}</p>
                                             </div>
                                         </div>

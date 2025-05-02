@@ -297,20 +297,20 @@ class MatrimonyController extends Controller
             'about' => 'required|string|max:500',
             'document' => 'nullable|file|mimes:pdf|max:2048',
             'image' => 'required|string',
-            'zodiac_sign' => 'required|integer',
-            'star' => 'required|integer',
+            'zodiac_sign' => 'required|integer|exists:zodiac_signs,id',
+            'star' => 'required|integer|exists:stars,id',
         ]);
 
         try {
-            // Handle file upload if exists
+            // Handle file upload
             $documentPath = null;
             if ($request->hasFile('document')) {
                 $documentPath = $request->file('document')->store('matrimony/documents', 'public');
             }
 
-            // 🪐 Fetch Zodiac Sign and Star names
-            $zodiacSignName = ZodiacSign::find($validated['zodiac_sign'])?->zodiac_sign ?? null;
-            $starName = Star::find($validated['star'])?->star ?? null;
+            // Get names for zodiac and star
+            $zodiacSign = ZodiacSign::find($validated['zodiac_sign']);
+            $star = Star::find($validated['star']);
 
             // Create KYC record
             $kyc = MatrimonyKyc::create([
@@ -323,43 +323,32 @@ class MatrimonyController extends Controller
                 'disability' => $validated['disability'],
                 'height' => $validated['height'],
                 'weight' => $validated['weight'],
-                'caste_id' => $validated['caste'],
-                'dosham_id' => $validated['dosham'],
-                'gothram_id' => $validated['gothram'],
+                'caste' => $validated['caste'],
+                'dosham' => $validated['dosham'],
+                'gothram' => $validated['gothram'],
                 'education' => $validated['education'],
                 'occupation' => $validated['occupation'],
                 'annual_income' => $validated['annual_income'],
                 'employed_in' => $validated['employed_in'],
-                'country_id' => $validated['country'],
-                'state_id' => $validated['state'],
-                'city_id' => $validated['city'],
+                'country' => $validated['country'],
+                'state' => $validated['state'],
+                'city' => $validated['city'],
                 'about' => $validated['about'],
                 'document_path' => $documentPath,
                 'image' => $validated['image'],
                 'status' => 'pending',
-                'zodiac_sign_id' => $validated['zodiac_sign'],
-                'zodiac_sign' => $zodiacSignName,
-                'star_id' => $validated['star'],
-                'star' => $starName,
+                'zodiac_sign' => $validated['zodiac_sign'], 
+                'star' => $validated['star'],               
             ]);
-
-            Log::info('Incoming KYC image IDs:', [
-                'image' => $validated['image'],
-                'zodiac_sign_id' => $validated['zodiac_sign'],
-                'star_id' => $validated['star'],
-                'zodiac_sign' => $zodiacSignName,
-                'star' => $starName,
-            ]);
-
-            Log::info('Incoming KYC image IDs:', ['image' => $validated['image']]);
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'KYC submitted successfully!',
-                'user_id' => 'M' . str_pad(Auth::id(), 6, '0', STR_PAD_LEFT) // Generate user ID
+                'user_id' => 'M' . str_pad(Auth::id(), 6, '0', STR_PAD_LEFT)
             ]);
 
         } catch (\Exception $e) {
+            \Log::error('KYC Submission Error: ' . $e->getMessage());
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to submit KYC: ' . $e->getMessage()
@@ -407,21 +396,35 @@ class MatrimonyController extends Controller
                 'zodiac_sign.*' => 'integer|exists:zodiac_signs,id',
                 'star' => 'nullable|array',
                 'star.*' => 'integer|exists:stars,id',
+                'marital_status' => 'required|string',
+                'gender' => 'required|string',
             ]);
+            Log::info('Incoming preference data:', $validatedData);
 
-            // Convert arrays to JSON
+            // Convert arrays to delimited string
             $validatedData['zodiac_sign'] = is_array($request->zodiac_sign) ? implode('|', $request->zodiac_sign) : null;
             $validatedData['star'] = is_array($request->star) ? implode('|', $request->star) : null;
 
             // Get the authenticated user
             $user = auth()->user();
 
-            // Store data
+            // Store or update preferences
             MatrimonyPreference::updateOrCreate(
                 ['user_id' => $user->id],
                 $validatedData
             );
+
+            // Refresh user model to get latest relations
+            $user->refresh();
+
+            // Check if both KYC and preferences exist
+            if ($user->kyc && $user->matrimonyPreference) {
+                $user->update(['profile_completed' => 1]);
+            }
+
+            // Log for debugging
             Log::info('User preferences saved:', $validatedData);
+            Log::info('Preferences saved successfully for user: ' . $user->id);
 
             return response()->json([
                 'success' => true,
@@ -435,31 +438,6 @@ class MatrimonyController extends Controller
                 'message' => 'Error: ' . $e->getMessage()
             ], 500);
         }
-
-        if (is_numeric($validatedData['star'])) {
-            $star = Star::find($validatedData['star']);
-            $validatedData['star'] = $star?->star ?? null;
-        }
-
-        // Store data in the MatrimonyPreference table
-        MatrimonyPreference::updateOrCreate(
-            ['user_id' => $user->id], // Ensure only one record per user
-            $validatedData
-        );
-
-        // Check if both forms are completed
-        if ($user->kyc && $user->matrimonyPreference) {
-            $user->update(['profile_completed' => 1]); // Update profile completion status
-        }
-
-        // Log the response for debugging
-        \Log::info('Preferences saved successfully for user: ' . $user->id);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Preferences saved successfully!',
-            'redirect_url' => url('/matrimony'),
-        ]);
     }
 
     public function profile()
@@ -491,7 +469,7 @@ class MatrimonyController extends Controller
         $states = State::all();
         $cities = City::all();
         $religions = Religion::all();
-        $marital_status = ['Married', 'Unmarried', 'Divorced', 'Widowed'];
+        $marital_status = ['married', 'unmarried', 'divorced', 'widowed'];
 
         $profile = null;
 
@@ -542,7 +520,7 @@ class MatrimonyController extends Controller
             $imageIds = explode('|', $request->input('images'));
 
             foreach ($imageIds as $imageId) {
-                $imagePaths[] = $imageId; 
+                $imagePaths[] = $imageId;
             }
         }
 
@@ -1046,10 +1024,8 @@ class MatrimonyController extends Controller
             }
 
             if ($request->filled('marital_status')) {
-                $query->whereHas('kyc', function ($q) use ($request) {
-                    $q->where('marital_status', $request->marital_status);
-                });
-            }
+                $query->where('marital_status', $request->marital_status);
+            }            
 
             if ($request->filled('income')) {
                 $incomeRange = IncomeRange::find($request->income);

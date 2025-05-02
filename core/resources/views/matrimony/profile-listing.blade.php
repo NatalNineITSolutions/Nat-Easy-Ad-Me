@@ -535,7 +535,7 @@
             chooseMembershipBtn.addEventListener('click', function () {
                 const requiredFields = ['name', 'date_of_birth', 'gender', 'religion', 'occupation',
                     'annual_income', 'caste', 'motherTongue', 'country', 'state', 'city',
-                    'description', 'zodiac_sign', 'star'
+                    'description', 'zodiac_sign', 'star', 'marital_status'
                 ];
 
                 let missingFields = [];
@@ -575,6 +575,7 @@
                 document.getElementById('modal_images').value = imagesInput.value;
                 document.getElementById('modal_zodiac_sign').value = document.getElementById('zodiac_sign').value;
                 document.getElementById('modal_star').value = document.getElementById('star').value;
+                document.getElementById('modal_marital_status').value = document.getElementById('marital_status').value;
                 document.getElementById('modal_visibility').value = visibilityToggle.checked ? 1 : 0;
             });
         });

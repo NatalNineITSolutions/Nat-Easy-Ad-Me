@@ -12,20 +12,14 @@ return new class extends Migration
     public function up()
     {
         Schema::table('profile_listings', function (Blueprint $table) {
-            if (!Schema::hasColumn('profile_listings', 'marital_status')) {
-                $table->enum('marital_status', ['single', 'married', 'divorced', 'widowed'])
-                      ->nullable()
-                      ->after('gender'); 
-            }
+            $table->dropColumn('marital_status');
         });
     }
 
     public function down()
     {
         Schema::table('profile_listings', function (Blueprint $table) {
-            if (Schema::hasColumn('profile_listings', 'marital_status')) {
-                $table->dropColumn('marital_status');
-            }
+            $table->enum('marital_status', ['unmarried', 'married', 'divorced', 'widowed'])->default('unmarried');
         });
     }
 };

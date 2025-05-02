@@ -40,7 +40,7 @@ class MatrimonyKyc extends Authenticatable
         'star'
     ];
 
-    protected $hidden = ['password']; // Hide password from JSON responses
+    protected $hidden = ['password']; 
 
     public function user()
     {

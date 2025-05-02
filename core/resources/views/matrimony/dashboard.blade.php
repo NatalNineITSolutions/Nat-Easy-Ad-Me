@@ -15,6 +15,12 @@
             padding: 20px 20px;
         }
 
+        .blur-image img,
+        .blur-image {
+            filter: blur(6px);
+            transition: filter 0.3s ease;
+        }
+
         /* Match percentage styles */
         .match-percentage {
             margin-top: 8px;
@@ -468,41 +474,48 @@
                             <h2>Profiles Matched</h2>
                             <div class="profile-container">
                                 @forelse($matches as $match)
-                                                            <a href="{{ route('matrimony.profile-details', ['id' => $match->id]) }}"
-                                                                class="profile-card-link">
-                                                                <div class="profile-card">
-                                                                    @if (Str::startsWith($match->first_image_url, '<img'))
-                                                                        <div class="card-profile">{!! $match->first_image_url !!}</div>
-                                                                    @else
-                                                                        <img class="card-profile" src="{{ $match->first_image_url }}"
-                                                                            alt="{{ $match->name }}">
-                                                                    @endif
-                                                                    <div class="overlay"></div>
-                                                                    <div class="profile-info">
-                                                                        <h3>{{ $match->name }}</h3>
-                                                                        @if($match->occupation)
-                                                                            <p class="occupation-match mb-0">{{ $match->occupation }}</p>
-                                                                        @endif
-                                                                        <!-- Add match percentage display -->
-                                                                        <div class="match-percentage">
-                                                                            <div class="percentage-bar">
-                                                                                <div class="percentage-fill 
-                                                                                    @if($match->match_percentage > 80) high
-                                                                                    @elseif($match->match_percentage > 60) medium-high
-                                                                                    @elseif($match->match_percentage > 40) medium
-                                                                                    @else low @endif
-                                                                                " style="width: {{ $match->match_percentage }}%"></div>
-                                                                                </div>
-                                                                            <span class="percentage-text 
-                                                                                    @if($match->match_percentage > 80) high
-                                                                                    @elseif($match->match_percentage > 60) medium-high
-                                                                                    @elseif($match->match_percentage > 40) medium
-                                                                                    @else low @endif
-                                                                                ">{{ $match->match_percentage }}% Match</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </a>
+                                    <a href="{{ route('matrimony.profile-details', ['id' => $match->id]) }}"
+                                        class="profile-card-link">
+                                        <div class="profile-card">
+                                            @php
+                                                $isBlurred = $match->visibility == 1 ? 'blur-image' : '';
+                                            @endphp
+
+                                            @if (Str::startsWith($match->first_image_url, '<img'))
+                                                <div class="card-profile {{ $isBlurred }}">{!! $match->first_image_url !!}</div>
+                                            @else
+                                                <div class="card-profile {{ $isBlurred }}">
+                                                    <img src="{{ $match->first_image_url }}" alt="{{ $match->name }}">
+                                                </div>
+                                            @endif
+                                            <div class="overlay"></div>
+                                            <div class="profile-info">
+                                                <h3>{{ $match->name }}</h3>
+                                                @if($match->occupation)
+                                                    <p class="occupation-match mb-0">{{ $match->occupation }}</p>
+                                                @endif
+                                                <!-- Add match percentage display -->
+                                                <div class="match-percentage">
+                                                    <div class="percentage-bar">
+                                                        <div class="percentage-fill 
+                                                                                            @if($match->match_percentage > 80) high
+                                                                                            @elseif($match->match_percentage > 60) medium-high
+                                                                                            @elseif($match->match_percentage > 40) medium
+                                                                                            @else low @endif
+                                                                                        "
+                                                            style="width: {{ $match->match_percentage }}%"></div>
+                                                    </div>
+                                                    <span class="percentage-text 
+                                                                                            @if($match->match_percentage > 80) high
+                                                                                            @elseif($match->match_percentage > 60) medium-high
+                                                                                            @elseif($match->match_percentage > 40) medium
+                                                                                            @else low @endif
+                                                                                        ">{{ $match->match_percentage }}%
+                                                        Match</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
                                 @empty
                                     <div class="no-matches">
                                         <p>No profiles found matching your preferred occupation</p>
@@ -606,41 +619,41 @@
 
                             <div class="tab-content active" id="new-requests">
                                 @forelse($receivedRequests as $request)
-                                                            <div class="request-card" data-request-id="{{ $request->id }}">
-                                                                <div class="request-info">
-                                                                    <h4>{{ $request->sender->username }} sent a request to:</h4>
-                                                                    <p class="profile-name">{{ $request->profile->name }}</p>
-                                                                    <p>
-                                                                        <strong>Age:</strong> {{ $request->profile->age ?? 'N/A' }}
-                                                                        <strong>Job:</strong> <span
-                                                                            class="highlight">{{ $request->profile->occupation ?? 'N/A' }}</span>
-                                                                    </p>
-                                                                    <p>Request given on: {{ $request->created_at->format('d F Y') }}</p>
-                                                                    @php
-                                                                        $imageId = $request->sender->image;
-                                                                        $senderImage = $imageId
-                                                                            ? get_attachment_image_by_id($imageId, null, true)['img_url']
-                                                                            : asset('assets/uploads/media-uploader/profile.png');
-                                                                    @endphp
-                                                                    <button class="btn-profile view-sender-profile"
-                                                                        data-username="{{ $request->sender->username }}"
-                                                                        data-email="{{ $request->sender->email }}"
-                                                                        data-phone="{{ $request->sender->phone }}"
-                                                                        data-created="{{ $request->sender->created_at->format('d M Y') }}"
-                                                                        data-address="{{ $request->sender->identity_verify->address ?? 'N/A' }}"
-                                                                        data-marital="{{ $request->sender->kyc?->marital_status ?? 'N/A' }}"
-                                                                        data-family="{{ $request->sender->kyc?->family_status ?? 'N/A' }}"
-                                                                        data-height="{{ $request->sender->kyc?->height ?? 'N/A' }}"
-                                                                        data-weight="{{ $request->sender->kyc?->weight ?? 'N/A' }}"
-                                                                        data-image="{{ $senderImage }}">
-                                                                        View Profile
-                                                                    </button>
-                                                                </div>
-                                                                <div class="action-buttons">
-                                                                    <button class="accept" data-request-id="{{ $request->id }}">Accept</button>
-                                                                    <button class="deny" data-request-id="{{ $request->id }}">Deny</button>
-                                                                </div>
-                                                            </div>
+                                    <div class="request-card" data-request-id="{{ $request->id }}">
+                                        <div class="request-info">
+                                            <h4>{{ $request->sender->username }} sent a request to:</h4>
+                                            <p class="profile-name">{{ $request->profile->name }}</p>
+                                            <p>
+                                                <strong>Age:</strong> {{ $request->profile->age ?? 'N/A' }}
+                                                <strong>Job:</strong> <span
+                                                    class="highlight">{{ $request->profile->occupation ?? 'N/A' }}</span>
+                                            </p>
+                                            <p>Request given on: {{ $request->created_at->format('d F Y') }}</p>
+                                            @php
+                                                $imageId = $request->sender->image;
+                                                $senderImage = $imageId
+                                                    ? get_attachment_image_by_id($imageId, null, true)['img_url']
+                                                    : asset('assets/uploads/media-uploader/profile.png');
+                                            @endphp
+                                            <button class="btn-profile view-sender-profile"
+                                                data-username="{{ $request->sender->username }}"
+                                                data-email="{{ $request->sender->email }}"
+                                                data-phone="{{ $request->sender->phone }}"
+                                                data-created="{{ $request->sender->created_at->format('d M Y') }}"
+                                                data-address="{{ $request->sender->identity_verify->address ?? 'N/A' }}"
+                                                data-marital="{{ $request->sender->kyc?->marital_status ?? 'N/A' }}"
+                                                data-family="{{ $request->sender->kyc?->family_status ?? 'N/A' }}"
+                                                data-height="{{ $request->sender->kyc?->height ?? 'N/A' }}"
+                                                data-weight="{{ $request->sender->kyc?->weight ?? 'N/A' }}"
+                                                data-image="{{ $senderImage }}">
+                                                View Profile
+                                            </button>
+                                        </div>
+                                        <div class="action-buttons">
+                                            <button class="accept" data-request-id="{{ $request->id }}">Accept</button>
+                                            <button class="deny" data-request-id="{{ $request->id }}">Deny</button>
+                                        </div>
+                                    </div>
                                 @empty
                                     <div class="no-requests">
                                         <p class="mb-0">No new requests found</p>
@@ -748,11 +761,11 @@
                     $badge.text(count);
                 } else {
                     $('.fa-bell').after(`
-                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                            ${count}
-                                            <span class="visually-hidden">unread notifications</span>
-                                        </span>
-                                    `);
+                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                ${count}
+                                                <span class="visually-hidden">unread notifications</span>
+                                            </span>
+                                        `);
                 }
             } else {
                 $badge.remove();

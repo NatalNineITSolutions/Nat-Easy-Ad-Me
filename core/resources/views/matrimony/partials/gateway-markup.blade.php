@@ -20,6 +20,7 @@
             <input type="hidden" name="gender" id="modal_gender">
             <input type="hidden" name="religion" id="modal_religion">
             <input type="hidden" name="visibility" id="modal_visibility" value="0">
+            <input type="hidden" name="marital_status" id="modal_marital_status" value="0">
 
             <input type="hidden" name="images" id="modal_images">
 

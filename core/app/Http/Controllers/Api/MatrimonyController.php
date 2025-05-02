@@ -9,7 +9,14 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\ProfileRequest;
 use App\Models\MatrimonyKyc;
 use App\Models\MatrimonyPreference;
+use App\Models\User;
+use App\Models\UsersBV;
+use App\Services\BVDistributionService;
 use Illuminate\Support\Facades\Log;
+use Razorpay\Api\Api;
+use Illuminate\Support\Facades\DB;
+use App\Services\RazorpayService;
+use Illuminate\Support\Facades\Auth;
 
 class MatrimonyController extends Controller
 {
@@ -62,39 +69,149 @@ class MatrimonyController extends Controller
         ]);
     }
 
+
     public function storeProfile(Request $request)
     {
+
+        $user = Auth::guard('sanctum')->user();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access'
+            ], 401);
+        }
+
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'age' => 'required|integer',
-            'occupation' => 'nullable|string',
-            'annual_income' => 'nullable|numeric',
-            'caste' => 'nullable|string',
-            'mother_tongue' => 'nullable|string',
-            'country' => 'nullable|string',
-            'state' => 'nullable|string',
-            'city' => 'nullable|string',
-            'image' => 'nullable|string',
-            'description' => 'nullable|string',
-            'paid' => 'nullable|boolean',
-            'payment_method' => 'nullable|string',
-            'is_verified' => 'nullable|boolean',
-            'rejection_reason' => 'nullable|string',
+            'name'                  => 'required|string|max:255',
+            'date_of_birth'         => 'required|date',
+            'age'                   => 'required|integer|min:0',
+            'gender'                => 'required|in:male,female,other',
+            'religion'              => 'nullable|string|max:100',
+            'occupation'            => 'required|string|max:150',
+            'marital_status'        => 'required|in:single,married,divorced,widowed',
+            'annual_income'         => 'required|numeric|min:0',
+            'caste'                 => 'nullable|string|max:100',
+            'mother_tongue'         => 'required|string|max:100',
+            'country'               => 'required|string|max:100',
+            'state'                 => 'required|string|max:100',
+            'city'                  => 'required|string|max:100',
+            'image'                 => 'required',
+            'description'           => 'required|string',
+            'zodiac_sign'           => 'nullable|string|max:50',
+            'star'                  => 'nullable|string|max:50',
+            'visibility'            => 'nullable|boolean',
+            'paid'                  => 'nullable|boolean',
+            'payment_method'        => 'nullable|string|max:50',
+            'is_verified'           => 'nullable|boolean',
+            'rejection_reason'      => 'nullable|string',
+            'selected_payment_gateway' => 'required|string',
         ]);
 
+        // Inject user_id and ensure paid/payment_method defaults
+        $data = array_merge($validated, [
+            'user_id'        => $user->id,
+            'paid'           => $validated['paid'] ?? 0,
+            'payment_method' => $validated['payment_method'] ?? null,
+        ]);
 
-        $validated['user_id'] = $request->user()->id;
+        // Create the ProfileListing
+        $profile = ProfileListing::create($data);
 
+        // Fetch gateway credentials from DB
+        $gatewayRow = DB::table('payment_gateways')
+            ->where('name', $request->selected_payment_gateway)
+            ->first();
+        if (! $gatewayRow) {
+            return response()->json(['error' => 'Selected payment gateway not found.'], 404);
+        }
 
-        $profile = ProfileListing::create($validated);
+        $credentials = json_decode($gatewayRow->credentials, true) ?: [];
+        $apiKey = $credentials['api_key'] ?? null;
+        $apiSecret = $credentials['api_secret'] ?? null;
+
+        if (! $apiKey || ! $apiSecret) {
+            return response()->json(['error' => 'Incomplete gateway credentials.'], 500);
+        }
+
+        // Instantiate RazorpayService with dynamic creds
+        $razorpayService = new RazorpayService($apiKey, $apiSecret);
+
+        // Create order
+        $amountInRupees = get_static_option('matrimony_price') ?? 0; // e.g. 500
+        $order = $razorpayService->createOrder($amountInRupees);
+
+        // Build checkout URL
+        $query = http_build_query([
+            'order_id'             => $order['id'],
+            'amount'               => $amountInRupees,
+            'currency'             => 'INR',
+            'key'                  => $razorpayService->getKey(),
+            'profile_listing_id'   => $profile->id,
+            'user_id'              => $profile->user_id,
+        ]);
+
+        $checkoutUrl = route('profile.checkout') . '?' . $query;
 
         return response()->json([
-            'success' => true,
-            'message' => 'Profile created successfully',
-            'profile' => $profile
-        ], 201);
+            'success'     => true,
+            'checkout_url' => $checkoutUrl,
+            'order_id'    => $order['id'],
+            'message'     => 'Checkout URL generated successfully.'
+        ]);
     }
-    
+
+
+    public function handlePaymentSuccess(Request $request)
+    {
+        $profileListingId = $request->query('profile_listing_id');
+        $orderId = $request->query('order_id');
+        $amount = $request->query('amount');
+        $membershipId = $request->query('membership_id');
+        $userId = $request->query('user_id');
+        $signature = $request->query('signature');
+
+
+        // Update the profile listing record
+        $update = ProfileListing::where('id', $profileListingId)->update([
+            'paid' => 1,
+            'payment_method' => "Razorpay",
+        ]);
+
+        // Retrieve the updated profile listing record
+        $profileListing = ProfileListing::find($profileListingId);
+        if (!$profileListing) {
+            return response()->json(['error' => 'Profile listing not found.'], 404);
+        }
+
+        // Get BV points from config
+        $bvPoints = get_static_option('matrimony_bv_points') ?? 0;
+
+        // Create a BV record for the user
+        $usersBv = UsersBV::create([
+            'user_id' => $profileListing->user_id,
+            'bv_points' => $bvPoints,
+            'upgrade_time' => \Carbon\Carbon::now(),
+            'type' => 'Profile Listing',
+        ]);
+
+        // Find the user
+        $user = User::find($profileListing->user_id);
+        if ($user) {
+            // Update user's self purchased BV
+            $user->self_purchased_bv = ($user->self_purchased_bv ?? 0) + $bvPoints;
+            $user->save();
+
+            // Distribute BV
+            $bvService = new BVDistributionService();
+            $bvService->distributeBVPoints($user, $bvPoints, null, $profileListing->user_id);
+        }
+
+        if ($update) {
+            return view('payment-success');
+        }
+    }
+
     public function sendRequest(Request $request, $profileId)
     {
 
@@ -116,8 +233,8 @@ class MatrimonyController extends Controller
 
         if (
             ProfileRequest::where('sender_id', auth()->id())
-                ->where('profile_id', $profileId)
-                ->exists()
+            ->where('profile_id', $profileId)
+            ->exists()
         ) {
             return response()->json([
                 'message' => 'You have already sent a request to this profile'
@@ -159,7 +276,7 @@ class MatrimonyController extends Controller
         ]);
     }
 
-   // In your controller
+    // In your controller
     public function storeUserDetails(Request $request)
     {
         try {
@@ -169,7 +286,7 @@ class MatrimonyController extends Controller
                     'message' => 'User must be logged in to submit details.'
                 ], 401);
             }
-    
+
             $validatedData = $request->validate([
                 'marital_status' => 'required|string',
                 'dob' => 'required|date_format:d-m-Y', // Changed validation
@@ -194,17 +311,17 @@ class MatrimonyController extends Controller
                 'gallery_images' => 'sometimes|array',
                 'gallery_images.*' => 'numeric'
             ]);
-    
+
             // Convert date to MySQL format
             $validatedData['dob'] = \Carbon\Carbon::createFromFormat('d-m-Y', $validatedData['dob'])->format('Y-m-d');
-            
+
             // Attach authenticated user ID
             $validatedData['user_id'] = auth()->id();
             $validatedData['marital_status'] = strtolower($validatedData['marital_status']);
-    
+
             // Save to database
             $matrimonyKyc = MatrimonyKyc::create($validatedData);
-    
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'User details saved successfully!',
@@ -219,7 +336,7 @@ class MatrimonyController extends Controller
         } catch (\Exception $e) {
             \Log::error('User Details Store Error: ' . $e->getMessage());
             \Log::error('Stack Trace: ' . $e->getTraceAsString());
-    
+
             return response()->json([
                 'status' => 'error',
                 'message' => 'An error occurred. Please try again.',

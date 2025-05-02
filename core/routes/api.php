@@ -9,10 +9,6 @@ use App\Http\Controllers\Api\MatrimonyController;
 use App\Http\Controllers\Api\BuyMembershipApiController;
 use App\Http\Controllers\Api\MembershipApiController;
 use App\Http\Controllers\Api\EnquiryControllerApi;
-use App\Http\Controllers\Api\MatrimonyRequestApiController;
-use App\Http\Controllers\Api\MatrimonyUserDetailsApiController;
-use App\Http\Controllers\Api\MatrimonyPreferencesApiController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +47,14 @@ Route::get('/listing-details/{identifier}', [ProductListingController::class, 'g
 Route::get('/memberships', [MembershipApiController::class, 'getMembershipsByCategory']);
 Route::post('/upload', [ListingApiController::class, 'uploadImage']);
 Route::get('/brands', [ProductListingController::class, 'index']);
+Route::get('/religion', [MatrimonyController::class, 'religion']);
+Route::get('/caste', [MatrimonyController::class, 'caste']);
+Route::get('/gothram', [MatrimonyController::class, 'gothram']);
+Route::get('/dosham', [MatrimonyController::class, 'dosham']);
+Route::get('/income', [MatrimonyController::class, 'income']);
+Route::get('/age', [MatrimonyController::class, 'age']);
+Route::get('/mother_tongue', [MatrimonyController::class, 'motherTongue']);
+
 
 // Protected Routes (using Sanctum for authentication)
 Route::middleware('auth:sanctum')->group(function () {

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\MatrimonyController;
 use App\Http\Controllers\Api\MembershipApiController;
 use App\Http\Controllers\Backend\AdminProfileController;
 use App\Http\Controllers\Common\GetCategoryController;
@@ -29,13 +30,17 @@ require_once __DIR__ . '/user.php';
 
 Route::get('/razorpay-checkout', function () {
     return view('razorpay-checkout');
-})->name('razorpay.checkout');  // Add this name
+})->name('razorpay.checkout');
 
-// Route::get('/payment-success', function () {
-//     return view('payment-success');
-// }) ->name('payment.success');
+Route::get('/razorpay-checkout', function () {
+    return view('profile-checkout');
+})->name('profile.checkout');
+
 Route::get('/payment-success', [MembershipApiController::class, 'handlePaymentSuccess'])
     ->name('payment.success');
+
+Route::get('/payment-profile-success', [MatrimonyController::class, 'handlePaymentSuccess'])
+    ->name('payment.profile.success');
 
 Route::group(['middleware' => ['globalVariable', 'setlang']], function () {
     Route::controller(LoginController::class)->group(function () {

@@ -251,7 +251,7 @@ class ProductListingController extends Controller
         ], 200);
     }
 
-    public function index()
+    public function religion()
     {
         $brands = Brand::all(); 
 

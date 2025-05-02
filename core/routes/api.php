@@ -51,6 +51,13 @@ Route::get('/listing-details/{identifier}', [ProductListingController::class, 'g
 Route::get('/memberships', [MembershipApiController::class, 'getMembershipsByCategory']);
 Route::post('/upload', [ListingApiController::class, 'uploadImage']);
 Route::get('/brands', [ProductListingController::class, 'index']);
+Route::get('/religion', [MatrimonyController::class, 'religion']);
+Route::get('/caste', [MatrimonyController::class, 'caste']);
+Route::get('/gothram', [MatrimonyController::class, 'gothram']);
+Route::get('/dosham', [MatrimonyController::class, 'dosham']);
+Route::get('/income', [MatrimonyController::class, 'income']);
+Route::get('/education', [MatrimonyController::class, 'education']);
+
 
 // Protected Routes (using Sanctum for authentication)
 Route::middleware('auth:sanctum')->group(function () {

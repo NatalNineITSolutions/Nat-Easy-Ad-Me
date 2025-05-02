@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Caste;
+use App\Models\Gothram;
+use App\Models\Religion;
 use Illuminate\Http\Request;
 use App\Models\ProfileListing;
 use Illuminate\Support\Facades\Validator;
@@ -10,6 +13,7 @@ use App\Models\ProfileRequest;
 use App\Models\MatrimonyKyc;
 use App\Models\MatrimonyPreference;
 use Illuminate\Support\Facades\Log;
+
 
 class MatrimonyController extends Controller
 {
@@ -266,5 +270,35 @@ class MatrimonyController extends Controller
             'success' => true,
             'message' => 'Preferences saved successfully!',
         ]);
+    }
+
+    public function religion()
+    {
+        $religions = Religion::all(); 
+
+        return response()->json([
+            'success' => true,
+            'data' => $religions
+        ], 200);
+    }
+
+    public function caste()
+    {
+        $castes = Caste::all(); 
+
+        return response()->json([
+            'success' => true,
+            'data' => $castes
+        ], 200);
+    }
+
+    public function gothram()
+    {
+        $gothram = Gothram::all(); 
+
+        return response()->json([
+            'success' => true,
+            'data' => $gothram
+        ], 200);
     }
 }

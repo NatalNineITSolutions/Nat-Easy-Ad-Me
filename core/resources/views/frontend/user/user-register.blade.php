@@ -136,6 +136,9 @@
                                         <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>
                                             {{ __('Female') }}
                                         </option>
+                                        <option value="other" {{ old('gender') == 'other' ? 'selected' : '' }}>
+                                            {{ __('Other') }}
+                                        </option>
                                     </select>
                                 </div>
                             </div>

@@ -108,6 +108,7 @@
                                                     <th>{{ __('Image') }}</th>
                                                     <th>{{ __('Details') }}</th>
                                                     <th>{{ __('Created On') }}</th>
+                                                    <th>{{ __('Expiry Date') }}</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -149,6 +150,9 @@
                                                         </td>
                                                         <td>
                                                             <span class="table_date">{{ $listing->created_at->format('d M Y') }}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span class="table_date">{{ $listing->created_at->addDays(30)->format('d M Y') }}</span>
                                                         </td>
                                                     </tr>
                                                 @endforeach

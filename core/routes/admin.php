@@ -141,7 +141,7 @@ Route::middleware(['setlang'])->group(function () {
     // General Settings
     Route::get('/dark-mode-toggle', 'AdminDashboardController@dark_mode_toggle')->name('admin.dark.mode.toggle');
     Route::get('/settings', [AdminDashboardController::class, 'adminSettings'])->name('admin.profile.settings');
-    Route::get('/dark-mode-toggle',  [AdminDashboardController::class, 'darkModeToggle'])->name('admin.dark.mode.toggle');
+    Route::get('/dark-mode-toggle', [AdminDashboardController::class, 'darkModeToggle'])->name('admin.dark.mode.toggle');
 
     // admin profile settings
     Route::get('/logout', [AdminProfileController::class, 'adminLogout'])->name('admin.logout');
@@ -227,6 +227,9 @@ Route::middleware(['setlang'])->group(function () {
             Route::post('report/bulk-action', 'bulk_action_report')->name('admin.listing.report.delete.bulk.action')->permission('listing-report-bulk-delete');
             Route::get('report/paginate/data', 'pagination')->name('admin.listing.report.paginate.data');
             Route::get('report/search', 'search_report')->name('admin.listing.report.search');
+            Route::get('expiry-date', 'listingExpiryDateView')->name('admin.listing.expiry.date.view')->permission('listing-expiry-date');
+            Route::post('expiry-date', 'listingExpiryDate')->name('admin.listing.expiry.date')->permission('listing-expiry-date');
+
         });
     });
 

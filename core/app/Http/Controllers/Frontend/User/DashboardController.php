@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend\User;
 use App\Http\Controllers\Controller;
 use App\Models\Frontend\ListingFavorite;
 use App\Models\Frontend\Review;
+use App\Models\UnlockedProfile;
 use App\Models\User;
 use App\Models\UsersBV;
 use Illuminate\Support\Facades\Log;
@@ -59,6 +60,21 @@ class DashboardController extends Controller
         $user_review_count = $user->reviews?->count();
         $user_given_reviews = Review::where('reviewer_id', $user_id)->take(500)->get();
         $age = $user->dob ? now()->diffInYears($user->dob) : null;
+
+        $userMembership = UserMembership::where('user_id', $user_id)
+            ->latest('created_at')
+            ->first();
+
+        $membershipInfo = null;
+        if ($userMembership && $userMembership->membership && $userMembership->membership->category == 1) {
+            $membershipInfo = [
+                'title' => $userMembership->membership->title,
+                'profile_limit' => $userMembership->profile_limit
+            ];
+        }
+
+        $profilesViewed = UnlockedProfile::where('user_id', $user_id)->count();
+        $remainingProfileLimit = max(0, $membershipInfo['profile_limit'] - $profilesViewed);
 
         // $bvvalue = get_static_option('payout_value') ?? 0;
         $bvvalue = ($membership && $membership->category == 1)
@@ -180,6 +196,10 @@ class DashboardController extends Controller
             'flushedRight' => $flushedRight,
             'referredBy' => $referredBy,
             'referredById' => $referredById,
+            'membership' => $membership,
+            'membershipInfo' => $membershipInfo,
+            'profilesViewed' => $profilesViewed,
+            'remainingProfileLimit' => $remainingProfileLimit,
         ]);
     }
 

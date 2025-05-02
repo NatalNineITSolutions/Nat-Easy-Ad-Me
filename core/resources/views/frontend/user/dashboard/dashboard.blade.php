@@ -63,14 +63,15 @@
                                             <h4 class="stats-title">
                                                 {{ __('Team Business') }}
                                                 @if ($check_active_distributor == 1)
-                                                    <span style="color: green; display: inline-flex; align-items: center; margin-left: 5px;">
+                                                    <span
+                                                        style="color: green; display: inline-flex; align-items: center; margin-left: 5px;">
                                                         Active Distributor
                                                         <span
                                                             style="width: 8px; height: 8px; margin-left: 5px; background-color: green; border-radius: 50%; animation: pulse 1.5s infinite;"></span>
                                                     </span>
                                                 @endif
                                             </h4>
-                                          
+
                                             <div class="stats-content">
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('Status:') }}</span>
@@ -153,7 +154,7 @@
                                         <div class="col-md-3 col-6">
                                             <div class="list-state bg-orange text-white">
                                                 <h4 class="list-head">{{ $remaining_listings }}</h4>
-                                                <p class="post-state">{{ __('Remaining Listings') }}</p>
+                                                <p class="post-state">{{ __('Remaining Ad Listings') }}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-3 col-6">
@@ -168,6 +169,18 @@
                                                 <p class="post-state">{{ __('Favorite Ads') }}</p>
                                             </div>
                                         </div>
+                                        <div class="col-md-3 col-6">
+                                            <div class="list-state bg-amber text-white">
+                                                <h4 class="list-head">{{ $profilesViewed }}</h4>
+                                                <p class="post-state">{{ __('Profile Viewed') }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-6">
+                                            <div class="list-state bg-red text-white">
+                                                <h4 class="list-head">{{ $membershipInfo['profile_limit'] }}</h4>
+                                                <p class="post-state">{{ __('Remaining Profile Limit') }}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="pt-4 d-flex flex-column flex-lg-row gap-3">
@@ -176,7 +189,7 @@
                                     </a>
                                     <a href="{{ route('user.genology') }}" class="genology">{{ __('Genology') }}</a>
                                     <a href="{{ route('user.referral.view', auth()->user()->id) }}"
-                                        class="referral">{{ __('My Referral View') }}</a>
+                                        class="referral">{{ __('My Direct Team') }}</a>
                                 </div>
                                 <!--All Reviews-->
                                 <div class="all-reviews box-shadow1 mt-20">
@@ -192,7 +205,8 @@
                                             @php
                                                 $review_type = 'received';
                                             @endphp
-                                            <x-user.user-reviews :reviews="$user->reviews" :user="$user" :reviewtype="$review_type" />
+                                            <x-user.user-reviews :reviews="$user->reviews" :user="$user"
+                                                :reviewtype="$review_type" />
                                         @endif
                                     </div>
 
@@ -201,7 +215,8 @@
                                             @php
                                                 $review_type = 'given';
                                             @endphp
-                                            <x-user.user-reviews :reviews="$user_given_reviews" :user="$user" :reviewtype="$review_type" />
+                                            <x-user.user-reviews :reviews="$user_given_reviews" :user="$user"
+                                                :reviewtype="$review_type" />
                                         @endif
                                     </div>
                                 </div>
@@ -321,6 +336,14 @@
 
         .bg-blue {
             background-color: #0073b7;
+        }
+
+        .bg-red {
+            background-color: #f56954;
+        }
+
+        .bg-amber {
+            background-color: #ffc107;
         }
 
         /* Responsive adjustments */

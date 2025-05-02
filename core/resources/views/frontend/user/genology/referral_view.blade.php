@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container-fluid my-4">
-        <h3 class="text-center mb-2">My Referral View</h3>
+        <h3 class="text-center mb-2">My Direct Team</h3>
         <div class="text-center mb-4">
             <strong>Referral ID:</strong> {{ $parentUser->partner_id }}
         </div>
@@ -34,6 +34,7 @@
                         <th>Position</th>
                         <th>Date</th>
                         <th>City</th>
+                        <th>State</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,6 +46,7 @@
                             <td>{{ $user->position }}</td>
                             <td>{{ $user->created_at->format('d M Y') }}</td>
                             <td>{{ $user->user_city->city ?? 'N/A' }}</td>
+                            <td>{{ $user->user_state->state ?? 'N/A' }}</td>
                         </tr>
                     @empty
                         <tr>

@@ -45,8 +45,6 @@
                                 </li>
                                @endcan
                             @endif
-
-
                             @can('admin-listing-list')
                             <li class="dashboard__bottom__list__item @if (request()->is('admin/listings/all') || request()->is('admin/listings/add') || request()->is('admin/listings/admin-edit-listing/*')) selected @endif">
                                 <a href="{{ route('admin.all.listings') }}"> {{ __('Admin All Listings') }} </a>
@@ -60,6 +58,11 @@
                              @can('listing-report-list')
                             <li class="dashboard__bottom__list__item @if (request()->is('admin/listings/report/all')) selected @endif">
                                 <a href="{{ route('admin.listing.report.all') }}"> {{ __('Listing Reports') }} </a>
+                            </li>
+                            @endcan
+                            @can('listing-report-list')
+                            <li class="dashboard__bottom__list__item @if (request()->is('admin/listings/expiry-date')) selected @endif">
+                                <a href="{{ route('admin.listing.expiry.date') }}"> {{ __('Listing Expiry Days') }} </a>
                             </li>
                             @endcan
                         </ul>

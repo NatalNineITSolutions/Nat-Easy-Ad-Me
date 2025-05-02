@@ -112,7 +112,7 @@
                 d="M16.3555 12.9375V14.625C16.3555 15.2217 16.1184 15.794 15.6965 16.216C15.2745 16.6379 14.7022 16.875 14.1055 16.875H10.0625"
                 stroke="#7D7D7D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
-        <span class="ms-2"> {{ __('Support tickets') }} </span>
+        <span class="ms-2"> {{ __('Complaint & Suggestions') }} </span>
     </a>
 
     <a href="{{ route('user.listing.favorite.all') }}"

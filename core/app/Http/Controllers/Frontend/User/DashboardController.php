@@ -74,7 +74,10 @@ class DashboardController extends Controller
         }
 
         $profilesViewed = UnlockedProfile::where('user_id', $user_id)->count();
-        $remainingProfileLimit = max(0, $membershipInfo['profile_limit'] - $profilesViewed);
+        $remainingProfileLimit = max(
+            0,
+            ($membershipInfo['profile_limit'] ?? 0) - $profilesViewed
+        );
 
         // $bvvalue = get_static_option('payout_value') ?? 0;
         $bvvalue = ($membership && $membership->category == 1)

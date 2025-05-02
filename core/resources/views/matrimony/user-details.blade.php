@@ -1121,78 +1121,84 @@
         }
 
         function submitForm() {
+            // Create FormData object
             const formData = new FormData();
 
+            // Helper function to safely get values
             function getValue(selector) {
-                const element = document.querySelector(selector);
-                return element ? element.value : ''; // Return empty string if not found
+                const el = document.querySelector(selector);
+                return el ? el.value : null;
             }
 
-            formData.append('marital_status', document.querySelector('[name="marital_status"]').value);
-            formData.append('dob', document.querySelector('[name="dob"]').value);
-            formData.append('family_status', document.getElementById('family_status').value);
-            formData.append('family_values', document.getElementById('family_values').value);
-            formData.append('family_type', document.querySelector('[name="family_type"]').value);
-            formData.append('disability', document.querySelector('[name="disability"]').value);
-            formData.append('height', document.querySelector('[name="height"]').value);
-            formData.append('weight', document.querySelector('[name="weight"]').value);
-            formData.append('caste', document.querySelector('[name="caste"]').value);
-            formData.append('dosham', document.querySelector('[name="dosham"]').value);
-            formData.append('gothram', document.querySelector('[name="gothram"]').value);
-            formData.append('education', document.querySelector('[name="education"]').value);
-            formData.append('occupation', document.querySelector('[name="occupation"]').value);
-            formData.append('annual_income', document.querySelector('[name="annual_income"]').value);
-            formData.append('employed_in', document.getElementById('employed_in').value);
-            formData.append('country', document.querySelector('[name="country"]').value);
-            formData.append('state', document.querySelector('[name="state"]').value);
-            formData.append('city', document.querySelector('[name="city"]').value);
-            formData.append('about', document.querySelector('[name="about"]').value);
-            formData.append('image', document.querySelector('[name="image"]').value);
-            formData.append('zodiac_sign', document.querySelector('[name="zodiac_sign"]').value);
-            formData.append('star', document.querySelector('[name="star"]').value);
+            // Section 1: Personal Details
+            formData.append('marital_status', getValue('.section-1 [name="marital_status"]'));
+            formData.append('dob', getValue('.section-1 [name="dob"]'));
+            formData.append('family_status', getValue('.section-1 #family_status'));
+            formData.append('family_values', getValue('.section-1 #family_values'));
+            formData.append('family_type', getValue('.section-1 [name="family_type"]'));
+            formData.append('disability', getValue('.section-1 [name="disability"]'));
+            formData.append('height', getValue('.section-1 [name="height"]'));
+            formData.append('weight', getValue('.section-1 [name="weight"]'));
 
-            // 👉 Add Divorce Order document if applicable
-            const maritalStatus = getValue('[name="marital_status"]');
-            const divorceDocInput = document.getElementById('document');
-            if (maritalStatus === 'Second Marriage' && divorceDocInput && divorceDocInput.files.length > 0) {
-                formData.append('document', divorceDocInput.files[0]);
+            // Section 2: Horoscope Details
+            formData.append('caste', getValue('.section-2 [name="caste"]'));
+            formData.append('dosham', getValue('.section-2 [name="dosham"]'));
+            formData.append('gothram', getValue('.section-2 [name="gothram"]'));
+            formData.append('zodiac_sign', getValue('.section-2 [name="zodiac_sign"]'));
+            formData.append('star', getValue('.section-2 [name="star"]'));
+
+            // Section 3: Professional Details
+            formData.append('education', getValue('.section-3 [name="education"]'));
+            formData.append('occupation', getValue('.section-3 [name="occupation"]'));
+            formData.append('annual_income', getValue('.section-3 [name="annual_income"]'));
+            formData.append('employed_in', getValue('.section-3 #employed_in'));
+            formData.append('country', getValue('.section-3 [name="country"]'));
+            formData.append('state', getValue('.section-3 [name="state"]'));
+            formData.append('city', getValue('.section-3 [name="city"]'));
+
+            // Section 4: Profile Details
+            formData.append('about', getValue('.section-4 [name="about"]'));
+            formData.append('image', getValue('.section-4 [name="image"]'));
+
+            // Handle divorce document if applicable
+            const maritalStatus = getValue('.section-1 [name="marital_status"]');
+            const divorceDoc = document.querySelector('.section-1 [name="document"]');
+            if (maritalStatus === 'Second Marriage' && divorceDoc && divorceDoc.files[0]) {
+                formData.append('document', divorceDoc.files[0]);
             }
 
+            // Debug: Log all form data before sending
             for (let [key, value] of formData.entries()) {
                 console.log(key, value);
             }
 
+            // Send the request
             fetch('/matrimony/user-details', {
                 method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                    'Accept': 'application/json' // Explicitly request JSON
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
                 },
                 body: formData
             })
                 .then(response => {
-                    // First check if the response is JSON
-                    const contentType = response.headers.get('content-type');
-                    if (!contentType || !contentType.includes('application/json')) {
-                        return response.text().then(text => {
-                            throw new Error(`Expected JSON but got: ${text.substring(0, 100)}...`);
-                        });
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
                     }
                     return response.json();
                 })
                 .then(data => {
-                    // Handle successful response
                     if (data.status === 'success') {
-                        toastr.success('KYC submitted successfully! Please fill preferences to complete your profile.');
                         showSection(6);
                         document.querySelector('.user-id strong').textContent = data.user_id;
+                        toastr.success('Profile submitted successfully!');
                     } else {
-                        toastr.error('Error: ' + (data.message || 'Unknown error'));
+                        toastr.error(data.message || 'Submission failed');
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    toastr.error(error.message || 'An unexpected error occurred.');
+                    toastr.error('Failed to submit: ' + error.message);
                 });
         }
     </script>

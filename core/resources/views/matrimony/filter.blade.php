@@ -1,5 +1,12 @@
 @extends('matrimony.layouts.app')
 
+<style>
+    .blur-image img {
+        filter: blur(6px);
+        transition: filter 0.3s ease;
+    }
+</style>
+
 @section('content')
 <div class="matrimony-filter-page py-4">
     <div class="container">
@@ -210,8 +217,10 @@
                                 <div class="card profile-card h-100 border-0 shadow-sm">
                                     <div class="card-body text-center">
                                         <div class="profile-img mb-3">
-                                            {!! render_image_markup_by_attachment_id($profile->image, 'rounded-circle', '120x120') 
-                                                ?? '<img src="' . asset('images/default-profile.jpg') . '" class="rounded-circle" width="120" height="120" alt="Profile">' !!}
+                                            <div class="{{ $profile->visibility == 1 ? 'blur-image' : '' }}">
+                                                {!! render_image_markup_by_attachment_id($profile->image, 'rounded-circle', '120x120') 
+                                                    ?? '<img src="' . asset('images/default-profile.jpg') . '" class="rounded-circle" width="120" height="120" alt="Profile">' !!}
+                                            </div>
                                         </div>
                                         <h5 class="mb-1">{{ $profile->name }}</h5>
                                         <p class="text-muted small mb-2">

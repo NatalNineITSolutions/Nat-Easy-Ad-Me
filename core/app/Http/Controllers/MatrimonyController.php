@@ -537,12 +537,17 @@ class MatrimonyController extends Controller
     {
         Log::info('Form submission data:', $request->all());
 
-        // Handle image upload
-        $imagePath = null;
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('profile_images', 'public');
-            Log::info('Uploaded profile image path: ' . $imagePath);
+        $imagePaths = [];
+        if ($request->filled('images')) {
+            $imageIds = explode('|', $request->input('images'));
+
+            foreach ($imageIds as $imageId) {
+                $imagePaths[] = $imageId; 
+            }
         }
+
+        // Join the paths with pipe if you want to keep the current storage format
+        $imagePathString = !empty($imagePaths) ? implode('|', $imagePaths) : null;
 
         // Calculate age from date of birth
         $dob = Carbon::parse($request->date_of_birth);
@@ -564,7 +569,7 @@ class MatrimonyController extends Controller
             'country' => $request->country,
             'state' => $request->state,
             'city' => $request->city,
-            'image' => $imagePath,
+            'image' => $imagePathString, // Store the pipe-separated string
             'description' => $request->description,
             'paid' => 0,
             'payment_method' => null,
@@ -990,40 +995,55 @@ class MatrimonyController extends Controller
     }
 
     public function filter(Request $request, $profileId = null)
-{
-    // Start with base query for verified profiles excluding current user
-    $query = ProfileListing::where('user_id', '!=', auth()->id())
-        ->where('is_verified', 1);
+    {
+        // Start with base query for verified profiles excluding current user
+        $query = ProfileListing::where('user_id', '!=', auth()->id())
+            ->where('is_verified', 1);
 
-    // Check if we're viewing a single profile
-    $isSingleProfile = $profileId !== null;
-    
-    if ($isSingleProfile) {
-        // Handle single profile view
-        $profile = $query->findOrFail($profileId);
-        
-        // Ensure the profile is verified and not the current user's
-        if ($profile->user_id == auth()->id() || !$profile->is_verified) {
-            abort(404);
-        }
-        
-        $profiles = collect([$profile]);
-    } else {
-        // Apply filters only if at least one filter is present
-        if ($request->anyFilled(['gender', 'age_range', 'marital_status', 'income', 'occupation', 
-                               'religion', 'caste', 'star', 'zodiac_sign', 'country', 'state', 'city'])) {
-            
-            // Apply all filters (same as your existing logic)
-            if ($request->filled('gender')) {
-                $query->where('gender', $request->gender);
+        // Check if we're viewing a single profile
+        $isSingleProfile = $profileId !== null;
+
+        if ($isSingleProfile) {
+            // Handle single profile view
+            $profile = $query->findOrFail($profileId);
+
+            // Ensure the profile is verified and not the current user's
+            if ($profile->user_id == auth()->id() || !$profile->is_verified) {
+                abort(404);
             }
 
-            if ($request->filled('age_range')) {
-                $ageRange = AgeRange::find($request->age_range);
-                if ($ageRange) {
-                    $query->whereBetween('age', [$ageRange->from_age, $ageRange->to_age]);
+            $profiles = collect([$profile]);
+        } else {
+            // Apply filters only if at least one filter is present
+            if (
+                $request->anyFilled([
+                    'gender',
+                    'age_range',
+                    'marital_status',
+                    'income',
+                    'occupation',
+                    'religion',
+                    'caste',
+                    'star',
+                    'zodiac_sign',
+                    'country',
+                    'state',
+                    'city'
+                ])
+            ) {
+
+                // Apply all filters (same as your existing logic)
+                if ($request->filled('gender')) {
+                    $query->where('gender', $request->gender);
                 }
-            }}
+
+                if ($request->filled('age_range')) {
+                    $ageRange = AgeRange::find($request->age_range);
+                    if ($ageRange) {
+                        $query->whereBetween('age', [$ageRange->from_age, $ageRange->to_age]);
+                    }
+                }
+            }
 
             if ($request->filled('marital_status')) {
                 $query->whereHas('kyc', function ($q) use ($request) {
@@ -1108,4 +1128,6 @@ class MatrimonyController extends Controller
             ])
         ]);
     }
+
+   
 }

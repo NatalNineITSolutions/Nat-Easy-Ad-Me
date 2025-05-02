@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\AgeRange;
 use App\Models\Caste;
+use App\Models\Dosham;
 use App\Models\Gothram;
+use App\Models\IncomeRange;
+use App\Models\MotherTongue;
 use App\Models\Religion;
 use Illuminate\Http\Request;
 use App\Models\ProfileListing;
@@ -388,7 +392,6 @@ class MatrimonyController extends Controller
             'message' => 'Preferences saved successfully!',
         ]);
     }
-<<<<<<< HEAD
 
     public function religion()
     {
@@ -419,7 +422,44 @@ class MatrimonyController extends Controller
             'data' => $gothram
         ], 200);
     }
+
+    public function dosham()
+    {
+        $dosham = Dosham::all(); 
+
+        return response()->json([
+            'success' => true,
+            'data' => $dosham
+        ], 200);
+    }
+
+    public function income()
+    {
+        $income = IncomeRange::all(); 
+
+        return response()->json([
+            'success' => true,
+            'data' => $income
+        ], 200);
+    }
+
+    public function age()
+    {
+        $ages = AgeRange::all(); 
+
+        return response()->json([
+            'success' => true,
+            'data' => $ages
+        ], 200);
+    }
+
+    public function mothertongue()
+    {
+        $motherTongue = MotherTongue::all(); 
+
+        return response()->json([
+            'success' => true,
+            'data' => $motherTongue
+        ], 200);
+    }
 }
-=======
-}
->>>>>>> c642ef6ce8b7f59ad7b06b0b340ae6315fdcc788

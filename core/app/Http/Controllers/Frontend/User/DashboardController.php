@@ -712,7 +712,10 @@ class DashboardController extends Controller
                 return [
                     'day' => Carbon::parse($item->created_at)->toDateString(),
                     'team_cv' => $item->left_bv + $item->right_bv,
-                    'income' => $item->net_amount,
+                    'payout_amount' => $item->payout_amount,
+                    'net_amount' => $item->net_amount,
+                    'tds' => $item->tds_deduction,
+                    'service_charge' => $item->service_charge,
                 ];
             })
             ->toArray();
@@ -731,6 +734,10 @@ class DashboardController extends Controller
         // Get income data (same as viewincome method)
         $allDays = $this->getIncomeDays($user->id);
         $filteredDays = $this->filterIncomeDays($allDays, $paymentType);
+        $filteredDays = collect($filteredDays)->map(function($day) {
+            $day['income'] = $day['payout_amount']; // Set this explicitly
+            return $day;
+        });
         $totalIncome = collect($filteredDays)->sum('income');
 
         // Calculate amounts (same as viewincome method)

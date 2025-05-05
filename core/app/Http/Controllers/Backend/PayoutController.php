@@ -22,7 +22,9 @@ class PayoutController extends Controller
     {
         $latestPayout = IncomePayoutManage::latest()->first();
         $previousCaseOnHand = $latestPayout?->previous_case_on_hand ?? 0;
-        $currentDayBV = UsersBV::whereDate('created_at', Carbon::today())->sum('bv_points');
+        $currentDayBV = UsersBV::whereDate('created_at', Carbon::today())
+                              ->where('type', 'Self-Purchased') // or whatever column/condition identifies self-purchased BV
+                              ->sum('bv_points');
         $currentDayMatchingPairs = $latestPayout?->matching_pairs ?? 1; // Ensure at least 1 to prevent division by zero
 
         $maxAllowed = ($currentDayMatchingPairs > 0)
@@ -199,7 +201,9 @@ class PayoutController extends Controller
         $latestPayout = IncomePayoutManage::latest()->first();
 
         $previousCaseOnHand = $latestPayout?->previous_case_on_hand ?? 0;
-        $currentDayBV = UsersBV::whereDate('created_at', Carbon::today())->sum('bv_points');
+        $currentDayBV = UsersBV::whereDate('created_at', Carbon::today())
+        ->where('type', 'Self-Purchased') // or whatever column/condition identifies self-purchased BV
+        ->sum('bv_points');
         $totalBV = $previousCaseOnHand + $currentDayBV;
 
         $pairIncome = get_static_option('maximum_one_pair_income') ?? 250;

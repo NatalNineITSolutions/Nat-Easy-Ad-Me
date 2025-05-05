@@ -139,23 +139,23 @@ $isEmpty = $todayIncome->isEmpty();
                                                                 <table class="table table-bordered">
                                                                     <tr>
                                                                         <th>Total Income</th>
-                                                                        <td>{{ $isEmpty ? 0 : ($incomeData['total_income'] ?? 0) }}</td>
+                                                                        <td>{{ $day['income'] ?? 0 }}</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <th>Product Coupon ({{ $incomeData['product_coupon'] ?? 0 }}%)</th>
-                                                                        <td>0</td>
+                                                                        <th>Product Coupon ({{ $incomeData['product_coupon'] }}%)</th>
+                                                                        <td>0.00</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <th>TDS ({{ $incomeData['tds_percentage'] ?? 0 }}%)</th>
-                                                                        <td>{{ $isEmpty ? 0 : ($incomeData['total_income'] * ($incomeData['tds'] ?? 0) / 100) }}</td>
+                                                                        <th>TDS ({{ $incomeData['tds_percentage'] }}%)</th>
+                                                                        <td>{{ number_format($incomeData['tds'], 2) }}</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <th>Service Charge ({{ $incomeData['service_charge_percentage'] ?? 0 }}%) </th>
-                                                                        <td>{{ $isEmpty ? 0 : ($incomeData['total_income'] * ($incomeData['service_charge'] ?? 0) / 100) }}</td>
+                                                                        <th>Service Charge ({{ $incomeData['service_charge_percentage'] }}%) </th>
+                                                                        <td>{{ number_format($incomeData['service_charge'], 2) }}</td>
                                                                     </tr>
                                                                     <tr class="table-active">
                                                                         <th><strong>Net Amount</strong></th>
-                                                                        <td><strong>{{ $isEmpty ? '0.00' : number_format($incomeData['net_amount'] ?? 0, 2) }}</strong></td>
+                                                                        <td><strong>{{ $day['income'] ?? 0 }}</strong></td>
                                                                     </tr>
                                                                 </table>
                                                             </div>

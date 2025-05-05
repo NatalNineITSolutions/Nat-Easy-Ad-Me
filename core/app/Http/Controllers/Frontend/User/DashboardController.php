@@ -731,6 +731,10 @@ class DashboardController extends Controller
         // Get income data (same as viewincome method)
         $allDays = $this->getIncomeDays($user->id);
         $filteredDays = $this->filterIncomeDays($allDays, $paymentType);
+        $filteredDays = collect($filteredDays)->map(function($day) {
+            $day['income'] = $day['payout_amount']; // Set this explicitly
+            return $day;
+        });
         $totalIncome = collect($filteredDays)->sum('income');
 
         // Calculate amounts (same as viewincome method)

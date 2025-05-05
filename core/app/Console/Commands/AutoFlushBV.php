@@ -89,48 +89,53 @@ class AutoFlushBV extends Command
             ->whereNotIn('type', $this->protectedTypes)
             ->sum('bv_points');
 
-        // If both sides are less than sealing limit, no flush
-        if ($leftBv < $sealingLimitBv && $rightBv < $sealingLimitBv) {
+        // Rule 1: If both sides have exactly the sealing limit, flush both completely
+        if ($leftBv == $sealingLimitBv && $rightBv == $sealingLimitBv) {
+            $this->flushSide($leftChild, $leftBv, 'left');
+            $this->flushSide($rightChild, $rightBv, 'right');
             return;
         }
 
-        // Calculate flushable amount: lowest side that is >= sealing limit
-        $flushableAmount = min(
-            $leftBv >= $sealingLimitBv ? $leftBv : 0,
-            $rightBv >= $sealingLimitBv ? $rightBv : 0,
-            $sealingLimitBv
-        );
-
-        $flushableAmount = 0;
-        if ($leftBv >= $sealingLimitBv) {
-            $flushableAmount = $sealingLimitBv;
-            $leftChild->userBvs()->create([
-                'bv_points' => -$flushableAmount,
-                'type' => 'flush_deduction',
-                'description' => 'Left BV flush at ' . now(),
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
+        // Rule 2: If one side has sealing limit and other doesn't, no flush
+        if (
+            ($leftBv >= $sealingLimitBv && $rightBv < $sealingLimitBv) ||
+            ($rightBv >= $sealingLimitBv && $leftBv < $sealingLimitBv)
+        ) {
+            return;
         }
 
-        if ($rightBv >= $sealingLimitBv) {
-            $flushableAmount = $sealingLimitBv;
-            $rightChild->userBvs()->create([
-                'bv_points' => -$flushableAmount,
-                'type' => 'flush_deduction',
-                'description' => 'Right BV flush at ' . now(),
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
-        }
+        // Rule 3: If both sides have at least sealing limit but unequal amounts
+        if ($leftBv >= $sealingLimitBv && $rightBv >= $sealingLimitBv) {
+            // Flush the sealing limit from both sides
+            $this->flushSide($leftChild, $sealingLimitBv, 'left');
+            $this->flushSide($rightChild, $sealingLimitBv, 'right');
 
-        Log::info("BV Flush Completed", [
-            'user_id' => $user->id,
-            'left_bv_before' => $leftBv,
-            'right_bv_before' => $rightBv,
-            'flushed_amount' => $flushableAmount,
-            'left_remaining' => $leftBv >= $sealingLimitBv ? $leftBv - $flushableAmount : $leftBv,
-            'right_remaining' => $rightBv >= $sealingLimitBv ? $rightBv - $flushableAmount : $rightBv,
+            // Then flush the remaining excess from the larger side
+            $excess = abs($leftBv - $rightBv);
+            if ($leftBv > $rightBv) {
+                $this->flushSide($leftChild, $excess, 'left');
+            } elseif ($rightBv > $leftBv) {
+                $this->flushSide($rightChild, $excess, 'right');
+            }
+        }
+    }
+
+    protected function flushSide($userChild, $amount, $side)
+    {
+        if ($amount <= 0)
+            return;
+
+        $userChild->userBvs()->create([
+            'bv_points' => -$amount,
+            'type' => 'flush_deduction',
+            'description' => ucfirst($side) . ' BV flush at ' . now(),
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        Log::info("BV Flush - Side {$side}", [
+            'user_id' => $userChild->id,
+            'flushed_amount' => $amount,
         ]);
     }
 

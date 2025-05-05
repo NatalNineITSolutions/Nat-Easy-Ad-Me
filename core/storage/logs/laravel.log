@@ -250,3 +250,790 @@
 [2025-05-02 14:44:19] production.INFO: User login request received. {"email":"akhil@gmail.com"} 
 [2025-05-02 14:44:20] production.INFO: User logged in successfully. {"user_id":108} 
 >>>>>>> c642ef6ce8b7f59ad7b06b0b340ae6315fdcc788
+[2025-05-03 13:04:19] production.ERROR: Undefined variable $primary_menu {"view":{"view":"/Users/apple/Herd/Nat-Easy-Ad-Me/core/resources/views/frontend/layout/partials/navbar-variant/navbar-02.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-111208968 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#2638</a><samp data-depth=1 class=sf-dump-expanded>
+  #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
+</samp>}
+</pre><script>Sfdump(\"sf-dump-111208968\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","page_details":"<pre class=sf-dump id=sf-dump-1550410270 data-indent-pad=\"  \"><span class=sf-dump-const>null</span>
+</pre><script>Sfdump(\"sf-dump-1550410270\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","random_ad":"<pre class=sf-dump id=sf-dump-1933317928 data-indent-pad=\"  \"><span class=sf-dump-const>null</span>
+</pre><script>Sfdump(\"sf-dump-1933317928\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","is_home":"<pre class=sf-dump id=sf-dump-2086350266 data-indent-pad=\"  \"><span class=sf-dump-const>true</span>
+</pre><script>Sfdump(\"sf-dump-2086350266\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","user":"<pre class=sf-dump id=sf-dump-735603569 data-indent-pad=\"  \"><span class=sf-dump-const>null</span>
+</pre><script>Sfdump(\"sf-dump-735603569\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","notificationCount":"<pre class=sf-dump id=sf-dump-1500472236 data-indent-pad=\"  \"><span class=sf-dump-num>0</span>
+</pre><script>Sfdump(\"sf-dump-1500472236\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","navbar_variant":"<pre class=sf-dump id=sf-dump-1246408979 data-indent-pad=\"  \">\"<span class=sf-dump-str title=\"2 characters\">02</span>\"
+</pre><script>Sfdump(\"sf-dump-1246408979\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+"}},"exception":"[object] (Spatie\\LaravelIgnition\\Exceptions\\ViewException(code: 0): Undefined variable $primary_menu at /Users/apple/Herd/Nat-Easy-Ad-Me/core/resources/views/frontend/layout/partials/navbar-variant/navbar-02.blade.php:16)
+[stacktrace]
+#0 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(123): require('/Users/apple/He...')
+#1 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(124): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#2 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('/Users/apple/He...', Array)
+#3 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(72): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('/Users/apple/He...', Array)
+#4 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/View.php(207): Illuminate\\View\\Engines\\CompilerEngine->get('/Users/apple/He...', Array)
+#5 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/View.php(190): Illuminate\\View\\View->getContents()
+#6 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/View.php(159): Illuminate\\View\\View->renderContents()
+#7 /Users/apple/Herd/Nat-Easy-Ad-Me/core/resources/views/frontend/layout/partials/navbar.blade.php(4): Illuminate\\View\\View->render()
+#8 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(123): require('/Users/apple/He...')
+#9 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(124): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#10 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('/Users/apple/He...', Array)
+#11 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(72): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('/Users/apple/He...', Array)
+#12 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/View.php(207): Illuminate\\View\\Engines\\CompilerEngine->get('/Users/apple/He...', Array)
+#13 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/View.php(190): Illuminate\\View\\View->getContents()
+#14 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/View.php(159): Illuminate\\View\\View->renderContents()
+#15 /Users/apple/Herd/Nat-Easy-Ad-Me/core/resources/views/frontend/layout/master.blade.php(2): Illuminate\\View\\View->render()
+#16 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(123): require('/Users/apple/He...')
+#17 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(124): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#18 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('/Users/apple/He...', Array)
+#19 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(72): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('/Users/apple/He...', Array)
+#20 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/View.php(207): Illuminate\\View\\Engines\\CompilerEngine->get('/Users/apple/He...', Array)
+#21 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/View.php(190): Illuminate\\View\\View->getContents()
+#22 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/View.php(159): Illuminate\\View\\View->renderContents()
+#23 /Users/apple/Herd/Nat-Easy-Ad-Me/core/resources/views/frontend/pages/frontend-home.blade.php(4): Illuminate\\View\\View->render()
+#24 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(123): require('/Users/apple/He...')
+#25 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(124): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#26 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('/Users/apple/He...', Array)
+#27 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(72): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('/Users/apple/He...', Array)
+#28 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/View.php(207): Illuminate\\View\\Engines\\CompilerEngine->get('/Users/apple/He...', Array)
+#29 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/View.php(190): Illuminate\\View\\View->getContents()
+#30 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/View.php(159): Illuminate\\View\\View->renderContents()
+#31 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Http/Response.php(69): Illuminate\\View\\View->render()
+#32 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Http/Response.php(35): Illuminate\\Http\\Response->setContent(Object(Illuminate\\View\\View))
+#33 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Routing/Router.php(918): Illuminate\\Http\\Response->__construct(Object(Illuminate\\View\\View), 200, Array)
+#34 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Routing/Router.php(885): Illuminate\\Routing\\Router::toResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#35 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Routing/Router.php(805): Illuminate\\Routing\\Router->prepareResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#36 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#37 /Users/apple/Herd/Nat-Easy-Ad-Me/core/app/Http/Middleware/SetLang.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#38 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): App\\Http\\Middleware\\SetLang->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#39 /Users/apple/Herd/Nat-Easy-Ad-Me/core/app/Http/Middleware/MaintainsMode.php(22): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#40 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): App\\Http\\Middleware\\MaintainsMode->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#41 /Users/apple/Herd/Nat-Easy-Ad-Me/core/app/Http/Middleware/GlobalVariableMiddleware.php(104): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#42 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): App\\Http\\Middleware\\GlobalVariableMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#43 /Users/apple/Herd/Nat-Easy-Ad-Me/core/app/Http/Middleware/CheckUserOnlineStatus.php(32): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#44 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): App\\Http\\Middleware\\CheckUserOnlineStatus->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#47 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#48 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#49 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/Middleware/ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#50 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#51 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#52 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#53 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#54 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#55 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#56 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#57 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#58 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#59 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Routing/Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#60 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Routing/Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#61 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Routing/Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#62 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Routing/Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#63 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#64 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#65 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/xgenious/installer/src/Http/Middleware/InstallerMiddleware.php(18): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#66 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Xgenious\\Installer\\Http\\Middleware\\InstallerMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#67 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#68 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#69 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#70 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#71 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#72 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#73 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#74 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#75 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#76 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#77 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#78 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#79 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#80 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#81 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#82 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#83 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#84 /Users/apple/Herd/Nat-Easy-Ad-Me/index.php(54): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#85 /Applications/Herd.app/Contents/Resources/valet/server.php(167): require('/Users/apple/He...')
+#86 {main}
+
+[previous exception] [object] (ErrorException(code: 0): Undefined variable $primary_menu at /Users/apple/Herd/Nat-Easy-Ad-Me/core/storage/framework/views/264f0a6a7459e8436c2d91d6ca1a9f01.php:17)
+[stacktrace]
+#0 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined varia...', '/Users/apple/He...', 17)
+#1 /Users/apple/Herd/Nat-Easy-Ad-Me/core/storage/framework/views/264f0a6a7459e8436c2d91d6ca1a9f01.php(17): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'Undefined varia...', '/Users/apple/He...', 17)
+#2 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(123): require('/Users/apple/He...')
+#3 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(124): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#4 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('/Users/apple/He...', Array)
+#5 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(72): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('/Users/apple/He...', Array)
+#6 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/View.php(207): Illuminate\\View\\Engines\\CompilerEngine->get('/Users/apple/He...', Array)
+#7 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/View.php(190): Illuminate\\View\\View->getContents()
+#8 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/View.php(159): Illuminate\\View\\View->renderContents()
+#9 /Users/apple/Herd/Nat-Easy-Ad-Me/core/storage/framework/views/080b96b065ce189f7903134ee47ec41d.php(4): Illuminate\\View\\View->render()
+#10 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(123): require('/Users/apple/He...')
+#11 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(124): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#12 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('/Users/apple/He...', Array)
+#13 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(72): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('/Users/apple/He...', Array)
+#14 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/View.php(207): Illuminate\\View\\Engines\\CompilerEngine->get('/Users/apple/He...', Array)
+#15 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/View.php(190): Illuminate\\View\\View->getContents()
+#16 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/View.php(159): Illuminate\\View\\View->renderContents()
+#17 /Users/apple/Herd/Nat-Easy-Ad-Me/core/storage/framework/views/42fc76e0506497833a6ad336f5863cdf.php(2): Illuminate\\View\\View->render()
+#18 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(123): require('/Users/apple/He...')
+#19 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(124): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#20 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('/Users/apple/He...', Array)
+#21 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(72): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('/Users/apple/He...', Array)
+#22 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/View.php(207): Illuminate\\View\\Engines\\CompilerEngine->get('/Users/apple/He...', Array)
+#23 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/View.php(190): Illuminate\\View\\View->getContents()
+#24 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/View.php(159): Illuminate\\View\\View->renderContents()
+#25 /Users/apple/Herd/Nat-Easy-Ad-Me/core/storage/framework/views/f1a3a25dc086928305b74a58fb0391f5.php(5): Illuminate\\View\\View->render()
+#26 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(123): require('/Users/apple/He...')
+#27 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(124): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#28 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('/Users/apple/He...', Array)
+#29 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(72): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('/Users/apple/He...', Array)
+#30 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/View.php(207): Illuminate\\View\\Engines\\CompilerEngine->get('/Users/apple/He...', Array)
+#31 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/View.php(190): Illuminate\\View\\View->getContents()
+#32 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/View.php(159): Illuminate\\View\\View->renderContents()
+#33 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Http/Response.php(69): Illuminate\\View\\View->render()
+#34 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Http/Response.php(35): Illuminate\\Http\\Response->setContent(Object(Illuminate\\View\\View))
+#35 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Routing/Router.php(918): Illuminate\\Http\\Response->__construct(Object(Illuminate\\View\\View), 200, Array)
+#36 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Routing/Router.php(885): Illuminate\\Routing\\Router::toResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#37 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Routing/Router.php(805): Illuminate\\Routing\\Router->prepareResponse(Object(Illuminate\\Http\\Request), Object(Illuminate\\View\\View))
+#38 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#39 /Users/apple/Herd/Nat-Easy-Ad-Me/core/app/Http/Middleware/SetLang.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#40 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): App\\Http\\Middleware\\SetLang->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#41 /Users/apple/Herd/Nat-Easy-Ad-Me/core/app/Http/Middleware/MaintainsMode.php(22): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#42 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): App\\Http\\Middleware\\MaintainsMode->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#43 /Users/apple/Herd/Nat-Easy-Ad-Me/core/app/Http/Middleware/GlobalVariableMiddleware.php(104): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#44 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): App\\Http\\Middleware\\GlobalVariableMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 /Users/apple/Herd/Nat-Easy-Ad-Me/core/app/Http/Middleware/CheckUserOnlineStatus.php(32): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): App\\Http\\Middleware\\CheckUserOnlineStatus->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#47 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#48 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#49 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#50 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#51 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/View/Middleware/ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#52 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#53 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#54 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#55 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#56 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#57 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#58 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#59 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#60 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#61 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Routing/Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#62 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Routing/Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#63 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Routing/Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#64 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Routing/Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#65 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#66 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#67 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/xgenious/installer/src/Http/Middleware/InstallerMiddleware.php(18): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#68 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Xgenious\\Installer\\Http\\Middleware\\InstallerMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#69 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#70 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#71 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#72 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#73 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#74 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#75 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#76 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#77 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#78 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#79 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#80 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#81 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#82 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#83 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#84 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#85 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#86 /Users/apple/Herd/Nat-Easy-Ad-Me/index.php(54): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#87 /Applications/Herd.app/Contents/Resources/valet/server.php(167): require('/Users/apple/He...')
+#88 {main}
+"} 
+[2025-05-03 13:04:51] production.ERROR: SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'user_payout_details' already exists (Connection: mysql, SQL: create table `user_payout_details` (`id` bigint unsigned not null auto_increment primary key, `user_id` bigint unsigned not null, `payout_summary_id` bigint unsigned not null, `left_bv` decimal(15, 2) not null default '0', `right_bv` decimal(15, 2) not null default '0', `matching_pairs` int not null default '0', `payout_amount` decimal(15, 2) not null default '0', `tds_deduction` decimal(15, 2) not null default '0', `service_charge` decimal(15, 2) not null default '0', `net_amount` decimal(15, 2) not null default '0', `status` varchar(191) not null default 'pending', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci') {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S01): SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'user_payout_details' already exists (Connection: mysql, SQL: create table `user_payout_details` (`id` bigint unsigned not null auto_increment primary key, `user_id` bigint unsigned not null, `payout_summary_id` bigint unsigned not null, `left_bv` decimal(15, 2) not null default '0', `right_bv` decimal(15, 2) not null default '0', `matching_pairs` int not null default '0', `payout_amount` decimal(15, 2) not null default '0', `tds_deduction` decimal(15, 2) not null default '0', `service_charge` decimal(15, 2) not null default '0', `net_amount` decimal(15, 2) not null default '0', `status` varchar(191) not null default 'pending', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci') at /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php:829)
+[stacktrace]
+#0 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('create table `u...', Array, Object(Closure))
+#1 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(576): Illuminate\\Database\\Connection->run('create table `u...', Array, Object(Closure))
+#2 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Blueprint.php(110): Illuminate\\Database\\Connection->statement('create table `u...')
+#3 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(602): Illuminate\\Database\\Schema\\Blueprint->build(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Schema\\Grammars\\MySqlGrammar))
+#4 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(456): Illuminate\\Database\\Schema\\Builder->build(Object(Illuminate\\Database\\Schema\\Blueprint))
+#5 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(355): Illuminate\\Database\\Schema\\Builder->create('user_payout_det...', Object(Closure))
+#6 /Users/apple/Herd/Nat-Easy-Ad-Me/core/database/migrations/2025_04_16_160859_create_user_payout_details_table.php(14): Illuminate\\Support\\Facades\\Facade::__callStatic('create', Array)
+#7 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(493): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#8 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(410): Illuminate\\Database\\Migrations\\Migrator->runMethod(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#9 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(419): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#10 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->runMigration(Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#11 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php(37): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#12 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(756): Illuminate\\Console\\View\\Components\\Task->render('2025_04_16_1608...', Object(Closure))
+#13 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->write('Illuminate\\\\Cons...', '2025_04_16_1608...', Object(Closure))
+#14 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(181): Illuminate\\Database\\Migrations\\Migrator->runUp('/Users/apple/He...', 137, false)
+#15 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(124): Illuminate\\Database\\Migrations\\Migrator->runPending(Array, Array)
+#16 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(90): Illuminate\\Database\\Migrations\\Migrator->run(Array, Array)
+#17 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(633): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#18 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(83): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#19 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#20 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#21 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#22 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#23 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#24 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call(Array)
+#25 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#26 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#27 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#28 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#29 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#30 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#31 /Users/apple/Herd/Nat-Easy-Ad-Me/core/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#32 {main}
+
+[previous exception] [object] (PDOException(code: 42S01): SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'user_payout_details' already exists at /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php:587)
+[stacktrace]
+#0 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(587): PDOStatement->execute()
+#1 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(816): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('create table `u...', Array)
+#2 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('create table `u...', Array, Object(Closure))
+#3 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(576): Illuminate\\Database\\Connection->run('create table `u...', Array, Object(Closure))
+#4 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Blueprint.php(110): Illuminate\\Database\\Connection->statement('create table `u...')
+#5 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(602): Illuminate\\Database\\Schema\\Blueprint->build(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Schema\\Grammars\\MySqlGrammar))
+#6 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(456): Illuminate\\Database\\Schema\\Builder->build(Object(Illuminate\\Database\\Schema\\Blueprint))
+#7 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(355): Illuminate\\Database\\Schema\\Builder->create('user_payout_det...', Object(Closure))
+#8 /Users/apple/Herd/Nat-Easy-Ad-Me/core/database/migrations/2025_04_16_160859_create_user_payout_details_table.php(14): Illuminate\\Support\\Facades\\Facade::__callStatic('create', Array)
+#9 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(493): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#10 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(410): Illuminate\\Database\\Migrations\\Migrator->runMethod(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#11 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(419): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#12 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->runMigration(Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#13 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php(37): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#14 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(756): Illuminate\\Console\\View\\Components\\Task->render('2025_04_16_1608...', Object(Closure))
+#15 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->write('Illuminate\\\\Cons...', '2025_04_16_1608...', Object(Closure))
+#16 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(181): Illuminate\\Database\\Migrations\\Migrator->runUp('/Users/apple/He...', 137, false)
+#17 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(124): Illuminate\\Database\\Migrations\\Migrator->runPending(Array, Array)
+#18 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(90): Illuminate\\Database\\Migrations\\Migrator->run(Array, Array)
+#19 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(633): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#20 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(83): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#21 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#22 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#23 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#24 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#25 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#26 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call(Array)
+#27 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#28 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#29 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#30 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#31 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#32 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#33 /Users/apple/Herd/Nat-Easy-Ad-Me/core/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#34 {main}
+"} 
+[2025-05-03 13:07:16] production.ERROR: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'flushed_right_bv' in 'users' (Connection: mysql, SQL: alter table `users` add `left_bv` int not null default '0' after `remember_token`, add `right_bv` int not null default '0' after `left_bv`, add `last_flush_date` timestamp null after `flushed_right_bv`) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'flushed_right_bv' in 'users' (Connection: mysql, SQL: alter table `users` add `left_bv` int not null default '0' after `remember_token`, add `right_bv` int not null default '0' after `left_bv`, add `last_flush_date` timestamp null after `flushed_right_bv`) at /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php:829)
+[stacktrace]
+#0 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('alter table `us...', Array, Object(Closure))
+#1 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(576): Illuminate\\Database\\Connection->run('alter table `us...', Array, Object(Closure))
+#2 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Blueprint.php(110): Illuminate\\Database\\Connection->statement('alter table `us...')
+#3 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(602): Illuminate\\Database\\Schema\\Blueprint->build(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Schema\\Grammars\\MySqlGrammar))
+#4 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(444): Illuminate\\Database\\Schema\\Builder->build(Object(Illuminate\\Database\\Schema\\Blueprint))
+#5 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(355): Illuminate\\Database\\Schema\\Builder->table('users', Object(Closure))
+#6 /Users/apple/Herd/Nat-Easy-Ad-Me/core/database/migrations/2025_04_28_170541_add_bv_columns_to_users_table.php(14): Illuminate\\Support\\Facades\\Facade::__callStatic('table', Array)
+#7 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(493): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#8 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(410): Illuminate\\Database\\Migrations\\Migrator->runMethod(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#9 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(419): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#10 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->runMigration(Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#11 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php(37): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#12 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(756): Illuminate\\Console\\View\\Components\\Task->render('2025_04_28_1705...', Object(Closure))
+#13 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->write('Illuminate\\\\Cons...', '2025_04_28_1705...', Object(Closure))
+#14 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(181): Illuminate\\Database\\Migrations\\Migrator->runUp('/Users/apple/He...', 137, false)
+#15 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(124): Illuminate\\Database\\Migrations\\Migrator->runPending(Array, Array)
+#16 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(90): Illuminate\\Database\\Migrations\\Migrator->run(Array, Array)
+#17 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(633): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#18 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(83): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#19 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#20 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#21 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#22 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#23 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#24 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call(Array)
+#25 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#26 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#27 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#28 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#29 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#30 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#31 /Users/apple/Herd/Nat-Easy-Ad-Me/core/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#32 {main}
+
+[previous exception] [object] (PDOException(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'flushed_right_bv' in 'users' at /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php:587)
+[stacktrace]
+#0 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(587): PDOStatement->execute()
+#1 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(816): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('alter table `us...', Array)
+#2 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('alter table `us...', Array, Object(Closure))
+#3 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(576): Illuminate\\Database\\Connection->run('alter table `us...', Array, Object(Closure))
+#4 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Blueprint.php(110): Illuminate\\Database\\Connection->statement('alter table `us...')
+#5 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(602): Illuminate\\Database\\Schema\\Blueprint->build(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Schema\\Grammars\\MySqlGrammar))
+#6 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(444): Illuminate\\Database\\Schema\\Builder->build(Object(Illuminate\\Database\\Schema\\Blueprint))
+#7 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(355): Illuminate\\Database\\Schema\\Builder->table('users', Object(Closure))
+#8 /Users/apple/Herd/Nat-Easy-Ad-Me/core/database/migrations/2025_04_28_170541_add_bv_columns_to_users_table.php(14): Illuminate\\Support\\Facades\\Facade::__callStatic('table', Array)
+#9 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(493): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#10 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(410): Illuminate\\Database\\Migrations\\Migrator->runMethod(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#11 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(419): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#12 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->runMigration(Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#13 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php(37): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#14 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(756): Illuminate\\Console\\View\\Components\\Task->render('2025_04_28_1705...', Object(Closure))
+#15 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->write('Illuminate\\\\Cons...', '2025_04_28_1705...', Object(Closure))
+#16 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(181): Illuminate\\Database\\Migrations\\Migrator->runUp('/Users/apple/He...', 137, false)
+#17 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(124): Illuminate\\Database\\Migrations\\Migrator->runPending(Array, Array)
+#18 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(90): Illuminate\\Database\\Migrations\\Migrator->run(Array, Array)
+#19 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(633): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#20 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(83): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#21 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#22 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#23 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#24 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#25 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#26 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call(Array)
+#27 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#28 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#29 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#30 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#31 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#32 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#33 /Users/apple/Herd/Nat-Easy-Ad-Me/core/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#34 {main}
+"} 
+[2025-05-03 13:09:13] production.ERROR: SQLSTATE[42000]: Syntax error or access violation: 1091 Can't DROP 'flushed_left_bv'; check that column/key exists (Connection: mysql, SQL: alter table `users` drop `bv_points`, drop `left_bv`, drop `right_bv`, drop `deleted_at`, drop `flushed_left_bv`, drop `flushed_right_bv`, drop `last_flush_date`) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42000): SQLSTATE[42000]: Syntax error or access violation: 1091 Can't DROP 'flushed_left_bv'; check that column/key exists (Connection: mysql, SQL: alter table `users` drop `bv_points`, drop `left_bv`, drop `right_bv`, drop `deleted_at`, drop `flushed_left_bv`, drop `flushed_right_bv`, drop `last_flush_date`) at /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php:829)
+[stacktrace]
+#0 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('alter table `us...', Array, Object(Closure))
+#1 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(576): Illuminate\\Database\\Connection->run('alter table `us...', Array, Object(Closure))
+#2 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Blueprint.php(110): Illuminate\\Database\\Connection->statement('alter table `us...')
+#3 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(602): Illuminate\\Database\\Schema\\Blueprint->build(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Schema\\Grammars\\MySqlGrammar))
+#4 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(444): Illuminate\\Database\\Schema\\Builder->build(Object(Illuminate\\Database\\Schema\\Blueprint))
+#5 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(355): Illuminate\\Database\\Schema\\Builder->table('users', Object(Closure))
+#6 /Users/apple/Herd/Nat-Easy-Ad-Me/core/database/migrations/2025_04_29_171442_remove_membership_and_bv_columns_from_users_table.php(14): Illuminate\\Support\\Facades\\Facade::__callStatic('table', Array)
+#7 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(493): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#8 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(410): Illuminate\\Database\\Migrations\\Migrator->runMethod(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#9 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(419): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#10 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->runMigration(Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#11 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php(37): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#12 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(756): Illuminate\\Console\\View\\Components\\Task->render('2025_04_29_1714...', Object(Closure))
+#13 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->write('Illuminate\\\\Cons...', '2025_04_29_1714...', Object(Closure))
+#14 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(181): Illuminate\\Database\\Migrations\\Migrator->runUp('/Users/apple/He...', 138, false)
+#15 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(124): Illuminate\\Database\\Migrations\\Migrator->runPending(Array, Array)
+#16 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(90): Illuminate\\Database\\Migrations\\Migrator->run(Array, Array)
+#17 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(633): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#18 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(83): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#19 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#20 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#21 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#22 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#23 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#24 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call(Array)
+#25 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#26 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#27 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#28 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#29 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#30 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#31 /Users/apple/Herd/Nat-Easy-Ad-Me/core/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#32 {main}
+
+[previous exception] [object] (PDOException(code: 42000): SQLSTATE[42000]: Syntax error or access violation: 1091 Can't DROP 'flushed_left_bv'; check that column/key exists at /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php:587)
+[stacktrace]
+#0 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(587): PDOStatement->execute()
+#1 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(816): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('alter table `us...', Array)
+#2 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('alter table `us...', Array, Object(Closure))
+#3 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(576): Illuminate\\Database\\Connection->run('alter table `us...', Array, Object(Closure))
+#4 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Blueprint.php(110): Illuminate\\Database\\Connection->statement('alter table `us...')
+#5 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(602): Illuminate\\Database\\Schema\\Blueprint->build(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Schema\\Grammars\\MySqlGrammar))
+#6 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(444): Illuminate\\Database\\Schema\\Builder->build(Object(Illuminate\\Database\\Schema\\Blueprint))
+#7 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(355): Illuminate\\Database\\Schema\\Builder->table('users', Object(Closure))
+#8 /Users/apple/Herd/Nat-Easy-Ad-Me/core/database/migrations/2025_04_29_171442_remove_membership_and_bv_columns_from_users_table.php(14): Illuminate\\Support\\Facades\\Facade::__callStatic('table', Array)
+#9 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(493): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#10 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(410): Illuminate\\Database\\Migrations\\Migrator->runMethod(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#11 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(419): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#12 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->runMigration(Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#13 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php(37): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#14 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(756): Illuminate\\Console\\View\\Components\\Task->render('2025_04_29_1714...', Object(Closure))
+#15 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->write('Illuminate\\\\Cons...', '2025_04_29_1714...', Object(Closure))
+#16 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(181): Illuminate\\Database\\Migrations\\Migrator->runUp('/Users/apple/He...', 138, false)
+#17 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(124): Illuminate\\Database\\Migrations\\Migrator->runPending(Array, Array)
+#18 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(90): Illuminate\\Database\\Migrations\\Migrator->run(Array, Array)
+#19 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(633): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#20 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(83): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#21 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#22 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#23 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#24 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#25 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#26 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call(Array)
+#27 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#28 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#29 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#30 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#31 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#32 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#33 /Users/apple/Herd/Nat-Easy-Ad-Me/core/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#34 {main}
+"} 
+[2025-05-03 13:09:52] production.ERROR: SQLSTATE[42S21]: Column already exists: 1060 Duplicate column name 'created_at' (Connection: mysql, SQL: alter table `zodiac_signs` add `created_at` timestamp null, add `updated_at` timestamp null) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S21): SQLSTATE[42S21]: Column already exists: 1060 Duplicate column name 'created_at' (Connection: mysql, SQL: alter table `zodiac_signs` add `created_at` timestamp null, add `updated_at` timestamp null) at /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php:829)
+[stacktrace]
+#0 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('alter table `zo...', Array, Object(Closure))
+#1 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(576): Illuminate\\Database\\Connection->run('alter table `zo...', Array, Object(Closure))
+#2 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Blueprint.php(110): Illuminate\\Database\\Connection->statement('alter table `zo...')
+#3 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(602): Illuminate\\Database\\Schema\\Blueprint->build(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Schema\\Grammars\\MySqlGrammar))
+#4 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(444): Illuminate\\Database\\Schema\\Builder->build(Object(Illuminate\\Database\\Schema\\Blueprint))
+#5 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(355): Illuminate\\Database\\Schema\\Builder->table('zodiac_signs', Object(Closure))
+#6 /Users/apple/Herd/Nat-Easy-Ad-Me/core/database/migrations/2025_04_29_192135_add_timestamps_to_zodiac_signs_table.php(14): Illuminate\\Support\\Facades\\Facade::__callStatic('table', Array)
+#7 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(493): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#8 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(410): Illuminate\\Database\\Migrations\\Migrator->runMethod(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#9 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(419): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#10 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->runMigration(Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#11 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php(37): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#12 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(756): Illuminate\\Console\\View\\Components\\Task->render('2025_04_29_1921...', Object(Closure))
+#13 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->write('Illuminate\\\\Cons...', '2025_04_29_1921...', Object(Closure))
+#14 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(181): Illuminate\\Database\\Migrations\\Migrator->runUp('/Users/apple/He...', 139, false)
+#15 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(124): Illuminate\\Database\\Migrations\\Migrator->runPending(Array, Array)
+#16 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(90): Illuminate\\Database\\Migrations\\Migrator->run(Array, Array)
+#17 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(633): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#18 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(83): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#19 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#20 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#21 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#22 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#23 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#24 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call(Array)
+#25 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#26 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#27 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#28 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#29 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#30 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#31 /Users/apple/Herd/Nat-Easy-Ad-Me/core/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#32 {main}
+
+[previous exception] [object] (PDOException(code: 42S21): SQLSTATE[42S21]: Column already exists: 1060 Duplicate column name 'created_at' at /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php:587)
+[stacktrace]
+#0 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(587): PDOStatement->execute()
+#1 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(816): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('alter table `zo...', Array)
+#2 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('alter table `zo...', Array, Object(Closure))
+#3 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(576): Illuminate\\Database\\Connection->run('alter table `zo...', Array, Object(Closure))
+#4 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Blueprint.php(110): Illuminate\\Database\\Connection->statement('alter table `zo...')
+#5 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(602): Illuminate\\Database\\Schema\\Blueprint->build(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Schema\\Grammars\\MySqlGrammar))
+#6 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(444): Illuminate\\Database\\Schema\\Builder->build(Object(Illuminate\\Database\\Schema\\Blueprint))
+#7 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(355): Illuminate\\Database\\Schema\\Builder->table('zodiac_signs', Object(Closure))
+#8 /Users/apple/Herd/Nat-Easy-Ad-Me/core/database/migrations/2025_04_29_192135_add_timestamps_to_zodiac_signs_table.php(14): Illuminate\\Support\\Facades\\Facade::__callStatic('table', Array)
+#9 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(493): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#10 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(410): Illuminate\\Database\\Migrations\\Migrator->runMethod(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#11 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(419): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#12 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->runMigration(Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#13 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php(37): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#14 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(756): Illuminate\\Console\\View\\Components\\Task->render('2025_04_29_1921...', Object(Closure))
+#15 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->write('Illuminate\\\\Cons...', '2025_04_29_1921...', Object(Closure))
+#16 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(181): Illuminate\\Database\\Migrations\\Migrator->runUp('/Users/apple/He...', 139, false)
+#17 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(124): Illuminate\\Database\\Migrations\\Migrator->runPending(Array, Array)
+#18 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(90): Illuminate\\Database\\Migrations\\Migrator->run(Array, Array)
+#19 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(633): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#20 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(83): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#21 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#22 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#23 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#24 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#25 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#26 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call(Array)
+#27 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#28 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#29 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#30 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#31 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#32 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#33 /Users/apple/Herd/Nat-Easy-Ad-Me/core/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#34 {main}
+"} 
+[2025-05-03 13:10:17] production.ERROR: SQLSTATE[22004]: Null value not allowed: 1138 Invalid use of NULL value (Connection: mysql, SQL: alter table `matrimony_preferences` modify `zodiac_sign` varchar(255) not null, modify `star` varchar(255) not null) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 22004): SQLSTATE[22004]: Null value not allowed: 1138 Invalid use of NULL value (Connection: mysql, SQL: alter table `matrimony_preferences` modify `zodiac_sign` varchar(255) not null, modify `star` varchar(255) not null) at /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php:829)
+[stacktrace]
+#0 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('alter table `ma...', Array, Object(Closure))
+#1 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(576): Illuminate\\Database\\Connection->run('alter table `ma...', Array, Object(Closure))
+#2 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Blueprint.php(110): Illuminate\\Database\\Connection->statement('alter table `ma...')
+#3 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(602): Illuminate\\Database\\Schema\\Blueprint->build(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Schema\\Grammars\\MySqlGrammar))
+#4 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(444): Illuminate\\Database\\Schema\\Builder->build(Object(Illuminate\\Database\\Schema\\Blueprint))
+#5 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(355): Illuminate\\Database\\Schema\\Builder->table('matrimony_prefe...', Object(Closure))
+#6 /Users/apple/Herd/Nat-Easy-Ad-Me/core/database/migrations/2025_04_30_173455_update_zodiac_sign_and_star_length_in_matrimony_preferences_table.php(13): Illuminate\\Support\\Facades\\Facade::__callStatic('table', Array)
+#7 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(493): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#8 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(410): Illuminate\\Database\\Migrations\\Migrator->runMethod(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#9 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(419): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#10 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->runMigration(Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#11 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php(37): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#12 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(756): Illuminate\\Console\\View\\Components\\Task->render('2025_04_30_1734...', Object(Closure))
+#13 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->write('Illuminate\\\\Cons...', '2025_04_30_1734...', Object(Closure))
+#14 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(181): Illuminate\\Database\\Migrations\\Migrator->runUp('/Users/apple/He...', 140, false)
+#15 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(124): Illuminate\\Database\\Migrations\\Migrator->runPending(Array, Array)
+#16 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(90): Illuminate\\Database\\Migrations\\Migrator->run(Array, Array)
+#17 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(633): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#18 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(83): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#19 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#20 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#21 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#22 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#23 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#24 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call(Array)
+#25 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#26 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#27 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#28 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#29 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#30 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#31 /Users/apple/Herd/Nat-Easy-Ad-Me/core/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#32 {main}
+
+[previous exception] [object] (PDOException(code: 22004): SQLSTATE[22004]: Null value not allowed: 1138 Invalid use of NULL value at /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php:587)
+[stacktrace]
+#0 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(587): PDOStatement->execute()
+#1 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(816): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('alter table `ma...', Array)
+#2 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('alter table `ma...', Array, Object(Closure))
+#3 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Connection.php(576): Illuminate\\Database\\Connection->run('alter table `ma...', Array, Object(Closure))
+#4 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Blueprint.php(110): Illuminate\\Database\\Connection->statement('alter table `ma...')
+#5 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(602): Illuminate\\Database\\Schema\\Blueprint->build(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Schema\\Grammars\\MySqlGrammar))
+#6 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(444): Illuminate\\Database\\Schema\\Builder->build(Object(Illuminate\\Database\\Schema\\Blueprint))
+#7 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(355): Illuminate\\Database\\Schema\\Builder->table('matrimony_prefe...', Object(Closure))
+#8 /Users/apple/Herd/Nat-Easy-Ad-Me/core/database/migrations/2025_04_30_173455_update_zodiac_sign_and_star_length_in_matrimony_preferences_table.php(13): Illuminate\\Support\\Facades\\Facade::__callStatic('table', Array)
+#9 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(493): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#10 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(410): Illuminate\\Database\\Migrations\\Migrator->runMethod(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#11 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(419): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#12 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->runMigration(Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#13 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php(37): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#14 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(756): Illuminate\\Console\\View\\Components\\Task->render('2025_04_30_1734...', Object(Closure))
+#15 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->write('Illuminate\\\\Cons...', '2025_04_30_1734...', Object(Closure))
+#16 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(181): Illuminate\\Database\\Migrations\\Migrator->runUp('/Users/apple/He...', 140, false)
+#17 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(124): Illuminate\\Database\\Migrations\\Migrator->runPending(Array, Array)
+#18 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(90): Illuminate\\Database\\Migrations\\Migrator->run(Array, Array)
+#19 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(633): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#20 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(83): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#21 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#22 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#23 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#24 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#25 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Container/Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#26 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call(Array)
+#27 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#28 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#29 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#30 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#31 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#32 /Users/apple/Herd/Nat-Easy-Ad-Me/core/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#33 /Users/apple/Herd/Nat-Easy-Ad-Me/core/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#34 {main}
+"} 
+[2025-05-03 13:13:07] production.INFO: Calculated BV points for node: {"node_id":129,"leftBV":0,"rightBV":0} 
+[2025-05-03 13:13:07] production.INFO: Calculated BV points for node: {"node_id":134,"leftBV":0,"rightBV":0} 
+[2025-05-03 13:13:07] production.INFO: Calculated BV points for node: {"node_id":135,"leftBV":0,"rightBV":0} 
+[2025-05-03 13:14:46] production.INFO: MLM new member registration request received. {"request_data":{"_token":"d97rTKqig1VpiJGJf8FPiNVvNxd7Wm1kkE6otM4A","position":"left","sponsor_name":"EASYADME-KAVYA","username":"test","first_name":"test","last_name":"one","email":"test@gmail.com","country_code":null,"phone":"8989787878","full_number":null,"dob":"2000-02-07","gender":"male","password":"12121212","confirm_password":"12121212","terms_conditions":"1","parent_id":"134","root_id":"129"}} 
+[2025-05-03 13:14:46] production.INFO: User created ID: 141 {"first_name":"test","last_name":"one","email":"test@gmail.com","username":"test","phone":"+ - 8989787878","email_verify_token":"198816","partner_id":"GL2025556951","partner_name":"EASYADME-TEST","sponsor_id":"129","parent_id":134,"gender":"male","dob":"2000-02-07","position":"left","_lft":7,"_rgt":8,"updated_at":"2025-05-03T07:44:46.000000Z","created_at":"2025-05-03T07:44:46.000000Z","id":141} 
+[2025-05-03 13:14:46] production.INFO: BV points initialized. {"user_id":141,"bv":0} 
+[2025-05-03 13:14:53] production.INFO: Calculated BV points for node: {"node_id":129,"leftBV":0,"rightBV":0} 
+[2025-05-03 13:14:53] production.INFO: Calculated BV points for node: {"node_id":134,"leftBV":0,"rightBV":0} 
+[2025-05-03 13:14:53] production.INFO: Calculated BV points for node: {"node_id":141,"leftBV":0,"rightBV":0} 
+[2025-05-03 13:14:53] production.INFO: Calculated BV points for node: {"node_id":135,"leftBV":0,"rightBV":0} 
+[2025-05-04 06:49:22] production.INFO: User registration request received. {"request_data":{"_token":"AyMc7jPyV959piyrkGn9n8a6aIrf7s2NnFiL7m0Z","partner_id":"VG76Y3W5F1","partner_name":"EASYADME","partner_data":"1","first_name":"test","last_name":"user","username":"test_user","email":"testuser@gmail.com","country_code":"91","phone":"9789892999","full_number":"+919789892999","dob":"1994-10-11","gender":"male","password":"12121212","confirm_password":"12121212","terms_conditions":"1"}} 
+[2025-05-04 06:49:22] production.INFO: Admin partner used for registration {"admin_partner_id":"VG76Y3W5F1","admin_id":1} 
+[2025-05-04 06:49:23] production.INFO: User created successfully. {"user_id":142} 
+[2025-05-04 12:38:48] production.INFO: Incoming preference data: {"partner_age":"18 - 25","income":"10000 - 20000","mother_tongue":"1","religion":"1","caste":"1","height":"120","weight":"50","occupation":"Developer","location":"Nagercoil","marital_status":"Unmarried","gender":"female","zodiac_sign":["1"],"star":["1"]} 
+[2025-05-04 12:38:48] production.INFO: User preferences saved: {"partner_age":"18 - 25","income":"10000 - 20000","mother_tongue":"1","religion":"1","caste":"1","height":"120","weight":"50","occupation":"Developer","location":"Nagercoil","marital_status":"Unmarried","gender":"female","zodiac_sign":"1","star":"1"} 
+[2025-05-04 12:38:48] production.INFO: Preferences saved successfully for user: 142  
+[2025-05-04 12:38:50] production.INFO: Pending profile requests count for user 142: 0  
+[2025-05-04 12:39:13] production.INFO: Calculated BV points for node: {"node_id":142,"leftBV":0,"rightBV":0} 
+[2025-05-04 12:39:56] production.INFO: MLM new member registration request received. {"request_data":{"_token":"Ujpm9BaGSVksPDclLaWIJRfbkXT9EATLK0cVieRI","position":"left","sponsor_name":"EASYADME-TEST","username":"lenin","first_name":"royal","last_name":"lenin","email":"lenin@gmail.com","country_code":null,"phone":"9022343887","full_number":null,"dob":"1996-10-14","gender":"male","password":"12121212","confirm_password":"12121212","terms_conditions":"1","parent_id":"142","root_id":"142"}} 
+[2025-05-04 12:39:56] production.INFO: User created ID: 143 {"first_name":"royal","last_name":"lenin","email":"lenin@gmail.com","username":"lenin","phone":"+ - 9022343887","email_verify_token":"797183","partner_id":"GL2025518712","partner_name":"EASYADME-ROYAL","sponsor_id":"142","parent_id":142,"gender":"male","dob":"1996-10-14","position":"left","_lft":20,"_rgt":21,"updated_at":"2025-05-04T07:09:56.000000Z","created_at":"2025-05-04T07:09:56.000000Z","id":143} 
+[2025-05-04 12:39:56] production.INFO: BV points initialized. {"user_id":143,"bv":0} 
+[2025-05-04 12:40:03] production.INFO: Calculated BV points for node: {"node_id":142,"leftBV":0,"rightBV":0} 
+[2025-05-04 12:40:03] production.INFO: Calculated BV points for node: {"node_id":143,"leftBV":0,"rightBV":0} 
+[2025-05-04 12:40:22] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-04 12:40:22] production.INFO: last3: {"membership_id":101} 
+[2025-05-04 12:40:22] production.INFO: last5: {"membership_id":101} 
+[2025-05-04 12:40:22] production.INFO: last4: {"membership_id":101,"order_id":null} 
+[2025-05-04 12:40:22] production.INFO: after-charge: {"membership_id":101,"order_id":101} 
+[2025-05-04 12:40:51] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"101","payment_amount":20000,"transaction_id":"pay_QQlSYYSOgRjHw5"} 
+[2025-05-04 12:40:51] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-04 12:40:51] production.INFO: Updating membership database {"last_membership_id":"101","transaction_id":"pay_QQlSYYSOgRjHw5","membership_history_id":254,"upgrade_membership_id":3} 
+[2025-05-04 12:40:51] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":101} 
+[2025-05-04 12:40:54] production.ERROR: Failed to send user membership email: Failed to authenticate on SMTP server with username "vikashinij1904@gmail.com" using the following authenticators: "CRAM-MD5", "LOGIN", "PLAIN". Authenticator "CRAM-MD5" returned "Expected response code "235" but got code "535", with message "535 5.7.0 Invalid credentials".". Authenticator "LOGIN" returned "Expected response code "334" but got empty code.". Authenticator "PLAIN" returned "Expected response code "235" but got empty code.".  
+[2025-05-04 12:40:59] production.ERROR: Failed to send admin membership email: Failed to authenticate on SMTP server with username "vikashinij1904@gmail.com" using the following authenticators: "CRAM-MD5", "LOGIN", "PLAIN". Authenticator "CRAM-MD5" returned "Expected response code "235" but got code "535", with message "535 5.7.0 Invalid credentials".". Authenticator "LOGIN" returned "Expected response code "334" but got empty code.". Authenticator "PLAIN" returned "Expected response code "235" but got empty code.".  
+[2025-05-04 12:40:59] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-04 12:42:55] production.INFO: Calculated BV points for node: {"node_id":142,"leftBV":0,"rightBV":0} 
+[2025-05-04 12:42:55] production.INFO: Calculated BV points for node: {"node_id":143,"leftBV":0,"rightBV":0} 
+[2025-05-04 12:43:34] production.INFO: MLM new member registration request received. {"request_data":{"_token":"Ujpm9BaGSVksPDclLaWIJRfbkXT9EATLK0cVieRI","position":"right","sponsor_name":"EASYADME-TEST","username":"libin","first_name":"libin","last_name":"royal","email":"libin@gmail.com","country_code":null,"phone":"9800334343","full_number":null,"dob":"1993-05-03","gender":"male","password":"12121212","confirm_password":"12121212","terms_conditions":"1","parent_id":"142","root_id":"142"}} 
+[2025-05-04 12:43:34] production.INFO: User created ID: 144 {"first_name":"libin","last_name":"royal","email":"libin@gmail.com","username":"libin","phone":"+ - 9800334343","email_verify_token":"308201","partner_id":"GL2025559005","partner_name":"EASYADME-LIBIN","sponsor_id":"142","parent_id":142,"gender":"male","dob":"1993-05-03","position":"right","_lft":22,"_rgt":23,"updated_at":"2025-05-04T07:13:34.000000Z","created_at":"2025-05-04T07:13:34.000000Z","id":144} 
+[2025-05-04 12:43:34] production.INFO: BV points initialized. {"user_id":144,"bv":0} 
+[2025-05-04 12:43:41] production.INFO: Calculated BV points for node: {"node_id":142,"leftBV":0,"rightBV":0} 
+[2025-05-04 12:43:41] production.INFO: Calculated BV points for node: {"node_id":143,"leftBV":0,"rightBV":0} 
+[2025-05-04 12:43:41] production.INFO: Calculated BV points for node: {"node_id":144,"leftBV":0,"rightBV":0} 
+[2025-05-04 12:44:15] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-04 12:44:15] production.INFO: last3: {"membership_id":102} 
+[2025-05-04 12:44:15] production.INFO: last5: {"membership_id":102} 
+[2025-05-04 12:44:15] production.INFO: last4: {"membership_id":102,"order_id":null} 
+[2025-05-04 12:44:15] production.INFO: after-charge: {"membership_id":102,"order_id":102} 
+[2025-05-04 12:44:33] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"102","payment_amount":20000,"transaction_id":"pay_QQlWbBDWT95uMT"} 
+[2025-05-04 12:44:33] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-04 12:44:33] production.INFO: Updating membership database {"last_membership_id":"102","transaction_id":"pay_QQlWbBDWT95uMT","membership_history_id":255,"upgrade_membership_id":3} 
+[2025-05-04 12:44:33] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":102} 
+[2025-05-04 12:44:33] production.INFO: Distributed BV points to parent user: {"user_id":142,"bv_points":900} 
+[2025-05-04 12:44:36] production.ERROR: Failed to send user membership email: Failed to authenticate on SMTP server with username "vikashinij1904@gmail.com" using the following authenticators: "CRAM-MD5", "LOGIN", "PLAIN". Authenticator "CRAM-MD5" returned "Expected response code "235" but got code "535", with message "535 5.7.0 Invalid credentials".". Authenticator "LOGIN" returned "Expected response code "334" but got empty code.". Authenticator "PLAIN" returned "Expected response code "235" but got empty code.".  
+[2025-05-04 12:44:39] production.ERROR: Failed to send admin membership email: Failed to authenticate on SMTP server with username "vikashinij1904@gmail.com" using the following authenticators: "CRAM-MD5", "LOGIN", "PLAIN". Authenticator "CRAM-MD5" returned "Expected response code "235" but got code "535", with message "535 5.7.0 Invalid credentials".". Authenticator "LOGIN" returned "Expected response code "334" but got empty code.". Authenticator "PLAIN" returned "Expected response code "235" but got empty code.".  
+[2025-05-04 12:44:39] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-04 12:45:48] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-04 12:45:48] production.INFO: last3: {"membership_id":103} 
+[2025-05-04 12:45:48] production.INFO: last5: {"membership_id":103} 
+[2025-05-04 12:45:48] production.INFO: last4: {"membership_id":103,"order_id":null} 
+[2025-05-04 12:45:48] production.INFO: after-charge: {"membership_id":103,"order_id":103} 
+[2025-05-04 12:46:06] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"103","payment_amount":20000,"transaction_id":"pay_QQlYGAwblA7aD7"} 
+[2025-05-04 12:46:06] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-04 12:46:06] production.INFO: Updating membership database {"last_membership_id":"103","transaction_id":"pay_QQlYGAwblA7aD7","membership_history_id":256,"upgrade_membership_id":3} 
+[2025-05-04 12:46:06] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":103} 
+[2025-05-04 12:46:06] production.INFO: Distributed BV points to parent user: {"user_id":142,"bv_points":900} 
+[2025-05-04 12:46:11] production.ERROR: Failed to send user membership email: Failed to authenticate on SMTP server with username "vikashinij1904@gmail.com" using the following authenticators: "CRAM-MD5", "LOGIN", "PLAIN". Authenticator "CRAM-MD5" returned "Expected response code "235" but got code "535", with message "535 5.7.0 Invalid credentials".". Authenticator "LOGIN" returned "Expected response code "334" but got empty code.". Authenticator "PLAIN" returned "Expected response code "235" but got empty code.".  
+[2025-05-04 12:46:15] production.ERROR: Failed to send admin membership email: Failed to authenticate on SMTP server with username "vikashinij1904@gmail.com" using the following authenticators: "CRAM-MD5", "LOGIN", "PLAIN". Authenticator "CRAM-MD5" returned "Expected response code "235" but got code "535", with message "535 5.7.0 Too many failed login attempts".". Authenticator "LOGIN" returned "Expected response code "334" but got empty code.". Authenticator "PLAIN" returned "Expected response code "235" but got empty code.".  
+[2025-05-04 12:46:15] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-04 12:50:08] production.INFO: Checking for BV flush. Now: 12:50, Configured: 12:50  
+[2025-05-04 12:50:08] production.INFO: BV Flush Completed {"user_id":142,"left_bv_before":"900","right_bv_before":"900","flushed_amount":900,"left_remaining":0,"right_remaining":0} 
+[2025-05-04 12:50:08] production.INFO: Payout recorded {"date":"2025-05-04 12:50:08","previous_balance":3600,"new_balance":8099,"record_id":45} 
+[2025-05-04 12:50:08] production.INFO: Starting payout detail recording. Total users: 2  
+[2025-05-04 12:50:08] production.INFO: User Payout Detail Created {"user_id":129,"left_bv":0,"right_bv":0,"pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-04 12:50:08] production.INFO: User Payout Detail Created {"user_id":142,"left_bv":"900","right_bv":"900","pairs":1.0,"payout":0.0,"net_amount":0} 
+[2025-05-04 12:50:08] production.INFO: Payout detail recording completed.  
+[2025-05-04 12:52:28] production.INFO: Checking for BV flush. Now: 12:52, Configured: 12:52  
+[2025-05-04 12:52:28] production.INFO: Payout recorded {"date":"2025-05-04 12:52:28","previous_balance":8099,"new_balance":12299,"record_id":46} 
+[2025-05-04 12:52:28] production.INFO: Starting payout detail recording. Total users: 2  
+[2025-05-04 12:52:28] production.INFO: User Payout Detail Created {"user_id":129,"left_bv":0,"right_bv":0,"pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-04 12:52:28] production.INFO: User Payout Detail Created {"user_id":142,"left_bv":"900","right_bv":"900","pairs":1.0,"payout":300.0,"net_amount":294.0} 
+[2025-05-04 12:52:28] production.INFO: Payout detail recording completed.  
+[2025-05-04 19:34:41] production.INFO: User registration request received. {"request_data":{"_token":"CRxXtbM8ynvDgHf5YUyjYekzZDQAEgNBItoZNN7E","partner_id":"VG76Y3W5F1","partner_name":"EASYADME","partner_data":"1","first_name":"john","last_name":"son","username":"johnson","email":"johnson@gmail.com","country_code":"91","phone":"9877676756","full_number":null,"dob":"2000-02-01","gender":"male","password":"12121212","confirm_password":"12121212","terms_conditions":"1"}} 
+[2025-05-04 19:34:41] production.INFO: Admin partner used for registration {"admin_partner_id":"VG76Y3W5F1","admin_id":1} 
+[2025-05-04 19:34:41] production.INFO: User created successfully. {"user_id":145} 
+[2025-05-04 19:36:03] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-04 19:36:03] production.INFO: last3: {"membership_id":104} 
+[2025-05-04 19:36:03] production.INFO: last5: {"membership_id":104} 
+[2025-05-04 19:36:03] production.INFO: last4: {"membership_id":104,"order_id":null} 
+[2025-05-04 19:36:03] production.INFO: after-charge: {"membership_id":104,"order_id":104} 
+[2025-05-04 19:36:54] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"104","payment_amount":20000,"transaction_id":"pay_QQsY9eYTbRRa0G"} 
+[2025-05-04 19:36:54] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-04 19:36:54] production.INFO: Updating membership database {"last_membership_id":"104","transaction_id":"pay_QQsY9eYTbRRa0G","membership_history_id":257,"upgrade_membership_id":3} 
+[2025-05-04 19:36:54] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":104} 
+[2025-05-04 19:36:58] production.ERROR: Failed to send user membership email: Failed to authenticate on SMTP server with username "vikashinij1904@gmail.com" using the following authenticators: "CRAM-MD5", "LOGIN", "PLAIN". Authenticator "CRAM-MD5" returned "Expected response code "235" but got code "535", with message "535 5.7.0 Invalid credentials".". Authenticator "LOGIN" returned "Expected response code "334" but got empty code.". Authenticator "PLAIN" returned "Expected response code "235" but got empty code.".  
+[2025-05-04 19:37:02] production.ERROR: Failed to send admin membership email: Failed to authenticate on SMTP server with username "vikashinij1904@gmail.com" using the following authenticators: "CRAM-MD5", "LOGIN", "PLAIN". Authenticator "CRAM-MD5" returned "Expected response code "235" but got code "535", with message "535 5.7.0 Invalid credentials".". Authenticator "LOGIN" returned "Expected response code "334" but got empty code.". Authenticator "PLAIN" returned "Expected response code "235" but got empty code.".  
+[2025-05-04 19:37:02] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-04 19:44:55] production.INFO: Calculated BV points for node: {"node_id":145,"leftBV":0,"rightBV":0} 
+[2025-05-04 19:45:55] production.INFO: MLM new member registration request received. {"request_data":{"_token":"CRxXtbM8ynvDgHf5YUyjYekzZDQAEgNBItoZNN7E","position":"left","sponsor_name":"EASYADME-JOHN","username":"alex","first_name":"alex","last_name":"raj","email":"alex@gmail.com","country_code":null,"phone":"8989899999","full_number":null,"dob":"1994-02-07","gender":"male","password":"12121212","confirm_password":"12121212","terms_conditions":"1","parent_id":"145","root_id":"145"}} 
+[2025-05-04 19:45:55] production.INFO: User created ID: 146 {"first_name":"alex","last_name":"raj","email":"alex@gmail.com","username":"alex","phone":"+ - 8989899999","email_verify_token":"561698","partner_id":"GL2025571062","partner_name":"EASYADME-ALEX","sponsor_id":"145","parent_id":145,"gender":"male","dob":"1994-02-07","position":"left","_lft":2,"_rgt":3,"updated_at":"2025-05-04T14:15:55.000000Z","created_at":"2025-05-04T14:15:55.000000Z","id":146} 
+[2025-05-04 19:45:55] production.INFO: BV points initialized. {"user_id":146,"bv":0} 
+[2025-05-04 19:46:03] production.INFO: Calculated BV points for node: {"node_id":145,"leftBV":0,"rightBV":0} 
+[2025-05-04 19:46:03] production.INFO: Calculated BV points for node: {"node_id":146,"leftBV":0,"rightBV":0} 
+[2025-05-04 19:47:12] production.INFO: MLM new member registration request received. {"request_data":{"_token":"CRxXtbM8ynvDgHf5YUyjYekzZDQAEgNBItoZNN7E","position":"right","sponsor_name":"EASYADME-JOHN","username":"babu","first_name":"babu","last_name":"raj","email":"babu@gmail.com","country_code":null,"phone":"9089787777","full_number":null,"dob":"1998-01-04","gender":"male","password":"12121212","confirm_password":"12121212","terms_conditions":"1","parent_id":"145","root_id":"145"}} 
+[2025-05-04 19:47:12] production.INFO: User created ID: 147 {"first_name":"babu","last_name":"raj","email":"babu@gmail.com","username":"babu","phone":"+ - 9089787777","email_verify_token":"709309","partner_id":"GL2025544101","partner_name":"EASYADME-BABU","sponsor_id":"145","parent_id":145,"gender":"male","dob":"1998-01-04","position":"right","_lft":4,"_rgt":5,"updated_at":"2025-05-04T14:17:12.000000Z","created_at":"2025-05-04T14:17:12.000000Z","id":147} 
+[2025-05-04 19:47:12] production.INFO: BV points initialized. {"user_id":147,"bv":0} 
+[2025-05-04 19:47:21] production.INFO: Calculated BV points for node: {"node_id":145,"leftBV":0,"rightBV":0} 
+[2025-05-04 19:47:21] production.INFO: Calculated BV points for node: {"node_id":146,"leftBV":0,"rightBV":0} 
+[2025-05-04 19:47:21] production.INFO: Calculated BV points for node: {"node_id":147,"leftBV":0,"rightBV":0} 
+[2025-05-04 19:51:16] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-04 19:51:16] production.INFO: last3: {"membership_id":105} 
+[2025-05-04 19:51:16] production.INFO: last5: {"membership_id":105} 
+[2025-05-04 19:51:16] production.INFO: last4: {"membership_id":105,"order_id":null} 
+[2025-05-04 19:51:16] production.INFO: after-charge: {"membership_id":105,"order_id":105} 
+[2025-05-04 19:51:48] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"105","payment_amount":20000,"transaction_id":"pay_QQsnugG6AVMX8s"} 
+[2025-05-04 19:51:48] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-04 19:51:48] production.INFO: Updating membership database {"last_membership_id":"105","transaction_id":"pay_QQsnugG6AVMX8s","membership_history_id":258,"upgrade_membership_id":3} 
+[2025-05-04 19:51:48] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":105} 
+[2025-05-04 19:51:48] production.INFO: Distributed BV points to parent user: {"user_id":145,"bv_points":900} 
+[2025-05-04 19:51:52] production.ERROR: Failed to send user membership email: Failed to authenticate on SMTP server with username "vikashinij1904@gmail.com" using the following authenticators: "CRAM-MD5", "LOGIN", "PLAIN". Authenticator "CRAM-MD5" returned "Expected response code "235" but got code "535", with message "535 5.7.0 Invalid credentials".". Authenticator "LOGIN" returned "Expected response code "334" but got empty code.". Authenticator "PLAIN" returned "Expected response code "235" but got empty code.".  
+[2025-05-04 19:51:56] production.ERROR: Failed to send admin membership email: Failed to authenticate on SMTP server with username "vikashinij1904@gmail.com" using the following authenticators: "CRAM-MD5", "LOGIN", "PLAIN". Authenticator "CRAM-MD5" returned "Expected response code "235" but got code "535", with message "535 5.7.0 Invalid credentials".". Authenticator "LOGIN" returned "Expected response code "334" but got empty code.". Authenticator "PLAIN" returned "Expected response code "235" but got empty code.".  
+[2025-05-04 19:51:56] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-04 19:54:03] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-04 19:54:03] production.INFO: last3: {"membership_id":106} 
+[2025-05-04 19:54:03] production.INFO: last5: {"membership_id":106} 
+[2025-05-04 19:54:03] production.INFO: last4: {"membership_id":106,"order_id":null} 
+[2025-05-04 19:54:03] production.INFO: after-charge: {"membership_id":106,"order_id":106} 
+[2025-05-04 19:54:27] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"106","payment_amount":20000,"transaction_id":"pay_QQsqi2p1wPDwfk"} 
+[2025-05-04 19:54:27] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-04 19:54:27] production.INFO: Updating membership database {"last_membership_id":"106","transaction_id":"pay_QQsqi2p1wPDwfk","membership_history_id":259,"upgrade_membership_id":3} 
+[2025-05-04 19:54:27] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":106} 
+[2025-05-04 19:54:27] production.INFO: Distributed BV points to parent user: {"user_id":145,"bv_points":900} 
+[2025-05-04 19:54:31] production.ERROR: Failed to send user membership email: Failed to authenticate on SMTP server with username "vikashinij1904@gmail.com" using the following authenticators: "CRAM-MD5", "LOGIN", "PLAIN". Authenticator "CRAM-MD5" returned "Expected response code "235" but got code "535", with message "535 5.7.0 Too many failed login attempts".". Authenticator "LOGIN" returned "Expected response code "334" but got empty code.". Authenticator "PLAIN" returned "Expected response code "235" but got empty code.".  
+[2025-05-04 19:54:35] production.ERROR: Failed to send admin membership email: Failed to authenticate on SMTP server with username "vikashinij1904@gmail.com" using the following authenticators: "CRAM-MD5", "LOGIN", "PLAIN". Authenticator "CRAM-MD5" returned "Expected response code "235" but got code "535", with message "535 5.7.0 Too many failed login attempts".". Authenticator "LOGIN" returned "Expected response code "334" but got empty code.". Authenticator "PLAIN" returned "Expected response code "235" but got empty code.".  
+[2025-05-04 19:54:35] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-04 20:00:58] production.INFO: Checking for BV flush. Now: 20:00, Configured: 20:00  
+[2025-05-04 20:00:58] production.INFO: BV Flush Completed {"user_id":145,"left_bv_before":"900","right_bv_before":"900","flushed_amount":900,"left_remaining":0,"right_remaining":0} 
+[2025-05-04 20:00:58] production.INFO: Payout recorded {"date":"2025-05-04 20:00:58","previous_balance":0,"new_balance":4300,"record_id":47} 
+[2025-05-04 20:00:58] production.INFO: Starting payout detail recording. Total users: 1  
+[2025-05-04 20:00:58] production.INFO: User Payout Detail Created {"user_id":145,"left_bv":"900","right_bv":"900","pairs":1.0,"payout":200.0,"net_amount":180.0} 
+[2025-05-04 20:00:58] production.INFO: Payout detail recording completed.  
+[2025-05-04 20:23:23] production.INFO: Calculated BV points for node: {"node_id":146,"leftBV":0,"rightBV":0} 
+[2025-05-04 20:24:26] production.INFO: MLM new member registration request received. {"request_data":{"_token":"ufXvKS9h9JEO7zgHehPhEK4Sbln5qq3pgb0YswOm","position":"left","sponsor_name":"EASYADME-ALEX","username":"josh","first_name":"josh","last_name":"raj","email":"josh@gmail.com","country_code":null,"phone":"9878786777","full_number":null,"dob":null,"gender":"male","password":"12121212","confirm_password":"12121212","terms_conditions":"1","parent_id":"146","root_id":"146"}} 
+[2025-05-04 20:25:20] production.INFO: MLM new member registration request received. {"request_data":{"_token":"ufXvKS9h9JEO7zgHehPhEK4Sbln5qq3pgb0YswOm","position":"left","sponsor_name":"EASYADME-ALEX","username":"josh","first_name":"josh","last_name":"raj","email":"josh@gmail.com","country_code":null,"phone":"9089334343","full_number":null,"dob":"1999-04-08","gender":"male","password":"12121212","confirm_password":"12121212","terms_conditions":"1","parent_id":"146","root_id":"146"}} 
+[2025-05-04 20:25:21] production.INFO: User created ID: 148 {"first_name":"josh","last_name":"raj","email":"josh@gmail.com","username":"josh","phone":"+ - 9089334343","email_verify_token":"812814","partner_id":"GL202551004","partner_name":"EASYADME-JOSH","sponsor_id":"146","parent_id":146,"gender":"male","dob":"1999-04-08","position":"left","_lft":3,"_rgt":4,"updated_at":"2025-05-04T14:55:21.000000Z","created_at":"2025-05-04T14:55:21.000000Z","id":148} 
+[2025-05-04 20:25:21] production.INFO: BV points initialized. {"user_id":148,"bv":0} 
+[2025-05-04 20:25:30] production.INFO: Calculated BV points for node: {"node_id":146,"leftBV":0,"rightBV":0} 
+[2025-05-04 20:25:30] production.INFO: Calculated BV points for node: {"node_id":148,"leftBV":0,"rightBV":0} 
+[2025-05-04 20:26:01] production.INFO: Calculated BV points for node: {"node_id":146,"leftBV":0,"rightBV":0} 
+[2025-05-04 20:26:01] production.INFO: Calculated BV points for node: {"node_id":148,"leftBV":0,"rightBV":0} 
+[2025-05-04 20:27:04] production.INFO: MLM new member registration request received. {"request_data":{"_token":"ufXvKS9h9JEO7zgHehPhEK4Sbln5qq3pgb0YswOm","position":"right","sponsor_name":"EASYADME-ALEX","username":"justin","first_name":"justin","last_name":"raj","email":"justin@gmail.com","country_code":null,"phone":"678787777","full_number":null,"dob":"1998-12-10","gender":"male","password":"12121212","confirm_password":"12121212","terms_conditions":"1","parent_id":"146","root_id":"146"}} 
+[2025-05-04 20:27:04] production.INFO: User created ID: 149 {"first_name":"justin","last_name":"raj","email":"justin@gmail.com","username":"justin","phone":"+ - 678787777","email_verify_token":"192814","partner_id":"GL2025545879","partner_name":"EASYADME-JUSTIN","sponsor_id":"146","parent_id":146,"gender":"male","dob":"1998-12-10","position":"right","_lft":5,"_rgt":6,"updated_at":"2025-05-04T14:57:04.000000Z","created_at":"2025-05-04T14:57:04.000000Z","id":149} 
+[2025-05-04 20:27:04] production.INFO: BV points initialized. {"user_id":149,"bv":0} 
+[2025-05-04 20:27:12] production.INFO: Calculated BV points for node: {"node_id":146,"leftBV":0,"rightBV":0} 
+[2025-05-04 20:27:12] production.INFO: Calculated BV points for node: {"node_id":148,"leftBV":0,"rightBV":0} 
+[2025-05-04 20:27:12] production.INFO: Calculated BV points for node: {"node_id":149,"leftBV":0,"rightBV":0} 
+[2025-05-04 20:28:14] production.INFO: Calculated BV points for node: {"node_id":147,"leftBV":0,"rightBV":0} 
+[2025-05-04 20:28:57] production.INFO: MLM new member registration request received. {"request_data":{"_token":"ufXvKS9h9JEO7zgHehPhEK4Sbln5qq3pgb0YswOm","position":"right","sponsor_name":"EASYADME-BABU","username":"akhil","first_name":"akhil","last_name":"jinu","email":"akhil@gmail.com","country_code":null,"phone":"8978786666","full_number":null,"dob":"2000-01-06","gender":"male","password":"12121212","confirm_password":"12121212","terms_conditions":"1","parent_id":"147","root_id":"147"}} 
+[2025-05-04 20:28:57] production.INFO: User created ID: 150 {"first_name":"akhil","last_name":"jinu","email":"akhil@gmail.com","username":"akhil","phone":"+ - 8978786666","email_verify_token":"988098","partner_id":"GL2025567070","partner_name":"EASYADME-AKHIL","sponsor_id":"147","parent_id":147,"gender":"male","dob":"2000-01-06","position":"right","_lft":9,"_rgt":10,"updated_at":"2025-05-04T14:58:57.000000Z","created_at":"2025-05-04T14:58:57.000000Z","id":150} 
+[2025-05-04 20:28:57] production.INFO: BV points initialized. {"user_id":150,"bv":0} 
+[2025-05-04 20:29:06] production.INFO: Calculated BV points for node: {"node_id":147,"leftBV":0,"rightBV":0} 
+[2025-05-04 20:29:06] production.INFO: Calculated BV points for node: {"node_id":150,"leftBV":0,"rightBV":0} 
+[2025-05-04 20:31:41] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-04 20:31:41] production.INFO: last3: {"membership_id":107} 
+[2025-05-04 20:31:41] production.INFO: last5: {"membership_id":107} 
+[2025-05-04 20:31:41] production.INFO: last4: {"membership_id":107,"order_id":null} 
+[2025-05-04 20:31:41] production.INFO: after-charge: {"membership_id":107,"order_id":107} 
+[2025-05-04 20:32:03] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"107","payment_amount":20000,"transaction_id":"pay_QQtUR4IR3ABDM5"} 
+[2025-05-04 20:32:03] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-04 20:32:03] production.INFO: Updating membership database {"last_membership_id":"107","transaction_id":"pay_QQtUR4IR3ABDM5","membership_history_id":260,"upgrade_membership_id":3} 
+[2025-05-04 20:32:03] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":107} 
+[2025-05-04 20:32:03] production.INFO: Distributed BV points to parent user: {"user_id":147,"bv_points":900} 
+[2025-05-04 20:32:03] production.INFO: Distributed BV points to parent user: {"user_id":145,"bv_points":900} 
+[2025-05-04 20:32:07] production.ERROR: Failed to send user membership email: Failed to authenticate on SMTP server with username "vikashinij1904@gmail.com" using the following authenticators: "CRAM-MD5", "LOGIN", "PLAIN". Authenticator "CRAM-MD5" returned "Expected response code "235" but got code "535", with message "535 5.7.0 Invalid credentials".". Authenticator "LOGIN" returned "Expected response code "334" but got empty code.". Authenticator "PLAIN" returned "Expected response code "235" but got empty code.".  
+[2025-05-04 20:32:11] production.ERROR: Failed to send admin membership email: Failed to authenticate on SMTP server with username "vikashinij1904@gmail.com" using the following authenticators: "CRAM-MD5", "LOGIN", "PLAIN". Authenticator "CRAM-MD5" returned "Expected response code "235" but got code "535", with message "535 5.7.0 Invalid credentials".". Authenticator "LOGIN" returned "Expected response code "334" but got empty code.". Authenticator "PLAIN" returned "Expected response code "235" but got empty code.".  
+[2025-05-04 20:32:11] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-04 20:33:48] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-04 20:33:48] production.INFO: last3: {"membership_id":108} 
+[2025-05-04 20:33:48] production.INFO: last5: {"membership_id":108} 
+[2025-05-04 20:33:48] production.INFO: last4: {"membership_id":108,"order_id":null} 
+[2025-05-04 20:33:48] production.INFO: after-charge: {"membership_id":108,"order_id":108} 
+[2025-05-04 20:34:09] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"108","payment_amount":20000,"transaction_id":"pay_QQtWf0qWa5Ucba"} 
+[2025-05-04 20:34:09] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-04 20:34:09] production.INFO: Updating membership database {"last_membership_id":"108","transaction_id":"pay_QQtWf0qWa5Ucba","membership_history_id":261,"upgrade_membership_id":3} 
+[2025-05-04 20:34:09] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":108} 
+[2025-05-04 20:34:09] production.INFO: Distributed BV points to parent user: {"user_id":146,"bv_points":900} 
+[2025-05-04 20:34:09] production.INFO: Distributed BV points to parent user: {"user_id":145,"bv_points":900} 
+[2025-05-04 20:34:13] production.ERROR: Failed to send user membership email: Failed to authenticate on SMTP server with username "vikashinij1904@gmail.com" using the following authenticators: "CRAM-MD5", "LOGIN", "PLAIN". Authenticator "CRAM-MD5" returned "Expected response code "235" but got code "535", with message "535 5.7.0 Invalid credentials".". Authenticator "LOGIN" returned "Expected response code "334" but got empty code.". Authenticator "PLAIN" returned "Expected response code "235" but got empty code.".  
+[2025-05-04 20:34:17] production.ERROR: Failed to send admin membership email: Failed to authenticate on SMTP server with username "vikashinij1904@gmail.com" using the following authenticators: "CRAM-MD5", "LOGIN", "PLAIN". Authenticator "CRAM-MD5" returned "Expected response code "235" but got code "535", with message "535 5.7.0 Invalid credentials".". Authenticator "LOGIN" returned "Expected response code "334" but got empty code.". Authenticator "PLAIN" returned "Expected response code "235" but got empty code.".  
+[2025-05-04 20:34:17] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-04 20:34:28] production.INFO: Calculated BV points for node: {"node_id":148,"leftBV":0,"rightBV":0} 
+[2025-05-04 20:35:09] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-04 20:35:09] production.INFO: last3: {"membership_id":109} 
+[2025-05-04 20:35:09] production.INFO: last5: {"membership_id":109} 
+[2025-05-04 20:35:09] production.INFO: last4: {"membership_id":109,"order_id":null} 
+[2025-05-04 20:35:09] production.INFO: after-charge: {"membership_id":109,"order_id":109} 
+[2025-05-04 20:35:28] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"109","payment_amount":10000,"transaction_id":"pay_QQtY3bmRpeP76h"} 
+[2025-05-04 20:35:28] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":2} 
+[2025-05-04 20:35:28] production.INFO: Updating membership database {"last_membership_id":"109","transaction_id":"pay_QQtY3bmRpeP76h","membership_history_id":262,"upgrade_membership_id":2} 
+[2025-05-04 20:35:28] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":109} 
+[2025-05-04 20:35:28] production.INFO: Distributed BV points to parent user: {"user_id":146,"bv_points":300} 
+[2025-05-04 20:35:28] production.INFO: Distributed BV points to parent user: {"user_id":145,"bv_points":300} 
+[2025-05-04 20:35:32] production.ERROR: Failed to send user membership email: Failed to authenticate on SMTP server with username "vikashinij1904@gmail.com" using the following authenticators: "CRAM-MD5", "LOGIN", "PLAIN". Authenticator "CRAM-MD5" returned "Expected response code "235" but got code "535", with message "535 5.7.0 Invalid credentials".". Authenticator "LOGIN" returned "Expected response code "334" but got empty code.". Authenticator "PLAIN" returned "Expected response code "235" but got empty code.".  
+[2025-05-04 20:35:36] production.ERROR: Failed to send admin membership email: Failed to authenticate on SMTP server with username "vikashinij1904@gmail.com" using the following authenticators: "CRAM-MD5", "LOGIN", "PLAIN". Authenticator "CRAM-MD5" returned "Expected response code "235" but got code "535", with message "535 5.7.0 Too many failed login attempts".". Authenticator "LOGIN" returned "Expected response code "334" but got empty code.". Authenticator "PLAIN" returned "Expected response code "235" but got empty code.".  
+[2025-05-04 20:35:36] production.INFO: Data to update: {"upgrade_membership_id":2} 
+[2025-05-04 20:36:45] production.INFO: Calculated BV points for node: {"node_id":145,"leftBV":1200,"rightBV":900} 
+[2025-05-04 20:36:45] production.INFO: Calculated BV points for node: {"node_id":146,"leftBV":900,"rightBV":300} 
+[2025-05-04 20:36:45] production.INFO: Calculated BV points for node: {"node_id":148,"leftBV":0,"rightBV":0} 
+[2025-05-04 20:36:45] production.INFO: Calculated BV points for node: {"node_id":149,"leftBV":0,"rightBV":0} 
+[2025-05-04 20:36:45] production.INFO: Calculated BV points for node: {"node_id":147,"leftBV":0,"rightBV":900} 
+[2025-05-04 20:36:45] production.INFO: Calculated BV points for node: {"node_id":150,"leftBV":0,"rightBV":0} 
+[2025-05-04 20:37:39] production.INFO: Checking for BV flush. Now: 20:37, Configured: 20:37  
+[2025-05-04 20:37:40] production.INFO: BV Flush Completed {"user_id":145,"left_bv_before":"1200","right_bv_before":"900","flushed_amount":900,"left_remaining":300,"right_remaining":0} 
+[2025-05-04 20:37:40] production.INFO: BV Flush Completed {"user_id":146,"left_bv_before":"900","right_bv_before":"300","flushed_amount":900,"left_remaining":0,"right_remaining":"300"} 
+[2025-05-04 20:37:40] production.INFO: Payout recorded {"date":"2025-05-04 20:37:40","previous_balance":4300,"new_balance":14900,"record_id":48} 
+[2025-05-04 20:37:40] production.INFO: Starting payout detail recording. Total users: 2  
+[2025-05-04 20:37:40] production.INFO: User Payout Detail Created {"user_id":145,"left_bv":"2100","right_bv":"1800","pairs":2.0,"payout":400.0,"net_amount":360.0} 
+[2025-05-04 20:37:40] production.INFO: User Payout Detail Created {"user_id":146,"left_bv":"900","right_bv":"300","pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-04 20:37:40] production.INFO: Payout detail recording completed.  

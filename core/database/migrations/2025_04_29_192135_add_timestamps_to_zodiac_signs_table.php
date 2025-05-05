@@ -12,14 +12,25 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('zodiac_signs', function (Blueprint $table) {
-            $table->timestamps(); // Adds created_at and updated_at
+            // Only add timestamps if they don't already exist
+            if (! Schema::hasColumn('zodiac_signs', 'created_at') 
+                && ! Schema::hasColumn('zodiac_signs', 'updated_at')) {
+                $table->timestamps();
+            }
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::table('zodiac_signs', function (Blueprint $table) {
-            $table->dropTimestamps();
+            // Only drop them if they exist
+            if (Schema::hasColumn('zodiac_signs', 'created_at') 
+                && Schema::hasColumn('zodiac_signs', 'updated_at')) {
+                $table->dropTimestamps();
+            }
         });
     }
 };

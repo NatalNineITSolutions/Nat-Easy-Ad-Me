@@ -714,6 +714,8 @@ class DashboardController extends Controller
                     'team_cv' => $item->left_bv + $item->right_bv,
                     'payout_amount' => $item->payout_amount,
                     'net_amount' => $item->net_amount,
+                    'tds' => $item->tds_deduction,
+                    'service_charge' => $item->service_charge,
                 ];
             })
             ->toArray();

@@ -104,18 +104,21 @@ class AutoFlushBV extends Command
             return;
         }
 
-        // Rule 3: If both sides have at least sealing limit but unequal amounts
+        // Rule 3: If both sides have at least sealing limit
         if ($leftBv >= $sealingLimitBv && $rightBv >= $sealingLimitBv) {
-            // Flush the sealing limit from both sides
+            // Step 1: Flush sealing limit from both
             $this->flushSide($leftChild, $sealingLimitBv, 'left');
             $this->flushSide($rightChild, $sealingLimitBv, 'right');
 
-            // Then flush the remaining excess from the larger side
-            $excess = abs($leftBv - $rightBv);
-            if ($leftBv > $rightBv) {
-                $this->flushSide($leftChild, $excess, 'left');
-            } elseif ($rightBv > $leftBv) {
-                $this->flushSide($rightChild, $excess, 'right');
+            // Step 2: Calculate remaining after sealing
+            $remainingLeft = $leftBv - $sealingLimitBv;
+            $remainingRight = $rightBv - $sealingLimitBv;
+
+            // Step 3: Flush remaining from the smaller side ONLY
+            if ($remainingRight > 0 && $remainingLeft > $remainingRight) {
+                $this->flushSide($rightChild, $remainingRight, 'right');
+            } elseif ($remainingLeft > 0 && $remainingRight > $remainingLeft) {
+                $this->flushSide($leftChild, $remainingLeft, 'left');
             }
         }
     }
@@ -138,6 +141,7 @@ class AutoFlushBV extends Command
             'flushed_amount' => $amount,
         ]);
     }
+
 
     protected function recordPayoutSummary($sealingLimitBv)
     {

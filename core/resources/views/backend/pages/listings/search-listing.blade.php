@@ -8,6 +8,14 @@
             </th>
         @endcan
         <th>{{__('ID')}}</th>
+        <th>{{__('Action')}}</th>
+        <th>
+            {{__('Status')}}
+            @can('user-listing-approved')
+                <span><x-status.all-status-change :url="route('admin.listings.user.all.approved')" /></span>
+            @endcan
+        </th>
+        <th>{{__('Publishing Status')}}</th>
         <th>{{__('Image')}}</th>
         <th>{{__('Title')}}</th>
         <th>{{__('Category')}}</th>
@@ -18,15 +26,7 @@
         <th>{{__('User Name')}}</th>
         <th>{{__('Created Date')}}</th>
         <th>{{__('Published Date')}}</th>
-        <th>{{__('Expiry Date')}}</th>
-        <th>{{__('Publishing Status')}}</th>
-        <th>
-            {{__('Status')}}
-            @can('user-listing-approved')
-                <span><x-status.all-status-change :url="route('admin.listings.user.all.approved')" /></span>
-            @endcan
-        </th>
-        <th>{{__('Action')}}</th>
+        <th>{{__('Expiry Date')}}</th>        
     </thead>
     <tbody>
         @foreach($all_listings as $data)
@@ -37,6 +37,43 @@
                     </td>
                 @endcan
                 <td>{{$data->id}}</td>
+                <!--Action -->
+                <td>
+                    <x-icon.view-icon :url="route('admin.listings.details', $data->id)" />
+                    @can('user-listing-delete')
+                        <x-popup.delete-popup :url="route('admin.listings.delete', $data->id)" />
+                    @endcan
+                </td>
+                <!--status -->
+                <td>
+                    @if($data->status == 1)
+                        <span class="alert alert-success">{{__('Approved')}}</span>
+                    @else
+                        <span class="alert alert-warning">{{__('Pending')}}</span>
+                    @endif
+
+                    @can('user-listing-status-change')
+                        <span class="my-2"><x-status.status-change
+                                :url="route('admin.listings.status.change', $data->id)" /></span>
+                    @endcan
+
+                </td>
+                  <!--published -->
+                  <td>
+                    @if($data->is_published === 1)
+                        <span class="alert alert-success">{{__('Published')}}</span>
+                    @else
+                        <span class="alert alert-warning">{{__('Unpublished')}}</span>
+                    @endif
+
+                    @can('user-listing-published-status-change')
+                        <span class="my-2">
+                            <x-status.admin-listing-published-change
+                                :url="route('admin.listings.published.status.change', $data->id)" />
+                        </span>
+                    @endcan
+
+                </td>
                 <td> {!! render_image_markup_by_attachment_id($data->image, '', 'thumb') !!}</td>
                 <td>{{$data->title}}</td>
                 <td>{{optional($data->category)->name}}</td>
@@ -64,46 +101,7 @@
                     @else
                         {{ __('Not published') }}
                     @endif
-                </td>
-                <!--published -->
-                <td>
-                    @if($data->is_published === 1)
-                        <span class="alert alert-success">{{__('Published')}}</span>
-                    @else
-                        <span class="alert alert-warning">{{__('Unpublished')}}</span>
-                    @endif
-
-                    @can('user-listing-published-status-change')
-                        <span class="my-2">
-                            <x-status.admin-listing-published-change
-                                :url="route('admin.listings.published.status.change', $data->id)" />
-                        </span>
-                    @endcan
-
-                </td>
-
-                <!--status -->
-                <td>
-                    @if($data->status == 1)
-                        <span class="alert alert-success">{{__('Approved')}}</span>
-                    @else
-                        <span class="alert alert-warning">{{__('Pending')}}</span>
-                    @endif
-
-                    @can('user-listing-status-change')
-                        <span class="my-2"><x-status.status-change
-                                :url="route('admin.listings.status.change', $data->id)" /></span>
-                    @endcan
-
-                </td>
-
-                <!--Action -->
-                <td>
-                    <x-icon.view-icon :url="route('admin.listings.details', $data->id)" />
-                    @can('user-listing-delete')
-                        <x-popup.delete-popup :url="route('admin.listings.delete', $data->id)" />
-                    @endcan
-                </td>
+                </td>  
             </tr>
         @endforeach
     </tbody>

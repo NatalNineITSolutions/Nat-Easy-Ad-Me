@@ -48,11 +48,19 @@
                     <div class="left-content">
                         <h4 class="header-title">{{__('Payout Listing')}}</h4>
                     </div>
+                    <form action="{{ route('user.payout.process') }}" method="POST" style="display:inline;">
+                        @csrf
+                        <input type="hidden" name="user_id" value="{{ $user->id }}">
+                        <input type="hidden" name="payout_detail_id" value="{{ $user->payoutDetail->id ?? '' }}">
+                        <button type="submit" class="cmnBtn btn_5 btn_bg_green radius-5 me-2" @if(isset($user->payoutDetail) && $user->payoutDetail->status == 'processed') disabled @endif>
+                            {{ __('Payout') }}
+                        </button>
+                    </form>
                     <div class="right-content">
                         <form action="{{route('user.bv.referrals')}}" method="GET" class="date-filter-container">
                             <div class="form-group mb-0">
-                                <input type="date" name="filter_date" class="form-control flatpickr-input" 
-                                       value="{{ $selectedDate }}" placeholder="{{ __('Select Date') }}">
+                                <input type="date" name="filter_date" class="form-control flatpickr-input"
+                                    value="{{ $selectedDate }}" placeholder="{{ __('Select Date') }}">
                             </div>
                             <button type="submit" class="cmnBtn btn_5 btn_bg_blue radius-5">
                                 {{ __('Filter') }}
@@ -65,7 +73,7 @@
                         </form>
                     </div>
                 </div>
-                
+
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
@@ -90,7 +98,9 @@
                                     <td>{{ number_format($user->net_amount, 2) }}</td>
                                     <td>
                                         @if($selectedDate)
-                                            {{ __('Date: ') }} {{ $selectedDate }}
+                                            {{ \Carbon\Carbon::parse($selectedDate)->format('d M Y') }}
+                                        @elseif($user->payout_date)
+                                            {{ \Carbon\Carbon::parse($user->payout_date)->format('d M Y') }}
                                         @else
                                             {{ __('All-time') }}
                                         @endif
@@ -100,6 +110,10 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="alert alert-info mt-3 text-end" role="alert">
+                    <strong>{{ __('Balance Case on Hand:') }}</strong> {{ number_format($cashOnHand, 2) }}
+                </div>
+
             </div>
         </div>
     </div>

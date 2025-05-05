@@ -3,7 +3,12 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendPayoutNotification;
+use App\Mail\PayoutNotificationMail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\UsersBV;
@@ -22,9 +27,7 @@ class PayoutController extends Controller
     {
         $latestPayout = IncomePayoutManage::latest()->first();
         $previousCaseOnHand = $latestPayout?->previous_case_on_hand ?? 0;
-        $currentDayBV = UsersBV::whereDate('created_at', Carbon::today())
-                              ->where('type', 'Self-Purchased') // or whatever column/condition identifies self-purchased BV
-                              ->sum('bv_points');
+        $currentDayBV = UsersBV::whereDate('created_at', Carbon::today())->sum('bv_points');
         $currentDayMatchingPairs = $latestPayout?->matching_pairs ?? 1; // Ensure at least 1 to prevent division by zero
 
         $maxAllowed = ($currentDayMatchingPairs > 0)
@@ -95,54 +98,6 @@ class PayoutController extends Controller
         return redirect()->route('payout.settings')->with('success', __('Payout settings updated successfully!'));
     }
 
-    // public function userBvReferrals(Request $request)
-    // {
-    //     $payoutMethod = get_static_option('payout_method');
-    //     $payoutValue = get_static_option('payout_value');
-    //     $selectedDate = $request->input('filter_date', null);
-
-    //     $eligibleParents = User::select('parent_id')
-    //         ->groupBy('parent_id')
-    //         ->havingRaw('COUNT(CASE WHEN position = "left" THEN 1 END) > 0')
-    //         ->havingRaw('COUNT(CASE WHEN position = "right" THEN 1 END) > 0')
-    //         ->pluck('parent_id');
-
-    //     $users = User::whereIn('id', $eligibleParents)
-    //         ->select('id', 'first_name', 'last_name', 'partner_id')
-    //         ->with('descendants')
-    //         ->get()
-    //         ->map(function ($user) use ($payoutMethod, $payoutValue, $selectedDate) {
-    //             $user->total_referrals = $this->countTotalReferrals($user);
-
-    //             $bvQuery = UsersBv::where('user_id', $user->id);
-
-    //             if ($selectedDate) {
-    //                 $bvQuery->whereDate('upgrade_time', $selectedDate);
-    //             }
-
-    //             $user->bv_points = $bvQuery->sum('bv_points');
-
-    //             if ($payoutMethod === 'amount') {
-    //                 $user->payout = $user->bv_points * $payoutValue;
-    //             } else {
-    //                 $user->payout = 0;
-    //             }
-
-    //             return $user;
-    //         })
-    //         ->when($selectedDate, function ($collection) {
-    //             return $collection->filter(function ($user) {
-    //                 return $user->bv_points > 0;
-    //             });
-    //         });
-
-    //     return view('backend.pages.payout-manage.payout-listing', compact('users', 'selectedDate'));
-    // }
-
-    /**
-     * Recursively count all descendants of a user
-     */
-
     public function userBvReferrals(Request $request)
     {
         $payoutMethod = get_static_option('payout_method');
@@ -155,7 +110,6 @@ class PayoutController extends Controller
             ->havingRaw('COUNT(CASE WHEN position = "right" THEN 1 END) > 0')
             ->pluck('parent_id');
 
-        // Get users only in payout manage table and eligible
         $users = User::whereIn('id', $eligibleParents)
             ->whereIn('id', function ($query) {
                 $query->select('user_id')->from('user_payout_details');
@@ -165,24 +119,57 @@ class PayoutController extends Controller
             ->get()
             ->map(function ($user) use ($payoutMethod, $payoutValue, $selectedDate) {
                 $user->total_referrals = $this->countTotalReferrals($user);
-            
-                // Fetch payout detail for left_bv and right_bv
-                $payoutDetail = UserPayoutDetail::where('user_id', $user->id)->first();
+
+                $payoutDetail = UserPayoutDetail::when($selectedDate, function ($query) use ($selectedDate) {
+                    return $query->whereDate('created_at', $selectedDate);
+                })->where('user_id', $user->id)->first();
+
+                $user->payout_date = $payoutDetail ? $payoutDetail->created_at : null;
                 $leftBv = $payoutDetail ? $payoutDetail->left_bv : 0;
                 $rightBv = $payoutDetail ? $payoutDetail->right_bv : 0;
-            
-                $user->bv_points = $leftBv + $rightBv; // Sum of left and right
+
+                $user->bv_points = $leftBv + $rightBv;
                 $user->net_amount = $payoutDetail ? $payoutDetail->net_amount : 0;
-            
+
                 return $user;
-            })            
+            })
             ->when($selectedDate, function ($collection) {
                 return $collection->filter(function ($user) {
                     return $user->bv_points > 0;
                 });
             });
 
-        return view('backend.pages.payout-manage.payout-listing', compact('users', 'selectedDate'));
+        $cashOnHand = DB::table('income_payout_manage')->value('balance_case_on_hand');
+
+        // $canPayout = $this->isPayoutButtonEnabled();
+
+        return view('backend.pages.payout-manage.payout-listing', compact(
+            'users',
+            'selectedDate',
+            'cashOnHand',
+        ));
+    }
+
+    private function isPayoutButtonEnabled(): bool
+    {
+        $paymentType = get_static_option('payment_type');
+
+        $lastPayoutDate = DB::table('user_payout_details')
+            ->latest('created_at')
+            ->value('created_at');
+
+        if (!$lastPayoutDate) {
+            return true;
+        }
+
+        $nextEligibleDate = match ($paymentType) {
+            'day' => Carbon::parse($lastPayoutDate)->addDay(),
+            'week' => Carbon::parse($lastPayoutDate)->addWeek(),
+            'month' => Carbon::parse($lastPayoutDate)->addMonth(),
+            default => null,
+        };
+
+        return $nextEligibleDate && now()->gte($nextEligibleDate);
     }
 
     private function countTotalReferrals(User $user)
@@ -201,9 +188,7 @@ class PayoutController extends Controller
         $latestPayout = IncomePayoutManage::latest()->first();
 
         $previousCaseOnHand = $latestPayout?->previous_case_on_hand ?? 0;
-        $currentDayBV = UsersBV::whereDate('created_at', Carbon::today())
-        ->where('type', 'Self-Purchased') // or whatever column/condition identifies self-purchased BV
-        ->sum('bv_points');
+        $currentDayBV = UsersBV::whereDate('created_at', Carbon::today())->sum('bv_points');
         $totalBV = $previousCaseOnHand + $currentDayBV;
 
         $pairIncome = get_static_option('maximum_one_pair_income') ?? 250;
@@ -263,5 +248,55 @@ class PayoutController extends Controller
 
         update_static_option('maximum_one_pair_income', $submittedPairIncome);
         return back()->with('success', 'Maximum Pair Income updated successfully!');
+    }
+
+    public function processPayout(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'payout_detail_id' => 'required|exists:user_payout_details,id'
+        ]);
+
+        Log::info('Payout processing initiated', [
+            'user_id' => $validated['user_id'],
+            'payout_detail_id' => $validated['payout_detail_id']
+        ]);
+
+        $user = User::find($validated['user_id']);
+        $payoutDetail = UserPayoutDetail::find($validated['payout_detail_id']);
+
+        if (!$user || !$payoutDetail) {
+            Log::error('User or PayoutDetail not found', [
+                'user' => $user,
+                'payoutDetail' => $payoutDetail
+            ]);
+            return redirect()->back()->with('error', 'User or Payout details not found.');
+        }
+
+        // Update payout status
+        $updated = $payoutDetail->update(['status' => 'processed']);
+
+        if (!$updated) {
+            Log::error('Failed to update payout status', ['payoutDetail' => $payoutDetail]);
+            return redirect()->back()->with('error', 'Failed to update payout status.');
+        }
+
+        Log::info('Dispatching SendPayoutNotification job', [
+            'user_email' => $user->email,
+            'payout_amount' => $payoutDetail->net_amount
+        ]);
+
+        try {
+            dispatch(new SendPayoutNotification($user, $payoutDetail));
+            Log::info('SendPayoutNotification job dispatched successfully');
+        } catch (\Exception $e) {
+            Log::error('Failed to dispatch SendPayoutNotification job', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->with('error', 'Failed to queue payout notification.');
+        }
+
+        return redirect()->back()->with('success', 'Payout processed successfully. Notification sent to user.');
     }
 }

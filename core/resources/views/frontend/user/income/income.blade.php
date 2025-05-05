@@ -124,7 +124,7 @@ $isEmpty = $todayIncome->isEmpty();
                                                                                 <tr>
                                                                                     <td>{{ $day['day'] ?? $day['created_at'] }}</td>
                                                                                     <td>{{ $day['team_cv'] ?? 0 }}</td>
-                                                                                    <td>{{ $day['income'] ?? 0 }}</td>
+                                                                                    <td>{{ $day['payout_amount'] ?? 0 }}</td>
                                                                                 </tr>
                                                                             @endforeach
                                                                         @endif
@@ -139,7 +139,7 @@ $isEmpty = $todayIncome->isEmpty();
                                                                 <table class="table table-bordered">
                                                                     <tr>
                                                                         <th>Total Income</th>
-                                                                        <td>{{ $day['income'] ?? 0 }}</td>
+                                                                        <td>{{ $day['payout_amount'] ?? 0 }}</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th>Product Coupon ({{ $incomeData['product_coupon'] }}%)</th>
@@ -155,7 +155,7 @@ $isEmpty = $todayIncome->isEmpty();
                                                                     </tr>
                                                                     <tr class="table-active">
                                                                         <th><strong>Net Amount</strong></th>
-                                                                        <td><strong>{{ $day['income'] ?? 0 }}</strong></td>
+                                                                        <td><strong>{{ $day['net_amount'] ?? 0 }}</strong></td>
                                                                     </tr>
                                                                 </table>
                                                             </div>

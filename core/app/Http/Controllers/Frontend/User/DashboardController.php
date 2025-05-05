@@ -712,7 +712,8 @@ class DashboardController extends Controller
                 return [
                     'day' => Carbon::parse($item->created_at)->toDateString(),
                     'team_cv' => $item->left_bv + $item->right_bv,
-                    'income' => $item->net_amount,
+                    'payout_amount' => $item->payout_amount,
+                    'net_amount' => $item->net_amount,
                 ];
             })
             ->toArray();

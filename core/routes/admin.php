@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Backend\AdvertisementController;
+use App\Models\User;
+use App\Models\UserPayoutDetail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Backend\AdminDashboardController;
@@ -167,6 +169,7 @@ Route::middleware(['setlang'])->group(function () {
             Route::post('/settings/update', 'update')->name('payout.settings.update')->permission('payout-settings-update');
             Route::get('/user-bv-referrals', 'userBvReferrals')->name('user.bv.referrals')->permission('user-bv-referrals-view');
             Route::get('/income-dividing-system', 'incomepayoutmanage')->name('income.payout.manage')->permission('income-payout-manage');
+            Route::post('/process-payout', 'processPayout')->name('user.payout.process');
         });
     });
 
@@ -563,3 +566,10 @@ Route::post('/media-upload', [MediaUploadController::class, 'uploadMediaFile'])-
 Route::post('/media-upload/alt', [MediaUploadController::class, 'altChangeUploadMediaFile'])->name('admin.upload.media.file.alt.change');
 // media upload routes for restrict user in demo mode
 Route::post('/media-upload/loadmore', [MediaUploadController::class, 'getImageForLoadmore'])->name('admin.upload.media.file.loadmore');
+Route::get('/test-email', function() {
+    $user = User::first();
+    $payout = UserPayoutDetail::first();
+    
+    Mail::to($user->email)->send(new \App\Mail\PayoutProcessedMail($user, $payout));
+    return 'Email sent!';
+});

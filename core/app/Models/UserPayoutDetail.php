@@ -32,4 +32,10 @@ class UserPayoutDetail extends Model
     {
         return $this->belongsTo(IncomePayoutManage::class, 'payout_summary_id');
     }
+
+    // In User model
+    public function payoutSettings()
+    {
+        return $this->hasOne(UserPayoutDetail::class);
+    }
 }

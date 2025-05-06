@@ -263,7 +263,7 @@ class AutoFlushBV extends Command
                 'tds_deduction' => $tdsDeduction,
                 'service_charge' => $serviceChargeAmount,
                 'net_amount' => $netAmount,
-                'status' => $userPayout > 0 ? 'processed' : 'no_payout'
+                'status' => $userPayout > 0 ? 'payout_eligible' : 'no_payout'
             ]);
 
             Log::info("User Payout Detail Created", [

@@ -80,7 +80,6 @@ class AutoFlushBV extends Command
             return;
         }
 
-        // Get total BV for left and right, excluding protected types
         $leftBv = $leftChild->userBvs()
             ->whereNotIn('type', $this->protectedTypes)
             ->sum('bv_points');
@@ -89,44 +88,26 @@ class AutoFlushBV extends Command
             ->whereNotIn('type', $this->protectedTypes)
             ->sum('bv_points');
 
-        // Rule 1: If both sides have exactly the sealing limit, flush both completely
-        if ($leftBv == $sealingLimitBv && $rightBv == $sealingLimitBv) {
-            $this->flushSide($leftChild, $leftBv, 'left');
-            $this->flushSide($rightChild, $rightBv, 'right');
+        // Calculate how many full pairs we have
+        $pairs = floor(min($leftBv, $rightBv) / $sealingLimitBv);
+        
+        if ($pairs < 1) {
             return;
         }
 
-        // Rule 2: If one side has sealing limit and other doesn't, no flush
-        if (
-            ($leftBv >= $sealingLimitBv && $rightBv < $sealingLimitBv) ||
-            ($rightBv >= $sealingLimitBv && $leftBv < $sealingLimitBv)
-        ) {
-            return;
-        }
+        // Only flush the exact number of pairs specified by sealing limit
+        $flushAmount = $sealingLimitBv;
 
-        // Rule 3: If both sides have at least sealing limit
-        if ($leftBv >= $sealingLimitBv && $rightBv >= $sealingLimitBv) {
-            // Step 1: Flush sealing limit from both
-            $this->flushSide($leftChild, $sealingLimitBv, 'left');
-            $this->flushSide($rightChild, $sealingLimitBv, 'right');
-
-            // Step 2: Calculate remaining after sealing
-            $remainingLeft = $leftBv - $sealingLimitBv;
-            $remainingRight = $rightBv - $sealingLimitBv;
-
-            // Step 3: Flush remaining from the smaller side ONLY
-            if ($remainingRight > 0 && $remainingLeft > $remainingRight) {
-                $this->flushSide($rightChild, $remainingRight, 'right');
-            } elseif ($remainingLeft > 0 && $remainingRight > $remainingLeft) {
-                $this->flushSide($leftChild, $remainingLeft, 'left');
-            }
-        }
+        // Flush from both sides
+        $this->flushSide($leftChild, $flushAmount, 'left');
+        $this->flushSide($rightChild, $flushAmount, 'right');
     }
 
     protected function flushSide($userChild, $amount, $side)
     {
-        if ($amount <= 0)
+        if ($amount <= 0) {
             return;
+        }
 
         $userChild->userBvs()->create([
             'bv_points' => -$amount,
@@ -141,7 +122,6 @@ class AutoFlushBV extends Command
             'flushed_amount' => $amount,
         ]);
     }
-
 
     protected function recordPayoutSummary($sealingLimitBv)
     {
@@ -209,10 +189,9 @@ class AutoFlushBV extends Command
                     ->whereNotIn('type', $this->protectedTypes)
                     ->sum('bv_points') : 0;
 
-            // If this user qualifies (has at least one match), count just 1
-            if (floor(min($leftBv, $rightBv) / $sealingLimitBv) >= 1) {
-                $matchingPairs += 1;
-            }
+            // Count only the number of complete pairs based on sealing limit
+            $pairs = floor(min($leftBv, $rightBv) / $sealingLimitBv);
+            $matchingPairs += $pairs;
         }
 
         return $matchingPairs;
@@ -244,6 +223,7 @@ class AutoFlushBV extends Command
                 ->where('created_at', '<', now())
                 ->sum('bv_points') ?? 0;
 
+            // Calculate pairs based on sealing limit
             $userPairs = floor(min($leftBv, $rightBv) / $sealingLimitBv);
             $userPayout = $userPairs * $pairIncome;
 

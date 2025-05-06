@@ -112,41 +112,50 @@ class PayoutController extends Controller
 
         $users = User::whereIn('id', $eligibleParents)
             ->whereIn('id', function ($query) {
-                $query->select('user_id')->from('user_payout_details');
+                $query->select('user_id')
+                    ->from('user_payout_details');
             })
             ->select('id', 'first_name', 'last_name', 'partner_id')
-            ->with('descendants')
+            ->with('payout_details')
             ->get()
-            ->map(function ($user) use ($payoutMethod, $payoutValue, $selectedDate) {
+            ->map(function ($user) use ($selectedDate) {
                 $user->total_referrals = $this->countTotalReferrals($user);
 
-                $payoutDetail = UserPayoutDetail::when($selectedDate, function ($query) use ($selectedDate) {
-                    return $query->whereDate('created_at', $selectedDate);
-                })->where('user_id', $user->id)->first();
+                $payoutDetail = UserPayoutDetail::when($selectedDate, function ($q) use ($selectedDate) {
+                    return $q->whereDate('created_at', $selectedDate);
+                })
+                    ->where('user_id', $user->id)
+                    ->where('status', '!=', 'no_payout')      // ← filter out “no_payout” here
+                    ->first();
 
-                $user->payout_date = $payoutDetail ? $payoutDetail->created_at : null;
-                $leftBv = $payoutDetail ? $payoutDetail->left_bv : 0;
-                $rightBv = $payoutDetail ? $payoutDetail->right_bv : 0;
-
-                $user->bv_points = $leftBv + $rightBv;
-                $user->net_amount = $payoutDetail ? $payoutDetail->net_amount : 0;
+                $user->payoutDetail = $payoutDetail;
+                $user->payout_date = $payoutDetail?->created_at;
+                $user->bv_points = ($payoutDetail->left_bv ?? 0) + ($payoutDetail->right_bv ?? 0);
+                $user->net_amount = $payoutDetail->net_amount ?? 0;
 
                 return $user;
             })
-            ->when($selectedDate, function ($collection) {
-                return $collection->filter(function ($user) {
-                    return $user->bv_points > 0;
-                });
-            });
+            // remove any users where we found no valid payoutDetail
+            ->filter(fn($user) => $user->payoutDetail !== null)
+            // if filtering by date, also remove zero‑BV entries
+            ->when($selectedDate, fn($coll) => $coll->filter(fn($u) => $u->bv_points > 0));
 
-        $cashOnHand = DB::table('income_payout_manage')->value('balance_case_on_hand');
+        $cashOnHand = DB::table('income_payout_manage')
+            ->value('balance_case_on_hand');
 
-        // $canPayout = $this->isPayoutButtonEnabled();
+        $lastFlushRecord = UserPayoutDetail::where('status', 'processed')
+            ->orderByDesc('updated_at')
+            ->first();
+
+        $lastPayoutAt = $lastFlushRecord
+            ? $lastFlushRecord->updated_at
+            : now();
 
         return view('backend.pages.payout-manage.payout-listing', compact(
             'users',
             'selectedDate',
             'cashOnHand',
+            'lastPayoutAt',
         ));
     }
 
@@ -253,8 +262,10 @@ class PayoutController extends Controller
     public function processPayout(Request $request)
     {
         $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'payout_detail_id' => 'required|exists:user_payout_details,id'
+            'user_id' => 'required|array|min:1',
+            'user_id.*' => 'exists:users,id',
+            'payout_detail_id' => 'required|array',
+            'payout_detail_id.*' => 'exists:user_payout_details,id',
         ]);
 
         Log::info('Payout processing initiated', [
@@ -262,40 +273,29 @@ class PayoutController extends Controller
             'payout_detail_id' => $validated['payout_detail_id']
         ]);
 
-        $user = User::find($validated['user_id']);
-        $payoutDetail = UserPayoutDetail::find($validated['payout_detail_id']);
+        // 1) get all emails for these users
+        $emailsByUser = User::whereIn('id', $validated['user_id'])
+            ->pluck('email', 'id');
 
-        if (!$user || !$payoutDetail) {
-            Log::error('User or PayoutDetail not found', [
-                'user' => $user,
-                'payoutDetail' => $payoutDetail
-            ]);
-            return redirect()->back()->with('error', 'User or Payout details not found.');
+        // 2a) sum ONLY the payouts you just validated (if you only want these payouts):
+        $totalsByUser = UserPayoutDetail::whereIn('id', $validated['payout_detail_id'])
+            ->groupBy('user_id')
+            ->selectRaw('user_id, SUM(net_amount) as total_net')
+            ->pluck('total_net', 'user_id');
+
+        foreach ($totalsByUser as $userId => $sum) {
+            $user = User::find($userId);
+
+            // skip if something’s wrong
+            if (!$user || !isset($emailsByUser[$userId])) {
+                Log::warning("Skipping mail for user {$userId}");
+                continue;
+            }
+
+            dispatch(new SendPayoutNotification($user, $sum));
         }
 
-        // Update payout status
-        $updated = $payoutDetail->update(['status' => 'processed']);
 
-        if (!$updated) {
-            Log::error('Failed to update payout status', ['payoutDetail' => $payoutDetail]);
-            return redirect()->back()->with('error', 'Failed to update payout status.');
-        }
-
-        Log::info('Dispatching SendPayoutNotification job', [
-            'user_email' => $user->email,
-            'payout_amount' => $payoutDetail->net_amount
-        ]);
-
-        try {
-            dispatch(new SendPayoutNotification($user, $payoutDetail));
-            Log::info('SendPayoutNotification job dispatched successfully');
-        } catch (\Exception $e) {
-            Log::error('Failed to dispatch SendPayoutNotification job', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->with('error', 'Failed to queue payout notification.');
-        }
 
         return redirect()->back()->with('success', 'Payout processed successfully. Notification sent to user.');
     }

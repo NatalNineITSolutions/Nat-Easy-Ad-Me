@@ -1,9 +1,9 @@
 <?php
 
+
 namespace App\Jobs;
 
 use App\Models\User;
-use App\Models\UserPayoutDetail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -16,18 +16,25 @@ class SendPayoutNotification implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $user;
-    public $payoutDetail;
+    /** @var User */
+    protected $user;
 
-    public function __construct(User $user, UserPayoutDetail $payoutDetail)
+    /** @var float */
+    protected $totalAmount;
+
+    public function __construct(User $user, float $totalAmount)
     {
-        $this->user = $user;
-        $this->payoutDetail = $payoutDetail;
+        $this->user        = $user;
+        $this->totalAmount = $totalAmount;
     }
 
     public function handle()
     {
+        // send one mail directly to $this->user->email
         Mail::to($this->user->email)
-            ->queue(new PayoutProcessedMail($this->user, $this->payoutDetail));
+            ->queue(new PayoutProcessedMail(
+                $this->user,
+                $this->totalAmount
+            ));
     }
 }

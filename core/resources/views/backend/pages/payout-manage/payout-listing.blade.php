@@ -183,23 +183,26 @@
     </div>
 @endsection
 @section('scripts')
-    <script src="{{asset('assets/backend/js/bootstrap-tagsinput.js')}}"></script>
-    <x-summernote.js />
-    <x-media.js />
-    <script src="{{asset('assets/backend/js/flatpickr.min.js')}}"></script>
-    <script>
-        (function ($) {
-            "use strict";
+<script src="{{asset('assets/backend/js/bootstrap-tagsinput.js')}}"></script>
+<x-summernote.js />
+<x-media.js />
+<script src="{{asset('assets/backend/js/flatpickr.min.js')}}"></script>
+<script>
+    (function ($) {
+        "use strict";
 
-            $(document).ready(function () {
-                // Initialize date picker
-                $(".flatpickr-input").flatpickr({
-                    dateFormat: "Y-m-d",
-                    maxDate: "today"
-                });
+        $(document).ready(function () {
+            // Initialize date picker
+            $(".flatpickr-input").flatpickr({
+                dateFormat: "Y-m-d",
+                maxDate: "today"
             });
-        })(jQuery)
-    </script>
+        });
+    })(jQuery)
+</script>
+@section('scripts')
+    <!-- … other scripts … -->
+
     <script>
             (function ($) {
                 "use strict";
@@ -216,16 +219,22 @@
                                 return;
                             }
 
-                            const hours = Math.floor(seconds / 3600);
+                            const days = Math.floor(seconds / (3600 * 24));
+                            const hours = Math.floor((seconds % (3600 * 24)) / 3600);
                             const minutes = Math.floor((seconds % 3600) / 60);
                             const secs = seconds % 60;
 
-                            countdownElement.textContent = `${hours}h ${minutes}m ${secs}s`;
+                            let parts = [];
+                            if (days > 0) parts.push(`${days}d`);
+                            if (hours > 0 || days > 0) parts.push(`${hours}h`);
+                            parts.push(`${minutes}m`);
+                            parts.push(`${secs}s`);
+
+                            countdownElement.textContent = parts.join(' ');
                             seconds--;
                         }, 1000);
                     }
                 });
             })(jQuery);
     </script>
-
 @endsection

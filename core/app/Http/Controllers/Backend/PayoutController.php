@@ -112,8 +112,7 @@ class PayoutController extends Controller
 
         $users = User::whereIn('id', $eligibleParents)
             ->whereIn('id', function ($query) {
-                $query->select('user_id')
-                    ->from('user_payout_details');
+                $query->select('user_id')->from('user_payout_details');
             })
             ->select('id', 'first_name', 'last_name', 'partner_id')
             ->with('payout_details')
@@ -125,37 +124,41 @@ class PayoutController extends Controller
                     return $q->whereDate('created_at', $selectedDate);
                 })
                     ->where('user_id', $user->id)
-                    ->where('status', '!=', 'no_payout')      // ← filter out “no_payout” here
+                    ->where('status', 'payout_eligible')
                     ->first();
 
                 $user->payoutDetail = $payoutDetail;
-                $user->payout_date = $payoutDetail?->created_at;
+                $user->payout_date = optional($payoutDetail)->created_at;
                 $user->bv_points = ($payoutDetail->left_bv ?? 0) + ($payoutDetail->right_bv ?? 0);
                 $user->net_amount = $payoutDetail->net_amount ?? 0;
 
                 return $user;
             })
-            // remove any users where we found no valid payoutDetail
             ->filter(fn($user) => $user->payoutDetail !== null)
-            // if filtering by date, also remove zero‑BV entries
             ->when($selectedDate, fn($coll) => $coll->filter(fn($u) => $u->bv_points > 0));
 
-        $cashOnHand = DB::table('income_payout_manage')
-            ->value('balance_case_on_hand');
+        $cashOnHand = DB::table('income_payout_manage')->value('balance_case_on_hand');
 
-        $lastFlushRecord = UserPayoutDetail::where('status', 'processed')
+        $lastFlushRecord = UserPayoutDetail::where('status', 'payout_completed')
             ->orderByDesc('updated_at')
             ->first();
 
-        $lastPayoutAt = $lastFlushRecord
-            ? $lastFlushRecord->updated_at
-            : now();
+        $lastPayoutAt = $lastFlushRecord ? $lastFlushRecord->updated_at : now();
+
+        $hasFlushOccurred = UserPayoutDetail::where('status', 'payout_eligible')
+            ->whereDate('created_at', now())
+            ->exists();
+
+        $remainingSeconds = 0; 
+
+        $payoutAllowed = $remainingSeconds <= 0 || $hasFlushOccurred;
 
         return view('backend.pages.payout-manage.payout-listing', compact(
             'users',
             'selectedDate',
             'cashOnHand',
             'lastPayoutAt',
+            'remainingSeconds'
         ));
     }
 
@@ -273,11 +276,15 @@ class PayoutController extends Controller
             'payout_detail_id' => $validated['payout_detail_id']
         ]);
 
+        // Update status to payout_completed for processed records
+        UserPayoutDetail::whereIn('id', $validated['payout_detail_id'])
+            ->update(['status' => 'payout_completed']);
+
         // 1) get all emails for these users
         $emailsByUser = User::whereIn('id', $validated['user_id'])
             ->pluck('email', 'id');
 
-        // 2a) sum ONLY the payouts you just validated (if you only want these payouts):
+        // 2a) sum ONLY the payouts you just validated
         $totalsByUser = UserPayoutDetail::whereIn('id', $validated['payout_detail_id'])
             ->groupBy('user_id')
             ->selectRaw('user_id, SUM(net_amount) as total_net')
@@ -286,7 +293,7 @@ class PayoutController extends Controller
         foreach ($totalsByUser as $userId => $sum) {
             $user = User::find($userId);
 
-            // skip if something’s wrong
+            // skip if something's wrong
             if (!$user || !isset($emailsByUser[$userId])) {
                 Log::warning("Skipping mail for user {$userId}");
                 continue;
@@ -294,8 +301,6 @@ class PayoutController extends Controller
 
             dispatch(new SendPayoutNotification($user, $sum));
         }
-
-
 
         return redirect()->back()->with('success', 'Payout processed successfully. Notification sent to user.');
     }

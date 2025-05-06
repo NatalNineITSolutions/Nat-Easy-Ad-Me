@@ -89,7 +89,7 @@
                         } elseif ($paymentType === 'week') {
                             $nextPayout->addWeek();
                         } elseif ($paymentType === 'month') {
-                            $nextPayout->addMonthNoOverflow();
+                            $nextPayout->addDays(28);
                         }
 
                         $now = Carbon::now();

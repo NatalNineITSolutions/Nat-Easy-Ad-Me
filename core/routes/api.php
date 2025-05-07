@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\GenologyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -77,5 +78,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/enquiries', [EnquiryControllerApi::class, 'allEnquiriesApi']);
     Route::get('/user/profile', [EnquiryControllerApi::class, 'showProfileApi']);
     Route::get('/user/dashboard', [AuthController::class, 'dashboardApi']);
-    
+    Route::get('/genology', [GenologyController::class, 'genology']);
+    Route::post('/mlm/register-member', [GenologyController::class, 'apiRegisterNewMember']);
 });

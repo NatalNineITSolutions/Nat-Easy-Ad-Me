@@ -205,7 +205,6 @@ class DashboardController extends Controller
             'remainingProfileLimit' => $remainingProfileLimit,
         ]);
     }
-
     public function genology()
     {
         $user_id = Auth::id();

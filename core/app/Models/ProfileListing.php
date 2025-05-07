@@ -38,6 +38,9 @@ class ProfileListing extends Model
         'visibility',
         'marital_status',
         'age',
+        'address',
+        'lon',
+        'lat'
     ];
 
     public function imageAttachment()

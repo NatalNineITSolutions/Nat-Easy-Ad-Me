@@ -83,7 +83,12 @@
                     </div>
 
                     <div class="right-content">
-                        <div class="date-filter-container">
+                        <div class="date-filter-container">                              
+                            {{-- Add this right after the payout button --}}
+                            <a href="{{ route('user.payout.pdf') }}" class="cmnBtn btn_5 btn_bg_blue radius-5 ms-2 mb-3">
+                                {{ __('Download PDF') }}
+                            </a>
+                       
                             {{-- Payout Button --}}
                             <form id="payoutForm" action="{{ route('user.payout.process') }}" method="POST"
                                 class="d-inline-block">
@@ -303,8 +308,8 @@
                         Swal.fire({
                             title: '{{ __("Payout Not Available Yet") }}',
                             html: `{{ __("The payout time has not been reached yet.") }}<br><br>
-                      {{ __("Next payout will be available in") }} <strong>
-                      ${days}d ${hours}h ${minutes}m ${seconds}s</strong>`,
+                                  {{ __("Next payout will be available in") }} <strong>
+                                  ${days}d ${hours}h ${minutes}m ${seconds}s</strong>`,
                             icon: 'info',
                             confirmButtonColor: '#3085d6',
                             confirmButtonText: '{{ __("OK") }}'

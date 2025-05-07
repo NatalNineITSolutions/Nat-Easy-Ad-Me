@@ -293,4 +293,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserPayoutDetail::class)->latestOfMany();
     }
+
+    public function eligible_payout_details()
+    {
+        return $this->hasMany(UserPayoutDetail::class)->where('status', 'payout_eligible');
+    }
 }

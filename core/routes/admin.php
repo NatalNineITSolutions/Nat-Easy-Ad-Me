@@ -170,6 +170,7 @@ Route::middleware(['setlang'])->group(function () {
             Route::get('/user-bv-referrals', 'userBvReferrals')->name('user.bv.referrals')->permission('user-bv-referrals-view');
             Route::get('/income-dividing-system', 'incomepayoutmanage')->name('income.payout.manage')->permission('income-payout-manage');
             Route::post('/process-payout', 'processPayout')->name('user.payout.process');
+            Route::get('/user/payout/pdf', 'generatePayoutPDF')->name('user.payout.pdf');
         });
     });
 

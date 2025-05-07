@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendPayoutNotification;
 use App\Mail\PayoutNotificationMail;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -126,11 +127,12 @@ class PayoutController extends Controller
                     ->where('user_id', $user->id)
                     ->where('status', 'payout_eligible')
                     ->first();
+                $payoutDetails = $user->eligible_payout_details;
 
                 $user->payoutDetail = $payoutDetail;
                 $user->payout_date = optional($payoutDetail)->created_at;
                 $user->bv_points = ($payoutDetail->left_bv ?? 0) + ($payoutDetail->right_bv ?? 0);
-                $user->net_amount = $payoutDetail->net_amount ?? 0;
+                $user->net_amount = $payoutDetails->sum('net_amount');
 
                 return $user;
             })
@@ -149,7 +151,7 @@ class PayoutController extends Controller
             ->whereDate('created_at', now())
             ->exists();
 
-        $remainingSeconds = 0; 
+        $remainingSeconds = 0;
 
         $payoutAllowed = $remainingSeconds <= 0 || $hasFlushOccurred;
 
@@ -203,8 +205,8 @@ class PayoutController extends Controller
         $currentDayBV = UsersBV::whereDate('created_at', Carbon::today())->sum('bv_points');
         $totalBV = $previousCaseOnHand + $currentDayBV;
 
-        $pairIncome = get_static_option('maximum_one_pair_income') ?? 250;
-        $maximumDailyCeiling = get_static_option('sealing_limitation') ?? 10;
+        $pairIncome = get_static_option('maximum_one_pair_income') ?? 0;
+        $maximumDailyCeiling = get_static_option('sealing_limitation') ?? 0;
         $maximumPairIncomeLimit = get_static_option('maximum_pair_income') ?? PHP_INT_MAX;
 
         $currentDayMatchingPairs = $latestPayout?->matching_pairs ?? 0;
@@ -303,5 +305,69 @@ class PayoutController extends Controller
         }
 
         return redirect()->back()->with('success', 'Payout processed successfully. Notification sent to user.');
+    }
+
+    public function generatePayoutPDF(Request $request)
+    {
+        $selectedDate = $request->input('filter_date', null);
+
+        $users = User::with([
+            'eligible_payout_details' => function ($query) use ($selectedDate) {
+                if ($selectedDate) {
+                    $query->whereDate('created_at', $selectedDate);
+                }
+            }
+        ])
+            ->whereHas('eligible_payout_details', function ($query) use ($selectedDate) {
+                if ($selectedDate) {
+                    $query->whereDate('created_at', $selectedDate);
+                }
+            })
+            ->get()
+            ->map(function ($user) {
+                // Get the payout details as a collection
+                $payoutDetails = $user->eligible_payout_details;
+
+                // Calculate totals
+                $user->total_payout_amount = $payoutDetails->sum('payout_amount');
+                $user->total_tds_deduction = $payoutDetails->sum('tds_deduction');
+                $user->total_service_charge = $payoutDetails->sum('service_charge');
+                $user->net_amount = $payoutDetails->sum('net_amount');
+
+                // Prepare transaction details
+                $user->transactions = $payoutDetails->map(function ($detail) {
+                    return [
+                        'date' => $detail->created_at->format('d M Y'),
+                        'payout_amount' => $detail->payout_amount,
+                        'tds_deduction' => $detail->tds_deduction,
+                        'service_charge' => $detail->service_charge,
+                        'net_amount' => $detail->net_amount
+                    ];
+                })->toArray(); // Convert to array to avoid serialization issues
+    
+                return $user;
+            })
+            ->filter(function ($user) {
+                return $user->eligible_payout_details->isNotEmpty();
+            });
+
+        $data = [
+            'title' => $selectedDate
+                ? 'Payout Report - ' . \Carbon\Carbon::parse($selectedDate)->format('d M Y')
+                : 'Cumulative Payout Report',
+            'date' => now()->format('d/m/Y H:i'),
+            'users' => $users,
+            'total_payout' => $users->sum('total_payout_amount'),
+            'total_tds' => $users->sum('total_tds_deduction'),
+            'total_service' => $users->sum('total_service_charge'),
+            'total_net' => $users->sum('net_amount'),
+            'selectedDate' => $selectedDate
+        ];
+
+        return Pdf::loadView('backend.pages.payout-manage.payout-pdf', $data)
+            ->download(
+                ($selectedDate ? 'payout-' . $selectedDate : 'cumulative-payout')
+                . '-report-' . now()->format('Y-m-d-H-i') . '.pdf'
+            );
     }
 }

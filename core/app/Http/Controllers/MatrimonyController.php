@@ -337,8 +337,8 @@ class MatrimonyController extends Controller
                 'document_path' => $documentPath,
                 'image' => $validated['image'],
                 'status' => 'pending',
-                'zodiac_sign' => $validated['zodiac_sign'], 
-                'star' => $validated['star'],               
+                'zodiac_sign' => $validated['zodiac_sign'],
+                'star' => $validated['star'],
             ]);
 
             return response()->json([
@@ -554,6 +554,9 @@ class MatrimonyController extends Controller
             'zodiac_sign' => $request->zodiac_sign,
             'star' => $request->star,
             'visibility' => $request->visibility ?? 0,
+            'address' => $request->address, // Store the address
+            'lat' => $request->latitude, // Store latitude
+            'lon' => $request->longitude, // Store longitude
         ]);
 
         Log::info('Profile Listing Created:', $profileListing->toArray());
@@ -1025,7 +1028,7 @@ class MatrimonyController extends Controller
 
             if ($request->filled('marital_status')) {
                 $query->where('marital_status', $request->marital_status);
-            }            
+            }
 
             if ($request->filled('income')) {
                 $incomeRange = IncomeRange::find($request->income);
@@ -1105,5 +1108,5 @@ class MatrimonyController extends Controller
         ]);
     }
 
-   
+
 }

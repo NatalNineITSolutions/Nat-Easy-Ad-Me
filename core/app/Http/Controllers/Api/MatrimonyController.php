@@ -10,6 +10,8 @@ use App\Models\Gothram;
 use App\Models\IncomeRange;
 use App\Models\MotherTongue;
 use App\Models\Religion;
+use App\Models\Star;
+use App\Models\ZodiacSign;
 use Illuminate\Http\Request;
 use App\Models\ProfileListing;
 use Illuminate\Support\Facades\Validator;
@@ -368,6 +370,10 @@ class MatrimonyController extends Controller
             'occupation' => 'required|string',
             'location' => 'required|string',
             'income' => 'required|string',
+            'marital_status' => 'required|string',
+            'gender' => 'required|string',
+            'zodiac_sign' => 'required|string',
+            'star' => 'required|string',
         ]);
 
 
@@ -463,6 +469,26 @@ class MatrimonyController extends Controller
         return response()->json([
             'success' => true,
             'data' => $motherTongue
+        ], 200);
+    }
+    
+    public function zodiacSign()
+    {
+        $zodiacSigns = ZodiacSign::all(); 
+
+        return response()->json([
+            'success' => true,
+            'data' => $zodiacSigns
+        ], 200);
+    }
+
+    public function star()
+    {
+        $stars = Star::all(); 
+
+        return response()->json([
+            'success' => true,
+            'data' => $stars
         ], 200);
     }
 }

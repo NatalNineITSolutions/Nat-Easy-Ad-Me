@@ -29,7 +29,7 @@
                 </tr>
                 <tr>
                     <td>Current Day Matching Pairs (One Distributor)</td>
-                    <td>{{ $currentDayMatchingPairs }}</td>
+                    <td>{{ $currentDayMatchingPairs }} (Paid: {{ $pairsToPay }})</td>
                 </tr>
                 <tr>
                     <td>One Day Maximum Ceiling</td>
@@ -40,7 +40,7 @@
                     <td>{{ number_format($pairIncome) }}</td>
                 </tr>
                 <tr>
-                    <td><strong>Total Output Amount</strong> ({{ $currentDayMatchingPairs }} × {{ $pairIncome }})</td>
+                    <td><strong>Total Output Amount</strong> ({{ $pairsToPay }} × {{ $pairIncome }})</td>
                     <td><strong>{{ number_format($totalOutPutAmount) }}</strong></td>
                 </tr>
                 <tr class="table-success">
@@ -51,4 +51,3 @@
         </table>
     </div>
 @endsection
-

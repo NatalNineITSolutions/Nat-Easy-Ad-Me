@@ -196,7 +196,6 @@ class PayoutController extends Controller
 
         return $count;
     }
-
     public function incomepayoutmanage()
     {
         $latestPayout = IncomePayoutManage::latest()->first();
@@ -211,7 +210,10 @@ class PayoutController extends Controller
 
         $currentDayMatchingPairs = $latestPayout?->matching_pairs ?? 0;
 
-        $totalOutPutAmount = $currentDayMatchingPairs * $pairIncome;
+        // Apply the daily ceiling limit to the matching pairs
+        $pairsToPay = min($currentDayMatchingPairs, $maximumDailyCeiling);
+
+        $totalOutPutAmount = $pairsToPay * $pairIncome;
 
         if ($totalOutPutAmount > $maximumPairIncomeLimit) {
             $totalOutPutAmount = $maximumPairIncomeLimit;
@@ -228,7 +230,8 @@ class PayoutController extends Controller
             'pairIncome',
             'totalOutPutAmount',
             'balanceCaseOnHand',
-            'maximumPairIncomeLimit'
+            'maximumPairIncomeLimit',
+            'pairsToPay' 
         ));
     }
 

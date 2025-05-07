@@ -54,6 +54,8 @@ Route::get('/dosham', [MatrimonyController::class, 'dosham']);
 Route::get('/income', [MatrimonyController::class, 'income']);
 Route::get('/age', [MatrimonyController::class, 'age']);
 Route::get('/mother_tongue', [MatrimonyController::class, 'motherTongue']);
+Route::get('/zodiac-sign', [MatrimonyController::class, 'zodiacSign']);
+Route::get('/star', [MatrimonyController::class, 'star']);
 
 
 // Protected Routes (using Sanctum for authentication)

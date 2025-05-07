@@ -1,0 +1,238 @@
+[2025-05-07 15:16:13] production.INFO: API Preferences saved for user: 212  
+[2025-05-07 15:42:42] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-07 15:42:42] production.INFO: last3: {"membership_id":263} 
+[2025-05-07 15:42:42] production.INFO: last5: {"membership_id":263} 
+[2025-05-07 15:42:42] production.INFO: last4: {"membership_id":263,"order_id":null} 
+[2025-05-07 15:42:42] production.INFO: after-charge: {"membership_id":263,"order_id":263} 
+[2025-05-07 15:43:23] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"263","payment_amount":5000,"transaction_id":"pay_QS0AhMVIfioS1v"} 
+[2025-05-07 15:43:23] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-07 15:43:23] production.INFO: Updating membership database {"last_membership_id":"263","transaction_id":"pay_QS0AhMVIfioS1v","membership_history_id":446,"upgrade_membership_id":3} 
+[2025-05-07 15:43:23] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":263} 
+[2025-05-07 15:43:43] production.INFO: Membership email sent to user #212  
+[2025-05-07 15:43:45] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-07 15:43:45] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-07 15:44:28] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-07 15:44:28] production.INFO: last3: {"membership_id":263} 
+[2025-05-07 15:44:28] production.INFO: last5: {"membership_id":263} 
+[2025-05-07 15:44:28] production.INFO: last4: {"membership_id":263,"order_id":null} 
+[2025-05-07 15:44:28] production.INFO: after-charge: {"membership_id":263,"order_id":263} 
+[2025-05-07 15:45:04] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-07 15:45:04] production.INFO: last3: {"membership_id":263} 
+[2025-05-07 15:45:04] production.INFO: last5: {"membership_id":263} 
+[2025-05-07 15:45:04] production.INFO: last4: {"membership_id":263,"order_id":263} 
+[2025-05-07 15:45:04] production.INFO: after-charge: {"membership_id":263,"order_id":263} 
+[2025-05-07 15:46:43] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"263","payment_amount":5000,"transaction_id":"pay_QS0EKRluCqRhPK"} 
+[2025-05-07 15:46:44] production.INFO: Updating membership database {"last_membership_id":"263","transaction_id":"pay_QS0EKRluCqRhPK","membership_history_id":448,"upgrade_membership_id":3} 
+[2025-05-07 15:46:44] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":263} 
+[2025-05-07 15:46:50] production.INFO: Membership email sent to user #212  
+[2025-05-07 15:46:52] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-07 15:46:52] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-07 15:49:33] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-07 15:49:33] production.INFO: last3: {"membership_id":264} 
+[2025-05-07 15:49:33] production.INFO: last5: {"membership_id":264} 
+[2025-05-07 15:49:33] production.INFO: last4: {"membership_id":264,"order_id":null} 
+[2025-05-07 15:49:33] production.INFO: after-charge: {"membership_id":264,"order_id":264} 
+[2025-05-07 15:50:04] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"264","payment_amount":5000,"transaction_id":"pay_QS0HthcI7XDFlG"} 
+[2025-05-07 15:50:04] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-07 15:50:04] production.INFO: Updating membership database {"last_membership_id":"264","transaction_id":"pay_QS0HthcI7XDFlG","membership_history_id":449,"upgrade_membership_id":3} 
+[2025-05-07 15:50:04] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":264} 
+[2025-05-07 15:50:05] production.INFO: Distributed BV points to parent user: {"user_id":212,"bv_points":900} 
+[2025-05-07 15:50:12] production.INFO: Membership email sent to user #214  
+[2025-05-07 15:50:13] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-07 15:50:13] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-07 15:50:38] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-07 15:50:38] production.INFO: last3: {"membership_id":265} 
+[2025-05-07 15:50:38] production.INFO: last5: {"membership_id":265} 
+[2025-05-07 15:50:38] production.INFO: last4: {"membership_id":265,"order_id":null} 
+[2025-05-07 15:50:38] production.INFO: after-charge: {"membership_id":265,"order_id":265} 
+[2025-05-07 15:51:12] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"265","payment_amount":1000,"transaction_id":"pay_QS0J6H35Liw0Mc"} 
+[2025-05-07 15:51:12] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":2} 
+[2025-05-07 15:51:12] production.INFO: Updating membership database {"last_membership_id":"265","transaction_id":"pay_QS0J6H35Liw0Mc","membership_history_id":450,"upgrade_membership_id":2} 
+[2025-05-07 15:51:12] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":265} 
+[2025-05-07 15:51:12] production.INFO: Distributed BV points to parent user: {"user_id":212,"bv_points":300} 
+[2025-05-07 15:51:17] production.INFO: Membership email sent to user #213  
+[2025-05-07 15:51:19] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-07 15:51:19] production.INFO: Data to update: {"upgrade_membership_id":2} 
+[2025-05-07 15:54:24] production.INFO: Checking for BV flush. Now: 15:54, Configured: 15:53  
+[2025-05-07 15:55:13] production.INFO: Checking for BV flush. Now: 15:55, Configured: 15:55  
+[2025-05-07 15:55:13] production.INFO: Payout recorded {"date":"2025-05-07 15:55:13","previous_balance":158296,"new_balance":161596.0,"record_id":171} 
+[2025-05-07 15:55:13] production.INFO: Starting payout detail recording. Total users: 3  
+[2025-05-07 15:55:13] production.INFO: User Payout Detail Created {"user_id":212,"left_bv":"300","right_bv":"900","pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 15:55:13] production.INFO: User Payout Detail Created {"user_id":213,"left_bv":0,"right_bv":0,"pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 15:55:13] production.INFO: User Payout Detail Created {"user_id":214,"left_bv":0,"right_bv":0,"pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 15:55:13] production.INFO: Payout detail recording completed.  
+[2025-05-07 15:58:01] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-07 15:58:01] production.INFO: last3: {"membership_id":266} 
+[2025-05-07 15:58:01] production.INFO: last5: {"membership_id":266} 
+[2025-05-07 15:58:01] production.INFO: last4: {"membership_id":266,"order_id":null} 
+[2025-05-07 15:58:01] production.INFO: after-charge: {"membership_id":266,"order_id":266} 
+[2025-05-07 15:58:21] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"266","payment_amount":5000,"transaction_id":"pay_QS0QcoFmhsVWBs"} 
+[2025-05-07 15:58:21] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-07 15:58:21] production.INFO: Updating membership database {"last_membership_id":"266","transaction_id":"pay_QS0QcoFmhsVWBs","membership_history_id":451,"upgrade_membership_id":3} 
+[2025-05-07 15:58:21] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":266} 
+[2025-05-07 15:58:21] production.INFO: Distributed BV points to parent user: {"user_id":213,"bv_points":900} 
+[2025-05-07 15:58:21] production.INFO: Distributed BV points to parent user: {"user_id":212,"bv_points":900} 
+[2025-05-07 15:58:28] production.INFO: Membership email sent to user #215  
+[2025-05-07 15:58:30] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-07 15:58:30] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-07 15:59:07] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-07 15:59:08] production.INFO: last3: {"membership_id":267} 
+[2025-05-07 15:59:08] production.INFO: last5: {"membership_id":267} 
+[2025-05-07 15:59:08] production.INFO: last4: {"membership_id":267,"order_id":null} 
+[2025-05-07 15:59:08] production.INFO: after-charge: {"membership_id":267,"order_id":267} 
+[2025-05-07 15:59:29] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"267","payment_amount":1000,"transaction_id":"pay_QS0RpRoUP09zVZ"} 
+[2025-05-07 15:59:29] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":2} 
+[2025-05-07 15:59:29] production.INFO: Updating membership database {"last_membership_id":"267","transaction_id":"pay_QS0RpRoUP09zVZ","membership_history_id":452,"upgrade_membership_id":2} 
+[2025-05-07 15:59:29] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":267} 
+[2025-05-07 15:59:29] production.INFO: Distributed BV points to parent user: {"user_id":213,"bv_points":300} 
+[2025-05-07 15:59:29] production.INFO: Distributed BV points to parent user: {"user_id":212,"bv_points":300} 
+[2025-05-07 15:59:34] production.INFO: Membership email sent to user #218  
+[2025-05-07 15:59:36] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-07 15:59:36] production.INFO: Data to update: {"upgrade_membership_id":2} 
+[2025-05-07 16:02:16] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-07 16:02:16] production.INFO: last3: {"membership_id":268} 
+[2025-05-07 16:02:16] production.INFO: last5: {"membership_id":268} 
+[2025-05-07 16:02:16] production.INFO: last4: {"membership_id":268,"order_id":null} 
+[2025-05-07 16:02:16] production.INFO: after-charge: {"membership_id":268,"order_id":268} 
+[2025-05-07 16:02:38] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"268","payment_amount":5000,"transaction_id":"pay_QS0V9az7NX5Ccq"} 
+[2025-05-07 16:02:38] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-07 16:02:38] production.INFO: Updating membership database {"last_membership_id":"268","transaction_id":"pay_QS0V9az7NX5Ccq","membership_history_id":453,"upgrade_membership_id":3} 
+[2025-05-07 16:02:38] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":268} 
+[2025-05-07 16:02:39] production.INFO: Distributed BV points to parent user: {"user_id":214,"bv_points":900} 
+[2025-05-07 16:02:39] production.INFO: Distributed BV points to parent user: {"user_id":212,"bv_points":900} 
+[2025-05-07 16:02:44] production.INFO: Membership email sent to user #217  
+[2025-05-07 16:02:46] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-07 16:02:46] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-07 16:03:21] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-07 16:03:22] production.INFO: last3: {"membership_id":269} 
+[2025-05-07 16:03:22] production.INFO: last5: {"membership_id":269} 
+[2025-05-07 16:03:22] production.INFO: last4: {"membership_id":269,"order_id":null} 
+[2025-05-07 16:03:22] production.INFO: after-charge: {"membership_id":269,"order_id":269} 
+[2025-05-07 16:04:01] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"269","payment_amount":1000,"transaction_id":"pay_QS0WKdw9OeLrYW"} 
+[2025-05-07 16:04:01] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":2} 
+[2025-05-07 16:04:01] production.INFO: Updating membership database {"last_membership_id":"269","transaction_id":"pay_QS0WKdw9OeLrYW","membership_history_id":454,"upgrade_membership_id":2} 
+[2025-05-07 16:04:01] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":269} 
+[2025-05-07 16:04:02] production.INFO: Distributed BV points to parent user: {"user_id":214,"bv_points":300} 
+[2025-05-07 16:04:02] production.INFO: Distributed BV points to parent user: {"user_id":212,"bv_points":300} 
+[2025-05-07 16:04:07] production.INFO: Membership email sent to user #217  
+[2025-05-07 16:04:09] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-07 16:04:09] production.INFO: Data to update: {"upgrade_membership_id":2} 
+[2025-05-07 16:05:16] production.INFO: Checking for BV flush. Now: 16:05, Configured: 16:04  
+[2025-05-07 16:05:32] production.INFO: Checking for BV flush. Now: 16:05, Configured: 16:05  
+[2025-05-07 16:05:32] production.INFO: BV Flush - Side left {"user_id":213,"flushed_amount":900} 
+[2025-05-07 16:05:32] production.INFO: BV Flush - Side right {"user_id":214,"flushed_amount":900} 
+[2025-05-07 16:05:32] production.INFO: Payout recorded {"date":"2025-05-07 16:05:32","previous_balance":161596,"new_balance":169395.0,"record_id":172} 
+[2025-05-07 16:05:32] production.INFO: Starting payout detail recording. Total users: 3  
+[2025-05-07 16:05:32] production.INFO: User Payout Detail Created {"user_id":212,"left_bv":"1500","right_bv":"1200","pairs":1.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 16:05:32] production.INFO: User Payout Detail Created {"user_id":213,"left_bv":"900","right_bv":"300","pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 16:05:32] production.INFO: User Payout Detail Created {"user_id":214,"left_bv":"300","right_bv":0,"pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 16:05:32] production.INFO: Payout detail recording completed.  
+[2025-05-07 16:23:09] production.INFO: Checking for BV flush. Now: 16:23, Configured: 16:23  
+[2025-05-07 16:23:09] production.INFO: BV Flush - Side left {"user_id":213,"flushed_amount":900.0} 
+[2025-05-07 16:23:09] production.INFO: BV Flush - Side right {"user_id":214,"flushed_amount":900.0} 
+[2025-05-07 16:23:09] production.INFO: BV Flush - Side right {"user_id":214,"flushed_amount":300.0} 
+[2025-05-07 16:23:09] production.INFO: BV Flush - Side right {"user_id":218,"flushed_amount":"300"} 
+[2025-05-07 16:23:09] production.INFO: Payout recorded {"date":"2025-05-07 16:23:09","previous_balance":169395,"new_balance":177194.0,"record_id":173} 
+[2025-05-07 16:23:09] production.INFO: Starting payout detail recording. Total users: 3  
+[2025-05-07 16:23:09] production.INFO: User Payout Detail Created {"user_id":212,"left_bv":"1500","right_bv":"1200","pairs":1.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 16:23:09] production.INFO: User Payout Detail Created {"user_id":213,"left_bv":"900","right_bv":"300","pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 16:23:09] production.INFO: User Payout Detail Created {"user_id":214,"left_bv":"300","right_bv":0,"pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 16:23:09] production.INFO: Payout detail recording completed.  
+[2025-05-07 16:26:00] production.INFO: Checking for BV flush. Now: 16:26, Configured: 16:25  
+[2025-05-07 16:26:21] production.INFO: Checking for BV flush. Now: 16:26, Configured: 16:26  
+[2025-05-07 16:26:22] production.INFO: BV Flush - Side left {"user_id":213,"flushed_amount":"300"} 
+[2025-05-07 16:26:22] production.INFO: Payout recorded {"date":"2025-05-07 16:26:22","previous_balance":177194,"new_balance":180494.0,"record_id":174} 
+[2025-05-07 16:26:22] production.INFO: Starting payout detail recording. Total users: 3  
+[2025-05-07 16:26:22] production.INFO: User Payout Detail Created {"user_id":212,"left_bv":"300","right_bv":"900","pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 16:26:22] production.INFO: User Payout Detail Created {"user_id":213,"left_bv":0,"right_bv":0,"pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 16:26:22] production.INFO: User Payout Detail Created {"user_id":214,"left_bv":0,"right_bv":0,"pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 16:26:22] production.INFO: Payout detail recording completed.  
+[2025-05-07 16:34:07] production.INFO: Checking for BV flush. Now: 16:34, Configured: 16:34  
+[2025-05-07 16:34:07] production.INFO: BV Flush - Side left {"user_id":213,"flushed_amount":"300"} 
+[2025-05-07 16:34:07] production.INFO: BV Flush - Side left {"user_id":213,"flushed_amount":"300"} 
+[2025-05-07 16:34:07] production.INFO: Payout recorded {"date":"2025-05-07 16:34:07","previous_balance":180494,"new_balance":183794.0,"record_id":175} 
+[2025-05-07 16:34:07] production.INFO: Starting payout detail recording. Total users: 3  
+[2025-05-07 16:34:07] production.INFO: User Payout Detail Created {"user_id":212,"left_bv":"300","right_bv":"900","pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 16:34:07] production.INFO: User Payout Detail Created {"user_id":213,"left_bv":0,"right_bv":0,"pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 16:34:07] production.INFO: User Payout Detail Created {"user_id":214,"left_bv":0,"right_bv":0,"pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 16:34:07] production.INFO: Payout detail recording completed.  
+[2025-05-07 16:36:06] production.INFO: Checking for BV flush. Now: 16:36, Configured: 16:36  
+[2025-05-07 16:36:06] production.INFO: Payout recorded {"date":"2025-05-07 16:36:06","previous_balance":183794,"new_balance":187094.0,"record_id":176} 
+[2025-05-07 16:36:06] production.INFO: Starting payout detail recording. Total users: 3  
+[2025-05-07 16:36:06] production.INFO: User Payout Detail Created {"user_id":212,"left_bv":"300","right_bv":"900","pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 16:36:06] production.INFO: User Payout Detail Created {"user_id":213,"left_bv":0,"right_bv":0,"pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 16:36:06] production.INFO: User Payout Detail Created {"user_id":214,"left_bv":0,"right_bv":0,"pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 16:36:06] production.INFO: Payout detail recording completed.  
+[2025-05-07 16:37:34] production.INFO: Checking for BV flush. Now: 16:37, Configured: 16:37  
+[2025-05-07 16:37:34] production.INFO: Payout recorded {"date":"2025-05-07 16:37:34","previous_balance":187094,"new_balance":190394.0,"record_id":177} 
+[2025-05-07 16:37:34] production.INFO: Starting payout detail recording. Total users: 3  
+[2025-05-07 16:37:34] production.INFO: User Payout Detail Created {"user_id":212,"left_bv":"300","right_bv":"900","pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 16:37:34] production.INFO: User Payout Detail Created {"user_id":213,"left_bv":0,"right_bv":0,"pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 16:37:34] production.INFO: User Payout Detail Created {"user_id":214,"left_bv":0,"right_bv":0,"pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 16:37:34] production.INFO: Payout detail recording completed.  
+[2025-05-07 16:39:38] production.INFO: Checking for BV flush. Now: 16:39, Configured: 16:39  
+[2025-05-07 16:39:38] production.INFO: BV Flush - Side left {"user_id":213,"flushed_amount":900} 
+[2025-05-07 16:39:38] production.INFO: BV Flush - Side right {"user_id":214,"flushed_amount":900} 
+[2025-05-07 16:39:38] production.INFO: Payout recorded {"date":"2025-05-07 16:39:38","previous_balance":190394,"new_balance":194893.0,"record_id":178} 
+[2025-05-07 16:39:38] production.INFO: Starting payout detail recording. Total users: 3  
+[2025-05-07 16:39:38] production.INFO: User Payout Detail Created {"user_id":212,"left_bv":"900","right_bv":"900","pairs":1.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 16:39:38] production.INFO: User Payout Detail Created {"user_id":213,"left_bv":0,"right_bv":0,"pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 16:39:38] production.INFO: User Payout Detail Created {"user_id":214,"left_bv":0,"right_bv":0,"pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 16:39:38] production.INFO: Payout detail recording completed.  
+[2025-05-07 16:54:38] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-07 16:54:38] production.INFO: last3: {"membership_id":270} 
+[2025-05-07 16:54:39] production.INFO: last5: {"membership_id":270} 
+[2025-05-07 16:54:39] production.INFO: last4: {"membership_id":270,"order_id":null} 
+[2025-05-07 16:54:39] production.INFO: after-charge: {"membership_id":270,"order_id":270} 
+[2025-05-07 16:54:59] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"270","payment_amount":5000,"transaction_id":"pay_QS1OS5h7AC22kE"} 
+[2025-05-07 16:54:59] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-07 16:54:59] production.INFO: Updating membership database {"last_membership_id":"270","transaction_id":"pay_QS1OS5h7AC22kE","membership_history_id":455,"upgrade_membership_id":3} 
+[2025-05-07 16:54:59] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":270} 
+[2025-05-07 16:55:00] production.INFO: Distributed BV points to parent user: {"user_id":213,"bv_points":900} 
+[2025-05-07 16:55:00] production.INFO: Distributed BV points to parent user: {"user_id":212,"bv_points":900} 
+[2025-05-07 16:55:10] production.INFO: Membership email sent to user #215  
+[2025-05-07 16:55:12] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-07 16:55:12] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-07 16:55:51] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-07 16:55:51] production.INFO: last3: {"membership_id":271} 
+[2025-05-07 16:55:51] production.INFO: last5: {"membership_id":271} 
+[2025-05-07 16:55:51] production.INFO: last4: {"membership_id":271,"order_id":null} 
+[2025-05-07 16:55:51] production.INFO: after-charge: {"membership_id":271,"order_id":271} 
+[2025-05-07 16:56:14] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"271","payment_amount":5000,"transaction_id":"pay_QS1PltmMihsAOS"} 
+[2025-05-07 16:56:14] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-07 16:56:14] production.INFO: Updating membership database {"last_membership_id":"271","transaction_id":"pay_QS1PltmMihsAOS","membership_history_id":456,"upgrade_membership_id":3} 
+[2025-05-07 16:56:14] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":271} 
+[2025-05-07 16:56:14] production.INFO: Distributed BV points to parent user: {"user_id":213,"bv_points":900} 
+[2025-05-07 16:56:14] production.INFO: Distributed BV points to parent user: {"user_id":212,"bv_points":900} 
+[2025-05-07 16:56:19] production.INFO: Membership email sent to user #218  
+[2025-05-07 16:56:21] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-07 16:56:21] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-07 16:59:43] production.INFO: Checking for BV flush. Now: 16:59, Configured: 16:59  
+[2025-05-07 16:59:44] production.INFO: BV Flush - Side left {"user_id":213,"flushed_amount":900.0} 
+[2025-05-07 16:59:44] production.INFO: BV Flush - Side right {"user_id":214,"flushed_amount":900.0} 
+[2025-05-07 16:59:44] production.INFO: BV Flush - Side left {"user_id":215,"flushed_amount":900.0} 
+[2025-05-07 16:59:44] production.INFO: BV Flush - Side right {"user_id":218,"flushed_amount":900.0} 
+[2025-05-07 16:59:44] production.INFO: Payout recorded {"date":"2025-05-07 16:59:44","previous_balance":194893,"new_balance":204791.0,"record_id":179} 
+[2025-05-07 16:59:44] production.INFO: Starting payout detail recording. Total users: 3  
+[2025-05-07 16:59:44] production.INFO: User Payout Detail Created {"user_id":212,"left_bv":"2700","right_bv":"900","pairs":1.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 16:59:44] production.INFO: User Payout Detail Created {"user_id":213,"left_bv":"900","right_bv":"900","pairs":1.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 16:59:44] production.INFO: User Payout Detail Created {"user_id":214,"left_bv":0,"right_bv":0,"pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 16:59:44] production.INFO: Payout detail recording completed.  
+[2025-05-07 17:00:23] production.INFO: Checking for BV flush. Now: 17:00, Configured: 17:00  
+[2025-05-07 17:00:23] production.INFO: Payout recorded {"date":"2025-05-07 17:00:23","previous_balance":204791,"new_balance":214091.0,"record_id":180} 
+[2025-05-07 17:00:24] production.INFO: Starting payout detail recording. Total users: 3  
+[2025-05-07 17:00:24] production.INFO: User Payout Detail Created {"user_id":212,"left_bv":"2700","right_bv":"900","pairs":1.0,"payout":300.0,"net_amount":294.0} 
+[2025-05-07 17:00:24] production.INFO: User Payout Detail Created {"user_id":213,"left_bv":"900","right_bv":"900","pairs":1.0,"payout":300.0,"net_amount":294.0} 
+[2025-05-07 17:00:24] production.INFO: User Payout Detail Created {"user_id":214,"left_bv":0,"right_bv":0,"pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 17:00:24] production.INFO: Payout detail recording completed.  
+[2025-05-07 17:03:07] production.INFO: Checking for BV flush. Now: 17:03, Configured: 17:03  
+[2025-05-07 17:03:07] production.INFO: BV Flush - Side left {"user_id":213,"flushed_amount":900.0} 
+[2025-05-07 17:03:07] production.INFO: BV Flush - Side right {"user_id":214,"flushed_amount":900.0} 
+[2025-05-07 17:03:07] production.INFO: BV Flush - Side left {"user_id":215,"flushed_amount":900.0} 
+[2025-05-07 17:03:07] production.INFO: BV Flush - Side right {"user_id":218,"flushed_amount":900.0} 
+[2025-05-07 17:03:07] production.INFO: Payout recorded {"date":"2025-05-07 17:03:07","previous_balance":214091,"new_balance":223391.0,"record_id":181} 
+[2025-05-07 17:03:07] production.INFO: Starting payout detail recording. Total users: 3  
+[2025-05-07 17:03:07] production.INFO: User Payout Detail Created {"user_id":212,"left_bv":"2700","right_bv":"900","pairs":1.0,"payout":300.0,"net_amount":294.0} 
+[2025-05-07 17:03:07] production.INFO: User Payout Detail Created {"user_id":213,"left_bv":"900","right_bv":"900","pairs":1.0,"payout":300.0,"net_amount":294.0} 
+[2025-05-07 17:03:07] production.INFO: User Payout Detail Created {"user_id":214,"left_bv":0,"right_bv":0,"pairs":0.0,"payout":0.0,"net_amount":0} 
+[2025-05-07 17:03:07] production.INFO: Payout detail recording completed.  

@@ -131,7 +131,7 @@
                                 <th>{{ __('Sponsor Id') }}</th>
                                 <th>{{ __('Referrals Count') }}</th>
                                 <th>{{ __('BV Points') }}</th>
-                                <th>{{ __('Payout Amount') }}</th>
+                                <th>{{ __('Net Amount') }}</th>
                                 <th>{{ __('Data Scope') }}</th>
                             </tr>
                         </thead>

@@ -121,8 +121,10 @@ class DashboardController extends Controller
         $rightBP = max(0, floor($sealedRightBv / $bpConversionRate));
         $equalizedBP = max(0, min($leftBP, $rightBP));
 
+        $pairincome = get_static_option('maximum_one_pair_income') ?? 0;
+
         // Calculate income
-        $income = $equalizedBP * $bvvalue;
+        $income = $equalizedBP * $pairincome;
         $showIncome = $equalizedBP > 0;
 
         // Format display values

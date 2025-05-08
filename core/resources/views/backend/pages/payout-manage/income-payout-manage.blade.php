@@ -29,7 +29,7 @@
                 </tr>
                 <tr>
                     <td>Current Day Matching Pairs (One Distributor)</td>
-                    <td>{{ $currentDayMatchingPairs }} (Paid: {{ $pairsToPay }})</td>
+                    <td>{{  $pairsToPay }}</td>
                 </tr>
                 <tr>
                     <td>One Day Maximum Ceiling</td>

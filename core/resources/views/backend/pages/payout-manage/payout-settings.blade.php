@@ -138,7 +138,7 @@
                                     <span class="text-danger">*</span></label>
                                 <input type="number" name="maximum_one_pair_income" id="maximum_one_pair_income"
                                     class="form-control @error('maximum_one_pair_income') is-invalid @enderror"
-                                    value="{{ old('maximum_one_pair_income', get_static_option('maximum_one_pair_income')) }}"
+                                    value="{{ old('maximum_one_pair_income', get_static_option('maximum_one_pair_income') ?? 200) }}"
                                     @if($maxAllowed <= 0) disabled @endif>
 
                                 @error('maximum_one_pair_income')

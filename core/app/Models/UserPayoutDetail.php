@@ -20,6 +20,7 @@ class UserPayoutDetail extends Model
         'service_charge',
         'net_amount',
         'status',
+        'direct_business_income',
     ];
 
     // Relationships

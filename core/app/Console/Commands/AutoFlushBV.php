@@ -250,9 +250,11 @@ class AutoFlushBV extends Command
     
             // 5️⃣ Cap it
             $userPairs = min($rawPairs, $dailyPairLimit);
+            $referralincome = $user->referral_commission ?? 0;
+            Log::info("User {$user->id} pairs: {$userPairs}, referral income: {$referralincome}");
     
             // 6️⃣ dollar math stays the same…
-            $grossPayout    = $userPairs * $pairIncome;
+            $grossPayout    = $userPairs * $pairIncome + $referralincome;
             $tdsDeduction   = $grossPayout * ($tdsPercentage  / 100);
             $serviceChargeAmt = $grossPayout * ($serviceCharge / 100);
             $netAmount      = max($grossPayout - $tdsDeduction - $serviceChargeAmt, 0);

@@ -153,6 +153,11 @@ class DashboardController extends Controller
 
         $referralCommission = $perReferralCommission * $directReferralsCount;
 
+        User::updateOrCreate(
+            ['id' => $user_id],                 
+            ['referral_commission' => $referralCommission]  
+        );
+
         if ($user->sponsor) {
             $referredBy = $user->sponsor->partner_name ?? 'Unknown';
             $referredById = $user->sponsor->partner_id ?? '';

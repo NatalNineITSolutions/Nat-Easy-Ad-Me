@@ -18,3 +18,111 @@
 [2025-05-08 19:45:33] production.INFO: User 2 payout detail: {"totalLeftBv":1200.0,"totalRightBv":1000.0,"rawPairs":1,"userPairs":1,"grossPayout":200.0,"netAmount":196.0} 
 [2025-05-08 19:45:33] production.INFO: User 3 payout detail: {"totalLeftBv":900.0,"totalRightBv":900.0,"rawPairs":1,"userPairs":1,"grossPayout":200.0,"netAmount":196.0} 
 [2025-05-08 19:45:33] production.INFO: Payout detail recording completed.  
+[2025-05-09 15:45:43] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-09 15:45:44] production.INFO: last3: {"membership_id":344} 
+[2025-05-09 15:45:45] production.INFO: last5: {"membership_id":344} 
+[2025-05-09 15:45:45] production.INFO: last4: {"membership_id":344,"order_id":null} 
+[2025-05-09 15:45:45] production.INFO: after-charge: {"membership_id":344,"order_id":344} 
+[2025-05-09 15:46:15] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"344","payment_amount":5000,"transaction_id":"pay_QSnHyGw4M64vC0"} 
+[2025-05-09 15:46:15] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-09 15:46:15] production.INFO: Updating membership database {"last_membership_id":"344","transaction_id":"pay_QSnHyGw4M64vC0","membership_history_id":556,"upgrade_membership_id":3} 
+[2025-05-09 15:46:15] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":344} 
+[2025-05-09 15:46:15] production.INFO: Distributed BV points to parent user: {"user_id":1,"bv_points":900} 
+[2025-05-09 15:46:28] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-09 15:46:28] production.INFO: last3: {"membership_id":345} 
+[2025-05-09 15:46:28] production.INFO: last5: {"membership_id":345} 
+[2025-05-09 15:46:28] production.INFO: last4: {"membership_id":345,"order_id":null} 
+[2025-05-09 15:46:28] production.INFO: after-charge: {"membership_id":345,"order_id":345} 
+[2025-05-09 15:46:30] production.INFO: Membership email sent to user #2  
+[2025-05-09 15:46:33] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-09 15:46:33] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-09 15:47:02] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"345","payment_amount":5000,"transaction_id":"pay_QSnIldqAEC6KqY"} 
+[2025-05-09 15:47:02] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-09 15:47:02] production.INFO: Updating membership database {"last_membership_id":"345","transaction_id":"pay_QSnIldqAEC6KqY","membership_history_id":557,"upgrade_membership_id":3} 
+[2025-05-09 15:47:02] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":345} 
+[2025-05-09 15:47:03] production.INFO: Distributed BV points to parent user: {"user_id":1,"bv_points":900} 
+[2025-05-09 15:47:08] production.INFO: Membership email sent to user #3  
+[2025-05-09 15:47:09] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-09 15:47:09] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-09 15:48:45] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-09 15:48:46] production.INFO: last3: {"membership_id":346} 
+[2025-05-09 15:48:46] production.INFO: last5: {"membership_id":346} 
+[2025-05-09 15:48:46] production.INFO: last4: {"membership_id":346,"order_id":null} 
+[2025-05-09 15:48:46] production.INFO: after-charge: {"membership_id":346,"order_id":346} 
+[2025-05-09 15:49:41] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"346","payment_amount":5000,"transaction_id":"pay_QSnLk8VhbLLy6M"} 
+[2025-05-09 15:49:41] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-09 15:49:41] production.INFO: Updating membership database {"last_membership_id":"346","transaction_id":"pay_QSnLk8VhbLLy6M","membership_history_id":558,"upgrade_membership_id":3} 
+[2025-05-09 15:49:41] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":346} 
+[2025-05-09 15:49:41] production.INFO: Distributed BV points to parent user: {"user_id":3,"bv_points":900} 
+[2025-05-09 15:49:41] production.INFO: Distributed BV points to parent user: {"user_id":1,"bv_points":900} 
+[2025-05-09 15:49:47] production.INFO: Membership email sent to user #6  
+[2025-05-09 15:49:49] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-09 15:49:49] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-09 15:51:41] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-09 15:51:41] production.INFO: last3: {"membership_id":347} 
+[2025-05-09 15:51:41] production.INFO: last5: {"membership_id":347} 
+[2025-05-09 15:51:41] production.INFO: last4: {"membership_id":347,"order_id":null} 
+[2025-05-09 15:51:41] production.INFO: after-charge: {"membership_id":347,"order_id":347} 
+[2025-05-09 15:51:59] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"347","payment_amount":5000,"transaction_id":"pay_QSnOC3BBCV9LUG"} 
+[2025-05-09 15:51:59] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-09 15:51:59] production.INFO: Updating membership database {"last_membership_id":"347","transaction_id":"pay_QSnOC3BBCV9LUG","membership_history_id":559,"upgrade_membership_id":3} 
+[2025-05-09 15:51:59] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":347} 
+[2025-05-09 15:51:59] production.INFO: Distributed BV points to parent user: {"user_id":1,"bv_points":900} 
+[2025-05-09 15:52:04] production.INFO: Membership email sent to user #3  
+[2025-05-09 15:52:06] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-09 15:52:06] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-09 15:53:54] production.INFO: Checking for BV flush. Now: 15:53, Configured: 15:53  
+[2025-05-09 15:53:54] production.INFO: No flush: Either side below sealing limit {"left_bv":0,"right_bv":"1800","sealing_limit":900} 
+[2025-05-09 15:53:54] production.INFO: No flush: Either side below sealing limit {"left_bv":0,"right_bv":0,"sealing_limit":900} 
+[2025-05-09 15:53:54] production.INFO: No flush: Either side below sealing limit {"left_bv":"900","right_bv":0,"sealing_limit":900} 
+[2025-05-09 15:53:54] production.INFO: Payout recorded {"date":"2025-05-09 15:53:54","previous_balance":23900,"new_balance":28400.0,"record_id":230} 
+[2025-05-09 15:53:54] production.INFO: Starting payout-detail recording. Users to process: 3  
+[2025-05-09 15:53:54] production.INFO: User 1 pairs: 0, referral income: 73.50  
+[2025-05-09 15:53:54] production.INFO: User 1 payout detail: {"totalLeftBv":0.0,"totalRightBv":2700.0,"rawPairs":0,"userPairs":0,"grossPayout":73.5,"netAmount":72.03} 
+[2025-05-09 15:53:54] production.INFO: User 2 pairs: 0, referral income: 0.00  
+[2025-05-09 15:53:54] production.INFO: User 2 payout detail: {"totalLeftBv":0.0,"totalRightBv":0.0,"rawPairs":0,"userPairs":0,"grossPayout":0.0,"netAmount":0.0} 
+[2025-05-09 15:53:54] production.INFO: User 3 pairs: 0, referral income: 0.00  
+[2025-05-09 15:53:54] production.INFO: User 3 payout detail: {"totalLeftBv":900.0,"totalRightBv":0.0,"rawPairs":0,"userPairs":0,"grossPayout":0.0,"netAmount":0.0} 
+[2025-05-09 15:53:54] production.INFO: Payout detail recording completed.  
+[2025-05-09 16:05:26] production.INFO: Checking for BV flush. Now: 16:05, Configured: 16:05  
+[2025-05-09 16:05:26] production.INFO: No flush: Either side below sealing limit {"left_bv":0,"right_bv":"1800","sealing_limit":900} 
+[2025-05-09 16:05:26] production.INFO: No flush: Either side below sealing limit {"left_bv":0,"right_bv":0,"sealing_limit":900} 
+[2025-05-09 16:05:26] production.INFO: No flush: Either side below sealing limit {"left_bv":"900","right_bv":0,"sealing_limit":900} 
+[2025-05-09 16:05:26] production.INFO: Payout recorded {"date":"2025-05-09 16:05:26","previous_balance":0,"new_balance":4500.0,"record_id":231} 
+[2025-05-09 16:05:26] production.INFO: Starting payout-detail recording. Users to process: 3  
+[2025-05-09 16:05:26] production.INFO: User 1 pairs: 0, referral income: 73.50  
+[2025-05-09 16:05:26] production.INFO: User 1 payout detail: {"totalLeftBv":0.0,"totalRightBv":2700.0,"rawPairs":0,"userPairs":0,"grossPayout":0,"netAmount":0.0} 
+[2025-05-09 16:05:26] production.INFO: User 2 pairs: 0, referral income: 0.00  
+[2025-05-09 16:05:26] production.INFO: User 2 payout detail: {"totalLeftBv":0.0,"totalRightBv":0.0,"rawPairs":0,"userPairs":0,"grossPayout":0,"netAmount":0.0} 
+[2025-05-09 16:05:26] production.INFO: User 3 pairs: 0, referral income: 0.00  
+[2025-05-09 16:05:26] production.INFO: User 3 payout detail: {"totalLeftBv":900.0,"totalRightBv":0.0,"rawPairs":0,"userPairs":0,"grossPayout":0,"netAmount":0.0} 
+[2025-05-09 16:05:26] production.INFO: Payout detail recording completed.  
+[2025-05-09 17:25:44] production.ERROR: file_put_contents(C:\laragon\www\Nat-Easy-Ad-Me\core\storage\framework/cache/data/23/77/23772f384cffcd6c26023c93dcee3e1de8527609): Failed to open stream: Permission denied {"exception":"[object] (ErrorException(code: 0): file_put_contents(C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\storage\\framework/cache/data/23/77/23772f384cffcd6c26023c93dcee3e1de8527609): Failed to open stream: Permission denied at C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php:204)
+[stacktrace]
+#0 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'file_put_conten...', 'C:\\\\laragon\\\\www\\\\...', 204)
+#1 [internal function]: Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'file_put_conten...', 'C:\\\\laragon\\\\www\\\\...', 204)
+#2 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(204): file_put_contents('C:\\\\laragon\\\\www\\\\...', '1746791801O:31:...', 2)
+#3 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cache\\FileStore.php(83): Illuminate\\Filesystem\\Filesystem->put('C:\\\\laragon\\\\www\\\\...', '1746791801O:31:...', true)
+#4 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cache\\Repository.php(216): Illuminate\\Cache\\FileStore->put('facebook_client...', Object(App\\Models\\Backend\\StaticOption), 60)
+#5 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cache\\Repository.php(398): Illuminate\\Cache\\Repository->put('facebook_client...', Object(App\\Models\\Backend\\StaticOption), 60)
+#6 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cache\\CacheManager.php(429): Illuminate\\Cache\\Repository->remember('facebook_client...', 60, Object(Closure))
+#7 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Cache\\CacheManager->__call('remember', Array)
+#8 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Helpers\\helpers.php(115): Illuminate\\Support\\Facades\\Facade::__callStatic('remember', Array)
+#9 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Providers\\CustomConfigServiceProvider.php(28): get_static_option('facebook_client...')
+#10 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Providers\\CustomConfigServiceProvider->boot()
+#11 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#12 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#13 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#14 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#15 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1034): Illuminate\\Container\\Container->call(Array)
+#16 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1015): Illuminate\\Foundation\\Application->bootProvider(Object(App\\Providers\\CustomConfigServiceProvider))
+#17 [internal function]: Illuminate\\Foundation\\Application->Illuminate\\Foundation\\{closure}(Object(App\\Providers\\CustomConfigServiceProvider), 46)
+#18 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1014): array_walk(Array, Object(Closure))
+#19 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\BootProviders.php(17): Illuminate\\Foundation\\Application->boot()
+#20 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\BootProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#21 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(186): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#22 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(170): Illuminate\\Foundation\\Http\\Kernel->bootstrap()
+#23 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#24 C:\\laragon\\www\\Nat-Easy-Ad-Me\\index.php(54): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#25 {main}
+"} 

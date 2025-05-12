@@ -7,7 +7,6 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProductListingController;
 use App\Http\Controllers\Api\ListingApiController;
 use App\Http\Controllers\Api\MatrimonyController;
-use App\Http\Controllers\Api\BuyMembershipApiController;
 use App\Http\Controllers\Api\MembershipApiController;
 use App\Http\Controllers\Api\EnquiryControllerApi;
 
@@ -57,6 +56,9 @@ Route::get('/age', [MatrimonyController::class, 'age']);
 Route::get('/mother_tongue', [MatrimonyController::class, 'motherTongue']);
 Route::get('/zodiac-sign', [MatrimonyController::class, 'zodiacSign']);
 Route::get('/star', [MatrimonyController::class, 'star']);
+Route::get('/country', [MatrimonyController::class, 'country']);
+Route::get('/state/{country_id}', [MatrimonyController::class, 'state']);
+Route::get('/city/{state_id}', [MatrimonyController::class, 'city']);
 
 
 // Protected Routes (using Sanctum for authentication)
@@ -71,7 +73,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/membership/update', [MembershipApiController::class, 'updateMembership']);
     Route::post('/enquiry', [EnquiryControllerApi::class, 'store']);
     Route::post('/matrimony/profiles/{profile}/send-request', [MatrimonyController::class, 'sendRequest']);
-    Route::post('/matrimony/requests/accept', [MatrimonyController::class, 'accept']);
+    Route::post('/matrimony/requests/update-status', [MatrimonyController::class, 'updateStatus']);
     Route::post('/matrimony/user-details', [MatrimonyController::class, 'storeUserDetails']);
     Route::post('/matrimony/preferences', [MatrimonyController::class, 'store']);
     Route::get('/user/listings', [ListingApiController::class, 'allListingsApi']);
@@ -80,4 +82,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/dashboard', [AuthController::class, 'dashboardApi']);
     Route::get('/genology', [GenologyController::class, 'genology']);
     Route::post('/mlm/register-member', [GenologyController::class, 'apiRegisterNewMember']);
+    Route::get('/matrimony/received-requests', [MatrimonyController::class, 'getReceivedRequests']);
+    Route::get('/profile-requests/accepted', [MatrimonyController::class, 'getAcceptedRequests']);
+    Route::get('/profile-requests/rejected', [MatrimonyController::class, 'getRejectedRequests']);
 });

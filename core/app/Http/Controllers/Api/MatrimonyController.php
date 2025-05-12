@@ -22,6 +22,9 @@ use App\Models\User;
 use App\Models\UsersBV;
 use App\Services\BVDistributionService;
 use Illuminate\Support\Facades\Log;
+use Modules\CountryManage\app\Models\City;
+use Modules\CountryManage\app\Models\Country;
+use Modules\CountryManage\app\Models\State;
 use Razorpay\Api\Api;
 use Illuminate\Support\Facades\DB;
 use App\Services\RazorpayService;
@@ -93,38 +96,38 @@ class MatrimonyController extends Controller
         }
 
         $validated = $request->validate([
-            'name'                  => 'required|string|max:255',
-            'date_of_birth'         => 'required|date',
-            'age'                   => 'required|integer|min:0',
-            'gender'                => 'required|in:male,female,other',
-            'religion'              => 'nullable|string|max:100',
-            'occupation'            => 'required|string|max:150',
-            'marital_status'        => 'required|in:unmarried,married,divorced,widowed',
-            'annual_income'         => 'required|numeric|min:0',
-            'caste'                 => 'nullable|string|max:100',
-            'mother_tongue'         => 'required|string|max:100',
-            'country'               => 'required|string|max:100',
-            'state'                 => 'required|string|max:100',
-            'city'                  => 'required|string|max:100',
-            'address'               => 'nullable|string|max:255',
-            'lat'              => 'nullable|numeric',
-            'lon'             => 'nullable|numeric',
-            'image'                 => 'required',
-            'description'           => 'required|string',
-            'zodiac_sign'           => 'nullable|string|max:50',
-            'star'                  => 'nullable|string|max:50',
-            'visibility'            => 'nullable|boolean',
-            'paid'                  => 'nullable|boolean',
-            'payment_method'        => 'nullable|string|max:50',
-            'is_verified'           => 'nullable|boolean',
-            'rejection_reason'      => 'nullable|string',
+            'name' => 'required|string|max:255',
+            'date_of_birth' => 'required|date',
+            'age' => 'required|integer|min:0',
+            'gender' => 'required|in:male,female,other',
+            'religion' => 'nullable|string|max:100',
+            'occupation' => 'required|string|max:150',
+            'marital_status' => 'required|in:unmarried,married,divorced,widowed',
+            'annual_income' => 'required|numeric|min:0',
+            'caste' => 'nullable|string|max:100',
+            'mother_tongue' => 'required|string|max:100',
+            'country' => 'required|string|max:100',
+            'state' => 'required|string|max:100',
+            'city' => 'required|string|max:100',
+            'address' => 'nullable|string|max:255',
+            'lat' => 'nullable|numeric',
+            'lon' => 'nullable|numeric',
+            'image' => 'required',
+            'description' => 'required|string',
+            'zodiac_sign' => 'nullable|string|max:50',
+            'star' => 'nullable|string|max:50',
+            'visibility' => 'nullable|boolean',
+            'paid' => 'nullable|boolean',
+            'payment_method' => 'nullable|string|max:50',
+            'is_verified' => 'nullable|boolean',
+            'rejection_reason' => 'nullable|string',
             'selected_payment_gateway' => 'required|string',
         ]);
 
         // Inject user_id and ensure paid/payment_method defaults
         $data = array_merge($validated, [
-            'user_id'        => $user->id,
-            'paid'           => $validated['paid'] ?? 0,
+            'user_id' => $user->id,
+            'paid' => $validated['paid'] ?? 0,
             'payment_method' => $validated['payment_method'] ?? null,
         ]);
 
@@ -135,7 +138,7 @@ class MatrimonyController extends Controller
         $gatewayRow = DB::table('payment_gateways')
             ->where('name', $request->selected_payment_gateway)
             ->first();
-        if (! $gatewayRow) {
+        if (!$gatewayRow) {
             return response()->json(['error' => 'Selected payment gateway not found.'], 404);
         }
 
@@ -143,7 +146,7 @@ class MatrimonyController extends Controller
         $apiKey = $credentials['api_key'] ?? null;
         $apiSecret = $credentials['api_secret'] ?? null;
 
-        if (! $apiKey || ! $apiSecret) {
+        if (!$apiKey || !$apiSecret) {
             return response()->json(['error' => 'Incomplete gateway credentials.'], 500);
         }
 
@@ -156,21 +159,21 @@ class MatrimonyController extends Controller
 
         // Build checkout URL
         $query = http_build_query([
-            'order_id'             => $order['id'],
-            'amount'               => $amountInRupees,
-            'currency'             => 'INR',
-            'key'                  => $razorpayService->getKey(),
-            'profile_listing_id'   => $profile->id,
-            'user_id'              => $profile->user_id,
+            'order_id' => $order['id'],
+            'amount' => $amountInRupees,
+            'currency' => 'INR',
+            'key' => $razorpayService->getKey(),
+            'profile_listing_id' => $profile->id,
+            'user_id' => $profile->user_id,
         ]);
 
         $checkoutUrl = route('profile.checkout') . '?' . $query;
 
         return response()->json([
-            'success'     => true,
+            'success' => true,
             'checkout_url' => $checkoutUrl,
-            'order_id'    => $order['id'],
-            'message'     => 'Checkout URL generated successfully.'
+            'order_id' => $order['id'],
+            'message' => 'Checkout URL generated successfully.'
         ]);
     }
 
@@ -246,8 +249,8 @@ class MatrimonyController extends Controller
 
         if (
             ProfileRequest::where('sender_id', auth()->id())
-            ->where('profile_id', $profileId)
-            ->exists()
+                ->where('profile_id', $profileId)
+                ->exists()
         ) {
             return response()->json([
                 'message' => 'You have already sent a request to this profile'
@@ -266,20 +269,20 @@ class MatrimonyController extends Controller
         ]);
     }
 
-
-    public function accept(Request $request)
+    public function updateStatus(Request $request)
     {
         $requestModel = ProfileRequest::find($request->id);
-
 
         if (!$requestModel) {
             return response()->json(['message' => 'Request not found'], 404);
         }
 
+        if (!in_array($request->status, ['accepted', 'rejected'])) {
+            return response()->json(['message' => 'Invalid status'], 400);
+        }
 
-        $requestModel->status = 'accepted';
+        $requestModel->status = $request->status;
         $requestModel->save();
-
 
         $newCount = ProfileRequest::where('status', 'pending')->count();
 
@@ -300,45 +303,47 @@ class MatrimonyController extends Controller
                 ], 401);
             }
 
-            $validatedData = $request->validate([
+            $validated = $request->validate([
                 'marital_status' => 'required|string',
-                'dob' => 'required|date_format:d-m-Y', // Changed validation
+                'dob' => 'required|date_format:d-m-Y',
                 'family_status' => 'required|string',
                 'family_values' => 'required|string',
                 'family_type' => 'required|string',
                 'disability' => 'required|string',
                 'height' => 'required|numeric|min:50|max:250',
                 'weight' => 'required|string',
-                'caste' => 'required|string',
-                'dosham' => 'required|string',
-                'gothram' => 'required|string',
+
+                // store these as integer IDs:
+                'zodiac_sign' => 'nullable|integer|exists:zodiac_signs,id',
+                'star' => 'nullable|integer|exists:stars,id',
+                'caste' => 'required|integer|exists:castes,id',
+                'dosham' => 'required|integer|exists:doshams,id',
+                'gothram' => 'required|integer|exists:gothrams,id',
+                'annual_income' => 'required|string',
+
                 'education' => 'required|string',
                 'occupation' => 'required|string',
-                'annual_income' => 'required|string',
                 'employed_in' => 'required|string',
                 'country' => 'required|string',
                 'state' => 'required|string',
                 'city' => 'required|string',
                 'about' => 'required|string|max:500',
-                'image' => 'required|numeric', // Now expecting image ID
+                'image' => 'required|numeric',
                 'gallery_images' => 'sometimes|array',
-                'gallery_images.*' => 'numeric'
+                'gallery_images.*' => 'numeric',
             ]);
 
-            // Convert date to MySQL format
-            $validatedData['dob'] = \Carbon\Carbon::createFromFormat('d-m-Y', $validatedData['dob'])->format('Y-m-d');
+            // convert and normalize
+            $validated['dob'] = \Carbon\Carbon::createFromFormat('d-m-Y', $validated['dob'])->format('Y-m-d');
+            $validated['user_id'] = auth()->id();
+            $validated['marital_status'] = strtolower($validated['marital_status']);
 
-            // Attach authenticated user ID
-            $validatedData['user_id'] = auth()->id();
-            $validatedData['marital_status'] = strtolower($validatedData['marital_status']);
-
-            // Save to database
-            $matrimonyKyc = MatrimonyKyc::create($validatedData);
+            $kyc = MatrimonyKyc::create($validated);
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'User details saved successfully!',
-                'user_id' => 'M' . str_pad($matrimonyKyc->user_id, 6, '0', STR_PAD_LEFT),
+                'user_id' => 'M' . str_pad($kyc->user_id, 6, '0', STR_PAD_LEFT),
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
@@ -348,7 +353,7 @@ class MatrimonyController extends Controller
             ], 422);
         } catch (\Exception $e) {
             \Log::error('User Details Store Error: ' . $e->getMessage());
-            \Log::error('Stack Trace: ' . $e->getTraceAsString());
+            \Log::error($e->getTraceAsString());
 
             return response()->json([
                 'status' => 'error',
@@ -404,7 +409,7 @@ class MatrimonyController extends Controller
 
     public function religion()
     {
-        $religions = Religion::all(); 
+        $religions = Religion::all();
 
         return response()->json([
             'success' => true,
@@ -414,7 +419,7 @@ class MatrimonyController extends Controller
 
     public function caste()
     {
-        $castes = Caste::all(); 
+        $castes = Caste::all();
 
         return response()->json([
             'success' => true,
@@ -424,7 +429,7 @@ class MatrimonyController extends Controller
 
     public function gothram()
     {
-        $gothram = Gothram::all(); 
+        $gothram = Gothram::all();
 
         return response()->json([
             'success' => true,
@@ -434,7 +439,7 @@ class MatrimonyController extends Controller
 
     public function dosham()
     {
-        $dosham = Dosham::all(); 
+        $dosham = Dosham::all();
 
         return response()->json([
             'success' => true,
@@ -444,7 +449,7 @@ class MatrimonyController extends Controller
 
     public function income()
     {
-        $income = IncomeRange::all(); 
+        $income = IncomeRange::all();
 
         return response()->json([
             'success' => true,
@@ -454,7 +459,7 @@ class MatrimonyController extends Controller
 
     public function age()
     {
-        $ages = AgeRange::all(); 
+        $ages = AgeRange::all();
 
         return response()->json([
             'success' => true,
@@ -464,17 +469,17 @@ class MatrimonyController extends Controller
 
     public function mothertongue()
     {
-        $motherTongue = MotherTongue::all(); 
+        $motherTongue = MotherTongue::all();
 
         return response()->json([
             'success' => true,
             'data' => $motherTongue
         ], 200);
     }
-    
+
     public function zodiacSign()
     {
-        $zodiacSigns = ZodiacSign::all(); 
+        $zodiacSigns = ZodiacSign::all();
 
         return response()->json([
             'success' => true,
@@ -484,11 +489,109 @@ class MatrimonyController extends Controller
 
     public function star()
     {
-        $stars = Star::all(); 
+        $stars = Star::all();
 
         return response()->json([
             'success' => true,
             'data' => $stars
         ], 200);
     }
+
+    public function country()
+{
+    // load countries → states → cities
+    $countries = Country::with('states.cities')->get();
+
+    return response()->json([
+        'success' => true,
+        'data'    => $countries
+    ], 200);
+}
+
+    
+    public function state(Request $request)
+    {
+        $validated = $request->validate([
+            'country_id' => 'required|integer|exists:countries,id',
+        ]);
+
+        $states = State::where('country_id', $validated['country_id'])->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $states
+        ], 200);
+    }
+
+    public function city(Request $request)
+    {
+        $validated = $request->validate([
+            'state_id' => 'required|integer|exists:states,id',
+        ]);
+
+        $cities = City::where('state_id', $validated['state_id'])->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $cities
+        ], 200);
+    }
+
+    public function getReceivedRequests(Request $request)
+    {
+        $userId = auth()->id();
+
+        $receivedRequests = ProfileRequest::with(['sender.identity_verify', 'sender.kyc', 'profile'])
+            ->whereHas('profile', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
+            ->where('status', 'pending')
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'count' => $receivedRequests->count(),
+            'data' => $receivedRequests
+        ]);
+    }
+
+    public function getAcceptedRequests()
+    {
+        $userId = auth()->id();
+
+        $requests = ProfileRequest::with(['sender', 'profile']) // Include related models
+            ->where('status', 'accepted')
+            ->where(function ($query) use ($userId) {
+                $query->where('sender_id', $userId)
+                    ->orWhere('profile_id', $userId);
+            })
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $requests
+        ]);
+    }
+
+    public function getRejectedRequests()
+    {
+        $userId = auth()->id();
+
+        $rejectedRequests = ProfileRequest::with(['sender', 'profile']) // Include related models
+            ->where('status', 'rejected')
+            ->where(function ($query) use ($userId) {
+                $query->where('sender_id', $userId)
+                    ->orWhere('profile_id', $userId);
+            })
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $rejectedRequests,
+        ]);
+    }
+
 }

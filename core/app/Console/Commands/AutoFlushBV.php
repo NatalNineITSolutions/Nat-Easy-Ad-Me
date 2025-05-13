@@ -254,7 +254,7 @@ class AutoFlushBV extends Command
             Log::info("User {$user->id} pairs: {$userPairs}, referral income: {$referralincome}");
     
             // 6️⃣ dollar math stays the same…
-            $grossPayout    = $userPairs * $pairIncome + $referralincome;
+            $grossPayout = ($userPairs > 0) ? ($userPairs * $pairIncome + $referralincome) : 0;
             $tdsDeduction   = $grossPayout * ($tdsPercentage  / 100);
             $serviceChargeAmt = $grossPayout * ($serviceCharge / 100);
             $netAmount      = max($grossPayout - $tdsDeduction - $serviceChargeAmt, 0);

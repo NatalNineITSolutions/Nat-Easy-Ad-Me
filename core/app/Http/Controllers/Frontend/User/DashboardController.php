@@ -136,8 +136,8 @@ class DashboardController extends Controller
         $bvFromReferrals = $user->children()->with('userBvs')->get()->sum(fn($child) => $child->userBvs->sum('bv_points'));
 
         // Referral commission
-        $referralValue = (float) get_static_option('referral_value'); // e.g., 350
-        $referralPercentage = (float) get_static_option('referral_percentage'); // e.g., 2
+        $referralValue = (float) get_static_option('referral_value');
+        $referralPercentage = (float) get_static_option('referral_percentage');
 
         $perReferralCommission = ($referralPercentage / 100) * $referralValue;
 
@@ -151,11 +151,16 @@ class DashboardController extends Controller
         // Calculate BV points
         $directReferralsCount = User::where('sponsor_id', $user->id)->count();
 
-        $referralCommission = $perReferralCommission * $directReferralsCount;
+        // Get direct referrals who have self_purchased_bv >= 900
+        $qualifiedReferralsCount = User::where('parent_id', $user_id)
+            ->where('self_purchased_bv', '>=', 900)
+            ->count();
+
+        $referralCommission = $perReferralCommission * $qualifiedReferralsCount;
 
         User::updateOrCreate(
-            ['id' => $user_id],                 
-            ['referral_commission' => $referralCommission]  
+            ['id' => $user_id],
+            ['referral_commission' => $referralCommission]
         );
 
         if ($user->sponsor) {
@@ -740,7 +745,7 @@ class DashboardController extends Controller
         // Get income data (same as viewincome method)
         $allDays = $this->getIncomeDays($user->id);
         $filteredDays = $this->filterIncomeDays($allDays, $paymentType);
-        $filteredDays = collect($filteredDays)->map(function($day) {
+        $filteredDays = collect($filteredDays)->map(function ($day) {
             $day['income'] = $day['payout_amount']; // Set this explicitly
             return $day;
         });

@@ -126,3 +126,21 @@
 #24 C:\\laragon\\www\\Nat-Easy-Ad-Me\\index.php(54): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #25 {main}
 "} 
+[2025-05-13 18:51:22] production.INFO: Checking for BV flush. Now: 18:51, Configured: 18:51  
+[2025-05-13 18:51:22] production.INFO: BV Flush - Side left {"user_id":2,"flushed_amount":900} 
+[2025-05-13 18:51:22] production.INFO: BV Flush - Side right {"user_id":3,"flushed_amount":900} 
+[2025-05-13 18:51:22] production.INFO: Remainders equal; flushing entire left side BV {"user_id":1,"remaining_left_bv":300} 
+[2025-05-13 18:51:22] production.INFO: BV Flush - Side left {"user_id":2,"flushed_amount":300} 
+[2025-05-13 18:51:22] production.INFO: Flush completed {"remaining_left_bv":0,"remaining_right_bv":300} 
+[2025-05-13 18:51:22] production.INFO: Referral commission flushed for user {"user_id":1} 
+[2025-05-13 18:51:22] production.INFO: No flush: either side below sealing limit {"user_id":2,"left_bv":0,"right_bv":0,"sealing_limit":900} 
+[2025-05-13 18:51:22] production.INFO: No flush: either side below sealing limit {"user_id":3,"left_bv":0,"right_bv":0,"sealing_limit":900} 
+[2025-05-13 18:51:22] production.INFO: Payout recorded {"date":"2025-05-13 18:51:22","previous_balance":11000,"new_balance":16500.0,"record_id":234} 
+[2025-05-13 18:51:22] production.INFO: Starting payout-detail recording. Users to process: 3  
+[2025-05-13 18:51:22] production.INFO: User 1 pairs: 1, referral income: 0.00  
+[2025-05-13 18:51:22] production.INFO: User 1 payout detail: {"totalLeftBv":1200.0,"totalRightBv":1200.0,"rawPairs":1,"userPairs":1,"grossPayout":200.0,"netAmount":196.0} 
+[2025-05-13 18:51:22] production.INFO: User 2 pairs: 0, referral income: 0.00  
+[2025-05-13 18:51:22] production.INFO: User 2 payout detail: {"totalLeftBv":0.0,"totalRightBv":0.0,"rawPairs":0,"userPairs":0,"grossPayout":0,"netAmount":0.0} 
+[2025-05-13 18:51:22] production.INFO: User 3 pairs: 0, referral income: 0.00  
+[2025-05-13 18:51:22] production.INFO: User 3 payout detail: {"totalLeftBv":0.0,"totalRightBv":0.0,"rawPairs":0,"userPairs":0,"grossPayout":0,"netAmount":0.0} 
+[2025-05-13 18:51:22] production.INFO: Payout detail recording completed.  

@@ -87,14 +87,14 @@ class AutoFlushBV extends Command
             ->sum('bv_points');
 
         if ($leftBv >= $sealingLimitBv && $rightBv >= $sealingLimitBv) {
-            // 1) Flush one sealing‐limit chunk from each side
+            // 1) Flush exactly one sealing‐limit chunk from each side
             $this->flushSide($leftChild, $sealingLimitBv, 'left');
             $this->flushSide($rightChild, $sealingLimitBv, 'right');
 
             $leftBv -= $sealingLimitBv;
             $rightBv -= $sealingLimitBv;
 
-            // 2) Now flush the *entire* smaller side, regardless of sealing‐limit
+            // 2) If remainders differ, flush the smaller one entirely
             if ($leftBv !== $rightBv) {
                 if ($leftBv < $rightBv && $leftBv > 0) {
                     Log::info("Flushing entire remaining left side BV", [
@@ -111,6 +111,15 @@ class AutoFlushBV extends Command
                     $this->flushSide($rightChild, $rightBv, 'right');
                     $rightBv = 0;
                 }
+            }
+            // 3) NEW: if remainders are exactly equal and nonzero, flush one side to zero
+            elseif ($leftBv === $rightBv && $leftBv > 0) {
+                Log::info("Remainders equal; flushing entire left side BV", [
+                    'user_id' => $user->id,
+                    'remaining_left_bv' => $leftBv,
+                ]);
+                $this->flushSide($leftChild, $leftBv, 'left');
+                $leftBv = 0;
             }
 
             Log::info("Flush completed", [
@@ -221,7 +230,7 @@ class AutoFlushBV extends Command
     }
 
     protected function recordUserPayoutDetails(
-        int   $payoutSummaryId,
+        int $payoutSummaryId,
         float $sealingLimitBv,
         float $pairIncome,
         float $tdsPercentage,
@@ -229,101 +238,109 @@ class AutoFlushBV extends Command
     ) {
         // 1️⃣ daily cap
         $dailyPairLimit = (int) (get_static_option('sealing_limitation') ?? 1);
-        $now           = now();
-    
+        $now = now();
+
         // 2️⃣ users with both legs
         $users = User::with(['leftChild.userBvs', 'rightChild.userBvs'])
-                     ->whereHas('leftChild')
-                     ->whereHas('rightChild')
-                     ->get();
-    
+            ->whereHas('leftChild')
+            ->whereHas('rightChild')
+            ->get();
+
         Log::info("Starting payout-detail recording. Users to process: {$users->count()}");
-    
+
         foreach ($users as $user) {
             // 3️⃣ **Sum all net BV** under **this node’s entire left vs right** subtrees?
             //    → We’ll still log (or store) the total raw BV on each side for debugging if you like:
-            $totalLeftBv   = $this->sumSubtreeBv($user->leftChild,  $now);
-            $totalRightBv  = $this->sumSubtreeBv($user->rightChild, $now);
-    
+            $totalLeftBv = $this->sumSubtreeBv($user->leftChild, $now);
+            $totalRightBv = $this->sumSubtreeBv($user->rightChild, $now);
+
             // 4️⃣ **Count total matching pairs** by recursing through the tree
             $rawPairs = $this->countMatchingPairs($user, $sealingLimitBv, $now);
-    
+
             // 5️⃣ Cap it
             $userPairs = min($rawPairs, $dailyPairLimit);
             $referralincome = $user->referral_commission ?? 0;
             Log::info("User {$user->id} pairs: {$userPairs}, referral income: {$referralincome}");
-    
+
             // 6️⃣ dollar math stays the same…
             $grossPayout = ($userPairs > 0) ? ($userPairs * $pairIncome + $referralincome) : 0;
-            $tdsDeduction   = $grossPayout * ($tdsPercentage  / 100);
+            $tdsDeduction = $grossPayout * ($tdsPercentage / 100);
             $serviceChargeAmt = $grossPayout * ($serviceCharge / 100);
-            $netAmount      = max($grossPayout - $tdsDeduction - $serviceChargeAmt, 0);
-    
+            $netAmount = max($grossPayout - $tdsDeduction - $serviceChargeAmt, 0);
+
             // 7️⃣ record
             UserPayoutDetail::create([
-                'user_id'           => $user->id,
+                'user_id' => $user->id,
                 'payout_summary_id' => $payoutSummaryId,
-                'left_bv'           => $totalLeftBv,
-                'right_bv'          => $totalRightBv,
-                'matching_pairs'    => $userPairs,
-                'payout_amount'     => $grossPayout,
-                'tds_deduction'     => $tdsDeduction,
-                'service_charge'    => $serviceChargeAmt,
-                'net_amount'        => $netAmount,
-                'status'            => $grossPayout > 0 ? 'payout_eligible' : 'no_payout',
+                'left_bv' => $totalLeftBv,
+                'right_bv' => $totalRightBv,
+                'matching_pairs' => $userPairs,
+                'payout_amount' => $grossPayout,
+                'tds_deduction' => $tdsDeduction,
+                'service_charge' => $serviceChargeAmt,
+                'net_amount' => $netAmount,
+                'status' => $grossPayout > 0 ? 'payout_eligible' : 'no_payout',
             ]);
-    
+
             Log::info("User {$user->id} payout detail:", compact(
-                'totalLeftBv','totalRightBv','rawPairs','userPairs','grossPayout','netAmount'
+                'totalLeftBv',
+                'totalRightBv',
+                'rawPairs',
+                'userPairs',
+                'grossPayout',
+                'netAmount'
             ));
         }
-    
+
         Log::info("Payout detail recording completed.");
     }
-    
+
     /**
      * Sum only one node’s BV records (not its whole subtree).
      */
     protected function sumNodeBv(?User $node, \Illuminate\Support\Carbon $cutoff): float
     {
-        if (! $node) return 0;
+        if (!$node)
+            return 0;
         return (float) $node->userBvs()
             ->whereNotIn('type', $this->protectedTypes)
-            ->where('created_at','<',$cutoff)
+            ->where('created_at', '<', $cutoff)
             ->sum('bv_points');
     }
-    
+
     /**
      * (Optional) if you want to log/store the entire subtree’s BV total.
      */
     protected function sumSubtreeBv(?User $node, \Illuminate\Support\Carbon $cutoff): float
     {
-        if (! $node) return 0;
+        if (!$node)
+            return 0;
         $total = $this->sumNodeBv($node, $cutoff);
-        $total += $this->sumSubtreeBv($node->leftChild,  $cutoff);
+        $total += $this->sumSubtreeBv($node->leftChild, $cutoff);
         $total += $this->sumSubtreeBv($node->rightChild, $cutoff);
         return $total;
     }
-    
+
     /**
      * Recursively count **1 direct pair** at this node +
      * all pairs in its left‐ & right‐child subtrees.
      */
     protected function countMatchingPairs(?User $user, float $limit, \Illuminate\Support\Carbon $cutoff): int
     {
-        if (! $user) return 0;
-    
+        if (!$user)
+            return 0;
+
         // how much BV sits *directly* under each immediate child?
-        $L = $this->sumNodeBv($user->leftChild,  $cutoff);
+        $L = $this->sumNodeBv($user->leftChild, $cutoff);
         $R = $this->sumNodeBv($user->rightChild, $cutoff);
-    
+
         // ① direct pair here?
         $direct = ($L >= $limit && $R >= $limit) ? 1 : 0;
-    
+
         // ② plus whatever their sub‐subtrees hold
-        $leftPairs  = $this->countMatchingPairs($user->leftChild,  $limit, $cutoff);
+        $leftPairs = $this->countMatchingPairs($user->leftChild, $limit, $cutoff);
         $rightPairs = $this->countMatchingPairs($user->rightChild, $limit, $cutoff);
-    
+
         return $direct + $leftPairs + $rightPairs;
     }
 }

@@ -36,19 +36,37 @@ class MatrimonyController extends Controller
 
     public function profileLists()
     {
-        $profiles = ProfileListing::all()->map(function ($profile) {
-            $imageIds = array_filter(preg_split('/[|,]/', $profile->image), fn($id) => !empty(trim($id)));
+        $profiles = ProfileListing::with([
+            'motherTongue',
+            'caste',
+            'country',
+            'state',
+            'city',
+        ])->get()
+            ->map(function ($profile) {
+                // build image_urls as before
+                $imageIds = array_filter(
+                    preg_split('/[|,]/', $profile->image),
+                    fn($id) => trim($id) !== ''
+                );
+                $profile->image_urls = array_map(
+                    fn($id) => get_attachment_url_by_ids(trim($id)),
+                    $imageIds
+                );
 
-            $profile->image_urls = array_map(function ($id) {
-                return get_attachment_url_by_ids(trim($id));
-            }, $imageIds);
+                // now append the names from the loaded relations:
+                $profile->mother_tongue_name = $profile->motherTongue?->mother_tongue;
+                $profile->caste_name = $profile->caste?->caste;
+                $profile->country_name = $profile->country?->country;
+                $profile->state_name = $profile->state?->state;
+                $profile->city_name = $profile->city?->city;
 
-            return $profile;
-        });
+                return $profile;
+            });
 
         return response()->json([
             'success' => true,
-            'data' => $profiles
+            'data' => $profiles,
         ]);
     }
 
@@ -82,12 +100,9 @@ class MatrimonyController extends Controller
         ]);
     }
 
-
     public function storeProfile(Request $request)
     {
-
         $user = Auth::guard('sanctum')->user();
-
         if (!$user) {
             return response()->json([
                 'success' => false,
@@ -95,6 +110,7 @@ class MatrimonyController extends Controller
             ], 401);
         }
 
+        // 1) Validate input, treating 'image' as an array of IDs
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'date_of_birth' => 'required|date',
@@ -112,84 +128,84 @@ class MatrimonyController extends Controller
             'address' => 'nullable|string|max:255',
             'lat' => 'nullable|numeric',
             'lon' => 'nullable|numeric',
-            'image' => 'required',
+            'image' => 'required|array|min:1',
+            'image.*' => 'integer',           // each element must be an integer ID
             'description' => 'required|string',
             'zodiac_sign' => 'nullable|string|max:50',
             'star' => 'nullable|string|max:50',
-            'visibility' => 'nullable|boolean',
-            'paid' => 'nullable|boolean',
+            'visibility' => 'sometimes|boolean',
+            'paid' => 'sometimes|boolean',
             'payment_method' => 'nullable|string|max:50',
-            'is_verified' => 'nullable|boolean',
+            'is_verified' => 'sometimes|boolean',
             'rejection_reason' => 'nullable|string',
             'selected_payment_gateway' => 'required|string',
         ]);
 
-        // Inject user_id and ensure paid/payment_method defaults
+        // 2) Turn the array of image IDs into a pipe-separated string
+        $imageIds = $validated['image'];            // e.g. [1274,1273]
+        $imageString = implode('|', $imageIds);        // "1274|1273"
+
+        // 3) Merge defaults for optional flags/fields
         $data = array_merge($validated, [
             'user_id' => $user->id,
-            'paid' => $validated['paid'] ?? 0,
+            'paid' => $validated['paid'] ?? false,
             'payment_method' => $validated['payment_method'] ?? null,
+            'is_verified' => $validated['is_verified'] ?? false,
+            'rejection_reason' => $validated['rejection_reason'] ?? null,
         ]);
 
+        // 4) Populate and save
         $profile = new ProfileListing();
+        $profile->user_id = $data['user_id'];
+        $profile->name = $data['name'];
+        $profile->date_of_birth = $data['date_of_birth'];
+        $profile->age = $data['age'];
+        $profile->gender = $data['gender'];
+        $profile->religion = $data['religion'];
+        $profile->occupation = $data['occupation'];
+        $profile->marital_status = $data['marital_status'];
+        $profile->annual_income = $data['annual_income'];
+        $profile->caste = $data['caste'];
+        $profile->mother_tongue = $data['mother_tongue'];
+        $profile->country = $data['country'];
+        $profile->state = $data['state'];
+        $profile->city = $data['city'];
+        $profile->address = $data['address'];
+        $profile->lat = $data['lat'];
+        $profile->lon = $data['lon'];
 
-        $profile->user_id                  = $data['user_id'];
-        $profile->name                     = $data['name'];
-        $profile->date_of_birth            = $data['date_of_birth'];
-        $profile->age                      = $data['age'];
-        $profile->gender                   = $data['gender'];
-        $profile->religion                 = $data['religion'];
-        $profile->occupation               = $data['occupation'];
-        $profile->marital_status           = $data['marital_status'];
-        $profile->annual_income            = $data['annual_income'];
-        $profile->caste                    = $data['caste'];
-        $profile->mother_tongue            = $data['mother_tongue'];
-        $profile->country                  = $data['country'];
-        $profile->state                    = $data['state'];
-        $profile->city                     = $data['city'];
-        $profile->address                  = $data['address'];
-        $profile->lat                      = $data['lat'];
-        $profile->lon                      = $data['lon'];
+        // <-- store the pipe-separated IDs here -->
+        $profile->image = $imageString;
 
-        // Handle image upload and store path
-        $path = $request->file('image')->store('profiles', 'public');
-        $profile->image                    = $path;
-
-        $profile->description              = $data['description'];
-        $profile->zodiac_sign              = $data['zodiac_sign'];
-        $profile->star                     = $data['star'];
-        $profile->visibility               = $data['visibility'];
-        $profile->paid                     = $data['paid'];
-        $profile->payment_method           = $data['payment_method'];
-        $profile->is_verified              = $data['is_verified'];
-        $profile->rejection_reason         = $data['rejection_reason'];
-
+        $profile->description = $data['description'];
+        $profile->zodiac_sign = $data['zodiac_sign'];
+        $profile->star = $data['star'];
+        $profile->visibility = $data['visibility'];
+        $profile->paid = $data['paid'];
+        $profile->payment_method = $data['payment_method'];
+        $profile->is_verified = $data['is_verified'];
+        $profile->rejection_reason = $data['rejection_reason'];
         $profile->save();
 
-        // Fetch gateway credentials from DB
+        // 5) Fetch gateway creds and create a Razorpay order
         $gatewayRow = DB::table('payment_gateways')
             ->where('name', $request->selected_payment_gateway)
             ->first();
         if (!$gatewayRow) {
             return response()->json(['error' => 'Selected payment gateway not found.'], 404);
         }
-
-        $credentials = json_decode($gatewayRow->credentials, true) ?: [];
-        $apiKey = $credentials['api_key'] ?? null;
-        $apiSecret = $credentials['api_secret'] ?? null;
-
+        $creds = json_decode($gatewayRow->credentials, true) ?: [];
+        $apiKey = $creds['api_key'] ?? null;
+        $apiSecret = $creds['api_secret'] ?? null;
         if (!$apiKey || !$apiSecret) {
             return response()->json(['error' => 'Incomplete gateway credentials.'], 500);
         }
 
-        // Instantiate RazorpayService with dynamic creds
         $razorpayService = new RazorpayService($apiKey, $apiSecret);
-
-        // Create order
-        $amountInRupees = get_static_option('matrimony_price') ?? 0; // e.g. 500
+        $amountInRupees = get_static_option('matrimony_price') ?? 0;
         $order = $razorpayService->createOrder($amountInRupees);
 
-        // Build checkout URL
+        // 6) Build and return the checkout URL
         $query = http_build_query([
             'order_id' => $order['id'],
             'amount' => $amountInRupees,
@@ -199,16 +215,13 @@ class MatrimonyController extends Controller
             'user_id' => $profile->user_id,
         ]);
 
-        $checkoutUrl = route('profile.checkout') . '?' . $query;
-
         return response()->json([
             'success' => true,
-            'checkout_url' => $checkoutUrl,
+            'checkout_url' => route('profile.checkout') . '?' . $query,
             'order_id' => $order['id'],
             'message' => 'Checkout URL generated successfully.'
         ]);
     }
-
 
     public function handlePaymentSuccess(Request $request)
     {
@@ -281,8 +294,8 @@ class MatrimonyController extends Controller
 
         if (
             ProfileRequest::where('sender_id', auth()->id())
-            ->where('profile_id', $profileId)
-            ->exists()
+                ->where('profile_id', $profileId)
+                ->exists()
         ) {
             return response()->json([
                 'message' => 'You have already sent a request to this profile'
@@ -536,7 +549,7 @@ class MatrimonyController extends Controller
 
         return response()->json([
             'success' => true,
-            'data'    => $countries
+            'data' => $countries
         ], 200);
     }
 

@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Caste;
 use App\Models\Religion;
+use App\Models\ZodiacSign;
+use App\Models\Star;
+use App\Models\ProfileRequest;
+use App\Models\MotherTongue;
 use Modules\CountryManage\app\Models\City;
 use Modules\CountryManage\app\Models\Country;
 
@@ -90,6 +94,11 @@ class ProfileListing extends Model
     public function star()
     {
         return $this->belongsTo(Star::class, 'star');
+    }
+
+    public function motherTongue()
+    {
+        return $this->belongsTo(MotherTongue::class, 'mother_tongue');
     }
 
 }

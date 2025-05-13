@@ -131,8 +131,40 @@ class MatrimonyController extends Controller
             'payment_method' => $validated['payment_method'] ?? null,
         ]);
 
-        // Create the ProfileListing
-        $profile = ProfileListing::create($data);
+        $profile = new ProfileListing();
+
+        $profile->user_id                  = $data['user_id'];
+        $profile->name                     = $data['name'];
+        $profile->date_of_birth            = $data['date_of_birth'];
+        $profile->age                      = $data['age'];
+        $profile->gender                   = $data['gender'];
+        $profile->religion                 = $data['religion'];
+        $profile->occupation               = $data['occupation'];
+        $profile->marital_status           = $data['marital_status'];
+        $profile->annual_income            = $data['annual_income'];
+        $profile->caste                    = $data['caste'];
+        $profile->mother_tongue            = $data['mother_tongue'];
+        $profile->country                  = $data['country'];
+        $profile->state                    = $data['state'];
+        $profile->city                     = $data['city'];
+        $profile->address                  = $data['address'];
+        $profile->lat                      = $data['lat'];
+        $profile->lon                      = $data['lon'];
+
+        // Handle image upload and store path
+        $path = $request->file('image')->store('profiles', 'public');
+        $profile->image                    = $path;
+
+        $profile->description              = $data['description'];
+        $profile->zodiac_sign              = $data['zodiac_sign'];
+        $profile->star                     = $data['star'];
+        $profile->visibility               = $data['visibility'];
+        $profile->paid                     = $data['paid'];
+        $profile->payment_method           = $data['payment_method'];
+        $profile->is_verified              = $data['is_verified'];
+        $profile->rejection_reason         = $data['rejection_reason'];
+
+        $profile->save();
 
         // Fetch gateway credentials from DB
         $gatewayRow = DB::table('payment_gateways')
@@ -249,8 +281,8 @@ class MatrimonyController extends Controller
 
         if (
             ProfileRequest::where('sender_id', auth()->id())
-                ->where('profile_id', $profileId)
-                ->exists()
+            ->where('profile_id', $profileId)
+            ->exists()
         ) {
             return response()->json([
                 'message' => 'You have already sent a request to this profile'
@@ -498,17 +530,17 @@ class MatrimonyController extends Controller
     }
 
     public function country()
-{
-    // load countries → states → cities
-    $countries = Country::with('states.cities')->get();
+    {
+        // load countries → states → cities
+        $countries = Country::with('states.cities')->get();
 
-    return response()->json([
-        'success' => true,
-        'data'    => $countries
-    ], 200);
-}
+        return response()->json([
+            'success' => true,
+            'data'    => $countries
+        ], 200);
+    }
 
-    
+
     public function state(Request $request)
     {
         $validated = $request->validate([
@@ -593,5 +625,4 @@ class MatrimonyController extends Controller
             'data' => $rejectedRequests,
         ]);
     }
-
 }

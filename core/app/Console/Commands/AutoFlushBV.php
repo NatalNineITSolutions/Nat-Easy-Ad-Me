@@ -17,7 +17,6 @@ class AutoFlushBV extends Command
     protected $description = 'Flush extra BV based on sealing limit at scheduled time';
 
     protected $protectedTypes = [
-        'direct_referral',
         'genology',
         'purchase'
     ];
@@ -37,7 +36,7 @@ class AutoFlushBV extends Command
         try {
             DB::transaction(function () {
                 $bpConversionRate = get_static_option('bp_value') ?? 1;
-                $sealingLimit = get_static_option('sealing_limit') ?? 1;
+                $sealingLimit = get_static_option('sealing_limitation') ?? 1;
                 $sealingLimitBv = $sealingLimit * $bpConversionRate;
                 $pairIncome = get_static_option('maximum_one_pair_income');
                 $tdsPercentage = get_static_option('tds_value');
@@ -48,6 +47,7 @@ class AutoFlushBV extends Command
                     ->chunk(200, function ($users) use ($sealingLimitBv) {
                         foreach ($users as $user) {
                             $this->processUserBvFlush($user, $sealingLimitBv);
+                            $this->processReferralCommission($user);
                         }
                     });
 
@@ -62,7 +62,7 @@ class AutoFlushBV extends Command
                 );
             });
 
-            $this->info('BV flushed and deducted successfully.');
+            $this->info('BV and referral commissions flushed successfully.');
             return 0;
         } catch (\Exception $e) {
             Log::error("BV Flush Error: " . $e->getMessage());
@@ -131,6 +131,32 @@ class AutoFlushBV extends Command
                 'left_bv' => $leftBv,
                 'right_bv' => $rightBv,
                 'sealing_limit' => $sealingLimitBv,
+            ]);
+        }
+    }
+
+    protected function processReferralCommission(User $user)
+    {
+        // Get the user's current referral commission
+        $currentCommission = $user->referral_commission ?? 0;
+        
+        if ($currentCommission > 0) {
+            // Create a BV record for the referral commission
+            $user->userBvs()->create([
+                'bv_points' => $currentCommission,
+                'type' => 'referral_commission',
+                'description' => 'Referral commission payout at ' . now(),
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+
+            // Reset the referral commission to 0
+            $user->referral_commission = 0;
+            $user->save();
+
+            Log::info("Referral commission processed", [
+                'user_id' => $user->id,
+                'amount' => $currentCommission
             ]);
         }
     }
@@ -249,8 +275,7 @@ class AutoFlushBV extends Command
         Log::info("Starting payout-detail recording. Users to process: {$users->count()}");
 
         foreach ($users as $user) {
-            // 3️⃣ **Sum all net BV** under **this node’s entire left vs right** subtrees?
-            //    → We’ll still log (or store) the total raw BV on each side for debugging if you like:
+            // 3️⃣ **Sum all net BV** under **this node's entire left vs right** subtrees
             $totalLeftBv = $this->sumSubtreeBv($user->leftChild, $now);
             $totalRightBv = $this->sumSubtreeBv($user->rightChild, $now);
 
@@ -296,7 +321,7 @@ class AutoFlushBV extends Command
     }
 
     /**
-     * Sum only one node’s BV records (not its whole subtree).
+     * Sum only one node's BV records (not its whole subtree).
      */
     protected function sumNodeBv(?User $node, \Illuminate\Support\Carbon $cutoff): float
     {
@@ -309,7 +334,7 @@ class AutoFlushBV extends Command
     }
 
     /**
-     * (Optional) if you want to log/store the entire subtree’s BV total.
+     * (Optional) if you want to log/store the entire subtree's BV total.
      */
     protected function sumSubtreeBv(?User $node, \Illuminate\Support\Carbon $cutoff): float
     {

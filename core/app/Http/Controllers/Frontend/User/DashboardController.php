@@ -152,11 +152,39 @@ class DashboardController extends Controller
         $directReferralsCount = User::where('sponsor_id', $user->id)->count();
 
         // Get direct referrals who have self_purchased_bv >= 900
-        $qualifiedReferralsCount = User::where('parent_id', $user_id)
+        $qualifiedReferralsCount = User::where('sponsor_id', $user_id)
             ->where('self_purchased_bv', '>=', 900)
             ->count();
 
         $referralCommission = $perReferralCommission * $qualifiedReferralsCount;
+
+        $pendingReferralCommission = $user->referral_commission ?? 0;
+
+        // Total historical flushed commission (sum of all referral_commission BV records)
+        $flushedReferralCommission = $user->userBvs()
+            ->where('type', 'referral_commission')
+            ->sum('bv_points');
+
+        // Total earned commission (pending + flushed)
+        $totalReferralCommission = $pendingReferralCommission + $flushedReferralCommission;
+
+        // Calculate current potential commission (same as before)
+        $referralValue = (float) get_static_option('referral_value');
+        $referralPercentage = (float) get_static_option('referral_percentage');
+        $perReferralCommission = ($referralPercentage / 100) * $referralValue;
+        $qualifiedReferralsCount = User::where('sponsor_id', $user_id)
+            ->where('self_purchased_bv', '>=', 900)
+            ->count();
+        $potentialCommission = $perReferralCommission * $qualifiedReferralsCount;
+
+        // Update the user's current commission if needed
+        if ($potentialCommission != $pendingReferralCommission) {
+            User::updateOrCreate(
+                ['id' => $user_id],
+                ['referral_commission' => $potentialCommission]
+            );
+            $pendingReferralCommission = $potentialCommission;
+        }
 
         User::updateOrCreate(
             ['id' => $user_id],
@@ -215,6 +243,9 @@ class DashboardController extends Controller
             'membershipInfo' => $membershipInfo,
             'profilesViewed' => $profilesViewed,
             'remainingProfileLimit' => $remainingProfileLimit,
+            'pendingReferralCommission' => $pendingReferralCommission,
+            'flushedReferralCommission' => $flushedReferralCommission,
+            'totalReferralCommission' => $totalReferralCommission,
         ]);
     }
     public function genology()
@@ -630,7 +661,7 @@ class DashboardController extends Controller
         }
 
         // Only fetch direct referrals (1 level)
-        $referrals = $allUsers->where('parent_id', $id)->map(function ($user) {
+        $referrals = $allUsers->where('sponsor_id', $id)->map(function ($user) {
             $user->position = $user->membership ? 'Paid User' : 'Free User';
             return $user;
         });
@@ -655,20 +686,31 @@ class DashboardController extends Controller
         $user = auth()->user();
         $user->load(['kycRecord.user_country', 'kycRecord.user_state', 'kycRecord.user_city']);
 
-        // Get settings
+        // Get settings (same as viewincome method)
         $paymentType = get_static_option('payment_type') ?? 'day';
         $tdsPercentage = get_static_option('tds_value') ?? 0;
         $serviceChargePercentage = get_static_option('service_charge') ?? 0;
 
-        // Get income data
+        // Get income data (same as viewincome method)
         $allDays = $this->getIncomeDays($user->id);
         $filteredDays = $this->filterIncomeDays($allDays, $paymentType);
+        $filteredDays = collect($filteredDays)->map(function ($day) {
+            $day['income'] = $day['payout_amount'];
+            return $day;
+        });
         $totalIncome = collect($filteredDays)->sum('income');
 
-        // ✅ Correct percentage calculations
+        // Calculate amounts (same as viewincome method)
         $tdsAmount = $totalIncome * ($tdsPercentage / 100);
         $serviceChargeAmount = $totalIncome * ($serviceChargePercentage / 100);
         $netAmount = $totalIncome - $tdsAmount - $serviceChargeAmount;
+
+        $today = now()->toDateString();
+        $todayIncome = collect($filteredDays)->filter(function ($item) use ($today) {
+            $dateField = $item['created_at'] ?? $item['date'] ?? $item['day'] ?? null;
+            return $dateField && Carbon::parse($dateField)->toDateString() === $today;
+        });
+
         $bvFromReferrals = $user->children()->with('userBvs')->get()->sum(fn($child) => $child->userBvs->sum('bv_points'));
 
         $incomeData = [
@@ -677,16 +719,18 @@ class DashboardController extends Controller
             'address' => $user->address,
             'bank_details' => $user->bank_details,
             'days' => $filteredDays,
+            'today_income' => $todayIncome,
             'total_income' => round($totalIncome, 2),
             'product_coupon' => 0,
             'tds' => round($tdsAmount, 3),
             'service_charge' => round($serviceChargeAmount, 3),
             'net_amount' => round($netAmount, 3),
-            'direct_business_bv' => 150,
+            'direct_business' => $bvFromReferrals,
             'kyc' => $user->kycRecord,
             'tds_percentage' => $tdsPercentage,
             'service_charge_percentage' => $serviceChargePercentage,
-            'direct_business' => $bvFromReferrals,
+            'today' => $today,
+            'bv_from_referrals' => $bvFromReferrals,
         ];
 
         return view('frontend.user.income.income', compact('incomeData'));
@@ -718,6 +762,7 @@ class DashboardController extends Controller
     {
         return UserPayoutDetail::where('user_id', $userId)
             ->orderBy('created_at', 'asc')
+            ->where('status', 'payout_eligible')
             ->get()
             ->map(function ($item) {
                 return [
@@ -746,7 +791,7 @@ class DashboardController extends Controller
         $allDays = $this->getIncomeDays($user->id);
         $filteredDays = $this->filterIncomeDays($allDays, $paymentType);
         $filteredDays = collect($filteredDays)->map(function ($day) {
-            $day['income'] = $day['payout_amount']; // Set this explicitly
+            $day['income'] = $day['payout_amount'];
             return $day;
         });
         $totalIncome = collect($filteredDays)->sum('income');
@@ -776,7 +821,7 @@ class DashboardController extends Controller
             'tds' => round($tdsAmount, 3),
             'service_charge' => round($serviceChargeAmount, 3),
             'net_amount' => round($netAmount, 3),
-            'direct_business_bv' => 150,
+            'direct_business' => $bvFromReferrals,
             'kyc' => $user->kycRecord,
             'tds_percentage' => $tdsPercentage,
             'service_charge_percentage' => $serviceChargePercentage,

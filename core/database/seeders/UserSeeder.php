@@ -67,7 +67,7 @@ class UserSeeder extends Seeder
         ]);
 
         // Self-sponsor
-        $userA->update(['sponsor_id' => $userA->id]);
+        $userA->update(['sponsor_id' => null]);
 
         // Create B under A
         $partnerIdB = $this->generatePartnerId();

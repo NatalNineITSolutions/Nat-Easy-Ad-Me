@@ -56,10 +56,10 @@ class MatrimonyController extends Controller
 
                 // now append the names from the loaded relations:
                 $profile->mother_tongue_name = $profile->motherTongue?->mother_tongue;
-                $profile->caste_name = $profile->caste?->caste;
-                $profile->country_name = $profile->country?->country;
-                $profile->state_name = $profile->state?->state;
-                $profile->city_name = $profile->city?->city;
+                $profile->caste_name = $profile->castes?->caste;
+                $profile->country_name = $profile->countries?->country;
+                $profile->state_name = $profile->states?->state;
+                $profile->city_name = $profile->cities?->city;
 
                 return $profile;
             });

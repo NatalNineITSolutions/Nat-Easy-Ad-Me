@@ -292,6 +292,7 @@ class AutoFlushBV extends Command
         $dailyPairLimit = (int) get_static_option('sealing_limitation');
         $now = now();
 
+        // Fetch users with both children
         $users = User::with(['leftChild', 'rightChild'])
             ->whereHas('leftChild')
             ->whereHas('rightChild')
@@ -300,13 +301,29 @@ class AutoFlushBV extends Command
         Log::info("Starting payout-detail recording. Users to process: {$users->count()}");
 
         foreach ($users as $user) {
+            // Sum BV in each side
             $totalLeftBv = $this->sumSubtreeBv($user->leftChild, $now);
             $totalRightBv = $this->sumSubtreeBv($user->rightChild, $now);
 
+            // Must meet *all three* criteria to be eligible
+            if (
+                ($user->self_purchased_bv ?? 0) < 900 ||
+                $totalLeftBv < 900 ||
+                $totalRightBv < 900
+            ) {
+                Log::info("Skipping user {$user->id}; eligibility conditions not met", [
+                    'self_purchased_bv' => $user->self_purchased_bv,
+                    'left_bv' => $totalLeftBv,
+                    'right_bv' => $totalRightBv,
+                ]);
+                continue;
+            }
+
+            // Compute how many BP‐pairs they’ve formed, capped by daily limit
             $rawPairs = (int) floor(min($totalLeftBv, $totalRightBv) / $bpConversionRate);
             $userPairs = min($rawPairs, $dailyPairLimit);
 
-            // Fetch referral commissions credited as BV during this run
+            // Include any referral commissions credited in the last minute
             $referral = UsersBv::where('user_id', $user->id)
                 ->where('type', 'referral_commission')
                 ->where('created_at', '>=', $now->subMinute())
@@ -315,10 +332,12 @@ class AutoFlushBV extends Command
             $grossPayout = ($userPairs * $pairIncome) + $referral;
             Log::info("User {$user->id} gross payout: {$grossPayout}", compact('userPairs', 'referral'));
 
+            // Calculate deductions
             $tdsDeduction = $grossPayout * ($tdsPercentage / 100);
             $serviceChargeAmt = $grossPayout * ($serviceCharge / 100);
             $netAmount = max($grossPayout - $tdsDeduction - $serviceChargeAmt, 0);
 
+            // Persist the payout detail
             UserPayoutDetail::create([
                 'user_id' => $user->id,
                 'payout_summary_id' => $payoutSummaryId,
@@ -329,21 +348,24 @@ class AutoFlushBV extends Command
                 'tds_deduction' => $tdsDeduction,
                 'service_charge' => $serviceChargeAmt,
                 'net_amount' => $netAmount,
-                'status' => $grossPayout > 0 ? 'payout_eligible' : 'no_payout',
+                'status' => $grossPayout > 0
+                    ? 'payout_eligible'
+                    : 'no_payout',
             ]);
 
-            Log::info("User {$user->id} payout detail recorded", compact(
-                'totalLeftBv',
-                'totalRightBv',
-                'rawPairs',
-                'userPairs',
-                'grossPayout',
-                'netAmount'
-            ));
+            Log::info("User {$user->id} payout detail recorded", [
+                'totalLeftBv' => $totalLeftBv,
+                'totalRightBv' => $totalRightBv,
+                'rawPairs' => $rawPairs,
+                'userPairs' => $userPairs,
+                'grossPayout' => $grossPayout,
+                'netAmount' => $netAmount,
+            ]);
         }
 
         Log::info("Payout detail recording completed.");
     }
+
 
     /**
      * Sum only one node's BV records (not its whole subtree).

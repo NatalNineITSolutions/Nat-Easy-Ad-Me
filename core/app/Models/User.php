@@ -76,7 +76,8 @@ class User extends Authenticatable
         'sponsor_id',
         'placement_id',
         'deleted_at',
-        'net_amount'
+        'net_amount',
+        'commission_given'
     ];
 
     /**

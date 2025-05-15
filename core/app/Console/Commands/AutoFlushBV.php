@@ -56,6 +56,7 @@ class AutoFlushBV extends Command
                 $this->recordUserPayoutDetails(
                     $payoutRecord->id,
                     $sealingLimitBv,
+                    $bpConversionRate,
                     $pairIncome,
                     $tdsPercentage,
                     $serviceCharge
@@ -71,14 +72,19 @@ class AutoFlushBV extends Command
         }
     }
 
-    protected function processUserBvFlush(User $user, $sealingLimitBv)
+    protected function processUserBvFlush(User $user)
     {
+        // re‐fetch the dynamic settings
+        $bpConversionRate = get_static_option('bp_value') ?? 1;
+        $sealingLimit = get_static_option('sealing_limitation') ?? 1;
+
         $leftChild = $user->leftChild;
         $rightChild = $user->rightChild;
         if (!$leftChild || !$rightChild) {
             return;
         }
 
+        // total BV on each side (excluding protected types)
         $leftBv = $leftChild->userBvs()
             ->whereNotIn('type', $this->protectedTypes)
             ->sum('bv_points');
@@ -86,51 +92,67 @@ class AutoFlushBV extends Command
             ->whereNotIn('type', $this->protectedTypes)
             ->sum('bv_points');
 
-        if ($leftBv >= $sealingLimitBv && $rightBv >= $sealingLimitBv) {
-            // 1) Flush exactly one sealing‐limit chunk from each side
-            $this->flushSide($leftChild, $sealingLimitBv, 'left');
-            $this->flushSide($rightChild, $sealingLimitBv, 'right');
+        // How many WHOLE BP units on each side?
+        $leftBpUnits = floor($leftBv / $bpConversionRate);
+        $rightBpUnits = floor($rightBv / $bpConversionRate);
 
-            $leftBv -= $sealingLimitBv;
-            $rightBv -= $sealingLimitBv;
+        // How many BP‐pairs do we actually have?
+        $possiblePairs = min($leftBpUnits, $rightBpUnits);
 
-            // 2) If remainders differ, flush the smaller one entirely
-            if ($leftBv !== $rightBv) {
-                if ($leftBv < $rightBv && $leftBv > 0) {
-                    Log::info("Flushing entire remaining left side BV", [
+        // But we can only flush up to our daily sealing limit:
+        $pairsToFlush = min($possiblePairs, $sealingLimit);
+
+        if ($pairsToFlush > 0) {
+            // This is the BV we’ll deduct from each side:
+            $amountToFlush = $pairsToFlush * $bpConversionRate;
+
+            // 1) Flush that exact amount from left and right
+            $this->flushSide($leftChild, $amountToFlush, 'left');
+            $this->flushSide($rightChild, $amountToFlush, 'right');
+
+            // 2) Subtract it so we can still run your “remainder” logic
+            $leftRemainder = $leftBv - $amountToFlush;
+            $rightRemainder = $rightBv - $amountToFlush;
+
+            // 3) If the remainders differ, flush the smaller one entirely
+            if ($leftRemainder !== $rightRemainder) {
+                if ($leftRemainder < $rightRemainder && $leftRemainder > 0) {
+                    Log::info("Flushing leftover left BV", [
                         'user_id' => $user->id,
-                        'remaining_left_bv' => $leftBv,
+                        'left_over_bv' => $leftRemainder,
                     ]);
-                    $this->flushSide($leftChild, $leftBv, 'left');
-                    $leftBv = 0;
-                } elseif ($rightBv < $leftBv && $rightBv > 0) {
-                    Log::info("Flushing entire remaining right side BV", [
+                    $this->flushSide($leftChild, $leftRemainder, 'left');
+                    $leftRemainder = 0;
+                } elseif ($rightRemainder < $leftRemainder && $rightRemainder > 0) {
+                    Log::info("Flushing leftover right BV", [
                         'user_id' => $user->id,
-                        'remaining_right_bv' => $rightBv,
+                        'right_over_bv' => $rightRemainder,
                     ]);
-                    $this->flushSide($rightChild, $rightBv, 'right');
-                    $rightBv = 0;
+                    $this->flushSide($rightChild, $rightRemainder, 'right');
+                    $rightRemainder = 0;
                 }
             }
-            // 3) NEW: if remainders are exactly equal and nonzero, flush one side to zero
-            elseif ($leftBv === $rightBv && $leftBv > 0) {
-                Log::info("Remainders equal; flushing entire left side BV", [
+            // 4) If they’re exactly equal and nonzero, flush one side
+            elseif ($leftRemainder === $rightRemainder && $leftRemainder > 0) {
+                Log::info("Equal remainders; flushing left BV", [
                     'user_id' => $user->id,
-                    'remaining_left_bv' => $leftBv,
+                    'left_over_bv' => $leftRemainder,
                 ]);
-                $this->flushSide($leftChild, $leftBv, 'left');
-                $leftBv = 0;
+                $this->flushSide($leftChild, $leftRemainder, 'left');
+                $leftRemainder = 0;
             }
 
-            Log::info("Flush completed", [
-                'remaining_left_bv' => $leftBv,
-                'remaining_right_bv' => $rightBv,
+            Log::info("BV flush for user {$user->id} completed", [
+                'pairs_flushed' => $pairsToFlush,
+                'bv_per_side_flushed' => $amountToFlush,
+                'remaining_left_bv' => $leftRemainder,
+                'remaining_right_bv' => $rightRemainder,
             ]);
         } else {
-            Log::info("No flush: Either side below sealing limit", [
+            Log::info("No BV flush for user {$user->id}: not enough BV to form even one pair", [
                 'left_bv' => $leftBv,
                 'right_bv' => $rightBv,
-                'sealing_limit' => $sealingLimitBv,
+                'bp_rate' => $bpConversionRate,
             ]);
         }
     }
@@ -139,7 +161,7 @@ class AutoFlushBV extends Command
     {
         // Get the user's current referral commission
         $currentCommission = $user->referral_commission ?? 0;
-        
+
         if ($currentCommission > 0) {
             // Create a BV record for the referral commission
             $user->userBvs()->create([
@@ -193,12 +215,12 @@ class AutoFlushBV extends Command
 
         $pairIncome = get_static_option('maximum_one_pair_income') ?? 1;
         $dailyCeiling = get_static_option('sealing_limitation') ?? 1;
-        $maximumPairIncome = get_static_option('maximum_pair_income') ?? PHP_INT_MAX;
-
-        $matchingPairs = $this->calculateMatchingPairs($sealingLimitBv);
-        $actualPairsToPay = min($matchingPairs, $dailyCeiling);
+        $bpConversionRate = get_static_option('bp_value') ?? 1; // Ensure $bpConversionRate is defined
+        $matchingPairs = $this->calculateMatchingPairs($bpConversionRate);
+        $actualPairsToPay = min($matchingPairs, $dailyCeiling);/*  */
 
         $totalOutput = $matchingPairs * $pairIncome;
+        $maximumPairIncome = get_static_option('maximum_one_pair_income') ?? 0;
         $totalOutput = min($totalOutput, $maximumPairIncome);
 
         // Get previous balance and calculate new balance
@@ -229,7 +251,7 @@ class AutoFlushBV extends Command
         return $payoutRecord;
     }
 
-    protected function calculateMatchingPairs($sealingLimitBv)
+    protected function calculateMatchingPairs(float $bpConversionRate)
     {
         $users = User::with(['leftChild.userBvs', 'rightChild.userBvs'])->get();
         $matchingPairs = 0;
@@ -248,8 +270,12 @@ class AutoFlushBV extends Command
                     ->sum('bv_points') : 0;
 
             // Count only the number of complete pairs based on sealing limit
-            $pairs = floor(min($leftBv, $rightBv) / $sealingLimitBv);
+            $pairs = (int) floor(min($leftBv, $rightBv) / $bpConversionRate);
             $matchingPairs += $pairs;
+            Log::info("User {$user->id} matching pairs: {$pairs}", [
+                'left_bv' => $leftBv,
+                'right_bv' => $rightBv,
+            ]);
         }
 
         return $matchingPairs;
@@ -258,16 +284,15 @@ class AutoFlushBV extends Command
     protected function recordUserPayoutDetails(
         int $payoutSummaryId,
         float $sealingLimitBv,
+        float $bpConversionRate,
         float $pairIncome,
         float $tdsPercentage,
         float $serviceCharge
     ) {
-        // 1️⃣ daily cap
-        $dailyPairLimit = (int) (get_static_option('sealing_limitation') ?? 1);
+        $dailyPairLimit = (int) get_static_option('sealing_limitation');
         $now = now();
 
-        // 2️⃣ users with both legs
-        $users = User::with(['leftChild.userBvs', 'rightChild.userBvs'])
+        $users = User::with(['leftChild', 'rightChild'])
             ->whereHas('leftChild')
             ->whereHas('rightChild')
             ->get();
@@ -275,25 +300,25 @@ class AutoFlushBV extends Command
         Log::info("Starting payout-detail recording. Users to process: {$users->count()}");
 
         foreach ($users as $user) {
-            // 3️⃣ **Sum all net BV** under **this node's entire left vs right** subtrees
             $totalLeftBv = $this->sumSubtreeBv($user->leftChild, $now);
             $totalRightBv = $this->sumSubtreeBv($user->rightChild, $now);
 
-            // 4️⃣ **Count total matching pairs** by recursing through the tree
-            $rawPairs = $this->countMatchingPairs($user, $sealingLimitBv, $now);
-
-            // 5️⃣ Cap it
+            $rawPairs = (int) floor(min($totalLeftBv, $totalRightBv) / $bpConversionRate);
             $userPairs = min($rawPairs, $dailyPairLimit);
-            $referralincome = $user->referral_commission ?? 0;
-            Log::info("User {$user->id} pairs: {$userPairs}, referral income: {$referralincome}");
 
-            // 6️⃣ dollar math stays the same…
-            $grossPayout = ($userPairs > 0) ? ($userPairs * $pairIncome + $referralincome) : 0;
+            // Fetch referral commissions credited as BV during this run
+            $referral = UsersBv::where('user_id', $user->id)
+                ->where('type', 'referral_commission')
+                ->where('created_at', '>=', $now->subMinute())
+                ->sum('bv_points');
+
+            $grossPayout = ($userPairs * $pairIncome) + $referral;
+            Log::info("User {$user->id} gross payout: {$grossPayout}", compact('userPairs', 'referral'));
+
             $tdsDeduction = $grossPayout * ($tdsPercentage / 100);
             $serviceChargeAmt = $grossPayout * ($serviceCharge / 100);
             $netAmount = max($grossPayout - $tdsDeduction - $serviceChargeAmt, 0);
 
-            // 7️⃣ record
             UserPayoutDetail::create([
                 'user_id' => $user->id,
                 'payout_summary_id' => $payoutSummaryId,
@@ -307,7 +332,7 @@ class AutoFlushBV extends Command
                 'status' => $grossPayout > 0 ? 'payout_eligible' : 'no_payout',
             ]);
 
-            Log::info("User {$user->id} payout detail:", compact(
+            Log::info("User {$user->id} payout detail recorded", compact(
                 'totalLeftBv',
                 'totalRightBv',
                 'rawPairs',
@@ -350,7 +375,7 @@ class AutoFlushBV extends Command
      * Recursively count **1 direct pair** at this node +
      * all pairs in its left‐ & right‐child subtrees.
      */
-    protected function countMatchingPairs(?User $user, float $limit, \Illuminate\Support\Carbon $cutoff): int
+    protected function countMatchingPairs(?User $user, float $bpConversionRate, Carbon $cutoff): int
     {
         if (!$user)
             return 0;
@@ -360,11 +385,11 @@ class AutoFlushBV extends Command
         $R = $this->sumNodeBv($user->rightChild, $cutoff);
 
         // ① direct pair here?
-        $direct = ($L >= $limit && $R >= $limit) ? 1 : 0;
+        $direct = (floor(min($L, $R) / $bpConversionRate) >= 1) ? 1 : 0;
 
         // ② plus whatever their sub‐subtrees hold
-        $leftPairs = $this->countMatchingPairs($user->leftChild, $limit, $cutoff);
-        $rightPairs = $this->countMatchingPairs($user->rightChild, $limit, $cutoff);
+        $leftPairs = $this->countMatchingPairs($user->leftChild, $bpConversionRate, $cutoff);
+        $rightPairs = $this->countMatchingPairs($user->rightChild, $bpConversionRate, $cutoff);
 
         return $direct + $leftPairs + $rightPairs;
     }

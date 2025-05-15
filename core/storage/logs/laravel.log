@@ -1,128 +1,483 @@
-[2025-05-08 19:45:32] production.INFO: Checking for BV flush. Now: 19:45, Configured: 19:45  
-[2025-05-08 19:45:33] production.INFO: BV Flush - Side left {"user_id":2,"flushed_amount":900} 
-[2025-05-08 19:45:33] production.INFO: BV Flush - Side right {"user_id":3,"flushed_amount":900} 
-[2025-05-08 19:45:33] production.INFO: Flushing entire remaining right side BV {"user_id":1,"remaining_right_bv":1200} 
-[2025-05-08 19:45:33] production.INFO: BV Flush - Side right {"user_id":3,"flushed_amount":1200} 
-[2025-05-08 19:45:33] production.INFO: Flush completed {"remaining_left_bv":2200,"remaining_right_bv":0} 
-[2025-05-08 19:45:33] production.INFO: BV Flush - Side left {"user_id":4,"flushed_amount":900} 
-[2025-05-08 19:45:33] production.INFO: BV Flush - Side right {"user_id":5,"flushed_amount":900} 
-[2025-05-08 19:45:33] production.INFO: Flushing entire remaining right side BV {"user_id":2,"remaining_right_bv":100} 
-[2025-05-08 19:45:33] production.INFO: BV Flush - Side right {"user_id":5,"flushed_amount":100} 
-[2025-05-08 19:45:33] production.INFO: Flush completed {"remaining_left_bv":300,"remaining_right_bv":0} 
-[2025-05-08 19:45:33] production.INFO: BV Flush - Side left {"user_id":6,"flushed_amount":900} 
-[2025-05-08 19:45:33] production.INFO: BV Flush - Side right {"user_id":7,"flushed_amount":900} 
-[2025-05-08 19:45:33] production.INFO: Flush completed {"remaining_left_bv":0,"remaining_right_bv":0} 
-[2025-05-08 19:45:33] production.INFO: Payout recorded {"date":"2025-05-08 19:45:33","previous_balance":3300,"new_balance":17800.0,"record_id":225} 
-[2025-05-08 19:45:33] production.INFO: Starting payout-detail recording. Users to process: 3  
-[2025-05-08 19:45:33] production.INFO: User 1 payout detail: {"totalLeftBv":4400.0,"totalRightBv":3900.0,"rawPairs":3,"userPairs":2,"grossPayout":400.0,"netAmount":392.0} 
-[2025-05-08 19:45:33] production.INFO: User 2 payout detail: {"totalLeftBv":1200.0,"totalRightBv":1000.0,"rawPairs":1,"userPairs":1,"grossPayout":200.0,"netAmount":196.0} 
-[2025-05-08 19:45:33] production.INFO: User 3 payout detail: {"totalLeftBv":900.0,"totalRightBv":900.0,"rawPairs":1,"userPairs":1,"grossPayout":200.0,"netAmount":196.0} 
-[2025-05-08 19:45:33] production.INFO: Payout detail recording completed.  
-[2025-05-09 15:45:43] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
-[2025-05-09 15:45:44] production.INFO: last3: {"membership_id":344} 
-[2025-05-09 15:45:45] production.INFO: last5: {"membership_id":344} 
-[2025-05-09 15:45:45] production.INFO: last4: {"membership_id":344,"order_id":null} 
-[2025-05-09 15:45:45] production.INFO: after-charge: {"membership_id":344,"order_id":344} 
-[2025-05-09 15:46:15] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"344","payment_amount":5000,"transaction_id":"pay_QSnHyGw4M64vC0"} 
-[2025-05-09 15:46:15] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
-[2025-05-09 15:46:15] production.INFO: Updating membership database {"last_membership_id":"344","transaction_id":"pay_QSnHyGw4M64vC0","membership_history_id":556,"upgrade_membership_id":3} 
-[2025-05-09 15:46:15] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":344} 
-[2025-05-09 15:46:15] production.INFO: Distributed BV points to parent user: {"user_id":1,"bv_points":900} 
-[2025-05-09 15:46:28] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
-[2025-05-09 15:46:28] production.INFO: last3: {"membership_id":345} 
-[2025-05-09 15:46:28] production.INFO: last5: {"membership_id":345} 
-[2025-05-09 15:46:28] production.INFO: last4: {"membership_id":345,"order_id":null} 
-[2025-05-09 15:46:28] production.INFO: after-charge: {"membership_id":345,"order_id":345} 
-[2025-05-09 15:46:30] production.INFO: Membership email sent to user #2  
-[2025-05-09 15:46:33] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
-[2025-05-09 15:46:33] production.INFO: Data to update: {"upgrade_membership_id":3} 
-[2025-05-09 15:47:02] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"345","payment_amount":5000,"transaction_id":"pay_QSnIldqAEC6KqY"} 
-[2025-05-09 15:47:02] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
-[2025-05-09 15:47:02] production.INFO: Updating membership database {"last_membership_id":"345","transaction_id":"pay_QSnIldqAEC6KqY","membership_history_id":557,"upgrade_membership_id":3} 
-[2025-05-09 15:47:02] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":345} 
-[2025-05-09 15:47:03] production.INFO: Distributed BV points to parent user: {"user_id":1,"bv_points":900} 
-[2025-05-09 15:47:08] production.INFO: Membership email sent to user #3  
-[2025-05-09 15:47:09] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
-[2025-05-09 15:47:09] production.INFO: Data to update: {"upgrade_membership_id":3} 
-[2025-05-09 15:48:45] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
-[2025-05-09 15:48:46] production.INFO: last3: {"membership_id":346} 
-[2025-05-09 15:48:46] production.INFO: last5: {"membership_id":346} 
-[2025-05-09 15:48:46] production.INFO: last4: {"membership_id":346,"order_id":null} 
-[2025-05-09 15:48:46] production.INFO: after-charge: {"membership_id":346,"order_id":346} 
-[2025-05-09 15:49:41] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"346","payment_amount":5000,"transaction_id":"pay_QSnLk8VhbLLy6M"} 
-[2025-05-09 15:49:41] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
-[2025-05-09 15:49:41] production.INFO: Updating membership database {"last_membership_id":"346","transaction_id":"pay_QSnLk8VhbLLy6M","membership_history_id":558,"upgrade_membership_id":3} 
-[2025-05-09 15:49:41] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":346} 
-[2025-05-09 15:49:41] production.INFO: Distributed BV points to parent user: {"user_id":3,"bv_points":900} 
-[2025-05-09 15:49:41] production.INFO: Distributed BV points to parent user: {"user_id":1,"bv_points":900} 
-[2025-05-09 15:49:47] production.INFO: Membership email sent to user #6  
-[2025-05-09 15:49:49] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
-[2025-05-09 15:49:49] production.INFO: Data to update: {"upgrade_membership_id":3} 
-[2025-05-09 15:51:41] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
-[2025-05-09 15:51:41] production.INFO: last3: {"membership_id":347} 
-[2025-05-09 15:51:41] production.INFO: last5: {"membership_id":347} 
-[2025-05-09 15:51:41] production.INFO: last4: {"membership_id":347,"order_id":null} 
-[2025-05-09 15:51:41] production.INFO: after-charge: {"membership_id":347,"order_id":347} 
-[2025-05-09 15:51:59] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"347","payment_amount":5000,"transaction_id":"pay_QSnOC3BBCV9LUG"} 
-[2025-05-09 15:51:59] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
-[2025-05-09 15:51:59] production.INFO: Updating membership database {"last_membership_id":"347","transaction_id":"pay_QSnOC3BBCV9LUG","membership_history_id":559,"upgrade_membership_id":3} 
-[2025-05-09 15:51:59] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":347} 
-[2025-05-09 15:51:59] production.INFO: Distributed BV points to parent user: {"user_id":1,"bv_points":900} 
-[2025-05-09 15:52:04] production.INFO: Membership email sent to user #3  
-[2025-05-09 15:52:06] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
-[2025-05-09 15:52:06] production.INFO: Data to update: {"upgrade_membership_id":3} 
-[2025-05-09 15:53:54] production.INFO: Checking for BV flush. Now: 15:53, Configured: 15:53  
-[2025-05-09 15:53:54] production.INFO: No flush: Either side below sealing limit {"left_bv":0,"right_bv":"1800","sealing_limit":900} 
-[2025-05-09 15:53:54] production.INFO: No flush: Either side below sealing limit {"left_bv":0,"right_bv":0,"sealing_limit":900} 
-[2025-05-09 15:53:54] production.INFO: No flush: Either side below sealing limit {"left_bv":"900","right_bv":0,"sealing_limit":900} 
-[2025-05-09 15:53:54] production.INFO: Payout recorded {"date":"2025-05-09 15:53:54","previous_balance":23900,"new_balance":28400.0,"record_id":230} 
-[2025-05-09 15:53:54] production.INFO: Starting payout-detail recording. Users to process: 3  
-[2025-05-09 15:53:54] production.INFO: User 1 pairs: 0, referral income: 73.50  
-[2025-05-09 15:53:54] production.INFO: User 1 payout detail: {"totalLeftBv":0.0,"totalRightBv":2700.0,"rawPairs":0,"userPairs":0,"grossPayout":73.5,"netAmount":72.03} 
-[2025-05-09 15:53:54] production.INFO: User 2 pairs: 0, referral income: 0.00  
-[2025-05-09 15:53:54] production.INFO: User 2 payout detail: {"totalLeftBv":0.0,"totalRightBv":0.0,"rawPairs":0,"userPairs":0,"grossPayout":0.0,"netAmount":0.0} 
-[2025-05-09 15:53:54] production.INFO: User 3 pairs: 0, referral income: 0.00  
-[2025-05-09 15:53:54] production.INFO: User 3 payout detail: {"totalLeftBv":900.0,"totalRightBv":0.0,"rawPairs":0,"userPairs":0,"grossPayout":0.0,"netAmount":0.0} 
-[2025-05-09 15:53:54] production.INFO: Payout detail recording completed.  
-[2025-05-09 16:05:26] production.INFO: Checking for BV flush. Now: 16:05, Configured: 16:05  
-[2025-05-09 16:05:26] production.INFO: No flush: Either side below sealing limit {"left_bv":0,"right_bv":"1800","sealing_limit":900} 
-[2025-05-09 16:05:26] production.INFO: No flush: Either side below sealing limit {"left_bv":0,"right_bv":0,"sealing_limit":900} 
-[2025-05-09 16:05:26] production.INFO: No flush: Either side below sealing limit {"left_bv":"900","right_bv":0,"sealing_limit":900} 
-[2025-05-09 16:05:26] production.INFO: Payout recorded {"date":"2025-05-09 16:05:26","previous_balance":0,"new_balance":4500.0,"record_id":231} 
-[2025-05-09 16:05:26] production.INFO: Starting payout-detail recording. Users to process: 3  
-[2025-05-09 16:05:26] production.INFO: User 1 pairs: 0, referral income: 73.50  
-[2025-05-09 16:05:26] production.INFO: User 1 payout detail: {"totalLeftBv":0.0,"totalRightBv":2700.0,"rawPairs":0,"userPairs":0,"grossPayout":0,"netAmount":0.0} 
-[2025-05-09 16:05:26] production.INFO: User 2 pairs: 0, referral income: 0.00  
-[2025-05-09 16:05:26] production.INFO: User 2 payout detail: {"totalLeftBv":0.0,"totalRightBv":0.0,"rawPairs":0,"userPairs":0,"grossPayout":0,"netAmount":0.0} 
-[2025-05-09 16:05:26] production.INFO: User 3 pairs: 0, referral income: 0.00  
-[2025-05-09 16:05:26] production.INFO: User 3 payout detail: {"totalLeftBv":900.0,"totalRightBv":0.0,"rawPairs":0,"userPairs":0,"grossPayout":0,"netAmount":0.0} 
-[2025-05-09 16:05:26] production.INFO: Payout detail recording completed.  
-[2025-05-09 17:25:44] production.ERROR: file_put_contents(C:\laragon\www\Nat-Easy-Ad-Me\core\storage\framework/cache/data/23/77/23772f384cffcd6c26023c93dcee3e1de8527609): Failed to open stream: Permission denied {"exception":"[object] (ErrorException(code: 0): file_put_contents(C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\storage\\framework/cache/data/23/77/23772f384cffcd6c26023c93dcee3e1de8527609): Failed to open stream: Permission denied at C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php:204)
+[2025-05-15 13:44:38] production.INFO: Checking for BV flush. Now: 13:44, Configured: 13:44  
+[2025-05-15 13:44:38] production.INFO: BV Flush - Side left {"user_id":2,"flushed_amount":900.0} 
+[2025-05-15 13:44:38] production.INFO: BV Flush - Side right {"user_id":3,"flushed_amount":900.0} 
+[2025-05-15 13:44:38] production.INFO: BV flush for user 1 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0.0,"remaining_right_bv":0.0} 
+[2025-05-15 13:44:38] production.INFO: Referral commission processed {"user_id":1,"amount":"21.00"} 
+[2025-05-15 13:44:38] production.INFO: No BV flush for user 2: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-15 13:44:38] production.INFO: No BV flush for user 3: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-15 13:44:38] production.INFO: User 1 matching pairs: 1 {"left_bv":"900","right_bv":"900"} 
+[2025-05-15 13:44:38] production.INFO: User 2 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 13:44:38] production.INFO: User 3 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 13:44:38] production.INFO: User 4 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 13:44:38] production.INFO: User 5 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 13:44:38] production.INFO: User 6 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 13:44:38] production.INFO: User 7 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 13:44:38] production.INFO: Payout recorded {"date":"2025-05-15 13:44:38","previous_balance":4300,"new_balance":8600,"record_id":282} 
+[2025-05-15 13:44:38] production.INFO: Starting payout-detail recording. Users to process: 3  
+[2025-05-15 13:44:38] production.INFO: User 1 gross payout: 221 {"userPairs":1,"referral":"21"} 
+[2025-05-15 13:44:38] production.INFO: User 1 payout detail recorded {"totalLeftBv":900.0,"totalRightBv":900.0,"rawPairs":1,"userPairs":1,"grossPayout":221.0,"netAmount":216.57999999999998} 
+[2025-05-15 13:44:38] production.INFO: User 2 gross payout: 0 {"userPairs":0,"referral":0} 
+[2025-05-15 13:44:38] production.INFO: User 2 payout detail recorded {"totalLeftBv":0.0,"totalRightBv":0.0,"rawPairs":0,"userPairs":0,"grossPayout":0.0,"netAmount":0.0} 
+[2025-05-15 13:44:38] production.INFO: User 3 gross payout: 0 {"userPairs":0,"referral":0} 
+[2025-05-15 13:44:38] production.INFO: User 3 payout detail recorded {"totalLeftBv":0.0,"totalRightBv":0.0,"rawPairs":0,"userPairs":0,"grossPayout":0.0,"netAmount":0.0} 
+[2025-05-15 13:44:38] production.INFO: Payout detail recording completed.  
+[2025-05-15 13:45:06] production.INFO: Pending Referral Commission: {"pendingReferralCommission":"0.00"} 
+[2025-05-15 13:45:06] production.INFO: Flushed Referral Commission: {"flushedReferralCommission":"21"} 
+[2025-05-15 13:45:06] production.INFO: Total Referral Commission: {"totalReferralCommission":21.0} 
+[2025-05-15 13:50:35] production.INFO: Checking for BV flush. Now: 13:50, Configured: 13:50  
+[2025-05-15 13:50:35] production.INFO: BV Flush - Side left {"user_id":2,"flushed_amount":900.0} 
+[2025-05-15 13:50:35] production.INFO: BV Flush - Side right {"user_id":3,"flushed_amount":900.0} 
+[2025-05-15 13:50:35] production.INFO: BV flush for user 1 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0.0,"remaining_right_bv":0.0} 
+[2025-05-15 13:50:35] production.INFO: Referral commission processed {"user_id":1,"amount":"21.00"} 
+[2025-05-15 13:50:35] production.INFO: No BV flush for user 2: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-15 13:50:35] production.INFO: No BV flush for user 3: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-15 13:50:35] production.INFO: User 1 matching pairs: 1 {"left_bv":"900","right_bv":"900"} 
+[2025-05-15 13:50:35] production.INFO: User 2 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 13:50:35] production.INFO: User 3 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 13:50:35] production.INFO: User 4 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 13:50:35] production.INFO: User 5 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 13:50:35] production.INFO: User 6 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 13:50:35] production.INFO: User 7 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 13:50:35] production.INFO: Payout recorded {"date":"2025-05-15 13:50:35","previous_balance":8600,"new_balance":12900,"record_id":283} 
+[2025-05-15 13:50:35] production.INFO: Starting payout-detail recording. Users to process: 3  
+[2025-05-15 13:50:35] production.INFO: User 1 gross payout: 221 {"userPairs":1,"referral":"21"} 
+[2025-05-15 13:50:35] production.INFO: User 1 payout detail recorded {"totalLeftBv":900.0,"totalRightBv":900.0,"rawPairs":1,"userPairs":1,"grossPayout":221.0,"netAmount":216.57999999999998} 
+[2025-05-15 13:50:35] production.INFO: User 2 gross payout: 0 {"userPairs":0,"referral":0} 
+[2025-05-15 13:50:35] production.INFO: User 2 payout detail recorded {"totalLeftBv":0.0,"totalRightBv":0.0,"rawPairs":0,"userPairs":0,"grossPayout":0.0,"netAmount":0.0} 
+[2025-05-15 13:50:35] production.INFO: User 3 gross payout: 0 {"userPairs":0,"referral":0} 
+[2025-05-15 13:50:35] production.INFO: User 3 payout detail recorded {"totalLeftBv":0.0,"totalRightBv":0.0,"rawPairs":0,"userPairs":0,"grossPayout":0.0,"netAmount":0.0} 
+[2025-05-15 13:50:35] production.INFO: Payout detail recording completed.  
+[2025-05-15 13:51:36] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-15 13:51:36] production.INFO: last3: {"membership_id":362} 
+[2025-05-15 13:51:36] production.INFO: last5: {"membership_id":362} 
+[2025-05-15 13:51:36] production.INFO: last4: {"membership_id":362,"order_id":null} 
+[2025-05-15 13:51:36] production.INFO: after-charge: {"membership_id":362,"order_id":362} 
+[2025-05-15 13:51:55] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"362","payment_amount":5000,"transaction_id":"pay_QV8Y4SM6XHGcFp"} 
+[2025-05-15 13:51:55] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-15 13:51:56] production.INFO: Updating membership database {"last_membership_id":"362","transaction_id":"pay_QV8Y4SM6XHGcFp","membership_history_id":583,"upgrade_membership_id":3} 
+[2025-05-15 13:51:56] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":362} 
+[2025-05-15 13:51:56] production.INFO: Distributed BV points to parent user: {"user_id":2,"bv_points":900} 
+[2025-05-15 13:51:56] production.INFO: Distributed BV points to parent user: {"user_id":1,"bv_points":900} 
+[2025-05-15 13:52:04] production.INFO: Membership email sent to user #4  
+[2025-05-15 13:52:07] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-15 13:52:07] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-15 13:56:21] production.ERROR: Undefined variable $pendingReferralCommission {"userId":1,"exception":"[object] (ErrorException(code: 0): Undefined variable $pendingReferralCommission at C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Controllers\\Frontend\\User\\DashboardController.php:225)
 [stacktrace]
-#0 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'file_put_conten...', 'C:\\\\laragon\\\\www\\\\...', 204)
-#1 [internal function]: Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'file_put_conten...', 'C:\\\\laragon\\\\www\\\\...', 204)
-#2 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(204): file_put_contents('C:\\\\laragon\\\\www\\\\...', '1746791801O:31:...', 2)
-#3 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cache\\FileStore.php(83): Illuminate\\Filesystem\\Filesystem->put('C:\\\\laragon\\\\www\\\\...', '1746791801O:31:...', true)
-#4 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cache\\Repository.php(216): Illuminate\\Cache\\FileStore->put('facebook_client...', Object(App\\Models\\Backend\\StaticOption), 60)
-#5 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cache\\Repository.php(398): Illuminate\\Cache\\Repository->put('facebook_client...', Object(App\\Models\\Backend\\StaticOption), 60)
-#6 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cache\\CacheManager.php(429): Illuminate\\Cache\\Repository->remember('facebook_client...', 60, Object(Closure))
-#7 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Cache\\CacheManager->__call('remember', Array)
-#8 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Helpers\\helpers.php(115): Illuminate\\Support\\Facades\\Facade::__callStatic('remember', Array)
-#9 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Providers\\CustomConfigServiceProvider.php(28): get_static_option('facebook_client...')
-#10 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Providers\\CustomConfigServiceProvider->boot()
-#11 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
-#12 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
-#13 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
-#14 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
-#15 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1034): Illuminate\\Container\\Container->call(Array)
-#16 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1015): Illuminate\\Foundation\\Application->bootProvider(Object(App\\Providers\\CustomConfigServiceProvider))
-#17 [internal function]: Illuminate\\Foundation\\Application->Illuminate\\Foundation\\{closure}(Object(App\\Providers\\CustomConfigServiceProvider), 46)
-#18 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1014): array_walk(Array, Object(Closure))
-#19 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\BootProviders.php(17): Illuminate\\Foundation\\Application->boot()
-#20 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\BootProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
-#21 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(186): Illuminate\\Foundation\\Application->bootstrapWith(Array)
-#22 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(170): Illuminate\\Foundation\\Http\\Kernel->bootstrap()
-#23 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
-#24 C:\\laragon\\www\\Nat-Easy-Ad-Me\\index.php(54): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
-#25 {main}
+#0 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined varia...', 'C:\\\\laragon\\\\www\\\\...', 225)
+#1 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Controllers\\Frontend\\User\\DashboardController.php(225): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'Undefined varia...', 'C:\\\\laragon\\\\www\\\\...', 225)
+#2 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php(54): App\\Http\\Controllers\\Frontend\\User\\DashboardController->dashboard()
+#3 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(43): Illuminate\\Routing\\Controller->callAction('dashboard', Array)
+#4 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(259): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Http\\Controllers\\Frontend\\User\\DashboardController), 'dashboard')
+#5 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(205): Illuminate\\Routing\\Route->runController()
+#6 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(806): Illuminate\\Routing\\Route->run()
+#7 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#8 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Middleware\\SetLang.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#9 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\SetLang->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#10 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Middleware\\MaintainsMode.php(22): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#11 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\MaintainsMode->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#12 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Middleware\\GlobalVariableMiddleware.php(104): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#13 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\GlobalVariableMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#14 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Middleware\\UserEmailVerify.php(31): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#15 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\UserEmailVerify->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#16 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Middleware\\CheckUserOnlineStatus.php(32): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#17 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\CheckUserOnlineStatus->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#18 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#19 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#20 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\Middleware\\Authenticate.php(57): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#21 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Auth\\Middleware\\Authenticate->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#22 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#23 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#24 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#28 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#29 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#30 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#31 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#32 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#33 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#34 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#35 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#36 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#37 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#38 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#39 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#40 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\xgenious\\installer\\src\\Http\\Middleware\\InstallerMiddleware.php(18): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#41 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Xgenious\\Installer\\Http\\Middleware\\InstallerMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#42 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#43 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#44 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#47 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#48 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#49 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#50 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#51 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#52 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#53 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#54 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#55 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#56 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#57 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#58 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#59 C:\\laragon\\www\\Nat-Easy-Ad-Me\\index.php(54): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#60 {main}
 "} 
+[2025-05-15 13:58:04] production.INFO: Checking for BV flush. Now: 13:58, Configured: 13:57  
+[2025-05-15 13:58:15] production.INFO: Checking for BV flush. Now: 13:58, Configured: 13:58  
+[2025-05-15 13:58:15] production.INFO: BV Flush - Side left {"user_id":2,"flushed_amount":900.0} 
+[2025-05-15 13:58:15] production.INFO: BV Flush - Side right {"user_id":3,"flushed_amount":900.0} 
+[2025-05-15 13:58:15] production.INFO: BV flush for user 1 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0.0,"remaining_right_bv":0.0} 
+[2025-05-15 13:58:15] production.INFO: Referral commission processed {"user_id":1,"amount":"31.50"} 
+[2025-05-15 13:58:15] production.INFO: No BV flush for user 2: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-15 13:58:15] production.INFO: No BV flush for user 3: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-15 13:58:15] production.INFO: User 1 matching pairs: 1 {"left_bv":"900","right_bv":"900"} 
+[2025-05-15 13:58:15] production.INFO: User 2 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 13:58:15] production.INFO: User 3 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 13:58:15] production.INFO: User 4 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 13:58:15] production.INFO: User 5 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 13:58:15] production.INFO: User 6 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 13:58:15] production.INFO: User 7 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 13:58:15] production.INFO: Payout recorded {"date":"2025-05-15 13:58:15","previous_balance":12900,"new_balance":17200,"record_id":284} 
+[2025-05-15 13:58:15] production.INFO: Starting payout-detail recording. Users to process: 3  
+[2025-05-15 13:58:15] production.INFO: User 1 gross payout: 232 {"userPairs":1,"referral":"32"} 
+[2025-05-15 13:58:15] production.INFO: User 1 payout detail recorded {"totalLeftBv":900.0,"totalRightBv":900.0,"rawPairs":1,"userPairs":1,"grossPayout":232.0,"netAmount":227.36} 
+[2025-05-15 13:58:15] production.INFO: User 2 gross payout: 0 {"userPairs":0,"referral":0} 
+[2025-05-15 13:58:15] production.INFO: User 2 payout detail recorded {"totalLeftBv":0.0,"totalRightBv":0.0,"rawPairs":0,"userPairs":0,"grossPayout":0.0,"netAmount":0.0} 
+[2025-05-15 13:58:15] production.INFO: User 3 gross payout: 0 {"userPairs":0,"referral":0} 
+[2025-05-15 13:58:15] production.INFO: User 3 payout detail recorded {"totalLeftBv":0.0,"totalRightBv":0.0,"rawPairs":0,"userPairs":0,"grossPayout":0.0,"netAmount":0.0} 
+[2025-05-15 13:58:15] production.INFO: Payout detail recording completed.  
+[2025-05-15 13:59:50] production.INFO: Checking for BV flush. Now: 13:59, Configured: 13:59  
+[2025-05-15 13:59:50] production.INFO: BV Flush - Side left {"user_id":2,"flushed_amount":900.0} 
+[2025-05-15 13:59:50] production.INFO: BV Flush - Side right {"user_id":3,"flushed_amount":900.0} 
+[2025-05-15 13:59:50] production.INFO: BV flush for user 1 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0.0,"remaining_right_bv":0.0} 
+[2025-05-15 13:59:50] production.INFO: Referral commission processed {"user_id":1,"amount":"31.50"} 
+[2025-05-15 13:59:50] production.INFO: No BV flush for user 2: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-15 13:59:50] production.INFO: No BV flush for user 3: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-15 13:59:50] production.INFO: User 1 matching pairs: 1 {"left_bv":"900","right_bv":"900"} 
+[2025-05-15 13:59:50] production.INFO: User 2 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 13:59:50] production.INFO: User 3 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 13:59:50] production.INFO: User 4 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 13:59:50] production.INFO: User 5 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 13:59:50] production.INFO: User 6 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 13:59:50] production.INFO: User 7 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 13:59:50] production.INFO: Payout recorded {"date":"2025-05-15 13:59:50","previous_balance":17200,"new_balance":21500,"record_id":285} 
+[2025-05-15 13:59:50] production.INFO: Starting payout-detail recording. Users to process: 3  
+[2025-05-15 13:59:50] production.INFO: User 1 gross payout: 232 {"userPairs":1,"referral":"32"} 
+[2025-05-15 13:59:50] production.INFO: User 1 payout detail recorded {"totalLeftBv":900.0,"totalRightBv":900.0,"rawPairs":1,"userPairs":1,"grossPayout":232.0,"netAmount":227.36} 
+[2025-05-15 13:59:50] production.INFO: User 2 gross payout: 0 {"userPairs":0,"referral":0} 
+[2025-05-15 13:59:50] production.INFO: User 2 payout detail recorded {"totalLeftBv":0.0,"totalRightBv":0.0,"rawPairs":0,"userPairs":0,"grossPayout":0.0,"netAmount":0.0} 
+[2025-05-15 13:59:50] production.INFO: User 3 gross payout: 0 {"userPairs":0,"referral":0} 
+[2025-05-15 13:59:50] production.INFO: User 3 payout detail recorded {"totalLeftBv":0.0,"totalRightBv":0.0,"rawPairs":0,"userPairs":0,"grossPayout":0.0,"netAmount":0.0} 
+[2025-05-15 13:59:50] production.INFO: Payout detail recording completed.  
+[2025-05-15 14:00:04] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-15 14:00:04] production.INFO: last3: {"membership_id":363} 
+[2025-05-15 14:00:04] production.INFO: last5: {"membership_id":363} 
+[2025-05-15 14:00:04] production.INFO: last4: {"membership_id":363,"order_id":null} 
+[2025-05-15 14:00:04] production.INFO: after-charge: {"membership_id":363,"order_id":363} 
+[2025-05-15 14:00:22] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"363","payment_amount":5000,"transaction_id":"pay_QV8h0usMdwlVs7"} 
+[2025-05-15 14:00:22] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-15 14:00:22] production.INFO: Updating membership database {"last_membership_id":"363","transaction_id":"pay_QV8h0usMdwlVs7","membership_history_id":584,"upgrade_membership_id":3} 
+[2025-05-15 14:00:22] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":363} 
+[2025-05-15 14:00:22] production.INFO: Distributed BV points to parent user: {"user_id":2,"bv_points":900} 
+[2025-05-15 14:00:22] production.INFO: Distributed BV points to parent user: {"user_id":1,"bv_points":900} 
+[2025-05-15 14:00:28] production.INFO: Membership email sent to user #4  
+[2025-05-15 14:00:29] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-15 14:00:29] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-15 14:15:04] production.ERROR: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'is_commissioned' in 'where clause' (Connection: mysql, SQL: select * from `users` where `sponsor_id` = 1 and `self_purchased_bv` >= 900 and `is_commissioned` = 0 and `users`.`deleted_at` is null) {"userId":1,"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'is_commissioned' in 'where clause' (Connection: mysql, SQL: select * from `users` where `sponsor_id` = 1 and `self_purchased_bv` >= 900 and `is_commissioned` = 0 and `users`.`deleted_at` is null) at C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
+[stacktrace]
+#0 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#1 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(414): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#2 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2913): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#3 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2902): Illuminate\\Database\\Query\\Builder->runSelect()
+#4 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3456): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#5 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2901): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#6 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(739): Illuminate\\Database\\Query\\Builder->get(Array)
+#7 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(723): Illuminate\\Database\\Eloquent\\Builder->getModels(Array)
+#8 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Controllers\\Frontend\\User\\DashboardController.php(118): Illuminate\\Database\\Eloquent\\Builder->get()
+#9 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php(54): App\\Http\\Controllers\\Frontend\\User\\DashboardController->dashboard()
+#10 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(43): Illuminate\\Routing\\Controller->callAction('dashboard', Array)
+#11 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(259): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Http\\Controllers\\Frontend\\User\\DashboardController), 'dashboard')
+#12 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(205): Illuminate\\Routing\\Route->runController()
+#13 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(806): Illuminate\\Routing\\Route->run()
+#14 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#15 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Middleware\\SetLang.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#16 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\SetLang->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#17 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Middleware\\MaintainsMode.php(22): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#18 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\MaintainsMode->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#19 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Middleware\\GlobalVariableMiddleware.php(104): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#20 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\GlobalVariableMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#21 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Middleware\\UserEmailVerify.php(31): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#22 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\UserEmailVerify->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#23 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Middleware\\CheckUserOnlineStatus.php(32): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#24 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\CheckUserOnlineStatus->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#25 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#26 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#27 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\Middleware\\Authenticate.php(57): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#28 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Auth\\Middleware\\Authenticate->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#29 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#30 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#31 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#32 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#33 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#34 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#35 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#36 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#37 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#38 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#39 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#40 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#41 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#42 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#43 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#44 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#45 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#46 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#47 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\xgenious\\installer\\src\\Http\\Middleware\\InstallerMiddleware.php(18): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#48 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Xgenious\\Installer\\Http\\Middleware\\InstallerMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#49 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#50 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#51 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#52 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#53 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#54 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#55 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#56 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#57 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#58 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#59 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#60 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#61 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#62 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#63 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#64 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#65 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#66 C:\\laragon\\www\\Nat-Easy-Ad-Me\\index.php(54): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#67 {main}
+
+[previous exception] [object] (PDOException(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'is_commissioned' in 'where clause' at C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:423)
+[stacktrace]
+#0 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(423): PDO->prepare('select * from `...')
+#1 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(816): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('select * from `...', Array)
+#2 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#3 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(414): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#4 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2913): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#5 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2902): Illuminate\\Database\\Query\\Builder->runSelect()
+#6 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3456): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#7 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2901): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#8 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(739): Illuminate\\Database\\Query\\Builder->get(Array)
+#9 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(723): Illuminate\\Database\\Eloquent\\Builder->getModels(Array)
+#10 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Controllers\\Frontend\\User\\DashboardController.php(118): Illuminate\\Database\\Eloquent\\Builder->get()
+#11 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php(54): App\\Http\\Controllers\\Frontend\\User\\DashboardController->dashboard()
+#12 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(43): Illuminate\\Routing\\Controller->callAction('dashboard', Array)
+#13 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(259): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Http\\Controllers\\Frontend\\User\\DashboardController), 'dashboard')
+#14 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(205): Illuminate\\Routing\\Route->runController()
+#15 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(806): Illuminate\\Routing\\Route->run()
+#16 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#17 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Middleware\\SetLang.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#18 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\SetLang->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#19 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Middleware\\MaintainsMode.php(22): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#20 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\MaintainsMode->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#21 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Middleware\\GlobalVariableMiddleware.php(104): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#22 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\GlobalVariableMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#23 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Middleware\\UserEmailVerify.php(31): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#24 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\UserEmailVerify->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#25 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Middleware\\CheckUserOnlineStatus.php(32): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#26 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\CheckUserOnlineStatus->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#27 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#28 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#29 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\Middleware\\Authenticate.php(57): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#30 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Auth\\Middleware\\Authenticate->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#31 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#32 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#33 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#34 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#35 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#36 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#37 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#38 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#39 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#40 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#41 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#42 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#43 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#44 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#45 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#46 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#47 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#48 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#49 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\xgenious\\installer\\src\\Http\\Middleware\\InstallerMiddleware.php(18): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#50 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Xgenious\\Installer\\Http\\Middleware\\InstallerMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#51 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#52 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#53 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#54 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#55 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#56 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#57 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#58 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#59 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#60 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#61 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#62 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#63 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#64 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#65 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#66 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#67 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#68 C:\\laragon\\www\\Nat-Easy-Ad-Me\\index.php(54): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#69 {main}
+"} 
+[2025-05-15 14:16:52] production.INFO: Checking for BV flush. Now: 14:16, Configured: 14:16  
+[2025-05-15 14:16:52] production.INFO: BV Flush - Side left {"user_id":2,"flushed_amount":900.0} 
+[2025-05-15 14:16:52] production.INFO: BV Flush - Side right {"user_id":3,"flushed_amount":900.0} 
+[2025-05-15 14:16:52] production.INFO: BV flush for user 1 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0.0,"remaining_right_bv":0.0} 
+[2025-05-15 14:16:52] production.INFO: Referral commission processed {"user_id":1,"amount":"21.00"} 
+[2025-05-15 14:16:52] production.INFO: No BV flush for user 2: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-15 14:16:52] production.INFO: No BV flush for user 3: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-15 14:16:52] production.INFO: User 1 matching pairs: 1 {"left_bv":"900","right_bv":"900"} 
+[2025-05-15 14:16:52] production.INFO: User 2 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 14:16:52] production.INFO: User 3 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 14:16:52] production.INFO: User 4 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 14:16:52] production.INFO: User 5 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 14:16:52] production.INFO: User 6 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 14:16:52] production.INFO: User 7 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 14:16:52] production.INFO: Payout recorded {"date":"2025-05-15 14:16:52","previous_balance":21500,"new_balance":25800,"record_id":286} 
+[2025-05-15 14:16:52] production.INFO: Starting payout-detail recording. Users to process: 3  
+[2025-05-15 14:16:52] production.INFO: User 1 gross payout: 221 {"userPairs":1,"referral":"21"} 
+[2025-05-15 14:16:52] production.INFO: User 1 payout detail recorded {"totalLeftBv":900.0,"totalRightBv":900.0,"rawPairs":1,"userPairs":1,"grossPayout":221.0,"netAmount":216.57999999999998} 
+[2025-05-15 14:16:52] production.INFO: User 2 gross payout: 0 {"userPairs":0,"referral":0} 
+[2025-05-15 14:16:52] production.INFO: User 2 payout detail recorded {"totalLeftBv":0.0,"totalRightBv":0.0,"rawPairs":0,"userPairs":0,"grossPayout":0.0,"netAmount":0.0} 
+[2025-05-15 14:16:52] production.INFO: User 3 gross payout: 0 {"userPairs":0,"referral":0} 
+[2025-05-15 14:16:52] production.INFO: User 3 payout detail recorded {"totalLeftBv":0.0,"totalRightBv":0.0,"rawPairs":0,"userPairs":0,"grossPayout":0.0,"netAmount":0.0} 
+[2025-05-15 14:16:52] production.INFO: Payout detail recording completed.  
+[2025-05-15 14:17:31] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-15 14:17:31] production.INFO: last3: {"membership_id":364} 
+[2025-05-15 14:17:31] production.INFO: last5: {"membership_id":364} 
+[2025-05-15 14:17:31] production.INFO: last4: {"membership_id":364,"order_id":null} 
+[2025-05-15 14:17:31] production.INFO: after-charge: {"membership_id":364,"order_id":364} 
+[2025-05-15 14:17:52] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"364","payment_amount":5000,"transaction_id":"pay_QV8zSRBuI9oYxY"} 
+[2025-05-15 14:17:52] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-15 14:17:52] production.INFO: Updating membership database {"last_membership_id":"364","transaction_id":"pay_QV8zSRBuI9oYxY","membership_history_id":585,"upgrade_membership_id":3} 
+[2025-05-15 14:17:52] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":364} 
+[2025-05-15 14:17:53] production.INFO: Distributed BV points to parent user: {"user_id":2,"bv_points":900} 
+[2025-05-15 14:17:53] production.INFO: Distributed BV points to parent user: {"user_id":1,"bv_points":900} 
+[2025-05-15 14:17:57] production.INFO: Membership email sent to user #4  
+[2025-05-15 14:17:59] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-15 14:17:59] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-15 14:19:28] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-15 14:19:28] production.INFO: last3: {"membership_id":365} 
+[2025-05-15 14:19:28] production.INFO: last5: {"membership_id":365} 
+[2025-05-15 14:19:28] production.INFO: last4: {"membership_id":365,"order_id":null} 
+[2025-05-15 14:19:28] production.INFO: after-charge: {"membership_id":365,"order_id":365} 
+[2025-05-15 14:19:51] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"365","payment_amount":5000,"transaction_id":"pay_QV91b1f4MjaMiL"} 
+[2025-05-15 14:19:51] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-15 14:19:51] production.INFO: Updating membership database {"last_membership_id":"365","transaction_id":"pay_QV91b1f4MjaMiL","membership_history_id":586,"upgrade_membership_id":3} 
+[2025-05-15 14:19:51] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":365} 
+[2025-05-15 14:19:57] production.INFO: Membership email sent to user #1  
+[2025-05-15 14:19:59] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-15 14:19:59] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-15 14:20:16] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-15 14:20:16] production.INFO: last3: {"membership_id":366} 
+[2025-05-15 14:20:16] production.INFO: last5: {"membership_id":366} 
+[2025-05-15 14:20:16] production.INFO: last4: {"membership_id":366,"order_id":null} 
+[2025-05-15 14:20:16] production.INFO: after-charge: {"membership_id":366,"order_id":366} 
+[2025-05-15 14:20:34] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"366","payment_amount":5000,"transaction_id":"pay_QV92LgmrOmVXZK"} 
+[2025-05-15 14:20:34] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-15 14:20:34] production.INFO: Updating membership database {"last_membership_id":"366","transaction_id":"pay_QV92LgmrOmVXZK","membership_history_id":587,"upgrade_membership_id":3} 
+[2025-05-15 14:20:34] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":366} 
+[2025-05-15 14:20:35] production.INFO: Distributed BV points to parent user: {"user_id":2,"bv_points":900} 
+[2025-05-15 14:20:35] production.INFO: Distributed BV points to parent user: {"user_id":1,"bv_points":900} 
+[2025-05-15 14:20:39] production.INFO: Membership email sent to user #4  
+[2025-05-15 14:20:41] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-15 14:20:41] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-15 14:20:44] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-15 14:20:44] production.INFO: last3: {"membership_id":367} 
+[2025-05-15 14:20:44] production.INFO: last5: {"membership_id":367} 
+[2025-05-15 14:20:44] production.INFO: last4: {"membership_id":367,"order_id":null} 
+[2025-05-15 14:20:44] production.INFO: after-charge: {"membership_id":367,"order_id":367} 
+[2025-05-15 14:21:04] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"367","payment_amount":5000,"transaction_id":"pay_QV92rDIXVesXtY"} 
+[2025-05-15 14:21:04] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-15 14:21:04] production.INFO: Updating membership database {"last_membership_id":"367","transaction_id":"pay_QV92rDIXVesXtY","membership_history_id":588,"upgrade_membership_id":3} 
+[2025-05-15 14:21:04] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":367} 
+[2025-05-15 14:21:05] production.INFO: Distributed BV points to parent user: {"user_id":1,"bv_points":900} 
+[2025-05-15 14:21:09] production.INFO: Membership email sent to user #2  
+[2025-05-15 14:21:11] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-15 14:21:11] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-15 14:23:11] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-15 14:23:11] production.INFO: last3: {"membership_id":368} 
+[2025-05-15 14:23:11] production.INFO: last5: {"membership_id":368} 
+[2025-05-15 14:23:11] production.INFO: last4: {"membership_id":368,"order_id":null} 
+[2025-05-15 14:23:11] production.INFO: after-charge: {"membership_id":368,"order_id":368} 
+[2025-05-15 14:23:31] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"368","payment_amount":5000,"transaction_id":"pay_QV95RBuJ28K23C"} 
+[2025-05-15 14:23:31] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-15 14:23:31] production.INFO: Updating membership database {"last_membership_id":"368","transaction_id":"pay_QV95RBuJ28K23C","membership_history_id":589,"upgrade_membership_id":3} 
+[2025-05-15 14:23:31] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":368} 
+[2025-05-15 14:23:32] production.INFO: Distributed BV points to parent user: {"user_id":1,"bv_points":900} 
+[2025-05-15 14:23:36] production.INFO: Membership email sent to user #3  
+[2025-05-15 14:23:38] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-15 14:23:38] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-15 14:25:46] production.INFO: Checking for BV flush. Now: 14:25, Configured: 14:25  
+[2025-05-15 14:25:46] production.INFO: BV Flush - Side left {"user_id":2,"flushed_amount":900.0} 
+[2025-05-15 14:25:46] production.INFO: BV Flush - Side right {"user_id":3,"flushed_amount":900.0} 
+[2025-05-15 14:25:46] production.INFO: BV flush for user 1 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":900.0,"remaining_right_bv":0.0} 
+[2025-05-15 14:25:47] production.INFO: Referral commission processed {"user_id":1,"amount":"31.50"} 
+[2025-05-15 14:25:47] production.INFO: No BV flush for user 2: not enough BV to form even one pair {"left_bv":"900","right_bv":0,"bp_rate":"900"} 
+[2025-05-15 14:25:47] production.INFO: No BV flush for user 3: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-15 14:25:47] production.INFO: User 1 matching pairs: 1 {"left_bv":"1800","right_bv":"900"} 
+[2025-05-15 14:25:47] production.INFO: User 2 matching pairs: 0 {"left_bv":"900","right_bv":0} 
+[2025-05-15 14:25:47] production.INFO: User 3 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 14:25:47] production.INFO: User 4 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 14:25:47] production.INFO: User 5 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 14:25:47] production.INFO: User 6 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 14:25:47] production.INFO: User 7 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 14:25:47] production.INFO: Payout recorded {"date":"2025-05-15 14:25:47","previous_balance":0,"new_balance":7032,"record_id":287} 
+[2025-05-15 14:25:47] production.INFO: Starting payout-detail recording. Users to process: 3  
+[2025-05-15 14:25:47] production.INFO: User 1 gross payout: 32 {"userPairs":0,"referral":"32"} 
+[2025-05-15 14:25:47] production.INFO: User 1 payout detail recorded {"totalLeftBv":1800.0,"totalRightBv":0.0,"rawPairs":0,"userPairs":0,"grossPayout":32.0,"netAmount":31.36} 
+[2025-05-15 14:25:47] production.INFO: User 2 gross payout: 0 {"userPairs":0,"referral":0} 
+[2025-05-15 14:25:47] production.INFO: User 2 payout detail recorded {"totalLeftBv":900.0,"totalRightBv":0.0,"rawPairs":0,"userPairs":0,"grossPayout":0.0,"netAmount":0.0} 
+[2025-05-15 14:25:47] production.INFO: User 3 gross payout: 0 {"userPairs":0,"referral":0} 
+[2025-05-15 14:25:47] production.INFO: User 3 payout detail recorded {"totalLeftBv":0.0,"totalRightBv":0.0,"rawPairs":0,"userPairs":0,"grossPayout":0.0,"netAmount":0.0} 
+[2025-05-15 14:25:47] production.INFO: Payout detail recording completed.  
+[2025-05-15 14:26:46] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-15 14:26:46] production.INFO: last3: {"membership_id":369} 
+[2025-05-15 14:26:46] production.INFO: last5: {"membership_id":369} 
+[2025-05-15 14:26:46] production.INFO: last4: {"membership_id":369,"order_id":null} 
+[2025-05-15 14:26:46] production.INFO: after-charge: {"membership_id":369,"order_id":369} 
+[2025-05-15 14:27:04] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"369","payment_amount":5000,"transaction_id":"pay_QV99DKPZ8YKh1G"} 
+[2025-05-15 14:27:04] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-15 14:27:04] production.INFO: Updating membership database {"last_membership_id":"369","transaction_id":"pay_QV99DKPZ8YKh1G","membership_history_id":590,"upgrade_membership_id":3} 
+[2025-05-15 14:27:04] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":369} 
+[2025-05-15 14:27:04] production.INFO: Distributed BV points to parent user: {"user_id":2,"bv_points":900} 
+[2025-05-15 14:27:04] production.INFO: Distributed BV points to parent user: {"user_id":1,"bv_points":900} 
+[2025-05-15 14:27:09] production.INFO: Membership email sent to user #5  
+[2025-05-15 14:27:11] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-15 14:27:11] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-15 14:30:23] production.INFO: Checking for BV flush. Now: 14:30, Configured: 14:30  
+[2025-05-15 14:30:23] production.INFO: BV Flush - Side left {"user_id":2,"flushed_amount":900.0} 
+[2025-05-15 14:30:23] production.INFO: BV Flush - Side right {"user_id":3,"flushed_amount":900.0} 
+[2025-05-15 14:30:23] production.INFO: BV flush for user 1 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":1800.0,"remaining_right_bv":0.0} 
+[2025-05-15 14:30:23] production.INFO: Referral commission processed {"user_id":1,"amount":"52.50"} 
+[2025-05-15 14:30:23] production.INFO: BV Flush - Side left {"user_id":4,"flushed_amount":900.0} 
+[2025-05-15 14:30:23] production.INFO: BV Flush - Side right {"user_id":5,"flushed_amount":900.0} 
+[2025-05-15 14:30:23] production.INFO: BV flush for user 2 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0.0,"remaining_right_bv":0.0} 
+[2025-05-15 14:30:23] production.INFO: No BV flush for user 3: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-15 14:30:23] production.INFO: User 1 matching pairs: 1 {"left_bv":"2700","right_bv":"900"} 
+[2025-05-15 14:30:23] production.INFO: User 2 matching pairs: 1 {"left_bv":"900","right_bv":"900"} 
+[2025-05-15 14:30:23] production.INFO: User 3 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 14:30:23] production.INFO: User 4 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 14:30:23] production.INFO: User 5 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 14:30:23] production.INFO: User 6 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 14:30:23] production.INFO: User 7 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-15 14:30:23] production.INFO: Payout recorded {"date":"2025-05-15 14:30:23","previous_balance":7032,"new_balance":16732,"record_id":288} 
+[2025-05-15 14:30:23] production.INFO: Starting payout-detail recording. Users to process: 3  
+[2025-05-15 14:30:23] production.INFO: User 1 gross payout: 253 {"userPairs":1,"referral":"53"} 
+[2025-05-15 14:30:23] production.INFO: User 1 payout detail recorded {"totalLeftBv":4500.0,"totalRightBv":900.0,"rawPairs":1,"userPairs":1,"grossPayout":253.0,"netAmount":247.94} 
+[2025-05-15 14:30:23] production.INFO: User 2 gross payout: 200 {"userPairs":1,"referral":0} 
+[2025-05-15 14:30:23] production.INFO: User 2 payout detail recorded {"totalLeftBv":900.0,"totalRightBv":900.0,"rawPairs":1,"userPairs":1,"grossPayout":200.0,"netAmount":196.0} 
+[2025-05-15 14:30:23] production.INFO: User 3 gross payout: 0 {"userPairs":0,"referral":0} 
+[2025-05-15 14:30:23] production.INFO: User 3 payout detail recorded {"totalLeftBv":0.0,"totalRightBv":0.0,"rawPairs":0,"userPairs":0,"grossPayout":0.0,"netAmount":0.0} 
+[2025-05-15 14:30:23] production.INFO: Payout detail recording completed.  

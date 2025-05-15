@@ -51,22 +51,17 @@ class DashboardController extends Controller
         $user_ads_posted = $user->listings()->count();
         $remaining_listings = $current_membership->listing_limit;
         $user_active_listings = $user->listings()->where('is_published', 1)->where('status', 1)->count();
-        $user_deactivated_ads = $user->listings()->where(function ($query) {
-            $query->where('is_published', 0)->orWhere('status', 0);
-        })->count();
+        $user_deactivated_ads = $user->listings()->where(fn($q) => $q->where('is_published', 0)->orWhere('status', 0))->count();
         $user_favorite_ads = ListingFavorite::where('user_id', $user_id)->count();
-        $show_upgrade = ($current_membership->listing_limit > 0 && $remaining_listings === 0);
+        $show_upgrade = ($remaining_listings === 0 && $current_membership->listing_limit > 0);
         $averageRating = $user->reviews?->avg('rating');
         $user_review_count = $user->reviews?->count();
         $user_given_reviews = Review::where('reviewer_id', $user_id)->take(500)->get();
         $age = $user->dob ? now()->diffInYears($user->dob) : null;
 
-        $userMembership = UserMembership::where('user_id', $user_id)
-            ->latest('created_at')
-            ->first();
-
+        $userMembership = UserMembership::where('user_id', $user_id)->latest('created_at')->first();
         $membershipInfo = null;
-        if ($userMembership && $userMembership->membership && $userMembership->membership->category == 1) {
+        if ($userMembership && $userMembership->membership?->category === 1) {
             $membershipInfo = [
                 'title' => $userMembership->membership->title,
                 'profile_limit' => $userMembership->profile_limit
@@ -74,103 +69,81 @@ class DashboardController extends Controller
         }
 
         $profilesViewed = UnlockedProfile::where('user_id', $user_id)->count();
-        $remainingProfileLimit = max(
-            0,
-            ($membershipInfo['profile_limit'] ?? 0) - $profilesViewed
-        );
+        $remainingProfileLimit = max(0, ($membershipInfo['profile_limit'] ?? 0) - $profilesViewed);
 
-        // $bvvalue = get_static_option('payout_value') ?? 0;
-        $bvvalue = ($membership && $membership->category == 1)
-            ? get_static_option('matrimony_bv_value') ?? 0
-            : get_static_option('payout_value') ?? 0;
+        // BV / BP settings
+        $bvvalue = ($membership?->category == 1)
+            ? get_static_option('matrimony_bv_value')
+            : get_static_option('payout_value');
         $bpConversionRate = get_static_option('bp_value') ?? 1;
-        $sealingLimit = get_static_option('sealing_limit') ?? 1;
+        $sealingLimit = get_static_option('sealing_limitation') ?? 1;
 
-        $user->save();
-
-        // Get NET BV points (sum of all positive and negative entries)
+        // Sum BV points
         $leftBvPoints = $user->leftChild ? $user->leftChild->userBvs()->sum('bv_points') : 0;
         $rightBvPoints = $user->rightChild ? $user->rightChild->userBvs()->sum('bv_points') : 0;
 
-        // Calculate current flushable amount
+        // Flushable & remainder
         $sealingLimitBv = $sealingLimit * $bpConversionRate;
         $flushableAmount = floor(min($leftBvPoints, $rightBvPoints) / $sealingLimitBv) * $sealingLimitBv;
-
-        // Points that will remain after next flush
         $remainingLeft = max(0, $leftBvPoints - $flushableAmount);
         $remainingRight = max(0, $rightBvPoints - $flushableAmount);
-
-        // For display - show current state
-        $businesspoint = "$leftBvPoints <> $rightBvPoints";
-        $willFlushNextTime = "$flushableAmount <> $flushableAmount";
-        $willRemainAfterFlush = "$remainingLeft <> $remainingRight";
-
-        // Step 3: Calculate flushed BVs
         $flushedLeft = $leftBvPoints - $remainingLeft;
         $flushedRight = $rightBvPoints - $remainingRight;
 
-        // Apply sealing limit to the BV points
-        $sealingLimitBv = $sealingLimit * $bpConversionRate;
-
-        // Retain only BV up to the sealing limit
+        // BP display
         $sealedLeftBv = min($leftBvPoints, $sealingLimitBv);
         $sealedRightBv = min($rightBvPoints, $sealingLimitBv);
-
-        // Update the retained BP points for display
-        $leftBP = max(0, floor($sealedLeftBv / $bpConversionRate));
-        $rightBP = max(0, floor($sealedRightBv / $bpConversionRate));
-        $equalizedBP = max(0, min($leftBP, $rightBP));
-
+        $leftBP = floor($sealedLeftBv / $bpConversionRate);
+        $rightBP = floor($sealedRightBv / $bpConversionRate);
+        $equalizedBP = min($leftBP, $rightBP);
         $pairincome = get_static_option('maximum_one_pair_income') ?? 0;
-
-        // Calculate income
         $income = $equalizedBP * $pairincome;
         $showIncome = $equalizedBP > 0;
 
-        // Format display values
-        $businesspoint = max(0, $leftBvPoints) . " <> " . max(0, $rightBvPoints);
-        $totalBP = max(0, $leftBP) . " <> " . max(0, $rightBP);
-        $balancedBP = max(0, $leftBvPoints) . " <> " . max(0, $rightBvPoints);
+        // Other stats
+        $businesspoint = "$leftBvPoints <> $rightBvPoints";
+        $totalBP = "$leftBP <> $rightBP";
+        $balancedBP = "$leftBvPoints <> $rightBvPoints";
+        $bvFromReferrals = $user->children()->with('userBvs')->get()->sum(fn($c) => $c->userBvs->sum('bv_points'));
 
-        // BV from direct referrals
-        $bvFromReferrals = $user->children()->with('userBvs')->get()->sum(fn($child) => $child->userBvs->sum('bv_points'));
-
-        // Referral commission
-        $referralValue = (float) get_static_option('referral_value'); // e.g., 350
-        $referralPercentage = (float) get_static_option('referral_percentage'); // e.g., 2
-
+        // ─── Referral Commission Logic ─────────────────────────────────────────────
+        $referralValue = (float) get_static_option('referral_value');
+        $referralPercentage = (float) get_static_option('referral_percentage');
         $perReferralCommission = ($referralPercentage / 100) * $referralValue;
 
-        // Self purchased BV
-        $selfPurchasedBv = $user->self_purchased_bv ?? 0;
+        // Only process new referrals (flagged is_commissioned = 0)
+        $qualifiedReferrals = User::where('sponsor_id', $user_id)
+            ->where('self_purchased_bv', '>=', 900)
+            ->where('commission_given', 0)
+            ->get();
 
-        $bp_value = get_static_option('bp_value') ?? 0;
-
-        $check_active_distributor = $selfPurchasedBv >= $bp_value ? 1 : 0;
-
-        // Calculate BV points
-        $directReferralsCount = User::where('sponsor_id', $user->id)->count();
-
-        $referralCommission = $perReferralCommission * $directReferralsCount;
-
-        User::updateOrCreate(
-            ['id' => $user_id],                 
-            ['referral_commission' => $referralCommission]  
-        );
-
-        if ($user->sponsor) {
-            $referredBy = $user->sponsor->partner_name ?? 'Unknown';
-            $referredById = $user->sponsor->partner_id ?? '';
-        } else {
-            $admin = Admin::first(); // You can customize which admin to use
-            $referredBy = $admin ? $admin->partner_name : 'Admin';
-            $referredById = $admin ? $admin->partner_id ?? '' : ''; // or 'admin_id' if exists
+        $pendingReferralCommission = 0;
+        foreach ($qualifiedReferrals as $ref) {
+            $pendingReferralCommission += $perReferralCommission;
+            $ref->update(['commission_given' => 1]);
         }
 
-        // Return the view with updated data
+        if ($pendingReferralCommission > 0) {
+            $user->increment('referral_commission', $pendingReferralCommission);
+        }
+
+        // Now read the stored commission for display
+        $referralCommission = $user->referral_commission;
+        // ──────────────────────────────────────────────────────────────────────────────
+
+        // Determine sponsor display
+        if ($user->sponsor) {
+            $referredBy = $user->sponsor->partner_name ?: 'Unknown';
+            $referredById = $user->sponsor->partner_id ?: '';
+        } else {
+            $admin = Admin::first();
+            $referredBy = $admin?->partner_name ?: 'Admin';
+            $referredById = $admin?->partner_id ?: '';
+        }
+
         return view('frontend.user.dashboard.dashboard', [
             'user' => $user,
-            'check_active_distributor' => $check_active_distributor,
+            'check_active_distributor' => ($user->self_purchased_bv ?? 0) >= $bpConversionRate,
             'user_ads_posted' => $user_ads_posted,
             'user_active_listings' => $user_active_listings,
             'user_deactivated_ads' => $user_deactivated_ads,
@@ -185,7 +158,7 @@ class DashboardController extends Controller
             'rightBvPoints' => $rightBvPoints,
             'age' => $age,
             'totalBvPoints' => $businesspoint,
-            'directReferralsCount' => $directReferralsCount,
+            'directReferralsCount' => User::where('sponsor_id', $user_id)->count(),
             'referralCommission' => $referralCommission,
             'referralCommissionRate' => $referralPercentage,
             'totalBP' => $totalBP,
@@ -195,7 +168,7 @@ class DashboardController extends Controller
             'income' => $income,
             'showIncome' => $showIncome,
             'businesspoint' => $businesspoint,
-            'selfPurchasedBv' => $selfPurchasedBv,
+            'selfPurchasedBv' => $user->self_purchased_bv ?? 0,
             'sealingLimit' => $sealingLimit,
             'sealedLeftBv' => $sealedLeftBv,
             'sealedRightBv' => $sealedRightBv,
@@ -212,6 +185,7 @@ class DashboardController extends Controller
             'remainingProfileLimit' => $remainingProfileLimit,
         ]);
     }
+
     public function genology()
     {
         $user_id = Auth::id();
@@ -625,7 +599,7 @@ class DashboardController extends Controller
         }
 
         // Only fetch direct referrals (1 level)
-        $referrals = $allUsers->where('parent_id', $id)->map(function ($user) {
+        $referrals = $allUsers->where('sponsor_id', $id)->map(function ($user) {
             $user->position = $user->membership ? 'Paid User' : 'Free User';
             return $user;
         });
@@ -650,20 +624,31 @@ class DashboardController extends Controller
         $user = auth()->user();
         $user->load(['kycRecord.user_country', 'kycRecord.user_state', 'kycRecord.user_city']);
 
-        // Get settings
+        // Get settings (same as viewincome method)
         $paymentType = get_static_option('payment_type') ?? 'day';
         $tdsPercentage = get_static_option('tds_value') ?? 0;
         $serviceChargePercentage = get_static_option('service_charge') ?? 0;
 
-        // Get income data
+        // Get income data (same as viewincome method)
         $allDays = $this->getIncomeDays($user->id);
         $filteredDays = $this->filterIncomeDays($allDays, $paymentType);
+        $filteredDays = collect($filteredDays)->map(function ($day) {
+            $day['income'] = $day['payout_amount'];
+            return $day;
+        });
         $totalIncome = collect($filteredDays)->sum('income');
 
-        // ✅ Correct percentage calculations
+        // Calculate amounts (same as viewincome method)
         $tdsAmount = $totalIncome * ($tdsPercentage / 100);
         $serviceChargeAmount = $totalIncome * ($serviceChargePercentage / 100);
         $netAmount = $totalIncome - $tdsAmount - $serviceChargeAmount;
+
+        $today = now()->toDateString();
+        $todayIncome = collect($filteredDays)->filter(function ($item) use ($today) {
+            $dateField = $item['created_at'] ?? $item['date'] ?? $item['day'] ?? null;
+            return $dateField && Carbon::parse($dateField)->toDateString() === $today;
+        });
+
         $bvFromReferrals = $user->children()->with('userBvs')->get()->sum(fn($child) => $child->userBvs->sum('bv_points'));
 
         $incomeData = [
@@ -672,16 +657,18 @@ class DashboardController extends Controller
             'address' => $user->address,
             'bank_details' => $user->bank_details,
             'days' => $filteredDays,
+            'today_income' => $todayIncome,
             'total_income' => round($totalIncome, 2),
             'product_coupon' => 0,
             'tds' => round($tdsAmount, 3),
             'service_charge' => round($serviceChargeAmount, 3),
             'net_amount' => round($netAmount, 3),
-            'direct_business_bv' => 150,
+            'direct_business' => $bvFromReferrals,
             'kyc' => $user->kycRecord,
             'tds_percentage' => $tdsPercentage,
             'service_charge_percentage' => $serviceChargePercentage,
-            'direct_business' => $bvFromReferrals,
+            'today' => $today,
+            'bv_from_referrals' => $bvFromReferrals,
         ];
 
         return view('frontend.user.income.income', compact('incomeData'));
@@ -713,6 +700,7 @@ class DashboardController extends Controller
     {
         return UserPayoutDetail::where('user_id', $userId)
             ->orderBy('created_at', 'asc')
+            ->where('status', 'payout_eligible')
             ->get()
             ->map(function ($item) {
                 return [
@@ -740,8 +728,8 @@ class DashboardController extends Controller
         // Get income data (same as viewincome method)
         $allDays = $this->getIncomeDays($user->id);
         $filteredDays = $this->filterIncomeDays($allDays, $paymentType);
-        $filteredDays = collect($filteredDays)->map(function($day) {
-            $day['income'] = $day['payout_amount']; // Set this explicitly
+        $filteredDays = collect($filteredDays)->map(function ($day) {
+            $day['income'] = $day['payout_amount'];
             return $day;
         });
         $totalIncome = collect($filteredDays)->sum('income');
@@ -771,7 +759,7 @@ class DashboardController extends Controller
             'tds' => round($tdsAmount, 3),
             'service_charge' => round($serviceChargeAmount, 3),
             'net_amount' => round($netAmount, 3),
-            'direct_business_bv' => 150,
+            'direct_business' => $bvFromReferrals,
             'kyc' => $user->kycRecord,
             'tds_percentage' => $tdsPercentage,
             'service_charge_percentage' => $serviceChargePercentage,

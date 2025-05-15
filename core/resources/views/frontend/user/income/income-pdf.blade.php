@@ -154,7 +154,7 @@
 
         <!-- Additional -->
         <div class="mt-3">
-            <p><strong>Direct Business BV:</strong> {{ $incomeData['direct_business_bv'] ?? 0 }}</p>
+            <p><strong>Direct Business BV:</strong> {{ $incomeData['direct_business'] }}</p>
         </div>
     </div>
 </body>

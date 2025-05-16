@@ -86,4 +86,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile-requests/accepted', [MatrimonyController::class, 'getAcceptedRequests']);
     Route::get('/profile-requests/rejected', [MatrimonyController::class, 'getRejectedRequests']);
     Route::get('/user-memberships', [MembershipApiController::class, 'index']);
+    Route::post('/unlock-profile', [MatrimonyController::class, 'unlockProfile']);
+    Route::get('/unlocked-profiles', [MatrimonyController::class, 'getUnlockedProfiles']);
 });

@@ -79,8 +79,8 @@ class DashboardController extends Controller
         $sealingLimit = get_static_option('sealing_limitation') ?? 1;
 
         // Sum BV points
-        $leftBvPoints = $user->leftChild ? $user->leftChild->userBvs()->sum('bv_points') : 0;
-        $rightBvPoints = $user->rightChild ? $user->rightChild->userBvs()->sum('bv_points') : 0;
+        $leftBvPoints = $user->leftChild ? $user->leftChild->userBvs()->where('type', '!=', 'referral_commission')->sum('bv_points') : 0;
+        $rightBvPoints = $user->rightChild ? $user->rightChild->userBvs()->where('type', '!=', 'referral_commission')->sum('bv_points') : 0;
 
         // Flushable & remainder
         $sealingLimitBv = $sealingLimit * $bpConversionRate;
@@ -104,7 +104,7 @@ class DashboardController extends Controller
         $businesspoint = "$leftBvPoints <> $rightBvPoints";
         $totalBP = "$leftBP <> $rightBP";
         $balancedBP = "$leftBvPoints <> $rightBvPoints";
-        $bvFromReferrals = $user->children()->with('userBvs')->get()->sum(fn($c) => $c->userBvs->sum('bv_points'));
+        $bvFromReferrals = $user->children()->with('userBvs')->get()->sum(fn($c) => $c->userBvs->where('type', '!=', 'referral_commission')->sum('bv_points'));
 
         // ─── Referral Commission Logic ─────────────────────────────────────────────
         $referralValue = (float) get_static_option('referral_value');

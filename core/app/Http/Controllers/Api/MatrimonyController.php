@@ -11,6 +11,7 @@ use App\Models\IncomeRange;
 use App\Models\MotherTongue;
 use App\Models\Religion;
 use App\Models\Star;
+use App\Models\UnlockedProfile;
 use App\Models\ZodiacSign;
 use Illuminate\Http\Request;
 use App\Models\ProfileListing;
@@ -25,6 +26,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\CountryManage\app\Models\City;
 use Modules\CountryManage\app\Models\Country;
 use Modules\CountryManage\app\Models\State;
+use Modules\Membership\app\Models\UserMembership;
 use Razorpay\Api\Api;
 use Illuminate\Support\Facades\DB;
 use App\Services\RazorpayService;
@@ -56,10 +58,10 @@ class MatrimonyController extends Controller
 
                 // now append the names from the loaded relations:
                 $profile->mother_tongue_name = $profile->motherTongue?->mother_tongue;
-                $profile->caste_name = $profile->caste?->caste;
-                $profile->country_name = $profile->country?->country;
-                $profile->state_name = $profile->state?->state;
-                $profile->city_name = $profile->city?->city;
+                $profile->caste_name = $profile->castes?->caste;
+                $profile->country_name = $profile->countries?->country;
+                $profile->state_name = $profile->states?->state;
+                $profile->city_name = $profile->cities?->city;
 
                 return $profile;
             });
@@ -637,5 +639,81 @@ class MatrimonyController extends Controller
             'status' => 'success',
             'data' => $rejectedRequests,
         ]);
+    }
+
+    public function unlockProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json([
+                'status'   => 'error',
+                'message'  => 'Please login to unlock profiles',
+                'redirect' => route('user.login'),
+            ], 401);
+        }
+
+        $request->validate([
+            'profile_id' => 'required|exists:profile_listings,id',
+        ]);
+
+        return DB::transaction(function () use ($user, $request) {
+            // 1) Already unlocked?
+            $alreadyUnlocked = UnlockedProfile::where('user_id', $user->id)
+                ->where('profile_id', $request->profile_id)
+                ->exists();
+
+            if ($alreadyUnlocked) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Already unlocked',
+                ]);
+            }
+
+            // 2) Find a membership with remaining profile_limit > 0
+            $membership = UserMembership::where('user_id', $user->id)
+                ->where('profile_limit', '>', 0)
+                ->first();
+
+            if (!$membership) {
+                return response()->json([
+                    'status'   => 'error',
+                    'message'  => 'No profile views remaining. Please upgrade your membership.',
+                    'redirect' => route('matrimony.price'),
+                ], 403);
+            }
+
+            try {
+                // 3) Create the unlock record
+                UnlockedProfile::create([
+                    'user_id'    => $user->id,
+                    'profile_id' => $request->profile_id,
+                ]);
+
+                // 4) Deduct one view
+                $membership->decrement('profile_limit');
+
+                return response()->json([
+                    'status'          => 'success',
+                    'remaining_views' => $membership->profile_limit,
+                ]);
+            } catch (\Exception $e) {
+                // Rollback is automatic on exception in DB::transaction
+                return response()->json([
+                    'status'  => 'error',
+                    'message' => 'Failed to unlock profile: ' . $e->getMessage(),
+                ], 500);
+            }
+        });
+    }
+
+    public function getUnlockedProfiles()
+    {
+        $unlockedProfiles = UnlockedProfile::with(['user', 'profile'])->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $unlockedProfiles
+        ], 200);
     }
 }

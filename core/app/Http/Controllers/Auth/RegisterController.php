@@ -344,22 +344,22 @@ class RegisterController extends Controller
                 ]);
 
                 // Add commission to sponsor (if not admin partner)
-                if ($sponsor_id && !$is_admin_partner) {
-                    $referrer = User::find($sponsor_id);
-                    if ($referrer) {
-                        $referrer->bv_points += $bv_points;
+                // if ($sponsor_id && !$is_admin_partner) {
+                //     $referrer = User::find($sponsor_id);
+                //     if ($referrer) {
+                //         $referrer->bv_points += $bv_points;
 
-                        $commissionAmount = get_static_option('referral_value') ?? 0;
-                        $referrer->referral_commission += $commissionAmount;
-                        $referrer->save();
+                //         $commissionAmount = get_static_option('referral_value') ?? 0;
+                //         $referrer->referral_commission += $commissionAmount;
+                //         $referrer->save();
 
-                        Log::info("Commission added to sponsor", [
-                            'sponsor_id' => $referrer->id,
-                            'sponsor_partner_id' => $referrer->partner_id,
-                            'amount' => $commissionAmount,
-                        ]);
-                    }
-                }
+                //         Log::info("Commission added to sponsor", [
+                //             'sponsor_id' => $referrer->id,
+                //             'sponsor_partner_id' => $referrer->partner_id,
+                //             'amount' => $commissionAmount,
+                //         ]);
+                //     }
+                // }
 
                 if (moduleExists("Wallet")) {
                     Wallet::create([

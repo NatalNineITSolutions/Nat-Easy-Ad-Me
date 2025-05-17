@@ -200,5 +200,169 @@ class UserSeeder extends Seeder
             'partner_name' => $partnerNameH,
             'otp_verified' => 1,
         ]);
+
+        // Create I and J under E
+        $partnerIdI = $this->generatePartnerId();
+        $partnerNameI = $this->generatePartnerName('Irene');
+        $userI = User::create([
+            'first_name'   => 'Irene',
+            'last_name'    => 'Adams',
+            'email'        => 'irene.adams@example.com',
+            'username'     => 'irene_adams',
+            'phone'        => '9000000007',
+            'country_id'   => '91',
+            'password'     => Hash::make('password123'),
+            'parent_id'    => $userE->id,
+            'sponsor_id'   => $userA->id,
+            'position'     => 'left',
+            'gender'       => 'female',
+            'dob'          => '1997-08-08',
+            'partner_id'   => $partnerIdI,
+            'partner_name' => $partnerNameI,
+            'otp_verified' => 1,
+        ]);
+
+        $partnerIdJ = $this->generatePartnerId();
+        $partnerNameJ = $this->generatePartnerName('Jack');
+        $userJ = User::create([
+            'first_name'   => 'Jack',
+            'last_name'    => 'Martin',
+            'email'        => 'jack.martin@example.com',
+            'username'     => 'jack_martin',
+            'phone'        => '9000000008',
+            'country_id'   => '91',
+            'password'     => Hash::make('password123'),
+            'parent_id'    => $userE->id,
+            'sponsor_id'   => $userA->id,
+            'position'     => 'right',
+            'gender'       => 'male',
+            'dob'          => '1998-09-09',
+            'partner_id'   => $partnerIdJ,
+            'partner_name' => $partnerNameJ,
+            'otp_verified' => 1,
+        ]);
+
+        // Create K and L under F
+        $partnerIdK = $this->generatePartnerId();
+        $partnerNameK = $this->generatePartnerName('Karen');
+        $userK = User::create([
+            'first_name'   => 'Karen',
+            'last_name'    => 'O\'Neil',
+            'email'        => 'karen.oneil@example.com',
+            'username'     => 'karen_oneil',
+            'phone'        => '9000000009',
+            'country_id'   => '91',
+            'password'     => Hash::make('password123'),
+            'parent_id'    => $userF->id,
+            'sponsor_id'   => $userA->id,
+            'position'     => 'left',
+            'gender'       => 'female',
+            'dob'          => '1999-10-10',
+            'partner_id'   => $partnerIdK,
+            'partner_name' => $partnerNameK,
+            'otp_verified' => 1,
+        ]);
+
+        $partnerIdL = $this->generatePartnerId();
+        $partnerNameL = $this->generatePartnerName('Leo');
+        $userL = User::create([
+            'first_name'   => 'Leo',
+            'last_name'    => 'Patel',
+            'email'        => 'leo.patel@example.com',
+            'username'     => 'leo_patel',
+            'phone'        => '9000000010',
+            'country_id'   => '91',
+            'password'     => Hash::make('password123'),
+            'parent_id'    => $userF->id,
+            'sponsor_id'   => $userA->id,
+            'position'     => 'right',
+            'gender'       => 'male',
+            'dob'          => '2000-11-11',
+            'partner_id'   => $partnerIdL,
+            'partner_name' => $partnerNameL,
+            'otp_verified' => 1,
+        ]);
+
+        // Create M and N under G
+        $partnerIdM = $this->generatePartnerId();
+        $partnerNameM = $this->generatePartnerName('Maya');
+        $userM = User::create([
+            'first_name'   => 'Maya',
+            'last_name'    => 'Sharma',
+            'email'        => 'maya.sharma@example.com',
+            'username'     => 'maya_sharma',
+            'phone'        => '9000000011',
+            'country_id'   => '91',
+            'password'     => Hash::make('password123'),
+            'parent_id'    => $userG->id,
+            'sponsor_id'   => $userA->id,
+            'position'     => 'left',
+            'gender'       => 'female',
+            'dob'          => '2001-12-12',
+            'partner_id'   => $partnerIdM,
+            'partner_name' => $partnerNameM,
+            'otp_verified' => 1,
+        ]);
+
+        $partnerIdN = $this->generatePartnerId();
+        $partnerNameN = $this->generatePartnerName('Noah');
+        $userN = User::create([
+            'first_name'   => 'Noah',
+            'last_name'    => 'Desai',
+            'email'        => 'noah.desai@example.com',
+            'username'     => 'noah_desai',
+            'phone'        => '9000000012',
+            'country_id'   => '91',
+            'password'     => Hash::make('password123'),
+            'parent_id'    => $userG->id,
+            'sponsor_id'   => $userA->id,
+            'position'     => 'right',
+            'gender'       => 'male',
+            'dob'          => '2002-01-13',
+            'partner_id'   => $partnerIdN,
+            'partner_name' => $partnerNameN,
+            'otp_verified' => 1,
+        ]);
+
+        // Create O and P under H
+        $partnerIdO = $this->generatePartnerId();
+        $partnerNameO = $this->generatePartnerName('Olivia');
+        $userO = User::create([
+            'first_name'   => 'Olivia',
+            'last_name'    => 'Khan',
+            'email'        => 'olivia.khan@example.com',
+            'username'     => 'olivia_khan',
+            'phone'        => '9000000013',
+            'country_id'   => '91',
+            'password'     => Hash::make('password123'),
+            'parent_id'    => $userH->id,
+            'sponsor_id'   => $userA->id,
+            'position'     => 'left',
+            'gender'       => 'female',
+            'dob'          => '2003-02-14',
+            'partner_id'   => $partnerIdO,
+            'partner_name' => $partnerNameO,
+            'otp_verified' => 1,
+        ]);
+
+        $partnerIdP = $this->generatePartnerId();
+        $partnerNameP = $this->generatePartnerName('Paul');
+        $userP = User::create([
+            'first_name'   => 'Paul',
+            'last_name'    => 'Verma',
+            'email'        => 'paul.verma@example.com',
+            'username'     => 'paul_verma',
+            'phone'        => '9000000014',
+            'country_id'   => '91',
+            'password'     => Hash::make('password123'),
+            'parent_id'    => $userH->id,
+            'sponsor_id'   => $userA->id,
+            'position'     => 'right',
+            'gender'       => 'male',
+            'dob'          => '2004-03-15',
+            'partner_id'   => $partnerIdP,
+            'partner_name' => $partnerNameP,
+            'otp_verified' => 1,
+        ]);
     }
 }

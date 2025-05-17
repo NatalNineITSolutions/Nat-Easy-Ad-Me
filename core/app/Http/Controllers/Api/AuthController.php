@@ -353,4 +353,62 @@ class AuthController extends Controller
             ],
         ]);
     }
+
+    public function updateProfile(Request $request)
+    {
+        $userId = Auth::id();
+        Log::info('API profile update request received.', ['request_data' => $request->all()]);
+
+        try {
+            $request->validate([
+                'email' => 'required|email|unique:users,email,' . $userId,
+                'country' => 'nullable|integer|exists:countries,id',
+                'state' => 'nullable|integer|exists:states,id',
+                'city' => 'nullable|integer|exists:cities,id',
+            ], [
+                'email.required' => __('Email is required'),
+                'email.email' => __('Invalid email format'),
+                'email.unique' => __('This email is already in use'),
+            ]);
+
+            $user = User::findOrFail($userId);
+            $user->email = $request->email;
+
+            if ($request->filled('country')) {
+                $user->country_id = $request->country;
+            }
+
+            if ($request->filled('state')) {
+                $user->state_id = $request->state;
+            }
+
+            if ($request->filled('city')) {
+                $user->city_id = $request->city;
+            }
+
+            if ($request->filled('image')) {
+                // if you have an image_id column:
+                $user->image = $request->image;
+            }
+
+            $user->save();
+
+            Log::info('API profile update success:', ['user_id' => $userId]);
+
+            return response()->json([
+                'status' => 'ok',
+                'message' => __('Profile updated successfully'),
+                'data' => $user
+            ]);
+        } catch (\Exception $e) {
+            Log::error('API profile update failed:', ['error' => $e->getMessage()]);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => __('Profile update failed: ') . $e->getMessage()
+            ], 500);
+        }
+    }
+
+
 }

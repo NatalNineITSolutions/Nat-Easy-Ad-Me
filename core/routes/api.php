@@ -88,4 +88,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user-memberships', [MembershipApiController::class, 'index']);
     Route::post('/unlock-profile', [MatrimonyController::class, 'unlockProfile']);
     Route::get('/unlocked-profiles', [MatrimonyController::class, 'getUnlockedProfiles']);
+    Route::post('/user/update-profile', [AuthController::class, 'updateProfile']);
 });

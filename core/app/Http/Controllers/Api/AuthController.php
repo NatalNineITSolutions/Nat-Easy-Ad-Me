@@ -353,4 +353,93 @@ class AuthController extends Controller
             ],
         ]);
     }
+
+    public function apiRegisterNewMember(Request $request)
+    {
+        $validationRules = [
+            'first_name' => 'required|max:191',
+            'last_name' => 'required|max:191',
+            'email' => 'required|email|unique:users|max:191',
+            'username' => 'required|unique:users|max:191',
+            'phone' => 'required|max:191',
+            'password' => 'required|min:6|max:191',
+            'parent_id' => 'required|exists:users,id',
+            'root_id' => 'required|exists:users,id',
+            'position' => 'required|in:left,right',
+            'gender' => 'required|in:male,female',
+            'dob' => 'required|date|before:today',
+        ];
+
+        $request->validate($validationRules);
+
+        try {
+            $email_verify_token = sprintf("%d", random_int(123456, 999999));
+
+            $phone_number = Str::replace(['-', '(', ')', ' '], '', $request->phone);
+            $country_code = '+' . ltrim($request->country_code ?? '', '+');
+            $full_phone_number = $country_code . ' - ' . $phone_number;
+
+            if (User::where('phone', $full_phone_number)->exists()) {
+                return response()->json(['message' => 'Phone number already taken'], 409);
+            }
+
+            do {
+                $dateCode = now()->format('Yn');
+                $randomDigits = rand(1000, 99999);
+                $partnerId = 'GL' . $dateCode . $randomDigits;
+            } while (User::where('partner_id', $partnerId)->exists());
+
+            $partnerName = 'EASYADME-' . strtoupper($request->first_name);
+
+            $user = User::create([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+                'username' => $request->username,
+                'phone' => $full_phone_number,
+                'password' => Hash::make($request->password),
+                'terms_conditions' => 1,
+                'email_verify_token' => $email_verify_token,
+                'partner_id' => $partnerId,
+                'partner_name' => $partnerName,
+                'sponsor_id' => $request->root_id,
+                'parent_id' => $request->parent_id,
+                'gender' => $request->gender,
+                'dob' => $request->dob,
+                'position' => $request->position,
+            ]);
+
+            $default_membership = Membership::find(1);
+            $membership_id = $default_membership ? $default_membership->id : 1;
+            $bv_points = $default_membership ? $default_membership->bv_points : 0;
+
+            UsersBv::create([
+                'user_id' => $user->id,
+                'membership_id' => $membership_id,
+                'bv_points' => $bv_points,
+                'upgrade_time' => now(),
+            ]);
+
+            if (moduleExists("Wallet")) {
+                Wallet::create([
+                    'user_id' => $user->id,
+                    'balance' => 0,
+                    'remaining_balance' => 0,
+                    'withdraw_amount' => 0,
+                    'status' => 1,
+                ]);
+            }
+
+            dispatch(new SendRegisterUserEmailJob($user, $request->password));
+
+            return response()->json([
+                'message' => 'New member registered successfully',
+                'user_id' => $user->id,
+                'partner_id' => $partnerId,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('API MLM registration error: ' . $e->getMessage());
+            return response()->json(['message' => 'An error occurred during registration.'], 500);
+        }
+    }
 }

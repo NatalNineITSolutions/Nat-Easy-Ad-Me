@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\EnquiryControllerApi;
 // Public Routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/mlm/register', [AuthController::class, 'apiRegisterNewMember']);
 
 // Partner Verification Routes
 Route::post('partner/verify', [AuthController::class, 'verifyPartner']);

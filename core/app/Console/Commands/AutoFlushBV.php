@@ -181,9 +181,10 @@ class AutoFlushBV extends Command
     {
         $now = now();
         $selfBv = $user->self_purchased_bv ?? 0;
+        $bpConversionRate = get_static_option('bp_value') ?? 1;
 
         $referral = $user->referral_commission ?? 0;
-        if ($selfBv >= 900 && $referral > 100) {
+        if ($selfBv >= $bpConversionRate && $referral > 100) {
             Log::info("User qualifies via referral override", [
                 'user_id' => $user->id,
                 'self_bv' => $selfBv,
@@ -196,7 +197,7 @@ class AutoFlushBV extends Command
         $totalLeftBv = $this->sumSubtreeBv($user->leftChild, $now);
         $totalRightBv = $this->sumSubtreeBv($user->rightChild, $now);
 
-        $standardEligible = $selfBv >= 900 && $totalLeftBv >= 900 && $totalRightBv >= 900;
+        $standardEligible = $selfBv >= $bpConversionRate && $totalLeftBv >= $bpConversionRate && $totalRightBv >= $bpConversionRate;
 
         Log::info("User eligibility check", [
             'user_id' => $user->id,
@@ -204,7 +205,7 @@ class AutoFlushBV extends Command
             'left_bv' => $totalLeftBv,
             'right_bv' => $totalRightBv,
             'referral_commission' => $referral,
-            'is_eligible' => $standardEligible || ($selfBv >= 900 && $referral > 100)
+            'is_eligible' => $standardEligible || ($selfBv >= $bpConversionRate && $referral > 100)
         ]);
 
         return $standardEligible;
@@ -350,7 +351,7 @@ class AutoFlushBV extends Command
             $rightBv = $this->sumSubtreeBv($user->rightChild, $now);
 
             $selfBv = $user->self_purchased_bv ?? 0;
-            $rawPairs = ($selfBv >= 900 && $leftBv >= 900 && $rightBv >= 900)
+            $rawPairs = ($selfBv >= $bpConversionRate && $leftBv >= $bpConversionRate && $rightBv >= $bpConversionRate)
                       ? floor(min($leftBv,$rightBv)/$bpConversionRate)
                       : 0;
             $userPairs = min($rawPairs, $dailyLimit);
@@ -386,7 +387,6 @@ class AutoFlushBV extends Command
                 'service_charge'     => $serviceChargeAmt,
                 'net_amount'         => $netAmount,
                 'status'             => $grossPayout>0 ? 'payout_eligible':'no_payout',
-                'qualification_method'=> $selfBv>=900&&$recentReferral>100 ? 'referral_override':'standard_tree',
             ]);
 
             Log::info("User {$user->id} payout detail recorded");

@@ -129,7 +129,6 @@ class DashboardController extends Controller
 
         // Now read the stored commission for display
         $referralCommission = $user->referral_commission;
-        // ──────────────────────────────────────────────────────────────────────────────
 
         // Determine sponsor display
         if ($user->sponsor) {

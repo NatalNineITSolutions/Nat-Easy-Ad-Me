@@ -157,32 +157,6 @@ class AutoFlushBV extends Command
         }
     }
 
-    protected function processReferralCommission(User $user)
-    {
-        // Get the user's current referral commission
-        $currentCommission = $user->referral_commission ?? 0;
-
-        if ($currentCommission > 0) {
-            // Create a BV record for the referral commission
-            $user->userBvs()->create([
-                'bv_points' => $currentCommission,
-                'type' => 'referral_commission',
-                'description' => 'Referral commission payout at ' . now(),
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
-
-            // Reset the referral commission to 0
-            $user->referral_commission = 0;
-            $user->save();
-
-            Log::info("Referral commission processed", [
-                'user_id' => $user->id,
-                'amount' => $currentCommission
-            ]);
-        }
-    }
-
     protected function flushSide($userChild, $amount, $side)
     {
         if ($amount <= 0) {
@@ -201,6 +175,79 @@ class AutoFlushBV extends Command
             'user_id' => $userChild->id,
             'flushed_amount' => $amount,
         ]);
+    }
+
+    protected function isUserEligibleForPayout(User $user): bool
+    {
+        $now = now();
+        $selfBv = $user->self_purchased_bv ?? 0;
+        $bpConversionRate = get_static_option('bp_value') ?? 1;
+
+        $referral = $user->referral_commission ?? 0;
+        if ($selfBv >= $bpConversionRate && $referral > 100) {
+            Log::info("User qualifies via referral override", [
+                'user_id' => $user->id,
+                'self_bv' => $selfBv,
+                'referral_commission' => $referral
+            ]);
+            return true;
+        }
+
+        // Then check standard tree eligibility
+        $totalLeftBv = $this->sumSubtreeBv($user->leftChild, $now);
+        $totalRightBv = $this->sumSubtreeBv($user->rightChild, $now);
+
+        $standardEligible = $selfBv >= $bpConversionRate && $totalLeftBv >= $bpConversionRate && $totalRightBv >= $bpConversionRate;
+
+        Log::info("User eligibility check", [
+            'user_id' => $user->id,
+            'self_bv' => $selfBv,
+            'left_bv' => $totalLeftBv,
+            'right_bv' => $totalRightBv,
+            'referral_commission' => $referral,
+            'is_eligible' => $standardEligible || ($selfBv >= $bpConversionRate && $referral > 100)
+        ]);
+
+        return $standardEligible;
+    }
+
+    protected function processReferralCommission(User $user)
+    {
+        // Get the user's current referral commission
+        $currentCommission = $user->referral_commission ?? 0;
+
+        if ($currentCommission > 0) {
+            // Check if user is eligible through either criteria
+            $isEligible = $this->isUserEligibleForPayout($user);
+
+            if ($isEligible) {
+                // Create BV record for the commission
+                $user->userBvs()->create([
+                    'bv_points' => $currentCommission,
+                    'type' => 'referral_commission',
+                    'description' => 'Referral commission payout at ' . now(),
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+
+                // Reset the commission
+                $user->referral_commission = 0;
+                $user->save();
+
+                Log::info("Referral commission processed for eligible user", [
+                    'user_id' => $user->id,
+                    'amount' => $currentCommission,
+                    'self_bv' => $user->self_purchased_bv,
+                    'has_referral_override' => true
+                ]);
+            } else {
+                Log::info("Referral commission held - user not eligible", [
+                    'user_id' => $user->id,
+                    'amount' => $currentCommission,
+                    'self_bv' => $user->self_purchased_bv
+                ]);
+            }
+        }
     }
 
     protected function recordPayoutSummary($sealingLimitBv)
@@ -282,91 +329,71 @@ class AutoFlushBV extends Command
     }
 
     protected function recordUserPayoutDetails(
-        int $payoutSummaryId,
+        int   $payoutSummaryId,
         float $sealingLimitBv,
         float $bpConversionRate,
         float $pairIncome,
         float $tdsPercentage,
         float $serviceCharge
     ) {
-        $dailyPairLimit = (int) get_static_option('sealing_limitation');
+        $dailyLimit = (int)get_static_option('sealing_limitation');
         $now = now();
 
-        // Fetch users with both children
-        $users = User::with(['leftChild', 'rightChild'])
+        $users = User::with(['leftChild','rightChild'])
             ->whereHas('leftChild')
             ->whereHas('rightChild')
             ->get();
 
-        Log::info("Starting payout-detail recording. Users to process: {$users->count()}");
+        Log::info("Starting payout-detail recording. Users: {$users->count()}");
 
         foreach ($users as $user) {
-            // Sum BV in each side
-            $totalLeftBv = $this->sumSubtreeBv($user->leftChild, $now);
-            $totalRightBv = $this->sumSubtreeBv($user->rightChild, $now);
+            $leftBv  = $this->sumSubtreeBv($user->leftChild, $now);
+            $rightBv = $this->sumSubtreeBv($user->rightChild, $now);
 
-            // Must meet *all three* criteria to be eligible
-            if (
-                ($user->self_purchased_bv ?? 0) < 900 ||
-                $totalLeftBv < 900 ||
-                $totalRightBv < 900
-            ) {
-                Log::info("Skipping user {$user->id}; eligibility conditions not met", [
-                    'self_purchased_bv' => $user->self_purchased_bv,
-                    'left_bv' => $totalLeftBv,
-                    'right_bv' => $totalRightBv,
-                ]);
-                continue;
-            }
+            $selfBv = $user->self_purchased_bv ?? 0;
+            $rawPairs = ($selfBv >= $bpConversionRate && $leftBv >= $bpConversionRate && $rightBv >= $bpConversionRate)
+                      ? floor(min($leftBv,$rightBv)/$bpConversionRate)
+                      : 0;
+            $userPairs = min($rawPairs, $dailyLimit);
 
-            // Compute how many BP‐pairs they’ve formed, capped by daily limit
-            $rawPairs = (int) floor(min($totalLeftBv, $totalRightBv) / $bpConversionRate);
-            $userPairs = min($rawPairs, $dailyPairLimit);
-
-            // Include any referral commissions credited in the last minute
-            $referral = UsersBv::where('user_id', $user->id)
-                ->where('type', 'referral_commission')
-                ->where('created_at', '>=', $now->subMinute())
+            // fetch referral BV record inserted moments ago
+            $recentReferral = UsersBv::where('user_id',$user->id)
+                ->where('type','referral_commission')
+                ->where('created_at','>=',$now->subMinute())
                 ->sum('bv_points');
 
-            $grossPayout = ($userPairs * $pairIncome) + $referral;
-            Log::info("User {$user->id} gross payout: {$grossPayout}", compact('userPairs', 'referral'));
+            // compute gross payout
+            $grossPayout = ($userPairs * $pairIncome) + $recentReferral;
 
-            // Calculate deductions
-            $tdsDeduction = $grossPayout * ($tdsPercentage / 100);
-            $serviceChargeAmt = $grossPayout * ($serviceCharge / 100);
-            $netAmount = max($grossPayout - $tdsDeduction - $serviceChargeAmt, 0);
+            Log::info("User {$user->id} gross payout calc", [
+                'userPairs'     => $userPairs,
+                'pairIncome'    => $pairIncome,
+                'referralPaid'  => $recentReferral,
+                'totalPayout'   => $grossPayout,
+            ]);
 
-            // Persist the payout detail
+            $tdsDeduction    = $grossPayout * ($tdsPercentage/100);
+            $serviceChargeAmt= $grossPayout * ($serviceCharge/100);
+            $netAmount       = max($grossPayout - $tdsDeduction - $serviceChargeAmt, 0);
+
             UserPayoutDetail::create([
-                'user_id' => $user->id,
-                'payout_summary_id' => $payoutSummaryId,
-                'left_bv' => $totalLeftBv,
-                'right_bv' => $totalRightBv,
-                'matching_pairs' => $userPairs,
-                'payout_amount' => $grossPayout,
-                'tds_deduction' => $tdsDeduction,
-                'service_charge' => $serviceChargeAmt,
-                'net_amount' => $netAmount,
-                'status' => $grossPayout > 0
-                    ? 'payout_eligible'
-                    : 'no_payout',
+                'user_id'            => $user->id,
+                'payout_summary_id'  => $payoutSummaryId,
+                'left_bv'            => $leftBv,
+                'right_bv'           => $rightBv,
+                'matching_pairs'     => $userPairs,
+                'payout_amount'      => $grossPayout,
+                'tds_deduction'      => $tdsDeduction,
+                'service_charge'     => $serviceChargeAmt,
+                'net_amount'         => $netAmount,
+                'status'             => $grossPayout>0 ? 'payout_eligible':'no_payout',
             ]);
 
-            Log::info("User {$user->id} payout detail recorded", [
-                'totalLeftBv' => $totalLeftBv,
-                'totalRightBv' => $totalRightBv,
-                'rawPairs' => $rawPairs,
-                'userPairs' => $userPairs,
-                'grossPayout' => $grossPayout,
-                'netAmount' => $netAmount,
-            ]);
+            Log::info("User {$user->id} payout detail recorded");
         }
 
         Log::info("Payout detail recording completed.");
     }
-
-
     /**
      * Sum only one node's BV records (not its whole subtree).
      */

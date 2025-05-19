@@ -354,92 +354,61 @@ class AuthController extends Controller
         ]);
     }
 
-    public function apiRegisterNewMember(Request $request)
+    public function updateProfile(Request $request)
     {
-        $validationRules = [
-            'first_name' => 'required|max:191',
-            'last_name' => 'required|max:191',
-            'email' => 'required|email|unique:users|max:191',
-            'username' => 'required|unique:users|max:191',
-            'phone' => 'required|max:191',
-            'password' => 'required|min:6|max:191',
-            'parent_id' => 'required|exists:users,id',
-            'root_id' => 'required|exists:users,id',
-            'position' => 'required|in:left,right',
-            'gender' => 'required|in:male,female',
-            'dob' => 'required|date|before:today',
-        ];
-
-        $request->validate($validationRules);
+        $userId = Auth::id();
+        Log::info('API profile update request received.', ['request_data' => $request->all()]);
 
         try {
-            $email_verify_token = sprintf("%d", random_int(123456, 999999));
-
-            $phone_number = Str::replace(['-', '(', ')', ' '], '', $request->phone);
-            $country_code = '+' . ltrim($request->country_code ?? '', '+');
-            $full_phone_number = $country_code . ' - ' . $phone_number;
-
-            if (User::where('phone', $full_phone_number)->exists()) {
-                return response()->json(['message' => 'Phone number already taken'], 409);
-            }
-
-            do {
-                $dateCode = now()->format('Yn');
-                $randomDigits = rand(1000, 99999);
-                $partnerId = 'GL' . $dateCode . $randomDigits;
-            } while (User::where('partner_id', $partnerId)->exists());
-
-            $partnerName = 'EASYADME-' . strtoupper($request->first_name);
-
-            $user = User::create([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'email' => $request->email,
-                'username' => $request->username,
-                'phone' => $full_phone_number,
-                'password' => Hash::make($request->password),
-                'terms_conditions' => 1,
-                'email_verify_token' => $email_verify_token,
-                'partner_id' => $partnerId,
-                'partner_name' => $partnerName,
-                'sponsor_id' => $request->root_id,
-                'parent_id' => $request->parent_id,
-                'gender' => $request->gender,
-                'dob' => $request->dob,
-                'position' => $request->position,
+            $request->validate([
+                'email' => 'required|email|unique:users,email,' . $userId,
+                'country' => 'nullable|integer|exists:countries,id',
+                'state' => 'nullable|integer|exists:states,id',
+                'city' => 'nullable|integer|exists:cities,id',
+            ], [
+                'email.required' => __('Email is required'),
+                'email.email' => __('Invalid email format'),
+                'email.unique' => __('This email is already in use'),
             ]);
 
-            $default_membership = Membership::find(1);
-            $membership_id = $default_membership ? $default_membership->id : 1;
-            $bv_points = $default_membership ? $default_membership->bv_points : 0;
+            $user = User::findOrFail($userId);
+            $user->email = $request->email;
 
-            UsersBv::create([
-                'user_id' => $user->id,
-                'membership_id' => $membership_id,
-                'bv_points' => $bv_points,
-                'upgrade_time' => now(),
-            ]);
-
-            if (moduleExists("Wallet")) {
-                Wallet::create([
-                    'user_id' => $user->id,
-                    'balance' => 0,
-                    'remaining_balance' => 0,
-                    'withdraw_amount' => 0,
-                    'status' => 1,
-                ]);
+            if ($request->filled('country')) {
+                $user->country_id = $request->country;
             }
 
-            dispatch(new SendRegisterUserEmailJob($user, $request->password));
+            if ($request->filled('state')) {
+                $user->state_id = $request->state;
+            }
+
+            if ($request->filled('city')) {
+                $user->city_id = $request->city;
+            }
+
+            if ($request->filled('image')) {
+                // if you have an image_id column:
+                $user->image = $request->image;
+            }
+
+            $user->save();
+
+            Log::info('API profile update success:', ['user_id' => $userId]);
 
             return response()->json([
-                'message' => 'New member registered successfully',
-                'user_id' => $user->id,
-                'partner_id' => $partnerId,
+                'status' => 'ok',
+                'message' => __('Profile updated successfully'),
+                'data' => $user
             ]);
         } catch (\Exception $e) {
-            Log::error('API MLM registration error: ' . $e->getMessage());
-            return response()->json(['message' => 'An error occurred during registration.'], 500);
+            Log::error('API profile update failed:', ['error' => $e->getMessage()]);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => __('Profile update failed: ') . $e->getMessage()
+            ], 500);
         }
     }
+
+
 }

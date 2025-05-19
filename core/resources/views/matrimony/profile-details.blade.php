@@ -476,10 +476,6 @@
                         <!-- <button class="tab-link" data-tab="jothagam" onclick="openTab(event, 'jothagam')">Jathagam</button> -->
                     </div>
 
-                    <div class="tab-content active" id="description">
-                        <p>{{ $profile->description ?? 'No description available' }}</p>
-                    </div>
-
                     <div class="tab-content" id="contact">
                         @if($isUnlocked || !$shouldBlur)
                             <p><i class="fas fa-envelope"></i> {{ $userEmail ?? 'No email available' }}</p>

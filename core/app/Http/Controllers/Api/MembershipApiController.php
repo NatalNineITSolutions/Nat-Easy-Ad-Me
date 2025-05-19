@@ -18,6 +18,7 @@ use App\Models\UsersBV;
 use App\Models\Backend\AdminNotification;
 use Razorpay\Api\Api;
 
+
 class MembershipApiController extends Controller
 {
     public function getMembershipsByCategory(Request $request)
@@ -359,5 +360,21 @@ class MembershipApiController extends Controller
     protected function cancel_page()
     {
         return redirect()->route('membership.buy.payment.cancel.static');
+    }
+
+    public function index(Request $request)
+    {
+        // Get the current user
+        $user = $request->user();
+
+        // Fetch only their memberships
+        $memberships = UserMembership::where('user_id', $user->id)
+                                     ->get();
+
+        return response()->json([
+            'status'  => 'success',
+            'data'    => $memberships,
+            'message' => 'User memberships retrieved.',
+        ], 200);
     }
 }

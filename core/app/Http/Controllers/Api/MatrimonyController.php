@@ -647,8 +647,8 @@ class MatrimonyController extends Controller
 
         if (!$user) {
             return response()->json([
-                'status'   => 'error',
-                'message'  => 'Please login to unlock profiles',
+                'status' => 'error',
+                'message' => 'Please login to unlock profiles',
                 'redirect' => route('user.login'),
             ], 401);
         }
@@ -677,8 +677,8 @@ class MatrimonyController extends Controller
 
             if (!$membership) {
                 return response()->json([
-                    'status'   => 'error',
-                    'message'  => 'No profile views remaining. Please upgrade your membership.',
+                    'status' => 'error',
+                    'message' => 'No profile views remaining. Please upgrade your membership.',
                     'redirect' => route('matrimony.price'),
                 ], 403);
             }
@@ -686,7 +686,7 @@ class MatrimonyController extends Controller
             try {
                 // 3) Create the unlock record
                 UnlockedProfile::create([
-                    'user_id'    => $user->id,
+                    'user_id' => $user->id,
                     'profile_id' => $request->profile_id,
                 ]);
 
@@ -694,13 +694,13 @@ class MatrimonyController extends Controller
                 $membership->decrement('profile_limit');
 
                 return response()->json([
-                    'status'          => 'success',
+                    'status' => 'success',
                     'remaining_views' => $membership->profile_limit,
                 ]);
             } catch (\Exception $e) {
                 // Rollback is automatic on exception in DB::transaction
                 return response()->json([
-                    'status'  => 'error',
+                    'status' => 'error',
                     'message' => 'Failed to unlock profile: ' . $e->getMessage(),
                 ], 500);
             }
@@ -714,6 +714,149 @@ class MatrimonyController extends Controller
         return response()->json([
             'success' => true,
             'data' => $unlockedProfiles
+        ], 200);
+    }
+
+    public function apiFilter(Request $request, $profileId = null)
+    {
+        $query = ProfileListing::where('user_id', '!=', auth()->id())
+            ->where('is_verified', 1);
+
+        $isSingle = $profileId !== null;
+        if ($isSingle) {
+            $profile = $query->findOrFail($profileId);
+            if ($profile->user_id == auth()->id() || !$profile->is_verified) {
+                return response()->json(['message' => 'Not Found'], 404);
+            }
+            $items = collect([$profile]);
+        } else {
+            if (
+                $request->anyFilled([
+                    'gender',
+                    'age_range',
+                    'marital_status',
+                    'income',
+                    'occupation',
+                    'religion',
+                    'caste',
+                    'star',
+                    'zodiac_sign',
+                    'country',
+                    'state',
+                    'city'
+                ])
+            ) {
+                if ($request->filled('gender')) {
+                    $query->where('gender', $request->gender);
+                }
+                if ($request->filled('age_range')) {
+                    if ($ar = AgeRange::find($request->age_range)) {
+                        $query->whereBetween('age', [$ar->from_age, $ar->to_age]);
+                    }
+                }
+                if ($request->filled('marital_status')) {
+                $query->where('marital_status', $request->marital_status);
+            }
+
+            if ($request->filled('income')) {
+                $incomeRange = IncomeRange::find($request->income);
+                if ($incomeRange) {
+                    $query->where('annual_income', '>=', $incomeRange->from_income);
+                }
+            }
+
+            if ($request->filled('occupation')) {
+                $query->where('occupation', 'LIKE', "%{$request->occupation}%");
+            }
+
+            if ($request->filled('religion')) {
+                $query->where('religion', $request->religion);
+            }
+
+            if ($request->filled('caste')) {
+                $query->where('caste', $request->caste);
+            }
+
+            if ($request->filled('star')) {
+                $query->where('star', $request->star);
+            }
+
+            if ($request->filled('zodiac_sign')) {
+                $query->where('zodiac_sign', $request->zodiac_sign);
+            }
+
+            if ($request->filled('country')) {
+                $query->where('country', $request->country);
+            }
+
+            if ($request->filled('state')) {
+                $query->where('state', $request->state);
+            }
+
+                if ($request->filled('city')) {
+                    $query->where('city', $request->city);
+                }
+            }
+            $items = $query->paginate(12);
+        }
+    
+        $filterOptions = [
+            'ages' => AgeRange::orderBy('from_age')->get(),
+            'income' => IncomeRange::orderBy('from_income')->get(),
+            'religions' => Religion::orderBy('religion')->get(),
+            'castes' => Caste::orderBy('caste')->get(),
+            'stars' => Star::orderBy('star')->get(),
+            'zodiacSigns' => ZodiacSign::orderBy('zodiac_sign')->get(),
+            'countries' => Country::orderBy('country')->get(),
+            'states' => State::orderBy('state')->get(),
+            'cities' => City::orderBy('city')->get(),
+            'maritalStatuses' => ['Married', 'Unmarried', 'Divorced', 'Widowed'],
+        ];
+
+        return response()->json([
+            'data' => $items,
+            'filters' => $request->only([
+                'gender',
+                'age_range',
+                'marital_status',
+                'income',
+                'occupation',
+                'religion',
+                'caste',
+                'star',
+                'zodiac_sign',
+                'country',
+                'state',
+                'city'
+            ]),
+            'filterOptions' => $filterOptions,
+            'hasFilters' => $request->anyFilled([
+                'gender',
+                'age_range',
+                'marital_status',
+                'income',
+                'occupation',
+                'religion',
+                'caste',
+                'star',
+                'zodiac_sign',
+                'country',
+                'state',
+                'city'
+            ]),
+        ]);
+    }
+
+    public function index(Request $request)
+    {
+        $user = $request->user(); 
+
+        $profiles = ProfileListing::where('user_id', $user->id)
+            ->select('id', 'name', 'date_of_birth', 'is_verified', 'rejection_reason')
+            ->get();
+
+        return response()->json([
+            'data' => $profiles,
         ], 200);
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Membership\app\Models\Membership;
 
+
 class UsersBV extends Model
 {
     use HasFactory;

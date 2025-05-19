@@ -9,10 +9,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Modules\Membership\app\Models\Membership;
-use App\Models\UsersBv;
+use App\Models\UsersBV;
 use Modules\Wallet\app\Models\Wallet;
 use Illuminate\Support\Facades\Hash;
 use App\Jobs\SendRegisterUserEmailJob;
+
 
 class GenologyController extends Controller
 {
@@ -156,7 +157,7 @@ class GenologyController extends Controller
             $membership_id = $default_membership ? $default_membership->id : 1;
             $bv_points = $default_membership ? $default_membership->bv_points : 0;
 
-            UsersBv::create([
+            UsersBV::create([
                 'user_id' => $user->id,
                 'membership_id' => $membership_id,
                 'bv_points' => $bv_points,

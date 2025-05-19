@@ -1033,7 +1033,7 @@ class MatrimonyController extends Controller
             if ($request->filled('income')) {
                 $incomeRange = IncomeRange::find($request->income);
                 if ($incomeRange) {
-                    $query->where('income', '>=', $incomeRange->from_income);
+                    $query->where('annual_income', '>=', $incomeRange->from_income);
                 }
             }
 

@@ -18,112 +18,144 @@ use App\Models\UsersBV;
 use App\Models\Frontend\ListingFavorite;
 use App\Models\Frontend\Review;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Backend\Admin;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    /**
+     * Handle API user registration.
+     */
     public function register(Request $request)
     {
-        $validationRules = [
-            'first_name' => 'required|max:191',
-            'last_name' => 'required|max:191',
-            'email' => 'required|email|unique:users|max:191',
-            'username' => 'required|unique:users|max:191',
-            'phone' => 'required|max:191',
-            'country_code' => 'nullable|max:10',
-            'password' => 'required|min:6|max:191',
-            'confirm_password' => 'required|same:password',
-            'partner_id' => 'nullable|exists:users,partner_id',
+        // Validate input including gender and dob
+        $request->validate([
+            'first_name' => 'required|string|max:191',
+            'last_name' => 'required|string|max:191',
+            'email' => 'required|email|unique:users,email|max:191',
+            'username' => 'required|string|unique:users,username|max:191',
+            'phone' => 'required|string|max:191',
+            'password' => 'required|string|min:6|max:191|confirmed',
             'gender' => 'required|in:male,female',
-            'dob' => 'required|date|before:today',
-        ];
-
-        // Validate the request
-        $request->validate($validationRules);
+            'dob' => 'required|date|before:' . now()->subYears(18)->toDateString(),
+            'partner_id' => 'nullable|string',
+        ], [
+            'dob.before' => __('You must be at least 18 years old.'),
+        ]);
 
         try {
-            Log::info('User registration request received.', ['request_data' => $request->all()]);
-
-            $email_verify_token = sprintf("%d", random_int(123456, 999999));
-
             // Clean and format phone number
-            $phone_number = Str::replace(['-', '(', ')', ' '], '', $request->phone);
-            $country_code = '+' . ltrim($request->country_code, '+');
-            $full_phone_number = $country_code . ' - ' . $phone_number;
+            $phoneClean = Str::replace(['-', '(', ')', ' '], '', $request->phone);
+            $countryCode = '+' . ltrim($request->input('country_code', ''), '+');
+            $fullPhone = trim($countryCode . $phoneClean);
 
-            if (!empty($full_phone_number) && User::where('phone', $full_phone_number)->exists()) {
-                Log::warning('Phone number already taken.', ['phone' => $full_phone_number]);
-                return response()->json(['error' => __('Phone number is already taken')], 422);
+            // Assign partner or default to admin
+            $inputPartnerId = $request->partner_id;
+            $isAdminPartner = false;
+            if (empty($inputPartnerId)) {
+                $admin = Admin::firstOrFail();
+                $inputPartnerId = $admin->partner_id;
+                $isAdminPartner = true;
             }
 
-            // Generate unique partner id
-            do {
-                $partnerId = 'EAM' . Str::upper(Str::random(6));
-            } while (User::where('partner_id', $partnerId)->exists());
+            // Determine sponsor, parent, and position
+            $sponsorId = null;
+            $parentId = null;
+            $position = null;
 
-            $partnerName = 'EASYADME-' . strtoupper($request->first_name);
-
-            $parent_id = null;
-            if ($request->partner_id) {
-                $partner = User::where('partner_id', $request->partner_id)->first();
-                if ($partner) {
-                    $parent_id = $partner->id;
-                    Log::info('Referred by existing user.', ['referrer_id' => $parent_id]);
+            // Check if partner is admin
+            $adminPartner = Admin::where('partner_id', $inputPartnerId)->first();
+            if ($adminPartner) {
+                $isAdminPartner = true;
+            } else {
+                // Partner is a regular user
+                $referrer = User::where('partner_id', $inputPartnerId)
+                    ->orWhere('username', $inputPartnerId)
+                    ->first();
+                if ($referrer) {
+                    $sponsorId = $referrer->id;
+                    // Binary tree placement
+                    if (!$referrer->children()->where('position', 'left')->exists()) {
+                        $parentId = $referrer->id;
+                        $position = 'left';
+                    } elseif (!$referrer->children()->where('position', 'right')->exists()) {
+                        $parentId = $referrer->id;
+                        $position = 'right';
+                    } else {
+                        // Traverse descendants
+                        $descendants = $referrer->descendants()->with('children')->get();
+                        foreach ($descendants as $desc) {
+                            if (!$desc->children()->where('position', 'left')->exists()) {
+                                $parentId = $desc->id;
+                                $position = 'left';
+                                break;
+                            }
+                            if (!$desc->children()->where('position', 'right')->exists()) {
+                                $parentId = $desc->id;
+                                $position = 'right';
+                                break;
+                            }
+                        }
+                        // Fallback to first available
+                        if (!$parentId) {
+                            $firstAvail = User::whereDoesntHave('children', fn($q) => $q->where('position', 'left'))
+                                ->orWhereDoesntHave('children', fn($q) => $q->where('position', 'right'))
+                                ->first();
+                            if ($firstAvail) {
+                                $parentId = $firstAvail->id;
+                                $position = $firstAvail->children()->where('position', 'left')->exists() ? 'right' : 'left';
+                            }
+                        }
+                    }
                 }
             }
 
-            // Get default membership and BV points
-            $default_membership = Membership::find(1);
-            $membership_id = $default_membership ? $default_membership->id : 1;
-            $bv_points = $default_membership ? $default_membership->bv_points : 0;
+            // Generate new partner ID for this user
+            do {
+                $code = now()->format('Ym') . rand(1000, 99999);
+                $newPartner = 'GL' . $code;
+            } while (User::where('partner_id', $newPartner)->exists());
 
-            // Create the user
-            $user = User::create([
+            // Generate partner_name
+            $partnerName = 'EASYADME-' . strtoupper($request->first_name);
+
+            // Instantiate the user
+            $user = new User([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
                 'username' => $request->username,
-                'phone' => $full_phone_number,
+                'phone' => $fullPhone,
                 'password' => Hash::make($request->password),
-                'terms_conditions' => 1,
-                'email_verify_token' => $email_verify_token,
-                'partner_id' => $partnerId,
-                'partner_name' => $partnerName,
-                'parent_id' => $parent_id,
                 'gender' => $request->gender,
                 'dob' => $request->dob,
+                'partner_id' => $newPartner,
+                'partner_name' => $partnerName,
+                'sponsor_id' => $sponsorId,
+                'parent_id' => $parentId,
+                'position' => $position,
+                'is_admin_partner' => $isAdminPartner,
             ]);
 
-            Log::info('User created successfully.', ['user_id' => $user->id]);
+            // Save in nested set
+            if ($parentId) {
+                User::find($parentId)->appendNode($user);
+            } else {
+                $user->saveAsRoot();
+            }
 
-            // Record the user's BV points
-            UsersBv::create([
+            // Assign default membership BV
+            $defaultMembership = Membership::find(1);
+            $bvPoints = $defaultMembership->bv_points ?? 0;
+            UsersBV::create([
                 'user_id' => $user->id,
-                'membership_id' => $membership_id,
-                'bv_points' => $bv_points,
+                'membership_id' => $defaultMembership->id ?? 1,
+                'bv_points' => $bvPoints,
                 'upgrade_time' => now(),
             ]);
 
-            Log::info('User BV points recorded.', [
-                'user_id' => $user->id,
-                'membership_id' => $membership_id,
-                'bv_points' => $bv_points
-            ]);
-
-            // Update referrer's BV points if applicable
-            if ($parent_id) {
-                $referrer = User::find($parent_id);
-                if ($referrer) {
-                    $referrer->bv_points += $bv_points;
-                    $referrer->save();
-
-                    Log::info('Referrer BV points updated.', [
-                        'referrer_id' => $referrer->id,
-                        'new_bv_points' => $referrer->bv_points
-                    ]);
-                }
-            }
-
-            if (moduleExists("Wallet")) {
+            // Initialize wallet if module exists
+            if (moduleExists('Wallet')) {
                 Wallet::create([
                     'user_id' => $user->id,
                     'balance' => 0,
@@ -133,37 +165,15 @@ class AuthController extends Controller
                 ]);
             }
 
-            // Send OTP email if enabled
-            if (!empty(get_static_option('user_email_verify_enable_disable'))) {
-                try {
-                    Mail::to($user->email)->send(new BasicMail([
-                        'subject' => __('Otp Email'),
-                        'message' => __('Your OTP code is: ') . $email_verify_token,
-                    ]));
-                } catch (Exception $e) {
-                    Log::error('Failed to send OTP email.', ['error' => $e->getMessage()]);
-                }
-            }
+            // Dispatch welcome email
+            SendRegisterUserEmailJob::dispatch($user, $request->password);
 
-            // Dispatch email job
-            dispatch(new SendRegisterUserEmailJob($user, $request->password));
-
-            // Generate API token for the user (using Sanctum)
-            $token = $user->createToken('API Token')->plainTextToken;
-
-            return response()->json([
-                'message' => 'User registered successfully.',
-                'user' => $user,
-                'token' => $token,
-            ], 201);
-        } catch (Exception $e) {
-            Log::error('Error during user registration.', ['error' => $e->getMessage()]);
-            return response()->json([
-                'error' => __('An error occurred during registration. Please try again.')
-            ], 500);
+            return response()->json(['success' => true, 'user' => $user], 201);
+        } catch (\Exception $e) {
+            Log::error('API registration error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return response()->json(['success' => false, 'message' => __('Registration failed.')], 500);
         }
     }
-
 
     // Verify existing partner
     public function verifyPartner(Request $request)
@@ -184,6 +194,53 @@ class AuthController extends Controller
             'partner_name' => $partner->first_name . ' ' . $partner->last_name,
             'partner_id' => $partner->partner_id
         ]);
+    }
+
+    public function getAdminPartner()
+    {
+        $admin = Admin::select('partner_id', 'partner_name')->first();
+
+        return response()->json([
+            'success' => true,
+            'data' => $admin ?? []
+        ], 200);
+    }
+
+    public function verifyAdminPartnerId(Request $request)
+    {
+        try {
+            // Validate input
+            $validated = $request->validate([
+                'partner_id' => 'required|string|max:255',
+            ]);
+
+            // Check existence
+            $exists = Admin::where('partner_id', $validated['partner_id'])->exists();
+
+            // Return JSON response
+            return response()->json([
+                'success' => true,
+                'exists' => $exists,
+                'message' => $exists
+                    ? 'Partner ID exists.'
+                    : 'Partner ID does not exist.',
+            ], 200);
+
+        } catch (ValidationException $e) {
+            // Return validation errors
+            return response()->json([
+                'success' => false,
+                'errors' => $e->errors(),
+                'message' => 'Validation failed.',
+            ], 422);
+
+        } catch (\Exception $e) {
+            // Handle unexpected errors
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function login(Request $request)

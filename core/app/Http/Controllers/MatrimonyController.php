@@ -1108,5 +1108,39 @@ class MatrimonyController extends Controller
         ]);
     }
 
+    public function editProfile($id)
+    {
+        $userProfile = MatrimonyKYC::firstOrNew(['user_id' => $id]);
+
+        $user = User::findOrFail($id);
+
+        return view('matrimony.edit-main-profile', compact('userProfile', 'user'));
+    }
+
+
+    public function updateMainProfile(Request $request, $id)
+    {
+        // 1. Validate the incoming data
+        $data = $request->validate([
+            'education' => 'nullable|string|max:255',
+            'occupation' => 'nullable|string|max:255',
+            'annual_income' => 'nullable|numeric|min:0',
+            // 'username' is readonly, so no need to validate/save
+        ]);
+
+        // 2. Fetch or create the model
+        $profile = MatrimonyKYC::firstOrNew(['user_id' => $id]);
+
+        // 3. Mass‐assign the updatable fields
+        $profile->fill($data);
+
+        // 4. Persist
+        $profile->save();
+
+        // 5. Redirect back (or wherever you like) with a success message
+        return redirect()
+            ->route('matrimony.profile')
+            ->with('success', 'Profile updated successfully.');
+    }
 
 }

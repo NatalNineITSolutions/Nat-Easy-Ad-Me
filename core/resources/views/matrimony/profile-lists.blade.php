@@ -144,7 +144,7 @@
                                                             </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="4" class="text-center text-muted">
+                                        <td colspan="5" class="text-center text-muted">
                                             You are yet to list the users.
                                         </td>
                                     </tr>

@@ -27,6 +27,8 @@ Route::post('/login', [AuthController::class, 'login']);
 
 // Partner Verification Routes
 Route::post('partner/verify', [AuthController::class, 'verifyPartner']);
+Route::get('/admin/partner', [AuthController::class, 'getAdminPartner']);
+Route::post('admin/verify-partner-id', [AuthController::class, 'verifyAdminPartnerId']);
 
 // Home Page Listings
 Route::get('/top-listings', [ProductListingController::class, 'getTopListings']);

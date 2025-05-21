@@ -1,8 +1,35 @@
-[2025-05-20 18:55:30] production.INFO: Fetching profile for user ID: 1  
-[2025-05-20 18:55:30] production.INFO: MatrimonyKYC Data: {"id":46,"zodiac_sign":"6","star":"2","user_id":1,"marital_status":"unmarried","document":null,"dob":"1999-01-06","family_status":"Rich/Affluent","family_values":"Traditional","family_type":"Joint","disability":"No","height":160,"weight":70,"image":"1182","caste":"1","dosham":"1","gothram":"1","education":"BE","occupation":"Biomedical","annual_income":"400000","employed_in":"Defense","country":"7","state":"81","city":"41","about":"Testdemo","created_at":"2025-05-06 17:46:35","updated_at":"2025-05-20 18:55:29","username":"alex_morgan"} 
-[2025-05-20 19:01:43] production.INFO: Fetching profile for user ID: 1  
-[2025-05-20 19:01:43] production.INFO: MatrimonyKYC Data: {"id":46,"zodiac_sign":"6","star":"2","user_id":1,"marital_status":"unmarried","document":null,"dob":"1999-01-06","family_status":"Rich/Affluent","family_values":"Traditional","family_type":"Joint","disability":"No","height":160,"weight":70,"image":"1182","caste":"1","dosham":"1","gothram":"1","education":"BEd","occupation":"Technician","annual_income":"400005","employed_in":"Defense","country":"7","state":"81","city":"41","about":"Testdemo","created_at":"2025-05-06 17:46:35","updated_at":"2025-05-20 19:01:42","username":"alex_morgan"} 
-[2025-05-20 19:02:03] production.INFO: Fetching profile for user ID: 1  
-[2025-05-20 19:02:03] production.INFO: MatrimonyKYC Data: {"id":46,"zodiac_sign":"6","star":"2","user_id":1,"marital_status":"unmarried","document":null,"dob":"1999-01-06","family_status":"Rich/Affluent","family_values":"Traditional","family_type":"Joint","disability":"No","height":160,"weight":70,"image":"1182","caste":"1","dosham":"1","gothram":"1","education":"BEd","occupation":"Technician","annual_income":"400005","employed_in":"Defense","country":"7","state":"81","city":"41","about":"Testdemo","created_at":"2025-05-06 17:46:35","updated_at":"2025-05-20 19:01:42","username":"alex_morgan"} 
-[2025-05-20 19:09:22] production.INFO: Fetching profile for user ID: 1  
-[2025-05-20 19:09:22] production.INFO: MatrimonyKYC Data: {"id":46,"zodiac_sign":"6","star":"2","user_id":1,"marital_status":"unmarried","document":null,"dob":"1999-01-06","family_status":"Rich/Affluent","family_values":"Traditional","family_type":"Joint","disability":"No","height":160,"weight":70,"image":"1182","caste":"1","dosham":"1","gothram":"1","education":"B.E","occupation":"Developer","annual_income":"5000000","employed_in":"Defense","country":"7","state":"81","city":"41","about":"Testdemo","created_at":"2025-05-06 17:46:35","updated_at":"2025-05-20 19:09:21","username":"alex_morgan"} 
+[2025-05-21 12:40:02] production.INFO: Checking for BV flush. Now: 12:40, Configured: 12:40  
+[2025-05-21 12:40:02] production.INFO: No BV flush for user 1: not enough BV to form even one pair {"left_bv":"900","right_bv":0,"bp_rate":"900"} 
+[2025-05-21 12:40:02] production.INFO: User eligibility check {"user_id":1,"self_bv":"900.00","left_bv":900.0,"right_bv":0.0,"referral_commission":"90.00","is_eligible":false} 
+[2025-05-21 12:40:02] production.INFO: Referral commission held - user not eligible {"user_id":1,"amount":"90.00","self_bv":"900.00"} 
+[2025-05-21 12:40:02] production.INFO: No BV flush for user 2: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-21 12:40:02] production.INFO: No BV flush for user 3: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-21 12:40:02] production.INFO: No BV flush for user 4: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-21 12:40:02] production.INFO: No BV flush for user 5: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-21 12:40:02] production.INFO: No BV flush for user 6: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-21 12:40:02] production.INFO: No BV flush for user 7: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-21 12:40:02] production.INFO: User 1 matching pairs: 0 {"left_bv":"900","right_bv":0} 
+[2025-05-21 12:40:02] production.INFO: User 2 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 12:40:02] production.INFO: User 3 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 12:40:02] production.INFO: User 4 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 12:40:02] production.INFO: User 5 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 12:40:02] production.INFO: User 6 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 12:40:02] production.INFO: User 7 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 12:40:02] production.INFO: User 8 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 12:40:02] production.INFO: User 9 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 12:40:02] production.INFO: User 10 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 12:40:02] production.INFO: User 11 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 12:40:02] production.INFO: User 12 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 12:40:02] production.INFO: User 13 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 12:40:02] production.INFO: User 14 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 12:40:02] production.INFO: User 15 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 12:40:02] production.INFO: Payout recorded {"date":"2025-05-21 12:40:02","previous_balance":0,"new_balance":2700,"record_id":350} 
+[2025-05-21 12:40:02] production.INFO: Starting payout-detail recording. Users: 7  
+[2025-05-21 12:40:02] production.INFO: User 1 gross payout calc {"userPairs":0,"pairIncome":200.0,"referralPaid":0,"totalPayout":0.0} 
+[2025-05-21 12:40:02] production.INFO: User 2 gross payout calc {"userPairs":0,"pairIncome":200.0,"referralPaid":0,"totalPayout":0.0} 
+[2025-05-21 12:40:02] production.INFO: User 3 gross payout calc {"userPairs":0,"pairIncome":200.0,"referralPaid":0,"totalPayout":0.0} 
+[2025-05-21 12:40:02] production.INFO: User 4 gross payout calc {"userPairs":0,"pairIncome":200.0,"referralPaid":0,"totalPayout":0.0} 
+[2025-05-21 12:40:02] production.INFO: User 5 gross payout calc {"userPairs":0,"pairIncome":200.0,"referralPaid":0,"totalPayout":0.0} 
+[2025-05-21 12:40:02] production.INFO: User 6 gross payout calc {"userPairs":0,"pairIncome":200.0,"referralPaid":0,"totalPayout":0.0} 
+[2025-05-21 12:40:02] production.INFO: User 7 gross payout calc {"userPairs":0,"pairIncome":200.0,"referralPaid":0,"totalPayout":0.0} 
+[2025-05-21 12:40:02] production.INFO: Payout detail recording completed.  

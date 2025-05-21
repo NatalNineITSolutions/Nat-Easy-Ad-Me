@@ -173,7 +173,7 @@ class AutoFlushBV extends Command
 
         Log::info("BV Flush - Side {$side}", [
             'user_id' => $userChild->id,
-            'flushed_amount' => $amount,
+            'flushed_bv' => $amount,
         ]);
     }
 
@@ -329,17 +329,17 @@ class AutoFlushBV extends Command
     }
 
     protected function recordUserPayoutDetails(
-        int   $payoutSummaryId,
+        int $payoutSummaryId,
         float $sealingLimitBv,
         float $bpConversionRate,
         float $pairIncome,
         float $tdsPercentage,
         float $serviceCharge
     ) {
-        $dailyLimit = (int)get_static_option('sealing_limitation');
+        $dailyLimit = (int) get_static_option('sealing_limitation');
         $now = now();
 
-        $users = User::with(['leftChild','rightChild'])
+        $users = User::with(['leftChild', 'rightChild'])
             ->whereHas('leftChild')
             ->whereHas('rightChild')
             ->get();
@@ -347,49 +347,80 @@ class AutoFlushBV extends Command
         Log::info("Starting payout-detail recording. Users: {$users->count()}");
 
         foreach ($users as $user) {
-            $leftBv  = $this->sumSubtreeBv($user->leftChild, $now);
-            $rightBv = $this->sumSubtreeBv($user->rightChild, $now);
+            $leftBv = $user->leftChild
+                ->userBvs()
+                ->where('bv_points', '>', 0)
+                ->whereNotIn('type', array_merge($this->protectedTypes, ['referral_commission']))
+                ->where('created_at', '<', $now)
+                ->sum('bv_points');
+
+            $rightBv = $user->rightChild
+                ->userBvs()
+                ->where('bv_points', '>', 0)
+                ->whereNotIn('type', array_merge($this->protectedTypes, ['referral_commission']))
+                ->where('created_at', '<', $now)
+                ->sum('bv_points');
 
             $selfBv = $user->self_purchased_bv ?? 0;
             $rawPairs = ($selfBv >= $bpConversionRate && $leftBv >= $bpConversionRate && $rightBv >= $bpConversionRate)
-                      ? floor(min($leftBv,$rightBv)/$bpConversionRate)
-                      : 0;
+                ? floor(min($leftBv, $rightBv) / $bpConversionRate)
+                : 0;
             $userPairs = min($rawPairs, $dailyLimit);
 
+            $flushedLeft = $userPairs * $bpConversionRate;
+            $flushedRight = $userPairs * $bpConversionRate;
+
             // fetch referral BV record inserted moments ago
-            $recentReferral = UsersBv::where('user_id',$user->id)
-                ->where('type','referral_commission')
-                ->where('created_at','>=',$now->subMinute())
+            $recentReferral = UsersBv::where('user_id', $user->id)
+                ->where('type', 'referral_commission')
+                ->where('created_at', '>=', $now->subMinute())
                 ->sum('bv_points');
 
             // compute gross payout
             $grossPayout = ($userPairs * $pairIncome) + $recentReferral;
 
             Log::info("User {$user->id} gross payout calc", [
-                'userPairs'     => $userPairs,
-                'pairIncome'    => $pairIncome,
-                'referralPaid'  => $recentReferral,
-                'totalPayout'   => $grossPayout,
+                'userPairs' => $userPairs,
+                'pairIncome' => $pairIncome,
+                'referralPaid' => $recentReferral,
+                'totalPayout' => $grossPayout,
             ]);
 
-            $tdsDeduction    = $grossPayout * ($tdsPercentage/100);
-            $serviceChargeAmt= $grossPayout * ($serviceCharge/100);
-            $netAmount       = max($grossPayout - $tdsDeduction - $serviceChargeAmt, 0);
+            $tdsDeduction = $grossPayout * ($tdsPercentage / 100);
+            $serviceChargeAmt = $grossPayout * ($serviceCharge / 100);
+            $netAmount = max($grossPayout - $tdsDeduction - $serviceChargeAmt, 0);
 
-            UserPayoutDetail::create([
-                'user_id'            => $user->id,
-                'payout_summary_id'  => $payoutSummaryId,
-                'left_bv'            => $leftBv,
-                'right_bv'           => $rightBv,
-                'matching_pairs'     => $userPairs,
-                'payout_amount'      => $grossPayout,
-                'tds_deduction'      => $tdsDeduction,
-                'service_charge'     => $serviceChargeAmt,
-                'net_amount'         => $netAmount,
-                'status'             => $grossPayout>0 ? 'payout_eligible':'no_payout',
-            ]);
+            if ($userPairs > 0 || $recentReferral > 0) {
+                UserPayoutDetail::create([
+                    'user_id' => $user->id,
+                    'payout_summary_id' => $payoutSummaryId,
+                    'left_bv' => $flushedLeft,
+                    'right_bv' => $flushedRight,
+                    'matching_pairs' => $userPairs,
+                    'payout_amount' => $grossPayout,
+                    'tds_deduction' => $tdsDeduction,
+                    'service_charge' => $serviceChargeAmt,
+                    'net_amount' => $netAmount,
+                    'status' => $grossPayout > 0
+                        ? 'payout_eligible'
+                        : 'no_payout',
+                ]);
 
-            Log::info("User {$user->id} payout detail recorded");
+                Log::info("User payout detail recorded", [
+                    'user_id' => $user->id,
+                    'payout_summary_id' => $payoutSummaryId,
+                    'left_bv' => $flushedLeft,
+                    'right_bv' => $flushedRight,
+                    'matching_pairs' => $userPairs,
+                    'payout_amount' => $grossPayout,
+                    'tds_deduction' => $tdsDeduction,
+                    'service_charge' => $serviceChargeAmt,
+                    'net_amount' => $netAmount,
+                    'status' => $grossPayout > 0
+                        ? 'payout_eligible'
+                        : 'no_payout',
+                ]);
+            }
         }
 
         Log::info("Payout detail recording completed.");

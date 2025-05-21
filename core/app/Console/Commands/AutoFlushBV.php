@@ -10,6 +10,7 @@ use App\Models\IncomePayoutManage;
 use Illuminate\Support\Facades\Log;
 use App\Models\UserPayoutDetail;
 use Illuminate\Support\Facades\DB;
+use App\Models\UserFlush;
 
 class AutoFlushBV extends Command
 {
@@ -105,6 +106,13 @@ class AutoFlushBV extends Command
         if ($pairsToFlush > 0) {
             // This is the BV we’ll deduct from each side:
             $amountToFlush = $pairsToFlush * $bpConversionRate;
+
+            UserFlush::create([
+                'user_id' => $user->id,
+                'flushed_left_bv' => $amountToFlush,
+                'flushed_right_bv' => $amountToFlush,
+                'payout' => 0,
+            ]);
 
             // 1) Flush that exact amount from left and right
             $this->flushSide($leftChild, $amountToFlush, 'left');
@@ -328,6 +336,7 @@ class AutoFlushBV extends Command
         return $matchingPairs;
     }
 
+
     protected function recordUserPayoutDetails(
         int $payoutSummaryId,
         float $sealingLimitBv,
@@ -337,59 +346,79 @@ class AutoFlushBV extends Command
         float $serviceCharge
     ) {
         $dailyLimit = (int) get_static_option('sealing_limitation');
-        $now = now();
+        $now = Carbon::now();
 
+        // only users with both left & right legs
         $users = User::with(['leftChild', 'rightChild'])
             ->whereHas('leftChild')
             ->whereHas('rightChild')
             ->get();
 
-        Log::info("Starting payout-detail recording. Users: {$users->count()}");
-
         foreach ($users as $user) {
-            $leftBv = $user->leftChild
-                ->userBvs()
+            // 1) find the last flush before this summary
+            $lastFlushAt = UserFlush::where('user_id', $user->id)
+                ->where('payout_summary_id', '<', $payoutSummaryId)
+                ->max('created_at');
+
+            // 2) calculate total BV on each side since last flush
+            $leftBvQuery = $user->leftChild->userBvs()
                 ->where('bv_points', '>', 0)
                 ->whereNotIn('type', array_merge($this->protectedTypes, ['referral_commission']))
-                ->where('created_at', '<', $now)
-                ->sum('bv_points');
-
-            $rightBv = $user->rightChild
-                ->userBvs()
+                ->where('created_at', '<', $now);
+            $rightBvQuery = $user->rightChild->userBvs()
                 ->where('bv_points', '>', 0)
                 ->whereNotIn('type', array_merge($this->protectedTypes, ['referral_commission']))
-                ->where('created_at', '<', $now)
-                ->sum('bv_points');
+                ->where('created_at', '<', $now);
 
+            if ($lastFlushAt) {
+                $leftBvQuery->where('created_at', '>', $lastFlushAt);
+                $rightBvQuery->where('created_at', '>', $lastFlushAt);
+            }
+
+            $totalLeftBv = (float) $leftBvQuery->sum('bv_points');
+            $totalRightBv = (float) $rightBvQuery->sum('bv_points');
+
+            // subtract previously flushed totals for this summary runner
+            $flushedLeftTotal = UserFlush::where('user_id', $user->id)
+                ->where('payout_summary_id', $payoutSummaryId)
+                ->sum('flushed_left_bv');
+            $flushedRightTotal = UserFlush::where('user_id', $user->id)
+                ->where('payout_summary_id', $payoutSummaryId)
+                ->sum('flushed_right_bv');
+
+            $leftBv = max($totalLeftBv - $flushedLeftTotal, 0);
+            $rightBv = max($totalRightBv - $flushedRightTotal, 0);
+
+            // 3) pairing math
             $selfBv = $user->self_purchased_bv ?? 0;
-            $rawPairs = ($selfBv >= $bpConversionRate && $leftBv >= $bpConversionRate && $rightBv >= $bpConversionRate)
-                ? floor(min($leftBv, $rightBv) / $bpConversionRate)
-                : 0;
+            $rawPairs = 0;
+            if (
+                $selfBv >= $bpConversionRate
+                && $leftBv >= $bpConversionRate
+                && $rightBv >= $bpConversionRate
+            ) {
+                $rawPairs = floor(min($leftBv, $rightBv) / $bpConversionRate);
+            }
             $userPairs = min($rawPairs, $dailyLimit);
 
             $flushedLeft = $userPairs * $bpConversionRate;
             $flushedRight = $userPairs * $bpConversionRate;
 
-            // fetch referral BV record inserted moments ago
+            // 4) referral commission within this run
+            $referralWindowEnd = $now;
+            $referralWindowStart = $now->copy()->subMinute();
             $recentReferral = UsersBv::where('user_id', $user->id)
                 ->where('type', 'referral_commission')
-                ->where('created_at', '>=', $now->subMinute())
+                ->whereBetween('created_at', [$referralWindowStart, $referralWindowEnd])
                 ->sum('bv_points');
 
-            // compute gross payout
+            // 5) compute payout amounts
             $grossPayout = ($userPairs * $pairIncome) + $recentReferral;
-
-            Log::info("User {$user->id} gross payout calc", [
-                'userPairs' => $userPairs,
-                'pairIncome' => $pairIncome,
-                'referralPaid' => $recentReferral,
-                'totalPayout' => $grossPayout,
-            ]);
-
             $tdsDeduction = $grossPayout * ($tdsPercentage / 100);
             $serviceChargeAmt = $grossPayout * ($serviceCharge / 100);
             $netAmount = max($grossPayout - $tdsDeduction - $serviceChargeAmt, 0);
 
+            // 6) record details and flush row
             if ($userPairs > 0 || $recentReferral > 0) {
                 UserPayoutDetail::create([
                     'user_id' => $user->id,
@@ -406,25 +435,31 @@ class AutoFlushBV extends Command
                         : 'no_payout',
                 ]);
 
-                Log::info("User payout detail recorded", [
+                Log::info('User payout detail recorded', [
                     'user_id' => $user->id,
                     'payout_summary_id' => $payoutSummaryId,
                     'left_bv' => $flushedLeft,
                     'right_bv' => $flushedRight,
                     'matching_pairs' => $userPairs,
-                    'payout_amount' => $grossPayout,
+                    'gross_payout' => $grossPayout,
                     'tds_deduction' => $tdsDeduction,
                     'service_charge' => $serviceChargeAmt,
                     'net_amount' => $netAmount,
-                    'status' => $grossPayout > 0
-                        ? 'payout_eligible'
-                        : 'no_payout',
+                    'status' => $grossPayout > 0 ? 'payout_eligible' : 'no_payout',
+                ]);
+
+                UserFlush::create([
+                    'user_id' => $user->id,
+                    'payout_summary_id' => $payoutSummaryId,
+                    'flushed_left_bv' => $flushedLeft,
+                    'flushed_right_bv' => $flushedRight,
+                    'payout' => $grossPayout,
                 ]);
             }
         }
-
-        Log::info("Payout detail recording completed.");
     }
+
+
     /**
      * Sum only one node's BV records (not its whole subtree).
      */

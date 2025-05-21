@@ -1,35 +1,166 @@
-[2025-05-21 12:40:02] production.INFO: Checking for BV flush. Now: 12:40, Configured: 12:40  
-[2025-05-21 12:40:02] production.INFO: No BV flush for user 1: not enough BV to form even one pair {"left_bv":"900","right_bv":0,"bp_rate":"900"} 
-[2025-05-21 12:40:02] production.INFO: User eligibility check {"user_id":1,"self_bv":"900.00","left_bv":900.0,"right_bv":0.0,"referral_commission":"90.00","is_eligible":false} 
-[2025-05-21 12:40:02] production.INFO: Referral commission held - user not eligible {"user_id":1,"amount":"90.00","self_bv":"900.00"} 
-[2025-05-21 12:40:02] production.INFO: No BV flush for user 2: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
-[2025-05-21 12:40:02] production.INFO: No BV flush for user 3: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
-[2025-05-21 12:40:02] production.INFO: No BV flush for user 4: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
-[2025-05-21 12:40:02] production.INFO: No BV flush for user 5: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
-[2025-05-21 12:40:02] production.INFO: No BV flush for user 6: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
-[2025-05-21 12:40:02] production.INFO: No BV flush for user 7: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
-[2025-05-21 12:40:02] production.INFO: User 1 matching pairs: 0 {"left_bv":"900","right_bv":0} 
-[2025-05-21 12:40:02] production.INFO: User 2 matching pairs: 0 {"left_bv":0,"right_bv":0} 
-[2025-05-21 12:40:02] production.INFO: User 3 matching pairs: 0 {"left_bv":0,"right_bv":0} 
-[2025-05-21 12:40:02] production.INFO: User 4 matching pairs: 0 {"left_bv":0,"right_bv":0} 
-[2025-05-21 12:40:02] production.INFO: User 5 matching pairs: 0 {"left_bv":0,"right_bv":0} 
-[2025-05-21 12:40:02] production.INFO: User 6 matching pairs: 0 {"left_bv":0,"right_bv":0} 
-[2025-05-21 12:40:02] production.INFO: User 7 matching pairs: 0 {"left_bv":0,"right_bv":0} 
-[2025-05-21 12:40:02] production.INFO: User 8 matching pairs: 0 {"left_bv":0,"right_bv":0} 
-[2025-05-21 12:40:02] production.INFO: User 9 matching pairs: 0 {"left_bv":0,"right_bv":0} 
-[2025-05-21 12:40:02] production.INFO: User 10 matching pairs: 0 {"left_bv":0,"right_bv":0} 
-[2025-05-21 12:40:02] production.INFO: User 11 matching pairs: 0 {"left_bv":0,"right_bv":0} 
-[2025-05-21 12:40:02] production.INFO: User 12 matching pairs: 0 {"left_bv":0,"right_bv":0} 
-[2025-05-21 12:40:02] production.INFO: User 13 matching pairs: 0 {"left_bv":0,"right_bv":0} 
-[2025-05-21 12:40:02] production.INFO: User 14 matching pairs: 0 {"left_bv":0,"right_bv":0} 
-[2025-05-21 12:40:02] production.INFO: User 15 matching pairs: 0 {"left_bv":0,"right_bv":0} 
-[2025-05-21 12:40:02] production.INFO: Payout recorded {"date":"2025-05-21 12:40:02","previous_balance":0,"new_balance":2700,"record_id":350} 
-[2025-05-21 12:40:02] production.INFO: Starting payout-detail recording. Users: 7  
-[2025-05-21 12:40:02] production.INFO: User 1 gross payout calc {"userPairs":0,"pairIncome":200.0,"referralPaid":0,"totalPayout":0.0} 
-[2025-05-21 12:40:02] production.INFO: User 2 gross payout calc {"userPairs":0,"pairIncome":200.0,"referralPaid":0,"totalPayout":0.0} 
-[2025-05-21 12:40:02] production.INFO: User 3 gross payout calc {"userPairs":0,"pairIncome":200.0,"referralPaid":0,"totalPayout":0.0} 
-[2025-05-21 12:40:02] production.INFO: User 4 gross payout calc {"userPairs":0,"pairIncome":200.0,"referralPaid":0,"totalPayout":0.0} 
-[2025-05-21 12:40:02] production.INFO: User 5 gross payout calc {"userPairs":0,"pairIncome":200.0,"referralPaid":0,"totalPayout":0.0} 
-[2025-05-21 12:40:02] production.INFO: User 6 gross payout calc {"userPairs":0,"pairIncome":200.0,"referralPaid":0,"totalPayout":0.0} 
-[2025-05-21 12:40:02] production.INFO: User 7 gross payout calc {"userPairs":0,"pairIncome":200.0,"referralPaid":0,"totalPayout":0.0} 
-[2025-05-21 12:40:02] production.INFO: Payout detail recording completed.  
+[2025-05-21 22:00:05] production.INFO: Checking for BV flush. Now: 22:00, Configured: 21:59  
+[2025-05-21 22:00:15] production.INFO: Checking for BV flush. Now: 22:00, Configured: 22:00  
+[2025-05-21 22:00:15] production.INFO: BV Flush - Side left {"user_id":2,"flushed_bv":1800} 
+[2025-05-21 22:00:15] production.INFO: BV Flush - Side right {"user_id":3,"flushed_bv":1800} 
+[2025-05-21 22:00:15] production.INFO: Flushing leftover right BV {"user_id":1,"right_over_bv":3300} 
+[2025-05-21 22:00:15] production.INFO: BV Flush - Side right {"user_id":3,"flushed_bv":3300} 
+[2025-05-21 22:00:15] production.INFO: BV flush for user 1 completed {"pairs_flushed":"2","bv_per_side_flushed":1800,"remaining_left_bv":3900,"remaining_right_bv":0} 
+[2025-05-21 22:00:16] production.INFO: BV Flush - Side left {"user_id":4,"flushed_bv":1800} 
+[2025-05-21 22:00:16] production.INFO: BV Flush - Side right {"user_id":5,"flushed_bv":1800} 
+[2025-05-21 22:00:16] production.INFO: Equal remainders; flushing left BV {"user_id":2,"left_over_bv":900} 
+[2025-05-21 22:00:16] production.INFO: BV Flush - Side left {"user_id":4,"flushed_bv":900} 
+[2025-05-21 22:00:16] production.INFO: BV flush for user 2 completed {"pairs_flushed":"2","bv_per_side_flushed":1800,"remaining_left_bv":0,"remaining_right_bv":900} 
+[2025-05-21 22:00:16] production.INFO: User eligibility check {"user_id":2,"self_bv":"300.00","left_bv":2700.0,"right_bv":4500.0,"referral_commission":"180.00","is_eligible":false} 
+[2025-05-21 22:00:16] production.INFO: Referral commission held - user not eligible {"user_id":2,"amount":"180.00","self_bv":"300.00"} 
+[2025-05-21 22:00:16] production.INFO: BV Flush - Side left {"user_id":6,"flushed_bv":1800.0} 
+[2025-05-21 22:00:16] production.INFO: BV Flush - Side right {"user_id":7,"flushed_bv":1800.0} 
+[2025-05-21 22:00:16] production.INFO: Equal remainders; flushing left BV {"user_id":3,"left_over_bv":300.0} 
+[2025-05-21 22:00:16] production.INFO: BV Flush - Side left {"user_id":6,"flushed_bv":300.0} 
+[2025-05-21 22:00:16] production.INFO: BV flush for user 3 completed {"pairs_flushed":2.0,"bv_per_side_flushed":1800.0,"remaining_left_bv":0,"remaining_right_bv":300.0} 
+[2025-05-21 22:00:16] production.INFO: BV Flush - Side left {"user_id":8,"flushed_bv":900.0} 
+[2025-05-21 22:00:16] production.INFO: BV Flush - Side right {"user_id":9,"flushed_bv":900.0} 
+[2025-05-21 22:00:16] production.INFO: BV flush for user 4 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0.0,"remaining_right_bv":0.0} 
+[2025-05-21 22:00:16] production.INFO: BV Flush - Side left {"user_id":10,"flushed_bv":900.0} 
+[2025-05-21 22:00:16] production.INFO: BV Flush - Side right {"user_id":11,"flushed_bv":900.0} 
+[2025-05-21 22:00:16] production.INFO: BV flush for user 5 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0.0,"remaining_right_bv":0.0} 
+[2025-05-21 22:00:16] production.INFO: BV Flush - Side left {"user_id":12,"flushed_bv":900.0} 
+[2025-05-21 22:00:16] production.INFO: BV Flush - Side right {"user_id":13,"flushed_bv":900.0} 
+[2025-05-21 22:00:16] production.INFO: BV flush for user 6 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0.0,"remaining_right_bv":0.0} 
+[2025-05-21 22:00:16] production.INFO: BV Flush - Side left {"user_id":14,"flushed_bv":900.0} 
+[2025-05-21 22:00:16] production.INFO: BV Flush - Side right {"user_id":15,"flushed_bv":900.0} 
+[2025-05-21 22:00:16] production.INFO: BV flush for user 7 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0.0,"remaining_right_bv":0.0} 
+[2025-05-21 22:00:16] production.INFO: User 1 matching pairs: 5 {"left_bv":"5700","right_bv":"5100"} 
+[2025-05-21 22:00:16] production.INFO: User 2 matching pairs: 3 {"left_bv":"2700","right_bv":"2700"} 
+[2025-05-21 22:00:16] production.INFO: User 3 matching pairs: 2 {"left_bv":"2100","right_bv":"2100"} 
+[2025-05-21 22:00:16] production.INFO: User 4 matching pairs: 1 {"left_bv":"900","right_bv":"900"} 
+[2025-05-21 22:00:16] production.INFO: User 5 matching pairs: 1 {"left_bv":"900","right_bv":"900"} 
+[2025-05-21 22:00:16] production.INFO: User 6 matching pairs: 1 {"left_bv":"900","right_bv":"900"} 
+[2025-05-21 22:00:16] production.INFO: User 7 matching pairs: 1 {"left_bv":"900","right_bv":"900"} 
+[2025-05-21 22:00:16] production.INFO: User 8 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 22:00:16] production.INFO: User 9 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 22:00:16] production.INFO: User 10 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 22:00:16] production.INFO: User 11 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 22:00:16] production.INFO: User 12 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 22:00:16] production.INFO: User 13 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 22:00:16] production.INFO: User 14 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 22:00:16] production.INFO: User 15 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 22:00:16] production.INFO: Payout recorded {"date":"2025-05-21 22:00:16","previous_balance":117300,"new_balance":156400,"record_id":386} 
+[2025-05-21 22:00:16] production.INFO: User payout detail recorded/updated {"user_id":1,"total_left_bv":5700.0,"total_right_bv":5100.0,"previously_flushed_left":1800.0,"previously_flushed_right":1800.0,"current_flush_left":0,"current_flush_right":0,"available_left_bv":3900.0,"available_right_bv":3300.0,"flushed_left":1800.0,"flushed_right":1800.0,"matching_pairs":2,"gross_payout":400.0,"net_amount":392.0,"referral_commission":0,"self_bv":"900.00"} 
+[2025-05-21 22:00:16] production.DEBUG: User not eligible for payout {"user_id":2,"has_current_flush":false,"self_bv":"300.00","available_left_bv":900.0,"available_right_bv":900.0,"recent_referral":0} 
+[2025-05-21 22:00:16] production.DEBUG: User not eligible for payout {"user_id":3,"has_current_flush":false,"self_bv":"900.00","available_left_bv":300.0,"available_right_bv":300.0,"recent_referral":0} 
+[2025-05-21 22:00:16] production.DEBUG: User not eligible for payout {"user_id":4,"has_current_flush":false,"self_bv":"900.00","available_left_bv":0.0,"available_right_bv":0.0,"recent_referral":0} 
+[2025-05-21 22:00:16] production.DEBUG: User not eligible for payout {"user_id":5,"has_current_flush":false,"self_bv":"900.00","available_left_bv":0.0,"available_right_bv":0.0,"recent_referral":0} 
+[2025-05-21 22:00:16] production.DEBUG: User not eligible for payout {"user_id":6,"has_current_flush":false,"self_bv":"300.00","available_left_bv":0.0,"available_right_bv":0.0,"recent_referral":0} 
+[2025-05-21 22:00:16] production.DEBUG: User not eligible for payout {"user_id":7,"has_current_flush":false,"self_bv":"300.00","available_left_bv":0.0,"available_right_bv":0.0,"recent_referral":0} 
+[2025-05-21 22:02:07] production.INFO: Checking for BV flush. Now: 22:02, Configured: 22:01  
+[2025-05-21 22:02:18] production.INFO: Checking for BV flush. Now: 22:02, Configured: 22:02  
+[2025-05-21 22:02:18] production.INFO: BV Flush - Side left {"user_id":2,"flushed_bv":1800} 
+[2025-05-21 22:02:18] production.INFO: BV Flush - Side right {"user_id":3,"flushed_bv":1800} 
+[2025-05-21 22:02:18] production.INFO: Flushing leftover right BV {"user_id":1,"right_over_bv":3300} 
+[2025-05-21 22:02:18] production.INFO: BV Flush - Side right {"user_id":3,"flushed_bv":3300} 
+[2025-05-21 22:02:18] production.INFO: BV flush for user 1 completed {"pairs_flushed":"2","bv_per_side_flushed":1800,"remaining_left_bv":3900,"remaining_right_bv":0} 
+[2025-05-21 22:02:18] production.INFO: BV Flush - Side left {"user_id":4,"flushed_bv":1800} 
+[2025-05-21 22:02:18] production.INFO: BV Flush - Side right {"user_id":5,"flushed_bv":1800} 
+[2025-05-21 22:02:18] production.INFO: Equal remainders; flushing left BV {"user_id":2,"left_over_bv":900} 
+[2025-05-21 22:02:18] production.INFO: BV Flush - Side left {"user_id":4,"flushed_bv":900} 
+[2025-05-21 22:02:18] production.INFO: BV flush for user 2 completed {"pairs_flushed":"2","bv_per_side_flushed":1800,"remaining_left_bv":0,"remaining_right_bv":900} 
+[2025-05-21 22:02:18] production.INFO: User eligibility check {"user_id":2,"self_bv":"300.00","left_bv":4500.0,"right_bv":4500.0,"referral_commission":"180.00","is_eligible":false} 
+[2025-05-21 22:02:18] production.INFO: Referral commission held - user not eligible {"user_id":2,"amount":"180.00","self_bv":"300.00"} 
+[2025-05-21 22:02:18] production.INFO: BV Flush - Side left {"user_id":6,"flushed_bv":1800.0} 
+[2025-05-21 22:02:18] production.INFO: BV Flush - Side right {"user_id":7,"flushed_bv":1800.0} 
+[2025-05-21 22:02:18] production.INFO: Equal remainders; flushing left BV {"user_id":3,"left_over_bv":300.0} 
+[2025-05-21 22:02:18] production.INFO: BV Flush - Side left {"user_id":6,"flushed_bv":300.0} 
+[2025-05-21 22:02:18] production.INFO: BV flush for user 3 completed {"pairs_flushed":2.0,"bv_per_side_flushed":1800.0,"remaining_left_bv":0,"remaining_right_bv":300.0} 
+[2025-05-21 22:02:18] production.INFO: BV Flush - Side left {"user_id":8,"flushed_bv":900.0} 
+[2025-05-21 22:02:18] production.INFO: BV Flush - Side right {"user_id":9,"flushed_bv":900.0} 
+[2025-05-21 22:02:18] production.INFO: BV flush for user 4 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0.0,"remaining_right_bv":0.0} 
+[2025-05-21 22:02:18] production.INFO: BV Flush - Side left {"user_id":10,"flushed_bv":900.0} 
+[2025-05-21 22:02:18] production.INFO: BV Flush - Side right {"user_id":11,"flushed_bv":900.0} 
+[2025-05-21 22:02:18] production.INFO: BV flush for user 5 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0.0,"remaining_right_bv":0.0} 
+[2025-05-21 22:02:18] production.INFO: BV Flush - Side left {"user_id":12,"flushed_bv":900.0} 
+[2025-05-21 22:02:18] production.INFO: BV Flush - Side right {"user_id":13,"flushed_bv":900.0} 
+[2025-05-21 22:02:18] production.INFO: BV flush for user 6 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0.0,"remaining_right_bv":0.0} 
+[2025-05-21 22:02:18] production.INFO: BV Flush - Side left {"user_id":14,"flushed_bv":900.0} 
+[2025-05-21 22:02:18] production.INFO: BV Flush - Side right {"user_id":15,"flushed_bv":900.0} 
+[2025-05-21 22:02:18] production.INFO: BV flush for user 7 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0.0,"remaining_right_bv":0.0} 
+[2025-05-21 22:02:18] production.INFO: User 1 matching pairs: 5 {"left_bv":"5700","right_bv":"5100"} 
+[2025-05-21 22:02:18] production.INFO: User 2 matching pairs: 3 {"left_bv":"2700","right_bv":"2700"} 
+[2025-05-21 22:02:18] production.INFO: User 3 matching pairs: 2 {"left_bv":"2100","right_bv":"2100"} 
+[2025-05-21 22:02:18] production.INFO: User 4 matching pairs: 1 {"left_bv":"900","right_bv":"900"} 
+[2025-05-21 22:02:18] production.INFO: User 5 matching pairs: 1 {"left_bv":"900","right_bv":"900"} 
+[2025-05-21 22:02:18] production.INFO: User 6 matching pairs: 1 {"left_bv":"900","right_bv":"900"} 
+[2025-05-21 22:02:18] production.INFO: User 7 matching pairs: 1 {"left_bv":"900","right_bv":"900"} 
+[2025-05-21 22:02:18] production.INFO: User 8 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 22:02:18] production.INFO: User 9 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 22:02:18] production.INFO: User 10 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 22:02:18] production.INFO: User 11 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 22:02:18] production.INFO: User 12 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 22:02:18] production.INFO: User 13 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 22:02:18] production.INFO: User 14 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 22:02:18] production.INFO: User 15 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 22:02:18] production.INFO: Payout recorded {"date":"2025-05-21 22:02:18","previous_balance":156400,"new_balance":195500,"record_id":387} 
+[2025-05-21 22:02:18] production.INFO: User payout detail recorded {"user_id":1,"payout_summary_id":387,"left_bv":1800.0,"right_bv":1800.0,"matching_pairs":2,"gross_payout":400.0,"tds_deduction":4.0,"service_charge":4.0,"net_amount":392.0,"status":"payout_eligible"} 
+[2025-05-21 22:02:18] production.INFO: User payout detail recorded {"user_id":3,"payout_summary_id":387,"left_bv":1800.0,"right_bv":1800.0,"matching_pairs":2.0,"gross_payout":400.0,"tds_deduction":4.0,"service_charge":4.0,"net_amount":392.0,"status":"payout_eligible"} 
+[2025-05-21 22:02:18] production.INFO: User payout detail recorded {"user_id":4,"payout_summary_id":387,"left_bv":900.0,"right_bv":900.0,"matching_pairs":1.0,"gross_payout":200.0,"tds_deduction":2.0,"service_charge":2.0,"net_amount":196.0,"status":"payout_eligible"} 
+[2025-05-21 22:02:18] production.INFO: User payout detail recorded {"user_id":5,"payout_summary_id":387,"left_bv":900.0,"right_bv":900.0,"matching_pairs":1.0,"gross_payout":200.0,"tds_deduction":2.0,"service_charge":2.0,"net_amount":196.0,"status":"payout_eligible"} 
+[2025-05-21 22:02:42] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-21 22:02:42] production.INFO: last3: {"membership_id":522} 
+[2025-05-21 22:02:42] production.INFO: last5: {"membership_id":522} 
+[2025-05-21 22:02:42] production.INFO: last4: {"membership_id":522,"order_id":null} 
+[2025-05-21 22:02:42] production.INFO: after-charge: {"membership_id":522,"order_id":522} 
+[2025-05-21 22:03:06] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-21 22:03:06] production.INFO: last3: {"membership_id":520} 
+[2025-05-21 22:03:06] production.INFO: last5: {"membership_id":520} 
+[2025-05-21 22:03:06] production.INFO: last4: {"membership_id":520,"order_id":null} 
+[2025-05-21 22:03:06] production.INFO: after-charge: {"membership_id":520,"order_id":520} 
+[2025-05-21 22:03:30] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"522","payment_amount":5000,"transaction_id":"pay_QXe7iA6jVqZcvc"} 
+[2025-05-21 22:03:30] production.INFO: Updating membership database {"last_membership_id":"522","transaction_id":"pay_QXe7iA6jVqZcvc","membership_history_id":768,"upgrade_membership_id":3} 
+[2025-05-21 22:03:30] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":522} 
+[2025-05-21 22:03:31] production.INFO: Distributed BV points to parent user: {"user_id":3,"bv_points":900} 
+[2025-05-21 22:03:31] production.INFO: Distributed BV points to parent user: {"user_id":1,"bv_points":900} 
+[2025-05-21 22:03:38] production.INFO: Membership email sent to user #6  
+[2025-05-21 22:03:40] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-21 22:03:40] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-21 22:03:43] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"520","payment_amount":5000,"transaction_id":"pay_QXe831KfYH0ugO"} 
+[2025-05-21 22:03:43] production.INFO: Updating membership database {"last_membership_id":"520","transaction_id":"pay_QXe831KfYH0ugO","membership_history_id":769,"upgrade_membership_id":3} 
+[2025-05-21 22:03:43] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":520} 
+[2025-05-21 22:03:44] production.INFO: Distributed BV points to parent user: {"user_id":3,"bv_points":900} 
+[2025-05-21 22:03:44] production.INFO: Distributed BV points to parent user: {"user_id":1,"bv_points":900} 
+[2025-05-21 22:03:49] production.INFO: Membership email sent to user #7  
+[2025-05-21 22:03:51] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-21 22:03:51] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-21 22:04:16] production.INFO: Checking for BV flush. Now: 22:04, Configured: 22:04  
+[2025-05-21 22:04:16] production.INFO: BV Flush - Side left {"user_id":2,"flushed_bv":1800.0} 
+[2025-05-21 22:04:16] production.INFO: BV Flush - Side right {"user_id":3,"flushed_bv":1800.0} 
+[2025-05-21 22:04:16] production.INFO: BV flush for user 1 completed {"pairs_flushed":2.0,"bv_per_side_flushed":1800.0,"remaining_left_bv":2100.0,"remaining_right_bv":0.0} 
+[2025-05-21 22:04:16] production.INFO: No BV flush for user 2: not enough BV to form even one pair {"left_bv":0,"right_bv":"900","bp_rate":"900"} 
+[2025-05-21 22:04:16] production.INFO: User eligibility check {"user_id":2,"self_bv":"300.00","left_bv":0.0,"right_bv":900.0,"referral_commission":"180.00","is_eligible":false} 
+[2025-05-21 22:04:16] production.INFO: Referral commission held - user not eligible {"user_id":2,"amount":"180.00","self_bv":"300.00"} 
+[2025-05-21 22:04:16] production.INFO: BV Flush - Side left {"user_id":6,"flushed_bv":900.0} 
+[2025-05-21 22:04:16] production.INFO: BV Flush - Side right {"user_id":7,"flushed_bv":900.0} 
+[2025-05-21 22:04:16] production.INFO: BV flush for user 3 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0.0,"remaining_right_bv":300.0} 
+[2025-05-21 22:04:16] production.INFO: No BV flush for user 4: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-21 22:04:16] production.INFO: No BV flush for user 5: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-21 22:04:16] production.INFO: No BV flush for user 6: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-21 22:04:16] production.INFO: User qualifies via referral override {"user_id":6,"self_bv":"1200.00","referral_commission":"180.00"} 
+[2025-05-21 22:04:16] production.INFO: Referral commission processed for eligible user {"user_id":6,"amount":"180.00","self_bv":"1200.00","has_referral_override":true} 
+[2025-05-21 22:04:16] production.INFO: No BV flush for user 7: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-21 22:04:16] production.INFO: User 1 matching pairs: 6 {"left_bv":"5700","right_bv":"6900"} 
+[2025-05-21 22:04:16] production.INFO: User 2 matching pairs: 3 {"left_bv":"2700","right_bv":"2700"} 
+[2025-05-21 22:04:16] production.INFO: User 3 matching pairs: 3 {"left_bv":"3180","right_bv":"3000"} 
+[2025-05-21 22:04:16] production.INFO: User 4 matching pairs: 1 {"left_bv":"900","right_bv":"900"} 
+[2025-05-21 22:04:16] production.INFO: User 5 matching pairs: 1 {"left_bv":"900","right_bv":"900"} 
+[2025-05-21 22:04:16] production.INFO: User 6 matching pairs: 1 {"left_bv":"900","right_bv":"900"} 
+[2025-05-21 22:04:16] production.INFO: User 7 matching pairs: 1 {"left_bv":"900","right_bv":"900"} 
+[2025-05-21 22:04:16] production.INFO: User 8 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 22:04:16] production.INFO: User 9 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 22:04:16] production.INFO: User 10 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 22:04:16] production.INFO: User 11 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 22:04:16] production.INFO: User 12 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 22:04:16] production.INFO: User 13 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 22:04:16] production.INFO: User 14 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 22:04:16] production.INFO: User 15 matching pairs: 0 {"left_bv":0,"right_bv":0} 
+[2025-05-21 22:04:16] production.INFO: Payout recorded {"date":"2025-05-21 22:04:16","previous_balance":195500,"new_balance":240000,"record_id":388} 
+[2025-05-21 22:04:16] production.INFO: User payout detail recorded {"user_id":3,"payout_summary_id":388,"left_bv":900.0,"right_bv":900.0,"matching_pairs":1.0,"gross_payout":200.0,"tds_deduction":2.0,"service_charge":2.0,"net_amount":196.0,"status":"payout_eligible"} 
+[2025-05-21 22:04:16] production.INFO: User payout detail recorded {"user_id":6,"payout_summary_id":388,"left_bv":900.0,"right_bv":900.0,"matching_pairs":1.0,"gross_payout":380.0,"tds_deduction":3.8000000000000003,"service_charge":3.8000000000000003,"net_amount":372.4,"status":"payout_eligible"} 
+[2025-05-21 22:04:16] production.INFO: User payout detail recorded {"user_id":7,"payout_summary_id":388,"left_bv":900.0,"right_bv":900.0,"matching_pairs":1.0,"gross_payout":200.0,"tds_deduction":2.0,"service_charge":2.0,"net_amount":196.0,"status":"payout_eligible"} 

@@ -19,7 +19,13 @@ class UsersBV extends Model
         'bv_points',
         'upgrade_time',
         'created_at',
-        'type'
+        'type',
+        'flushed_bv_ids',
+        'consumed',
+    ];
+
+    protected $casts = [
+        'consumed' => 'boolean',
     ];
 
     public function user()

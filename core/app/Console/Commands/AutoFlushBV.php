@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\UserPayoutDetail;
 use Illuminate\Support\Facades\DB;
 use App\Models\UserFlush;
+use App\Models\UserFlushBv;
 
 class AutoFlushBV extends Command
 {
@@ -84,13 +85,22 @@ class AutoFlushBV extends Command
             return;
         }
 
+        $leftBvRecords = $leftChild->userBvs()
+            ->whereNotIn('type', $this->protectedTypes)
+            ->where('bv_points', '>', 0)
+            ->orderBy('created_at')
+            ->get();
+
+        $rightBvRecords = $rightChild->userBvs()
+            ->whereNotIn('type', $this->protectedTypes)
+            ->where('bv_points', '>', 0)
+            ->orderBy('created_at')
+            ->get();
+
+
         // Total BV on each side (excluding protected types)
-        $leftBv = $leftChild->userBvs()
-            ->whereNotIn('type', $this->protectedTypes)
-            ->sum('bv_points');
-        $rightBv = $rightChild->userBvs()
-            ->whereNotIn('type', $this->protectedTypes)
-            ->sum('bv_points');
+        $leftBv = $leftBvRecords->sum('bv_points');
+        $rightBv = $rightBvRecords->sum('bv_points');
 
         $leftBpUnits = floor($leftBv / $bpConversionRate);
         $rightBpUnits = floor($rightBv / $bpConversionRate);
@@ -101,117 +111,85 @@ class AutoFlushBV extends Command
         if ($pairsToFlush > 0) {
             $amountToFlush = $pairsToFlush * $bpConversionRate;
 
-            DB::transaction(function () use ($user, $amountToFlush, $payoutSummaryId, $leftChild, $rightChild) {
-                // Create the flush summary record
-                $flush = UserFlush::create([
-                    'user_id' => $user->id,
-                    'flushed_left_bv' => $amountToFlush,
-                    'flushed_right_bv' => $amountToFlush,
-                    'payout_summary_id' => $payoutSummaryId,
-                    'payout' => 0,
-                ]);
+            // figure out exactly which record‐IDs to flush
+            $leftBvIds = $this->getFlushedBvIds($leftBvRecords, $amountToFlush);
+            $rightBvIds = $this->getFlushedBvIds($rightBvRecords, $amountToFlush);
 
-                // Flush each side and immediately update the flush record
-                $leftBvModel = $this->flushSide($leftChild, $amountToFlush, 'left');
-                $rightBvModel = $this->flushSide($rightChild, $amountToFlush, 'right');
+            $allFlushedLeftIds = $leftBvIds;
+            $allFlushedRightIds = $rightBvIds;
 
-                if ($leftBvModel && $rightBvModel) {
-                    $flush->update([
-                        'left_bv_flushed_id' => $leftBvModel->id,
-                        'right_bv_flushed_id' => $rightBvModel->id
-                    ]);
+            $allBvIds = array_merge($leftBvIds, $rightBvIds);
 
-                    // Explicitly refresh the model
-                    $flush->refresh();
+            Log::info("Flushing BV for user {$user->id}", [
+                'left_bv' => $leftBv,
+                'right_bv' => $rightBv,
+                'pairs_to_flush' => $pairsToFlush,
+                'allBvIds' => $allBvIds,
+            ]);
 
-                    Log::info("Flush record updated with BV IDs", [
-                        'flush_id' => $flush->id,
-                        'left_bv_id' => $flush->left_bv_flushed_id,
-                        'right_bv_id' => $flush->right_bv_flushed_id
-                    ]);
-                } else {
-                    Log::error("Failed to get BV models for flush record", [
-                        'user_id' => $user->id,
-                        'flush_id' => $flush->id,
-                        'left_bv_model' => $leftBvModel?->id,
-                        'right_bv_model' => $rightBvModel?->id
-                    ]);
-                }
-
-                // Calculate remainders
-                $leftBv = $leftChild->userBvs()
-                    ->whereNotIn('type', $this->protectedTypes)
-                    ->sum('bv_points');
-                $rightBv = $rightChild->userBvs()
-                    ->whereNotIn('type', $this->protectedTypes)
-                    ->sum('bv_points');
-                $leftRemainder = $leftBv - $amountToFlush;
-                $rightRemainder = $rightBv - $amountToFlush;
-
-                // Handle leftover BV
-                if ($leftRemainder !== $rightRemainder) {
-                    if ($leftRemainder < $rightRemainder && $leftRemainder > 0) {
-                        Log::info("Flushing leftover left BV", [
-                            'user_id' => $user->id,
-                            'left_over_bv' => $leftRemainder,
-                        ]);
-                        $this->flushSide($leftChild, $leftRemainder, 'left');
-                    } elseif ($rightRemainder < $leftRemainder && $rightRemainder > 0) {
-                        Log::info("Flushing leftover right BV", [
-                            'user_id' => $user->id,
-                            'right_over_bv' => $rightRemainder,
-                        ]);
-                        $this->flushSide($rightChild, $rightRemainder, 'right');
-                    }
-                } elseif ($leftRemainder === $rightRemainder && $leftRemainder > 0) {
-                    Log::info("Equal remainders; flushing left BV", [
-                        'user_id' => $user->id,
-                        'left_over_bv' => $leftRemainder,
-                    ]);
-                    $this->flushSide($leftChild, $leftRemainder, 'left');
-                }
-
-                Log::info("BV flush for user {$user->id} completed", [
-                    'pairs_flushed' => $amountToFlush / (get_static_option('bp_value') ?? 1),
-                    'bv_per_side_flushed' => $amountToFlush,
-                    'remaining_left_bv' => max(0, $leftRemainder),
-                    'remaining_right_bv' => max(0, $rightRemainder),
-                ]);
-            });
-
-            // Calculate remainders
+            // 2) Compute remainders
             $leftRemainder = $leftBv - $amountToFlush;
             $rightRemainder = $rightBv - $amountToFlush;
 
-            // Handle leftover BV
+            // 3) If the remainders differ, flush the smaller one entirely
             if ($leftRemainder !== $rightRemainder) {
                 if ($leftRemainder < $rightRemainder && $leftRemainder > 0) {
                     Log::info("Flushing leftover left BV", [
                         'user_id' => $user->id,
                         'left_over_bv' => $leftRemainder,
                     ]);
-                    $this->flushSide($leftChild, $leftRemainder, 'left');
+                    $ids = $this->getFlushedBvIds($leftBvRecords, $leftRemainder);
+                    $this->flushSide($leftChild, $leftRemainder, 'left', $allBvIds);
+                    $leftRemainder = 0;
                 } elseif ($rightRemainder < $leftRemainder && $rightRemainder > 0) {
                     Log::info("Flushing leftover right BV", [
                         'user_id' => $user->id,
                         'right_over_bv' => $rightRemainder,
                     ]);
-                    $this->flushSide($rightChild, $rightRemainder, 'right');
+                    $ids = $this->getFlushedBvIds($rightBvRecords, $rightRemainder);
+                    $this->flushSide($rightChild, $rightRemainder, 'right', $allBvIds);
+                    $rightRemainder = 0;
                 }
-            } elseif ($leftRemainder === $rightRemainder && $leftRemainder > 0) {
+            }
+            // 4) If they’re exactly equal and nonzero, flush one side
+            elseif ($leftRemainder === $rightRemainder && $leftRemainder > 0) {
                 Log::info("Equal remainders; flushing left BV", [
                     'user_id' => $user->id,
                     'left_over_bv' => $leftRemainder,
                 ]);
-                $this->flushSide($leftChild, $leftRemainder, 'left');
+
+                // Filter out already flushed IDs
+                $remainingLeftRecords = $leftBvRecords->filter(function ($bv) use ($allFlushedLeftIds) {
+                    return !in_array($bv->id, $allFlushedLeftIds);
+                })->values();
+
+                Log::info("Remaining left BV records", [
+                    'leftBvRecords' => $leftBvRecords,
+                    'remaining_left_bv' => $remainingLeftRecords,
+                ]);
+
+                $ids = $this->getFlushedBvIds($remainingLeftRecords, $leftRemainder);
+                $this->flushSide($leftChild, $leftRemainder, 'left', $allBvIds);
+                $leftRemainder = 0;
             }
 
+            // Log final summary…
             Log::info("BV flush for user {$user->id} completed", [
                 'pairs_flushed' => $pairsToFlush,
                 'bv_per_side_flushed' => $amountToFlush,
-                'remaining_left_bv' => max(0, $leftRemainder),
-                'remaining_right_bv' => max(0, $rightRemainder),
+                'remaining_left_bv' => $leftRemainder,
+                'remaining_right_bv' => $rightRemainder,
             ]);
+
+            DB::table('user_flush_bvs')->updateOrInsert(
+                ['user_id' => $user->id],
+                [
+                    'left_bv' => $leftRemainder,
+                    'right_bv' => $rightRemainder,
+                    'updated_at' => now(),
+                    'created_at' => now(),
+                ]
+            );
         } else {
             Log::info("No BV flush for user {$user->id}: not enough BV to form even one pair", [
                 'left_bv' => $leftBv,
@@ -221,27 +199,69 @@ class AutoFlushBV extends Command
         }
     }
 
-    protected function flushSide(User $userChild, float $amount, string $side): UsersBV
+    protected function getFlushedBvIds($bvRecords, $amountToFlush)
+    {
+        $ids = [];
+        $remaining = $amountToFlush;
+        foreach ($bvRecords as $bv) {
+            if ($remaining <= 0)
+                break;
+            $ids[] = $bv->id;
+            $remaining -= $bv->bv_points;
+        }
+        return $ids;
+    }
+
+    protected function flushSide(User $userChild, float $amount, string $side, array $allBvIds): array
     {
         if ($amount <= 0) {
-            return null;
+            throw new \InvalidArgumentException('Amount to flush must be greater than zero.');
         }
 
-        $bv = $userChild->userBvs()->create([
-            'bv_points' => -$amount,
-            'type' => 'flush_deduction',
-            'description' => ucfirst($side) . ' BV flush at ' . now(),
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        $createdFlushIds = [];
 
-        Log::info("BV Flush - Side {$side}", [
-            'user_id' => $userChild->id,
-            'flushed_bv' => $amount,
-            'bv_record_id' => $bv->id,
-        ]);
+        Log::info('Bvid:' . json_encode(["bvids" => $allBvIds]));
+        foreach ($allBvIds as $bvId) {
+            $bvRecord = UsersBv::find($bvId);
+            if (!$bvRecord) {
+                throw new \RuntimeException("BV record with ID {$bvId} not found.");
+            }
 
-        return $bv;
+            // Create UserFlush entry
+            $userFlush = UserFlush::create([
+                'user_id' => $bvRecord->user_id,
+                'flushed_left_bv' => $side === 'left' ? $bvRecord->bv_points : 0,
+                'flushed_right_bv' => $side === 'right' ? $bvRecord->bv_points : 0,
+                'user_bv_flushed' => $bvId,
+            ]);
+
+            $createdFlushIds[] = $bvId;
+
+            // 🔽 Update UserFlushBv table here
+            $userFlushBv = UserFlushBv::firstOrNew([
+                'user_id' => $bvRecord->user_id,
+            ]);
+
+            if ($side === 'left') {
+                $userFlushBv->left_bv = ($userFlushBv->left_bv ?? 0) + $bvRecord->bv_points;
+            } elseif ($side === 'right') {
+                $userFlushBv->right_bv = ($userFlushBv->right_bv ?? 0) + $bvRecord->bv_points;
+            }
+
+            $userFlushBv->save();
+
+            Log::debug('UserFlush created', [
+                'id' => $userFlush->id,
+                'user_bv_flushed' => $userFlush->user_bv_flushed,
+            ]);
+        }
+
+        if (!empty($createdFlushIds)) {
+            UsersBv::whereIn('id', $createdFlushIds)
+                ->update(['consumed' => 1]);
+        }
+
+        return $createdFlushIds;
     }
 
     protected function isUserEligibleForPayout(User $user): bool
@@ -405,79 +425,53 @@ class AutoFlushBV extends Command
         float $serviceCharge
     ) {
         $dailyLimit = (int) get_static_option('sealing_limitation');
-        $now = Carbon::now();
+        $now = now();
 
-        // only users with both left & right legs
         $users = User::with(['leftChild', 'rightChild'])
             ->whereHas('leftChild')
             ->whereHas('rightChild')
             ->get();
 
         foreach ($users as $user) {
-            // 1) find the last flush before this summary
-            $lastFlushAt = UserFlush::where('user_id', $user->id)
-                ->where('payout_summary_id', '<', $payoutSummaryId)
-                ->max('created_at');
-
-            // 2) calculate total BV on each side since last flush
-            $leftBvQuery = $user->leftChild->userBvs()
+            // — only un-consumed, non-referral BV —
+            $leftBv = $user->leftChild
+                ->userBvs()
                 ->where('bv_points', '>', 0)
+                ->where('consumed', 0)                           // ← ignore flushed BV
                 ->whereNotIn('type', array_merge($this->protectedTypes, ['referral_commission']))
-                ->where('created_at', '<', $now);
-            $rightBvQuery = $user->rightChild->userBvs()
+                ->where('created_at', '<', $now)
+                ->sum('bv_points');
+
+            $rightBv = $user->rightChild
+                ->userBvs()
                 ->where('bv_points', '>', 0)
+                ->where('consumed', 0)                           // ← ignore flushed BV
                 ->whereNotIn('type', array_merge($this->protectedTypes, ['referral_commission']))
-                ->where('created_at', '<', $now);
+                ->where('created_at', '<', $now)
+                ->sum('bv_points');
 
-            if ($lastFlushAt) {
-                $leftBvQuery->where('created_at', '>', $lastFlushAt);
-                $rightBvQuery->where('created_at', '>', $lastFlushAt);
-            }
-
-            $totalLeftBv = (float) $leftBvQuery->sum('bv_points');
-            $totalRightBv = (float) $rightBvQuery->sum('bv_points');
-
-            // subtract previously flushed totals for this summary runner
-            $flushedLeftTotal = UserFlush::where('user_id', $user->id)
-                ->where('payout_summary_id', $payoutSummaryId)
-                ->sum('flushed_left_bv');
-            $flushedRightTotal = UserFlush::where('user_id', $user->id)
-                ->where('payout_summary_id', $payoutSummaryId)
-                ->sum('flushed_right_bv');
-
-            $leftBv = max($totalLeftBv - $flushedLeftTotal, 0);
-            $rightBv = max($totalRightBv - $flushedRightTotal, 0);
-
-            // 3) pairing math
             $selfBv = $user->self_purchased_bv ?? 0;
-            $rawPairs = 0;
-            if (
-                $selfBv >= $bpConversionRate
-                && $leftBv >= $bpConversionRate
-                && $rightBv >= $bpConversionRate
-            ) {
-                $rawPairs = floor(min($leftBv, $rightBv) / $bpConversionRate);
-            }
+            $rawPairs = ($selfBv >= $bpConversionRate && $leftBv >= $bpConversionRate && $rightBv >= $bpConversionRate)
+                ? floor(min($leftBv, $rightBv) / $bpConversionRate)
+                : 0;
             $userPairs = min($rawPairs, $dailyLimit);
 
+            // — flush amounts —
             $flushedLeft = $userPairs * $bpConversionRate;
             $flushedRight = $userPairs * $bpConversionRate;
 
-            // 4) referral commission within this run
-            $referralWindowEnd = $now;
-            $referralWindowStart = $now->copy()->subMinute();
+            // referral commissions from the last minute (we still count these unconditionally)
             $recentReferral = UsersBv::where('user_id', $user->id)
                 ->where('type', 'referral_commission')
-                ->whereBetween('created_at', [$referralWindowStart, $referralWindowEnd])
+                ->where('created_at', '>=', $now->subMinute())
                 ->sum('bv_points');
 
-            // 5) compute payout amounts
+            // gross, TDS, service-charge, net
             $grossPayout = ($userPairs * $pairIncome) + $recentReferral;
             $tdsDeduction = $grossPayout * ($tdsPercentage / 100);
             $serviceChargeAmt = $grossPayout * ($serviceCharge / 100);
             $netAmount = max($grossPayout - $tdsDeduction - $serviceChargeAmt, 0);
 
-            // 6) record details and flush row
             if ($userPairs > 0 || $recentReferral > 0) {
                 UserPayoutDetail::create([
                     'user_id' => $user->id,
@@ -489,9 +483,7 @@ class AutoFlushBV extends Command
                     'tds_deduction' => $tdsDeduction,
                     'service_charge' => $serviceChargeAmt,
                     'net_amount' => $netAmount,
-                    'status' => $grossPayout > 0
-                        ? 'payout_eligible'
-                        : 'no_payout',
+                    'status' => $grossPayout > 0 ? 'payout_eligible' : 'no_payout',
                 ]);
 
                 Log::info('User payout detail recorded', [
@@ -505,14 +497,6 @@ class AutoFlushBV extends Command
                     'service_charge' => $serviceChargeAmt,
                     'net_amount' => $netAmount,
                     'status' => $grossPayout > 0 ? 'payout_eligible' : 'no_payout',
-                ]);
-
-                UserFlush::create([
-                    'user_id' => $user->id,
-                    'payout_summary_id' => $payoutSummaryId,
-                    'flushed_left_bv' => $flushedLeft,
-                    'flushed_right_bv' => $flushedRight,
-                    'payout' => $grossPayout,
                 ]);
             }
         }

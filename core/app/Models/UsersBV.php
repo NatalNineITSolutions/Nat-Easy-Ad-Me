@@ -22,6 +22,7 @@ class UsersBV extends Model
         'type',
         'flushed_bv_ids',
         'consumed',
+        'position'
     ];
 
     protected $casts = [

@@ -23,6 +23,7 @@ use App\Models\UsersBV;
 use Modules\Wallet\app\Models\Wallet;
 use Kalnoy\Nestedset\NodeTrait;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Models\UserFlush;
 
 class User extends Authenticatable
 {
@@ -298,5 +299,10 @@ class User extends Authenticatable
     public function eligible_payout_details()
     {
         return $this->hasMany(UserPayoutDetail::class)->where('status', 'payout_eligible');
+    }
+
+    public function bvFlushes()
+    {
+        return $this->hasMany(UserFlush::class, 'user_id');
     }
 }

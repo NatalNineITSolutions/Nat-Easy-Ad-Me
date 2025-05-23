@@ -17,6 +17,7 @@ class UserFlush extends Model
         'flushed_left_bv',
         'flushed_right_bv',
         'payout_summary_id',
+        'user_bv_flushed'
     ];
 
     protected $casts = [

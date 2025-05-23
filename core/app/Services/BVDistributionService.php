@@ -4,56 +4,90 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Models\UsersBV;
+use App\Models\UserFlushBv;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class BVDistributionService
 {
-    /**
-     * Recursively distribute BV points upward through the upline.
-     *
-     * @param User   $user              The starting user (typically the new referral).
-     * @param int    $bvPoints          The BV points to distribute.
-     * @param mixed  $upgradeMembershipId The membership ID for recording purposes.
-     * @param mixed  $originalUserId    The ID of the original user (to skip duplicate updates).
-     * @return void
-     */
-    public function distributeBVPoints(User $user, int $bvPoints, $upgradeMembershipId, $originalUserId)
-    {
-        if (!$user || !$user->parent_id) {
+    public function distributeBVPoints(
+        User $user,
+        int  $bvPoints,
+        int  $upgradeMembershipId,
+        int  $originalUserId
+    ) {
+        if (! $user->parent_id) {
             return;
         }
-        
-        // Get the immediate parent.
+
         $parent = User::find($user->parent_id);
-        if (!$parent) {
+        if (! $parent) {
             return;
         }
-        
-        // Optionally skip if the parent's ID matches the original user to avoid duplicate distribution.
+
+        // prevent loops
         if ($parent->id === $originalUserId) {
-            $this->distributeBVPoints($parent, $bvPoints, $upgradeMembershipId, $originalUserId);
-            return;
+            return $this->distributeBVPoints(
+                $parent,
+                $bvPoints,
+                $upgradeMembershipId,
+                $originalUserId
+            );
         }
-        
-        // Update the parent's BV points.
+
+        // 1) bump parent's BV counter
         $parent->bv_points += $bvPoints;
         $parent->save();
-        
-        // Record the distribution in the UsersBV table.
-        UsersBV::create([
+
+        // 2) record the referral‐BV
+        $bvRecord = UsersBV::create([
             'user_id'       => $parent->id,
             'membership_id' => $upgradeMembershipId,
             'bv_points'     => $bvPoints,
             'upgrade_time'  => Carbon::now(),
-            'type'         => 'Referral',
+            'type'          => 'Referral',
+            'position'      => $user->position,
         ]);
-        
-        Log::info('Distributed BV points to parent user:', [
-            'user_id'   => $parent->id,
+
+        Log::info('Distributed BV referral to parent', [
+            'parent_id' => $parent->id,
             'bv_points' => $bvPoints,
+            'position'  => $user->position,
         ]);
-        
-        $this->distributeBVPoints($parent, $bvPoints, $upgradeMembershipId, $originalUserId);
+
+        // 3) **increment** the flush table by exactly that BV
+        $this->incrementFlushBv($parent->id, $bvRecord);
+
+        // 4) recurse up
+        $this->distributeBVPoints(
+            $parent,
+            $bvPoints,
+            $upgradeMembershipId,
+            $originalUserId
+        );
+    }
+
+    /**
+     * Increment the flush totals for exactly one new UsersBV entry—
+     * so old referral BV (already “counted”) never re-appears.
+     */
+    protected function incrementFlushBv(int $userId, UsersBV $bvRecord): void
+    {
+        $flush = UserFlushBv::firstOrNew(['user_id' => $userId]);
+
+        if ($bvRecord->position === 'left') {
+            $flush->left_bv = ($flush->left_bv ?? 0) + $bvRecord->bv_points;
+        } else {
+            $flush->right_bv = ($flush->right_bv ?? 0) + $bvRecord->bv_points;
+        }
+
+        $flush->save();
+
+        Log::info('Incremented flush BV totals', [
+            'user_id'  => $userId,
+            'bv_id'     => $bvRecord->id,
+            'left_bv'  => $flush->left_bv,
+            'right_bv' => $flush->right_bv,
+        ]);
     }
 }

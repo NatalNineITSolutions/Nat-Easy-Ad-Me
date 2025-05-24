@@ -20,6 +20,7 @@ class UserFlushBv extends Model
         'user_id',
         'left_bv',
         'right_bv',
+        'eligible_pairs',
     ];
 
     /**

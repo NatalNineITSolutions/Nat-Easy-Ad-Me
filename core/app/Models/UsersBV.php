@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Membership\app\Models\Membership;
+use App\Models\UserFlush;
 
 
 class UsersBV extends Model
@@ -37,5 +38,11 @@ class UsersBV extends Model
     public function membership()
     {
         return $this->belongsTo(Membership::class);
+    }
+
+    // In UsersBv model
+    public function flushes()
+    {
+        return $this->belongsToMany(UserFlush::class);
     }
 }

@@ -78,9 +78,18 @@ class DashboardController extends Controller
         $bpConversionRate = get_static_option('bp_value') ?? 1;
         $sealingLimit = get_static_option('sealing_limitation') ?? 1;
 
+        // Get left and right BV points from user_flush_bvs table
+        $userFlushBvs = DB::table('user_flush_bvs')
+            ->where('user_id', $user_id)
+            ->latest('id')
+            ->first();
+
         // Sum BV points
-        $leftBvPoints = $user->leftChild ? $user->leftChild->userBvs()->where('type', '!=', 'referral_commission')->sum('bv_points') : 0;
-        $rightBvPoints = $user->rightChild ? $user->rightChild->userBvs()->where('type', '!=', 'referral_commission')->sum('bv_points') : 0;
+        $leftBvPoints = $userFlushBvs ? $userFlushBvs->left_bv : 0;
+        Log::info('LeftBV: ' . $leftBvPoints);
+
+        $rightBvPoints = $userFlushBvs ? $userFlushBvs->right_bv : 0;
+        Log::info('RightBV:' . $rightBvPoints);
 
         // Flushable & remainder
         $sealingLimitBv = $sealingLimit * $bpConversionRate;

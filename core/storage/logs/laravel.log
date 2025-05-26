@@ -92,3 +92,405 @@
 [2025-05-26 12:22:50] production.INFO: UserPayoutDetail created for user 1 {"pairs":2,"gross":580.0,"tds":5.8,"service":5.8,"net":568.4000000000001,"referral":"180.00"} 
 [2025-05-26 12:22:50] production.INFO: UserPayoutDetail created for user 3 {"pairs":1,"gross":200.0,"tds":2.0,"service":2.0,"net":196.0,"referral":"0.00"} 
 [2025-05-26 12:22:50] production.INFO: Override-only payout recorded for user 6 {"gross":"180.00","tds":1.8,"service":1.8,"net":176.39999999999998,"referral":"180.00"} 
+[2025-05-26 13:37:54] production.ERROR: Undefined variable $userFlushBvs {"userId":1,"exception":"[object] (ErrorException(code: 0): Undefined variable $userFlushBvs at C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Controllers\\Frontend\\User\\DashboardController.php:82)
+[stacktrace]
+#0 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined varia...', 'C:\\\\laragon\\\\www\\\\...', 82)
+#1 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Controllers\\Frontend\\User\\DashboardController.php(82): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'Undefined varia...', 'C:\\\\laragon\\\\www\\\\...', 82)
+#2 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php(54): App\\Http\\Controllers\\Frontend\\User\\DashboardController->dashboard()
+#3 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(43): Illuminate\\Routing\\Controller->callAction('dashboard', Array)
+#4 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(259): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Http\\Controllers\\Frontend\\User\\DashboardController), 'dashboard')
+#5 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(205): Illuminate\\Routing\\Route->runController()
+#6 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(806): Illuminate\\Routing\\Route->run()
+#7 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#8 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Middleware\\SetLang.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#9 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\SetLang->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#10 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Middleware\\MaintainsMode.php(22): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#11 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\MaintainsMode->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#12 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Middleware\\GlobalVariableMiddleware.php(104): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#13 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\GlobalVariableMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#14 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Middleware\\UserEmailVerify.php(31): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#15 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\UserEmailVerify->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#16 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Http\\Middleware\\CheckUserOnlineStatus.php(32): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#17 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\CheckUserOnlineStatus->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#18 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#19 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#20 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\Middleware\\Authenticate.php(57): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#21 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Auth\\Middleware\\Authenticate->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#22 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#23 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#24 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#28 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#29 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#30 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#31 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#32 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#33 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#34 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#35 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#36 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#37 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#38 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#39 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#40 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\xgenious\\installer\\src\\Http\\Middleware\\InstallerMiddleware.php(18): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#41 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Xgenious\\Installer\\Http\\Middleware\\InstallerMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#42 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#43 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#44 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#47 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#48 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#49 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#50 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#51 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#52 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#53 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#54 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#55 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#56 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#57 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#58 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#59 C:\\laragon\\www\\Nat-Easy-Ad-Me\\index.php(54): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#60 {main}
+"} 
+[2025-05-26 13:39:30] production.INFO: LeftBV: 0  
+[2025-05-26 13:39:30] production.INFO: RightBV:0  
+[2025-05-26 13:40:00] production.INFO: LeftBV: 0  
+[2025-05-26 13:40:00] production.INFO: RightBV:0  
+[2025-05-26 13:40:41] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 13:40:41] production.INFO: last3: {"membership_id":589} 
+[2025-05-26 13:40:42] production.INFO: last5: {"membership_id":589} 
+[2025-05-26 13:40:42] production.INFO: last4: {"membership_id":589,"order_id":null} 
+[2025-05-26 13:40:42] production.INFO: after-charge: {"membership_id":589,"order_id":589} 
+[2025-05-26 13:41:11] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"589","payment_amount":5000,"transaction_id":"pay_QZUF2AhcOgtnrQ"} 
+[2025-05-26 13:41:11] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-26 13:41:11] production.INFO: Updating membership database {"last_membership_id":"589","transaction_id":"pay_QZUF2AhcOgtnrQ","membership_history_id":850,"upgrade_membership_id":3} 
+[2025-05-26 13:41:11] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":589} 
+[2025-05-26 13:41:27] production.INFO: Membership email sent to user #1  
+[2025-05-26 13:41:29] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 13:41:29] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-26 13:42:08] production.INFO: LeftBV: 0  
+[2025-05-26 13:42:08] production.INFO: RightBV:0  
+[2025-05-26 13:42:30] production.INFO: LeftBV: 0  
+[2025-05-26 13:42:30] production.INFO: RightBV:0  
+[2025-05-26 13:42:45] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 13:42:45] production.INFO: last3: {"membership_id":590} 
+[2025-05-26 13:42:45] production.INFO: last5: {"membership_id":590} 
+[2025-05-26 13:42:45] production.INFO: last4: {"membership_id":590,"order_id":null} 
+[2025-05-26 13:42:45] production.INFO: after-charge: {"membership_id":590,"order_id":590} 
+[2025-05-26 13:43:02] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 13:43:02] production.INFO: last3: {"membership_id":591} 
+[2025-05-26 13:43:02] production.INFO: last5: {"membership_id":591} 
+[2025-05-26 13:43:02] production.INFO: last4: {"membership_id":591,"order_id":null} 
+[2025-05-26 13:43:02] production.INFO: after-charge: {"membership_id":591,"order_id":591} 
+[2025-05-26 13:43:20] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"590","payment_amount":1000,"transaction_id":"pay_QZUH7WhdgKjRmH"} 
+[2025-05-26 13:43:20] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":2} 
+[2025-05-26 13:43:20] production.INFO: Updating membership database {"last_membership_id":"590","transaction_id":"pay_QZUH7WhdgKjRmH","membership_history_id":851,"upgrade_membership_id":2} 
+[2025-05-26 13:43:20] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":590} 
+[2025-05-26 13:43:21] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":300,"position":"left"} 
+[2025-05-26 13:43:21] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":4972,"left_bv":null,"right_bv":300} 
+[2025-05-26 13:43:26] production.INFO: Membership email sent to user #2  
+[2025-05-26 13:43:28] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 13:43:28] production.INFO: Data to update: {"upgrade_membership_id":2} 
+[2025-05-26 13:43:34] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"591","payment_amount":5000,"transaction_id":"pay_QZUHOdWUZ2hUx7"} 
+[2025-05-26 13:43:34] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-26 13:43:34] production.INFO: Updating membership database {"last_membership_id":"591","transaction_id":"pay_QZUHOdWUZ2hUx7","membership_history_id":852,"upgrade_membership_id":3} 
+[2025-05-26 13:43:34] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":591} 
+[2025-05-26 13:43:35] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"right"} 
+[2025-05-26 13:43:35] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":4974,"left_bv":0,"right_bv":1200} 
+[2025-05-26 13:43:40] production.INFO: Membership email sent to user #3  
+[2025-05-26 13:43:41] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 13:43:41] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-26 13:43:44] production.INFO: LeftBV: 0  
+[2025-05-26 13:43:44] production.INFO: RightBV:1200  
+[2025-05-26 13:43:47] production.INFO: LeftBV: 0  
+[2025-05-26 13:43:47] production.INFO: RightBV:1200  
+[2025-05-26 13:46:53] production.INFO: LeftBV: 0  
+[2025-05-26 13:46:53] production.INFO: RightBV:0  
+[2025-05-26 13:47:04] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 13:47:04] production.INFO: last3: {"membership_id":592} 
+[2025-05-26 13:47:04] production.INFO: last5: {"membership_id":592} 
+[2025-05-26 13:47:04] production.INFO: last4: {"membership_id":592,"order_id":null} 
+[2025-05-26 13:47:04] production.INFO: after-charge: {"membership_id":592,"order_id":592} 
+[2025-05-26 13:47:16] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 13:47:16] production.INFO: last3: {"membership_id":593} 
+[2025-05-26 13:47:16] production.INFO: last5: {"membership_id":593} 
+[2025-05-26 13:47:16] production.INFO: last4: {"membership_id":593,"order_id":null} 
+[2025-05-26 13:47:16] production.INFO: after-charge: {"membership_id":593,"order_id":593} 
+[2025-05-26 13:47:38] production.INFO: LeftBV: 0  
+[2025-05-26 13:47:38] production.INFO: RightBV:0  
+[2025-05-26 13:47:43] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"592","payment_amount":5000,"transaction_id":"pay_QZULeIjSMCzIhC"} 
+[2025-05-26 13:47:43] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-26 13:47:43] production.INFO: Updating membership database {"last_membership_id":"592","transaction_id":"pay_QZULeIjSMCzIhC","membership_history_id":853,"upgrade_membership_id":3} 
+[2025-05-26 13:47:43] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":592} 
+[2025-05-26 13:47:43] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 13:47:44] production.INFO: last3: {"membership_id":594} 
+[2025-05-26 13:47:44] production.INFO: last5: {"membership_id":594} 
+[2025-05-26 13:47:44] production.INFO: last4: {"membership_id":594,"order_id":null} 
+[2025-05-26 13:47:44] production.INFO: after-charge: {"membership_id":594,"order_id":594} 
+[2025-05-26 13:47:49] production.INFO: Membership email sent to user #1  
+[2025-05-26 13:47:50] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"593","payment_amount":1000,"transaction_id":"pay_QZULo4tnoBOupY"} 
+[2025-05-26 13:47:50] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":2} 
+[2025-05-26 13:47:50] production.INFO: Updating membership database {"last_membership_id":"593","transaction_id":"pay_QZULo4tnoBOupY","membership_history_id":854,"upgrade_membership_id":2} 
+[2025-05-26 13:47:50] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":593} 
+[2025-05-26 13:47:50] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 13:47:50] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-26 13:47:51] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":300,"position":"left"} 
+[2025-05-26 13:47:51] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":4977,"left_bv":300,"right_bv":null} 
+[2025-05-26 13:47:55] production.INFO: Membership email sent to user #2  
+[2025-05-26 13:47:57] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 13:47:57] production.INFO: Data to update: {"upgrade_membership_id":2} 
+[2025-05-26 13:48:04] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"594","payment_amount":5000,"transaction_id":"pay_QZUMIWo7g8q2mo"} 
+[2025-05-26 13:48:04] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-26 13:48:04] production.INFO: Updating membership database {"last_membership_id":"594","transaction_id":"pay_QZUMIWo7g8q2mo","membership_history_id":855,"upgrade_membership_id":3} 
+[2025-05-26 13:48:04] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":594} 
+[2025-05-26 13:48:05] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"right"} 
+[2025-05-26 13:48:05] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":4979,"left_bv":300,"right_bv":900} 
+[2025-05-26 13:48:10] production.INFO: Membership email sent to user #3  
+[2025-05-26 13:48:12] production.INFO: LeftBV: 300  
+[2025-05-26 13:48:12] production.INFO: RightBV:900  
+[2025-05-26 13:48:12] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 13:48:12] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-26 13:48:25] production.INFO: LeftBV: 1300  
+[2025-05-26 13:48:25] production.INFO: RightBV:900  
+[2025-05-26 13:50:14] production.INFO: LeftBV: 0  
+[2025-05-26 13:50:14] production.INFO: RightBV:0  
+[2025-05-26 13:50:31] production.INFO: LeftBV: 0  
+[2025-05-26 13:50:31] production.INFO: RightBV:0  
+[2025-05-26 13:50:36] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 13:50:37] production.INFO: last3: {"membership_id":595} 
+[2025-05-26 13:50:37] production.INFO: last5: {"membership_id":595} 
+[2025-05-26 13:50:37] production.INFO: last4: {"membership_id":595,"order_id":null} 
+[2025-05-26 13:50:37] production.INFO: after-charge: {"membership_id":595,"order_id":595} 
+[2025-05-26 13:50:56] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"595","payment_amount":5000,"transaction_id":"pay_QZUPLPoKZ3b0BU"} 
+[2025-05-26 13:50:56] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-26 13:50:56] production.INFO: Updating membership database {"last_membership_id":"595","transaction_id":"pay_QZUPLPoKZ3b0BU","membership_history_id":856,"upgrade_membership_id":3} 
+[2025-05-26 13:50:56] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":595} 
+[2025-05-26 13:50:57] production.INFO: Distributed BV referral to parent {"parent_id":2,"bv_points":900,"position":"left"} 
+[2025-05-26 13:50:57] production.INFO: Incremented flush BV totals {"user_id":2,"bv_id":4981,"left_bv":900,"right_bv":null} 
+[2025-05-26 13:50:58] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"left"} 
+[2025-05-26 13:50:58] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":4982,"left_bv":1200,"right_bv":900} 
+[2025-05-26 13:51:02] production.INFO: LeftBV: 0  
+[2025-05-26 13:51:02] production.INFO: RightBV:0  
+[2025-05-26 13:51:03] production.INFO: Membership email sent to user #4  
+[2025-05-26 13:51:04] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 13:51:04] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-26 13:51:08] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 13:51:08] production.INFO: last3: {"membership_id":596} 
+[2025-05-26 13:51:08] production.INFO: last5: {"membership_id":596} 
+[2025-05-26 13:51:08] production.INFO: last4: {"membership_id":596,"order_id":null} 
+[2025-05-26 13:51:08] production.INFO: after-charge: {"membership_id":596,"order_id":596} 
+[2025-05-26 13:51:29] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"596","payment_amount":5000,"transaction_id":"pay_QZUPv9e5zHTwmw"} 
+[2025-05-26 13:51:29] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-26 13:51:29] production.INFO: Updating membership database {"last_membership_id":"596","transaction_id":"pay_QZUPv9e5zHTwmw","membership_history_id":857,"upgrade_membership_id":3} 
+[2025-05-26 13:51:29] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":596} 
+[2025-05-26 13:51:30] production.INFO: Distributed BV referral to parent {"parent_id":2,"bv_points":900,"position":"right"} 
+[2025-05-26 13:51:30] production.INFO: Incremented flush BV totals {"user_id":2,"bv_id":4984,"left_bv":900,"right_bv":900} 
+[2025-05-26 13:51:30] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"left"} 
+[2025-05-26 13:51:30] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":4985,"left_bv":2100,"right_bv":900} 
+[2025-05-26 13:51:35] production.INFO: Membership email sent to user #5  
+[2025-05-26 13:51:37] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 13:51:37] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-26 13:52:44] production.INFO: LeftBV: 0  
+[2025-05-26 13:52:44] production.INFO: RightBV:0  
+[2025-05-26 13:53:10] production.INFO: LeftBV: 0  
+[2025-05-26 13:53:10] production.INFO: RightBV:0  
+[2025-05-26 13:53:53] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 13:53:53] production.INFO: last3: {"membership_id":597} 
+[2025-05-26 13:53:53] production.INFO: last5: {"membership_id":597} 
+[2025-05-26 13:53:53] production.INFO: last4: {"membership_id":597,"order_id":null} 
+[2025-05-26 13:53:53] production.INFO: after-charge: {"membership_id":597,"order_id":597} 
+[2025-05-26 13:53:57] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 13:53:57] production.INFO: last3: {"membership_id":598} 
+[2025-05-26 13:53:57] production.INFO: last5: {"membership_id":598} 
+[2025-05-26 13:53:58] production.INFO: last4: {"membership_id":598,"order_id":null} 
+[2025-05-26 13:53:58] production.INFO: after-charge: {"membership_id":598,"order_id":598} 
+[2025-05-26 13:54:39] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"598","payment_amount":1000,"transaction_id":"pay_QZUSxxleE10fMd"} 
+[2025-05-26 13:54:39] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":2} 
+[2025-05-26 13:54:39] production.INFO: Updating membership database {"last_membership_id":"598","transaction_id":"pay_QZUSxxleE10fMd","membership_history_id":null,"upgrade_membership_id":2} 
+[2025-05-26 13:54:42] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":598} 
+[2025-05-26 13:54:59] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"597","payment_amount":1000,"transaction_id":"pay_QZUTbg6wlEv2AS"} 
+[2025-05-26 13:54:59] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":2} 
+[2025-05-26 13:54:59] production.INFO: Updating membership database {"last_membership_id":"597","transaction_id":"pay_QZUTbg6wlEv2AS","membership_history_id":858,"upgrade_membership_id":2} 
+[2025-05-26 13:54:59] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":597} 
+[2025-05-26 13:55:02] production.INFO: Distributed BV referral to parent {"parent_id":3,"bv_points":300,"position":"left"} 
+[2025-05-26 13:55:02] production.INFO: Incremented flush BV totals {"user_id":3,"bv_id":4988,"left_bv":300,"right_bv":null} 
+[2025-05-26 13:55:02] production.INFO: Distributed BV referral to parent {"parent_id":3,"bv_points":300,"position":"right"} 
+[2025-05-26 13:55:03] production.INFO: Incremented flush BV totals {"user_id":3,"bv_id":4989,"left_bv":300,"right_bv":300} 
+[2025-05-26 13:55:03] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":300,"position":"right"} 
+[2025-05-26 13:55:03] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":4990,"left_bv":2100,"right_bv":1200} 
+[2025-05-26 13:55:04] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":300,"position":"right"} 
+[2025-05-26 13:55:04] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":4991,"left_bv":2100,"right_bv":1500} 
+[2025-05-26 13:55:05] production.ERROR: Failed to send user membership email: An email must have a "To", "Cc", or "Bcc" header.  
+[2025-05-26 13:55:09] production.INFO: Membership email sent to user #7  
+[2025-05-26 13:55:10] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 13:55:10] production.INFO: Data to update: {"upgrade_membership_id":2} 
+[2025-05-26 13:55:11] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 13:55:11] production.INFO: Data to update: {"upgrade_membership_id":2} 
+[2025-05-26 14:04:37] production.INFO: LeftBV: 900  
+[2025-05-26 14:04:37] production.INFO: RightBV:900  
+[2025-05-26 14:05:03] production.INFO: LeftBV: 0  
+[2025-05-26 14:05:03] production.INFO: RightBV:0  
+[2025-05-26 14:05:46] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 14:05:47] production.INFO: LeftBV: 0  
+[2025-05-26 14:05:47] production.INFO: RightBV:0  
+[2025-05-26 14:05:49] production.INFO: last3: {"membership_id":599} 
+[2025-05-26 14:05:49] production.INFO: last5: {"membership_id":599} 
+[2025-05-26 14:05:49] production.INFO: last4: {"membership_id":599,"order_id":null} 
+[2025-05-26 14:05:49] production.INFO: after-charge: {"membership_id":599,"order_id":599} 
+[2025-05-26 14:05:56] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 14:05:56] production.INFO: last3: {"membership_id":600} 
+[2025-05-26 14:05:56] production.INFO: last5: {"membership_id":600} 
+[2025-05-26 14:05:56] production.INFO: last4: {"membership_id":600,"order_id":null} 
+[2025-05-26 14:05:56] production.INFO: after-charge: {"membership_id":600,"order_id":600} 
+[2025-05-26 14:06:27] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"599","payment_amount":5000,"transaction_id":"pay_QZUfh0Z1YZR7AP"} 
+[2025-05-26 14:06:27] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-26 14:06:27] production.INFO: Updating membership database {"last_membership_id":"599","transaction_id":"pay_QZUfh0Z1YZR7AP","membership_history_id":860,"upgrade_membership_id":3} 
+[2025-05-26 14:06:27] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":599} 
+[2025-05-26 14:06:27] production.INFO: Distributed BV referral to parent {"parent_id":4,"bv_points":900,"position":"right"} 
+[2025-05-26 14:06:27] production.INFO: Incremented flush BV totals {"user_id":4,"bv_id":4993,"left_bv":null,"right_bv":900} 
+[2025-05-26 14:06:28] production.INFO: Distributed BV referral to parent {"parent_id":2,"bv_points":900,"position":"left"} 
+[2025-05-26 14:06:28] production.INFO: Incremented flush BV totals {"user_id":2,"bv_id":4994,"left_bv":1800,"right_bv":900} 
+[2025-05-26 14:06:28] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"left"} 
+[2025-05-26 14:06:28] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":4995,"left_bv":3000,"right_bv":1500} 
+[2025-05-26 14:06:33] production.INFO: Membership email sent to user #9  
+[2025-05-26 14:06:35] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 14:06:35] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-26 14:06:49] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"600","payment_amount":5000,"transaction_id":"pay_QZUfZH48URgICf"} 
+[2025-05-26 14:06:49] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-26 14:06:49] production.INFO: Updating membership database {"last_membership_id":"600","transaction_id":"pay_QZUfZH48URgICf","membership_history_id":861,"upgrade_membership_id":3} 
+[2025-05-26 14:06:49] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":600} 
+[2025-05-26 14:06:52] production.INFO: Distributed BV referral to parent {"parent_id":4,"bv_points":900,"position":"left"} 
+[2025-05-26 14:06:52] production.INFO: Incremented flush BV totals {"user_id":4,"bv_id":4997,"left_bv":900,"right_bv":900} 
+[2025-05-26 14:06:53] production.INFO: Distributed BV referral to parent {"parent_id":2,"bv_points":900,"position":"left"} 
+[2025-05-26 14:06:53] production.INFO: Incremented flush BV totals {"user_id":2,"bv_id":4998,"left_bv":2700,"right_bv":900} 
+[2025-05-26 14:06:53] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"left"} 
+[2025-05-26 14:06:54] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":4999,"left_bv":3900,"right_bv":1500} 
+[2025-05-26 14:06:55] production.INFO: LeftBV: 0  
+[2025-05-26 14:06:55] production.INFO: RightBV:0  
+[2025-05-26 14:06:58] production.INFO: Membership email sent to user #8  
+[2025-05-26 14:07:00] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 14:07:00] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-26 14:07:30] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 14:07:30] production.INFO: last3: {"membership_id":601} 
+[2025-05-26 14:07:30] production.INFO: last5: {"membership_id":601} 
+[2025-05-26 14:07:30] production.INFO: last4: {"membership_id":601,"order_id":null} 
+[2025-05-26 14:07:30] production.INFO: after-charge: {"membership_id":601,"order_id":601} 
+[2025-05-26 14:07:51] production.INFO: LeftBV: 0  
+[2025-05-26 14:07:51] production.INFO: RightBV:0  
+[2025-05-26 14:08:13] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"601","payment_amount":5000,"transaction_id":"pay_QZUhKsWUWLhLZ4"} 
+[2025-05-26 14:08:13] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-26 14:08:13] production.INFO: Updating membership database {"last_membership_id":"601","transaction_id":"pay_QZUhKsWUWLhLZ4","membership_history_id":862,"upgrade_membership_id":3} 
+[2025-05-26 14:08:13] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":601} 
+[2025-05-26 14:08:14] production.INFO: Distributed BV referral to parent {"parent_id":5,"bv_points":900,"position":"left"} 
+[2025-05-26 14:08:14] production.INFO: Incremented flush BV totals {"user_id":5,"bv_id":5001,"left_bv":900,"right_bv":null} 
+[2025-05-26 14:08:14] production.INFO: Distributed BV referral to parent {"parent_id":2,"bv_points":900,"position":"right"} 
+[2025-05-26 14:08:14] production.INFO: Incremented flush BV totals {"user_id":2,"bv_id":5002,"left_bv":2700,"right_bv":1800} 
+[2025-05-26 14:08:14] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"left"} 
+[2025-05-26 14:08:14] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5003,"left_bv":4800,"right_bv":1500} 
+[2025-05-26 14:08:15] production.INFO: LeftBV: 0  
+[2025-05-26 14:08:15] production.INFO: RightBV:0  
+[2025-05-26 14:08:19] production.INFO: Membership email sent to user #10  
+[2025-05-26 14:08:21] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 14:08:21] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-26 14:08:35] production.INFO: LeftBV: 0  
+[2025-05-26 14:08:35] production.INFO: RightBV:0  
+[2025-05-26 14:08:56] production.INFO: LeftBV: 0  
+[2025-05-26 14:08:56] production.INFO: RightBV:0  
+[2025-05-26 14:09:07] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 14:09:08] production.INFO: last3: {"membership_id":602} 
+[2025-05-26 14:09:08] production.INFO: last5: {"membership_id":602} 
+[2025-05-26 14:09:08] production.INFO: last4: {"membership_id":602,"order_id":null} 
+[2025-05-26 14:09:08] production.INFO: after-charge: {"membership_id":602,"order_id":602} 
+[2025-05-26 14:09:55] production.INFO: LeftBV: 0  
+[2025-05-26 14:09:55] production.INFO: RightBV:0  
+[2025-05-26 14:09:57] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"602","payment_amount":5000,"transaction_id":"pay_QZUjEiN3zpz34F"} 
+[2025-05-26 14:09:57] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-26 14:09:57] production.INFO: Updating membership database {"last_membership_id":"602","transaction_id":"pay_QZUjEiN3zpz34F","membership_history_id":863,"upgrade_membership_id":3} 
+[2025-05-26 14:09:57] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":602} 
+[2025-05-26 14:10:02] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 14:10:04] production.INFO: last3: {"membership_id":603} 
+[2025-05-26 14:10:04] production.INFO: last5: {"membership_id":603} 
+[2025-05-26 14:10:04] production.INFO: last4: {"membership_id":603,"order_id":null} 
+[2025-05-26 14:10:04] production.INFO: after-charge: {"membership_id":603,"order_id":603} 
+[2025-05-26 14:10:06] production.INFO: Distributed BV referral to parent {"parent_id":5,"bv_points":900,"position":"right"} 
+[2025-05-26 14:10:10] production.INFO: Incremented flush BV totals {"user_id":5,"bv_id":5005,"left_bv":900,"right_bv":900} 
+[2025-05-26 14:10:18] production.INFO: Distributed BV referral to parent {"parent_id":2,"bv_points":900,"position":"right"} 
+[2025-05-26 14:10:23] production.INFO: Incremented flush BV totals {"user_id":2,"bv_id":5006,"left_bv":2700,"right_bv":2700} 
+[2025-05-26 14:10:23] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"left"} 
+[2025-05-26 14:10:24] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5007,"left_bv":5700,"right_bv":1500} 
+[2025-05-26 14:10:29] production.INFO: Membership email sent to user #11  
+[2025-05-26 14:10:31] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 14:10:31] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-26 14:10:39] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"603","payment_amount":5000,"transaction_id":"pay_QZUjtLBzyd5tsD"} 
+[2025-05-26 14:10:39] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-26 14:10:39] production.INFO: Updating membership database {"last_membership_id":"603","transaction_id":"pay_QZUjtLBzyd5tsD","membership_history_id":null,"upgrade_membership_id":3} 
+[2025-05-26 14:10:39] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":603} 
+[2025-05-26 14:10:40] production.INFO: Distributed BV referral to parent {"parent_id":6,"bv_points":900,"position":"right"} 
+[2025-05-26 14:10:40] production.INFO: Incremented flush BV totals {"user_id":6,"bv_id":5009,"left_bv":null,"right_bv":900} 
+[2025-05-26 14:10:40] production.INFO: Distributed BV referral to parent {"parent_id":3,"bv_points":900,"position":"left"} 
+[2025-05-26 14:10:40] production.INFO: Incremented flush BV totals {"user_id":3,"bv_id":5010,"left_bv":1200,"right_bv":300} 
+[2025-05-26 14:10:40] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"right"} 
+[2025-05-26 14:10:40] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5011,"left_bv":5700,"right_bv":2400} 
+[2025-05-26 14:10:43] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 14:10:43] production.INFO: last3: {"membership_id":604} 
+[2025-05-26 14:10:43] production.INFO: last5: {"membership_id":604} 
+[2025-05-26 14:10:43] production.INFO: last4: {"membership_id":604,"order_id":null} 
+[2025-05-26 14:10:43] production.INFO: after-charge: {"membership_id":604,"order_id":604} 
+[2025-05-26 14:10:45] production.INFO: Membership email sent to user #9  
+[2025-05-26 14:10:47] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 14:10:47] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-26 14:11:03] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 14:11:03] production.INFO: last3: {"membership_id":605} 
+[2025-05-26 14:11:03] production.INFO: last5: {"membership_id":605} 
+[2025-05-26 14:11:03] production.INFO: last4: {"membership_id":605,"order_id":null} 
+[2025-05-26 14:11:03] production.INFO: after-charge: {"membership_id":605,"order_id":605} 
+[2025-05-26 14:11:18] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"604","payment_amount":5000,"transaction_id":"pay_QZUkZkMdkEqpq3"} 
+[2025-05-26 14:11:18] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-26 14:11:18] production.INFO: Updating membership database {"last_membership_id":"604","transaction_id":"pay_QZUkZkMdkEqpq3","membership_history_id":865,"upgrade_membership_id":3} 
+[2025-05-26 14:11:18] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":604} 
+[2025-05-26 14:11:18] production.INFO: Distributed BV referral to parent {"parent_id":6,"bv_points":900,"position":"left"} 
+[2025-05-26 14:11:18] production.INFO: Incremented flush BV totals {"user_id":6,"bv_id":5013,"left_bv":900,"right_bv":900} 
+[2025-05-26 14:11:19] production.INFO: Distributed BV referral to parent {"parent_id":3,"bv_points":900,"position":"left"} 
+[2025-05-26 14:11:19] production.INFO: Incremented flush BV totals {"user_id":3,"bv_id":5014,"left_bv":2100,"right_bv":300} 
+[2025-05-26 14:11:19] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"right"} 
+[2025-05-26 14:11:19] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5015,"left_bv":5700,"right_bv":3300} 
+[2025-05-26 14:11:24] production.INFO: Membership email sent to user #12  
+[2025-05-26 14:11:25] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 14:11:25] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-26 14:11:25] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"605","payment_amount":5000,"transaction_id":"pay_QZUkynBGnoU22C"} 
+[2025-05-26 14:11:25] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-26 14:11:25] production.INFO: Updating membership database {"last_membership_id":"605","transaction_id":"pay_QZUkynBGnoU22C","membership_history_id":866,"upgrade_membership_id":3} 
+[2025-05-26 14:11:25] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":605} 
+[2025-05-26 14:11:26] production.INFO: Distributed BV referral to parent {"parent_id":7,"bv_points":900,"position":"left"} 
+[2025-05-26 14:11:26] production.INFO: Incremented flush BV totals {"user_id":7,"bv_id":5017,"left_bv":900,"right_bv":null} 
+[2025-05-26 14:11:26] production.INFO: Distributed BV referral to parent {"parent_id":3,"bv_points":900,"position":"right"} 
+[2025-05-26 14:11:26] production.INFO: Incremented flush BV totals {"user_id":3,"bv_id":5018,"left_bv":2100,"right_bv":1200} 
+[2025-05-26 14:11:26] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"right"} 
+[2025-05-26 14:11:27] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5019,"left_bv":5700,"right_bv":4200} 
+[2025-05-26 14:11:31] production.INFO: Membership email sent to user #14  
+[2025-05-26 14:11:33] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 14:11:33] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-26 14:11:43] production.INFO: LeftBV: 0  
+[2025-05-26 14:11:43] production.INFO: RightBV:0  
+[2025-05-26 14:11:55] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 14:11:56] production.INFO: last3: {"membership_id":606} 
+[2025-05-26 14:11:56] production.INFO: last5: {"membership_id":606} 
+[2025-05-26 14:11:56] production.INFO: last4: {"membership_id":606,"order_id":null} 
+[2025-05-26 14:11:56] production.INFO: after-charge: {"membership_id":606,"order_id":606} 
+[2025-05-26 14:12:24] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"606","payment_amount":5000,"transaction_id":"pay_QZUlyq8FiqQ4UK"} 
+[2025-05-26 14:12:24] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-26 14:12:24] production.INFO: Updating membership database {"last_membership_id":"606","transaction_id":"pay_QZUlyq8FiqQ4UK","membership_history_id":867,"upgrade_membership_id":3} 
+[2025-05-26 14:12:24] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":606} 
+[2025-05-26 14:12:24] production.INFO: Distributed BV referral to parent {"parent_id":7,"bv_points":900,"position":"right"} 
+[2025-05-26 14:12:24] production.INFO: Incremented flush BV totals {"user_id":7,"bv_id":5021,"left_bv":900,"right_bv":900} 
+[2025-05-26 14:12:25] production.INFO: Distributed BV referral to parent {"parent_id":3,"bv_points":900,"position":"right"} 
+[2025-05-26 14:12:25] production.INFO: Incremented flush BV totals {"user_id":3,"bv_id":5022,"left_bv":2100,"right_bv":2100} 
+[2025-05-26 14:12:25] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"right"} 
+[2025-05-26 14:12:25] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5023,"left_bv":5700,"right_bv":5100} 
+[2025-05-26 14:12:30] production.INFO: Membership email sent to user #15  
+[2025-05-26 14:12:31] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 14:12:31] production.INFO: Data to update: {"upgrade_membership_id":3} 

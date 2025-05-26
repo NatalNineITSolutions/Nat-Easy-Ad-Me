@@ -325,7 +325,7 @@ class AutoFlushBV extends Command
                 ]);
 
                 // Reset the commission
-                $user->referral_commission = 0;
+                // $user->referral_commission = 0;
                 $user->save();
 
                 Log::info("Referral commission processed for eligible user", [
@@ -433,89 +433,116 @@ class AutoFlushBV extends Command
         $dayStart = now()->startOfDay();
         $dayEnd = now()->endOfDay();
 
+        // 1) Grab everyone who actually flushed pairs today
         $flushRows = UserFlushBv::whereBetween('created_at', [$dayStart, $dayEnd])
-            ->where('eligible_pairs', '>', 0)
+            ->get()
+            ->keyBy('user_id');
+
+        $overrideUsers = User::where('self_purchased_bv', '>=', $bpConversionRate)
+            ->where('referral_commission', '>=', 100)
+            ->whereNotIn('id', $flushRows->keys())
             ->get();
 
-        foreach ($flushRows as $flush) {
-            $user = User::find($flush->user_id);
-            if (!$user)
+        // 3) Process “real” BV‐flush payouts first
+        foreach ($flushRows as $userId => $flush) {
+            if ($flush->eligible_pairs <= 0) {
                 continue;
+            }
 
-            // 1) Enforce self‐BV threshold
-            if (($user->self_purchased_bv ?? 0) < $bpConversionRate) {
-                Log::info("Skipping user {$user->id}: self_purchased_bv too low");
+            $user = User::find($userId);
+            if (!$user || ($user->self_purchased_bv ?? 0) < $bpConversionRate) {
+                Log::info("Skipping user {$userId}: self_purchased_bv too low");
                 continue;
             }
 
             $matchBv = $flush->eligible_pairs * $bpConversionRate;
-            if ($matchBv <= 0) {
-                Log::info("Skipping user {$user->id}: left and right BV are 0");
-                continue;
-            }
-
-            // 2) Base gross from pairs
             $gross = $flush->eligible_pairs * $pairIncome;
 
-            // 3) Pull referral *now*, before it's cleared
             $commission = $user->referral_commission;
-            if ($user->referral_commission > 0) {
-                // if it’s a full‐blown payout
-                if ($user->referral_commission >= 100) {
-                    $commission = $user->referral_commission;
-                    $user->referral_commission = 0;
-                    $user->save();
-                } else {
-                    // or just the tiny ones you generated as BV a moment ago
-                    $commission = UsersBv::where('user_id', $user->id)
-                        ->where('type', 'referral_commission')
-                        ->where('created_at', '>=', now()->subMinute())
-                        ->sum('bv_points');
-                }
+            if ($commission >= 100) {
+                $user->referral_commission = 0;
+                $user->save();
+            } elseif ($commission > 0) {
+                $commission = UsersBv::where('user_id', $userId)
+                    ->where('type', 'referral_commission')
+                    ->where('created_at', '>=', now()->subMinute())
+                    ->sum('bv_points');
             }
-
             $gross += $commission;
 
-            // 4) Deductions
-            $tdsDeduction = $gross * ($tdsPercentage / 100);
+            // deductions
+            $tdsAmt = $gross * ($tdsPercentage / 100);
             $serviceChargeAmt = $gross * ($serviceCharge / 100);
-            $netAmount = max($gross - $tdsDeduction - $serviceChargeAmt, 0);
+            $net = max($gross - $tdsAmt - $serviceChargeAmt, 0);
 
-            // 5) Now record, using $commission, not the old $referral
+            // record it
             UserPayoutDetail::create([
-                'user_id' => $user->id,
+                'user_id' => $userId,
                 'payout_summary_id' => $payoutSummaryId,
                 'left_bv' => $matchBv,
                 'right_bv' => $matchBv,
                 'matching_pairs' => $flush->eligible_pairs,
                 'payout_amount' => $gross,
                 'referral' => $commission,
-                'tds_deduction' => $tdsDeduction,
+                'tds_deduction' => $tdsAmt,
                 'service_charge' => $serviceChargeAmt,
-                'net_amount' => $netAmount,
+                'net_amount' => $net,
                 'status' => 'payout_eligible',
             ]);
 
             Log::info('User payout detail recorded', [
-                'user_id' => $user->id,
+                'user_id' => $userId,
                 'matching_pairs' => $flush->eligible_pairs,
-                'bv_recorded' => $matchBv,
                 'gross' => $gross,
-                'tds' => $tdsDeduction,
+                'tds' => $tdsAmt,
                 'service_charge' => $serviceChargeAmt,
-                'net' => $netAmount,
+                'net' => $net,
                 'referral' => $commission,
             ]);
 
-            // Clear out their eligible_pairs
-            $flush->update(['eligible_pairs' => 0]);
+            // After processing all payouts, set eligible_pairs = 0 for all users flushed today
+            UserFlushBv::whereBetween('created_at', [$dayStart, $dayEnd])
+                ->update(['eligible_pairs' => 0]);
+        }
+
+        // 4) Now process the pure‐override case: no pairs but big referral + self BV
+        foreach ($overrideUsers as $user) {
+            $commission = $user->referral_commission;
+
+            // drain it completely
+            $user->referral_commission = 0;
+            $user->save();
+
+            $gross = $commission;
+            $tdsAmt = $gross * ($tdsPercentage / 100);
+            $serviceChargeAmt = $gross * ($serviceCharge / 100);
+            $net = max($gross - $tdsAmt - $serviceChargeAmt, 0);
+
+            UserPayoutDetail::create([
+                'user_id' => $user->id,
+                'payout_summary_id' => $payoutSummaryId,
+                'left_bv' => 0,
+                'right_bv' => 0,
+                'matching_pairs' => 0,
+                'payout_amount' => $gross,
+                'referral' => $commission,
+                'tds_deduction' => $tdsAmt,
+                'service_charge' => $serviceChargeAmt,
+                'net_amount' => $net,
+                'status' => 'payout_eligible',
+            ]);
+
+            Log::info('Override‐only payout recorded', [
+                'user_id' => $user->id,
+                'gross' => $gross,
+                'tds' => $tdsAmt,
+                'service_charge' => $serviceChargeAmt,
+                'net' => $net,
+                'referral' => $commission,
+            ]);
         }
     }
 
-
-    /**
-     * Sum only one node's BV records (not its whole subtree).
-     */
     protected function sumNodeBv(?User $node, \Illuminate\Support\Carbon $cutoff): float
     {
         if (!$node) {
@@ -529,9 +556,7 @@ class AutoFlushBV extends Command
             ->sum('bv_points');
     }
 
-    /**
-     * (Optional) if you want to log/store the entire subtree's BV total.
-     */
+
     protected function sumSubtreeBv(?User $node, \Illuminate\Support\Carbon $cutoff): float
     {
         if (!$node)
@@ -542,10 +567,6 @@ class AutoFlushBV extends Command
         return $total;
     }
 
-    /**
-     * Recursively count **1 direct pair** at this node +
-     * all pairs in its left‐ & right‐child subtrees.
-     */
     protected function countMatchingPairs(?User $user, float $bpConversionRate, Carbon $cutoff): int
     {
         if (!$user)

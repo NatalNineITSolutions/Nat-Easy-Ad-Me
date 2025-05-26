@@ -494,3 +494,322 @@
 [2025-05-26 14:12:30] production.INFO: Membership email sent to user #15  
 [2025-05-26 14:12:31] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
 [2025-05-26 14:12:31] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-26 14:13:15] production.INFO: LeftBV: 900  
+[2025-05-26 14:13:15] production.INFO: RightBV:900  
+[2025-05-26 14:13:30] production.INFO: LeftBV: 900  
+[2025-05-26 14:13:30] production.INFO: RightBV:900  
+[2025-05-26 14:18:00] production.INFO: LeftBV: 5700  
+[2025-05-26 14:18:00] production.INFO: RightBV:5100  
+[2025-05-26 14:19:26] production.INFO: LeftBV: 2700  
+[2025-05-26 14:19:26] production.INFO: RightBV:2700  
+[2025-05-26 14:19:41] production.INFO: LeftBV: 2100  
+[2025-05-26 14:19:41] production.INFO: RightBV:2100  
+[2025-05-26 14:19:53] production.INFO: LeftBV: 900  
+[2025-05-26 14:19:53] production.INFO: RightBV:900  
+[2025-05-26 14:20:06] production.INFO: LeftBV: 900  
+[2025-05-26 14:20:06] production.INFO: RightBV:900  
+[2025-05-26 14:20:16] production.INFO: LeftBV: 900  
+[2025-05-26 14:20:16] production.INFO: RightBV:900  
+[2025-05-26 14:20:28] production.INFO: LeftBV: 900  
+[2025-05-26 14:20:28] production.INFO: RightBV:900  
+[2025-05-26 14:22:23] production.INFO: Checking for BV flush. Now: 14:22, Configured: 14:22  
+[2025-05-26 14:22:23] production.INFO: BV Flush - Side left {"user_id":2,"flushed_bv":1800} 
+[2025-05-26 14:22:23] production.INFO: BV Flush - Side right {"user_id":3,"flushed_bv":1800} 
+[2025-05-26 14:22:23] production.INFO: Flushing leftover right BV {"user_id":1,"right_over_bv":3300} 
+[2025-05-26 14:22:23] production.INFO: BV Flush - Side right {"user_id":3,"flushed_bv":3300} 
+[2025-05-26 14:22:23] production.INFO: BV flush for user 1 completed {"pairs_flushed":"2","bv_per_side_flushed":1800,"remaining_left_bv":3900,"remaining_right_bv":0} 
+[2025-05-26 14:22:23] production.INFO: User qualifies via referral override {"user_id":1,"self_bv":"900.00","referral_commission":"810.00"} 
+[2025-05-26 14:22:23] production.INFO: Referral commission processed for eligible user {"user_id":1,"amount":"810.00","self_bv":"900.00","has_referral_override":true} 
+[2025-05-26 14:22:23] production.INFO: BV Flush - Side left {"user_id":4,"flushed_bv":1800} 
+[2025-05-26 14:22:23] production.INFO: BV Flush - Side right {"user_id":5,"flushed_bv":1800} 
+[2025-05-26 14:22:23] production.INFO: Equal remainders; flushing left BV {"user_id":2,"left_over_bv":900} 
+[2025-05-26 14:22:23] production.INFO: BV Flush - Side left {"user_id":4,"flushed_bv":900} 
+[2025-05-26 14:22:23] production.INFO: BV flush for user 2 completed {"pairs_flushed":"2","bv_per_side_flushed":1800,"remaining_left_bv":0,"remaining_right_bv":900} 
+[2025-05-26 14:22:23] production.INFO: User eligibility check {"user_id":2,"self_bv":"300.00","left_bv":4500.0,"right_bv":4500.0,"referral_commission":"90.00","is_eligible":false} 
+[2025-05-26 14:22:23] production.INFO: Referral commission held - user not eligible {"user_id":2,"amount":"90.00","self_bv":"300.00"} 
+[2025-05-26 14:22:23] production.INFO: BV Flush - Side left {"user_id":6,"flushed_bv":1800.0} 
+[2025-05-26 14:22:23] production.INFO: BV Flush - Side right {"user_id":7,"flushed_bv":1800.0} 
+[2025-05-26 14:22:23] production.INFO: Equal remainders; flushing left BV {"user_id":3,"left_over_bv":300.0} 
+[2025-05-26 14:22:23] production.INFO: BV Flush - Side left {"user_id":6,"flushed_bv":300.0} 
+[2025-05-26 14:22:23] production.INFO: BV flush for user 3 completed {"pairs_flushed":2.0,"bv_per_side_flushed":1800.0,"remaining_left_bv":0,"remaining_right_bv":300.0} 
+[2025-05-26 14:22:23] production.INFO: BV Flush - Side left {"user_id":8,"flushed_bv":900.0} 
+[2025-05-26 14:22:23] production.INFO: BV Flush - Side right {"user_id":9,"flushed_bv":900.0} 
+[2025-05-26 14:22:23] production.INFO: BV flush for user 4 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0.0,"remaining_right_bv":0.0} 
+[2025-05-26 14:22:23] production.INFO: BV Flush - Side left {"user_id":10,"flushed_bv":900.0} 
+[2025-05-26 14:22:23] production.INFO: BV Flush - Side right {"user_id":11,"flushed_bv":900.0} 
+[2025-05-26 14:22:23] production.INFO: BV flush for user 5 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0.0,"remaining_right_bv":0.0} 
+[2025-05-26 14:22:23] production.INFO: BV Flush - Side left {"user_id":12,"flushed_bv":900.0} 
+[2025-05-26 14:22:23] production.INFO: BV Flush - Side right {"user_id":13,"flushed_bv":900.0} 
+[2025-05-26 14:22:23] production.INFO: BV flush for user 6 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0.0,"remaining_right_bv":0.0} 
+[2025-05-26 14:22:23] production.INFO: User eligibility check {"user_id":6,"self_bv":"300.00","left_bv":900.0,"right_bv":900.0,"referral_commission":"180.00","is_eligible":false} 
+[2025-05-26 14:22:23] production.INFO: Referral commission held - user not eligible {"user_id":6,"amount":"180.00","self_bv":"300.00"} 
+[2025-05-26 14:22:23] production.INFO: BV Flush - Side left {"user_id":14,"flushed_bv":900.0} 
+[2025-05-26 14:22:23] production.INFO: BV Flush - Side right {"user_id":15,"flushed_bv":900.0} 
+[2025-05-26 14:22:23] production.INFO: BV flush for user 7 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0.0,"remaining_right_bv":0.0} 
+[2025-05-26 14:22:23] production.INFO: calculateMatchingPairs: {"rows":7,"sum_eligible_pairs":"10"} 
+[2025-05-26 14:22:23] production.INFO: Payout recorded {"date":"2025-05-26 14:22:23","previous_balance":0,"new_balance":39100,"record_id":436} 
+[2025-05-26 14:22:24] production.INFO: UserPayoutDetail created for user 1 {"pairs":2,"gross":1210.0,"tds":12.1,"service":12.1,"net":1185.8000000000002,"referral":"810.00"} 
+[2025-05-26 14:22:24] production.INFO: Skipping user 2: self_purchased_bv too low  
+[2025-05-26 14:22:24] production.INFO: UserPayoutDetail created for user 3 {"pairs":2,"gross":400.0,"tds":4.0,"service":4.0,"net":392.0,"referral":"0.00"} 
+[2025-05-26 14:22:24] production.INFO: UserPayoutDetail created for user 4 {"pairs":1,"gross":200.0,"tds":2.0,"service":2.0,"net":196.0,"referral":"0.00"} 
+[2025-05-26 14:22:24] production.INFO: UserPayoutDetail created for user 5 {"pairs":1,"gross":200.0,"tds":2.0,"service":2.0,"net":196.0,"referral":"0.00"} 
+[2025-05-26 14:22:24] production.INFO: Skipping user 6: self_purchased_bv too low  
+[2025-05-26 14:22:24] production.INFO: UserPayoutDetail created for user 7 {"pairs":1,"gross":200.0,"tds":2.0,"service":2.0,"net":196.0,"referral":"0.00"} 
+[2025-05-26 14:23:05] production.INFO: LeftBV: 3900  
+[2025-05-26 14:23:05] production.INFO: RightBV:0  
+[2025-05-26 14:23:20] production.INFO: LeftBV: 0  
+[2025-05-26 14:23:20] production.INFO: RightBV:900  
+[2025-05-26 14:23:53] production.INFO: LeftBV: 0  
+[2025-05-26 14:23:53] production.INFO: RightBV:300  
+[2025-05-26 14:24:05] production.INFO: LeftBV: 0  
+[2025-05-26 14:24:05] production.INFO: RightBV:0  
+[2025-05-26 14:24:14] production.INFO: LeftBV: 0  
+[2025-05-26 14:24:14] production.INFO: RightBV:0  
+[2025-05-26 14:24:28] production.INFO: LeftBV: 0  
+[2025-05-26 14:24:28] production.INFO: RightBV:0  
+[2025-05-26 14:24:45] production.INFO: LeftBV: 0  
+[2025-05-26 14:24:45] production.INFO: RightBV:0  
+[2025-05-26 14:25:54] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 14:25:54] production.INFO: last3: {"membership_id":598} 
+[2025-05-26 14:25:54] production.INFO: last5: {"membership_id":598} 
+[2025-05-26 14:25:54] production.INFO: last4: {"membership_id":598,"order_id":null} 
+[2025-05-26 14:25:54] production.INFO: after-charge: {"membership_id":598,"order_id":598} 
+[2025-05-26 14:26:24] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"598","payment_amount":5000,"transaction_id":"pay_QZV0dQUze3TW45"} 
+[2025-05-26 14:26:24] production.INFO: Updating membership database {"last_membership_id":"598","transaction_id":"pay_QZV0dQUze3TW45","membership_history_id":868,"upgrade_membership_id":3} 
+[2025-05-26 14:26:24] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":598} 
+[2025-05-26 14:26:24] production.INFO: Distributed BV referral to parent {"parent_id":3,"bv_points":900,"position":"left"} 
+[2025-05-26 14:26:24] production.INFO: Incremented flush BV totals {"user_id":3,"bv_id":5043,"left_bv":900,"right_bv":300} 
+[2025-05-26 14:26:24] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"right"} 
+[2025-05-26 14:26:24] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5044,"left_bv":3900,"right_bv":900} 
+[2025-05-26 14:26:32] production.INFO: Membership email sent to user #6  
+[2025-05-26 14:26:34] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 14:26:34] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-26 14:26:45] production.INFO: LeftBV: 3900  
+[2025-05-26 14:26:45] production.INFO: RightBV:900  
+[2025-05-26 14:26:59] production.INFO: LeftBV: 900  
+[2025-05-26 14:26:59] production.INFO: RightBV:300  
+[2025-05-26 14:27:15] production.INFO: LeftBV: 0  
+[2025-05-26 14:27:15] production.INFO: RightBV:0  
+[2025-05-26 14:27:18] production.INFO: LeftBV: 0  
+[2025-05-26 14:27:18] production.INFO: RightBV:0  
+[2025-05-26 14:28:16] production.INFO: Checking for BV flush. Now: 14:28, Configured: 14:28  
+[2025-05-26 14:28:16] production.INFO: BV Flush - Side left {"user_id":2,"flushed_bv":900.0} 
+[2025-05-26 14:28:16] production.INFO: BV Flush - Side right {"user_id":3,"flushed_bv":900.0} 
+[2025-05-26 14:28:16] production.INFO: BV flush for user 1 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":3000.0,"remaining_right_bv":0.0} 
+[2025-05-26 14:28:16] production.INFO: No BV flush for user 2: not enough BV to form even one pair {"left_bv":0,"right_bv":"900","bp_rate":"900"} 
+[2025-05-26 14:28:16] production.INFO: User eligibility check {"user_id":2,"self_bv":"300.00","left_bv":0.0,"right_bv":900.0,"referral_commission":"90.00","is_eligible":false} 
+[2025-05-26 14:28:16] production.INFO: Referral commission held - user not eligible {"user_id":2,"amount":"90.00","self_bv":"300.00"} 
+[2025-05-26 14:28:16] production.INFO: No BV flush for user 3: not enough BV to form even one pair {"left_bv":"900","right_bv":"300","bp_rate":"900"} 
+[2025-05-26 14:28:16] production.INFO: No BV flush for user 4: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-26 14:28:16] production.INFO: No BV flush for user 5: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-26 14:28:16] production.INFO: No BV flush for user 6: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-26 14:28:16] production.INFO: User qualifies via referral override {"user_id":6,"self_bv":"1200.00","referral_commission":"180.00"} 
+[2025-05-26 14:28:16] production.INFO: Referral commission processed for eligible user {"user_id":6,"amount":"180.00","self_bv":"1200.00","has_referral_override":true} 
+[2025-05-26 14:28:16] production.INFO: No BV flush for user 7: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-26 14:28:16] production.INFO: calculateMatchingPairs: {"rows":1,"sum_eligible_pairs":"1"} 
+[2025-05-26 14:28:16] production.INFO: Payout recorded {"date":"2025-05-26 14:28:16","previous_balance":39100,"new_balance":81710,"record_id":437} 
+[2025-05-26 14:28:16] production.INFO: UserPayoutDetail created for user 1 {"pairs":1,"gross":200.0,"tds":2.0,"service":2.0,"net":196.0,"referral":"0.00"} 
+[2025-05-26 14:28:16] production.INFO: Override-only payout recorded for user 6 {"gross":"180.00","tds":1.8,"service":1.8,"net":176.39999999999998,"referral":"180.00"} 
+[2025-05-26 14:28:39] production.INFO: LeftBV: 3000  
+[2025-05-26 14:28:39] production.INFO: RightBV:0  
+[2025-05-26 14:28:54] production.INFO: LeftBV: 900  
+[2025-05-26 14:28:54] production.INFO: RightBV:300  
+[2025-05-26 14:29:14] production.INFO: LeftBV: 0  
+[2025-05-26 14:29:14] production.INFO: RightBV:0  
+[2025-05-26 16:32:44] production.INFO: LeftBV: 3000  
+[2025-05-26 16:32:44] production.INFO: RightBV:0  
+[2025-05-26 16:38:47] production.INFO: LeftBV: 0  
+[2025-05-26 16:38:47] production.INFO: RightBV:0  
+[2025-05-26 16:41:19] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 16:41:19] production.INFO: last3: {"membership_id":607} 
+[2025-05-26 16:41:20] production.INFO: last5: {"membership_id":607} 
+[2025-05-26 16:41:20] production.INFO: last4: {"membership_id":607,"order_id":null} 
+[2025-05-26 16:41:20] production.INFO: after-charge: {"membership_id":607,"order_id":607} 
+[2025-05-26 16:42:05] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"607","payment_amount":5000,"transaction_id":"pay_QZXJx6zKsuduns"} 
+[2025-05-26 16:42:05] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-26 16:42:05] production.INFO: Updating membership database {"last_membership_id":"607","transaction_id":"pay_QZXJx6zKsuduns","membership_history_id":869,"upgrade_membership_id":3} 
+[2025-05-26 16:42:06] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":607} 
+[2025-05-26 16:42:28] production.INFO: Membership email sent to user #1  
+[2025-05-26 16:42:30] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 16:42:30] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-26 16:42:55] production.INFO: LeftBV: 0  
+[2025-05-26 16:42:55] production.INFO: RightBV:0  
+[2025-05-26 16:43:10] production.INFO: LeftBV: 0  
+[2025-05-26 16:43:10] production.INFO: RightBV:0  
+[2025-05-26 16:43:17] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 16:43:17] production.INFO: last3: {"membership_id":608} 
+[2025-05-26 16:43:17] production.INFO: last5: {"membership_id":608} 
+[2025-05-26 16:43:17] production.INFO: last4: {"membership_id":608,"order_id":null} 
+[2025-05-26 16:43:17] production.INFO: after-charge: {"membership_id":608,"order_id":608} 
+[2025-05-26 16:43:39] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 16:43:39] production.INFO: last3: {"membership_id":609} 
+[2025-05-26 16:43:39] production.INFO: last5: {"membership_id":609} 
+[2025-05-26 16:43:39] production.INFO: last4: {"membership_id":609,"order_id":null} 
+[2025-05-26 16:43:39] production.INFO: after-charge: {"membership_id":609,"order_id":609} 
+[2025-05-26 16:44:02] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"608","payment_amount":5000,"transaction_id":"pay_QZXLuRPUMaIPv6"} 
+[2025-05-26 16:44:02] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-26 16:44:03] production.INFO: Updating membership database {"last_membership_id":"608","transaction_id":"pay_QZXLuRPUMaIPv6","membership_history_id":870,"upgrade_membership_id":3} 
+[2025-05-26 16:44:03] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":608} 
+[2025-05-26 16:44:04] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"right"} 
+[2025-05-26 16:44:04] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5050,"left_bv":null,"right_bv":900} 
+[2025-05-26 16:44:16] production.INFO: Membership email sent to user #3  
+[2025-05-26 16:44:17] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"609","payment_amount":5000,"transaction_id":"pay_QZXMCg8rSX9D8c"} 
+[2025-05-26 16:44:17] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-26 16:44:17] production.INFO: Updating membership database {"last_membership_id":"609","transaction_id":"pay_QZXMCg8rSX9D8c","membership_history_id":871,"upgrade_membership_id":3} 
+[2025-05-26 16:44:17] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":609} 
+[2025-05-26 16:44:18] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"left"} 
+[2025-05-26 16:44:18] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5052,"left_bv":900,"right_bv":900} 
+[2025-05-26 16:44:18] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 16:44:18] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-26 16:44:23] production.INFO: Membership email sent to user #2  
+[2025-05-26 16:44:24] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 16:44:24] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-26 16:44:24] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 16:44:24] production.INFO: last3: {"membership_id":608} 
+[2025-05-26 16:44:24] production.INFO: last5: {"membership_id":608} 
+[2025-05-26 16:44:24] production.INFO: last4: {"membership_id":608,"order_id":null} 
+[2025-05-26 16:44:24] production.INFO: after-charge: {"membership_id":608,"order_id":608} 
+[2025-05-26 16:44:41] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 16:44:41] production.INFO: last3: {"membership_id":609} 
+[2025-05-26 16:44:41] production.INFO: last5: {"membership_id":609} 
+[2025-05-26 16:44:41] production.INFO: last4: {"membership_id":609,"order_id":null} 
+[2025-05-26 16:44:41] production.INFO: after-charge: {"membership_id":609,"order_id":609} 
+[2025-05-26 16:45:06] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"608","payment_amount":1000,"transaction_id":"pay_QZXN18x6UzKzD8"} 
+[2025-05-26 16:45:06] production.INFO: Updating membership database {"last_membership_id":"608","transaction_id":"pay_QZXN18x6UzKzD8","membership_history_id":872,"upgrade_membership_id":2} 
+[2025-05-26 16:45:06] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":608} 
+[2025-05-26 16:45:06] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":300,"position":"right"} 
+[2025-05-26 16:45:06] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5054,"left_bv":900,"right_bv":1200} 
+[2025-05-26 16:45:11] production.INFO: Membership email sent to user #3  
+[2025-05-26 16:45:13] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 16:45:13] production.INFO: Data to update: {"upgrade_membership_id":2} 
+[2025-05-26 16:45:20] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"609","payment_amount":1000,"transaction_id":"pay_QZXNWzBTn2i9Wq"} 
+[2025-05-26 16:45:20] production.INFO: Updating membership database {"last_membership_id":"609","transaction_id":"pay_QZXNWzBTn2i9Wq","membership_history_id":873,"upgrade_membership_id":2} 
+[2025-05-26 16:45:20] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":609} 
+[2025-05-26 16:45:21] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":300,"position":"left"} 
+[2025-05-26 16:45:21] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5056,"left_bv":1200,"right_bv":1200} 
+[2025-05-26 16:45:26] production.INFO: Membership email sent to user #2  
+[2025-05-26 16:45:27] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 16:45:27] production.INFO: Data to update: {"upgrade_membership_id":2} 
+[2025-05-26 16:45:35] production.INFO: LeftBV: 1200  
+[2025-05-26 16:45:35] production.INFO: RightBV:1200  
+[2025-05-26 16:47:12] production.INFO: Checking for BV flush. Now: 16:47, Configured: 16:47  
+[2025-05-26 16:47:12] production.INFO: BV Flush - Side left {"user_id":2,"flushed_bv":900.0} 
+[2025-05-26 16:47:12] production.INFO: BV Flush - Side right {"user_id":3,"flushed_bv":900.0} 
+[2025-05-26 16:47:12] production.INFO: Equal remainders; flushing left BV {"user_id":1,"left_over_bv":300.0} 
+[2025-05-26 16:47:12] production.INFO: BV Flush - Side left {"user_id":2,"flushed_bv":300.0} 
+[2025-05-26 16:47:12] production.INFO: BV flush for user 1 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0,"remaining_right_bv":300.0} 
+[2025-05-26 16:47:12] production.INFO: User qualifies via referral override {"user_id":1,"self_bv":"900.00","referral_commission":"180.00"} 
+[2025-05-26 16:47:12] production.INFO: Referral commission processed for eligible user {"user_id":1,"amount":"180.00","self_bv":"900.00","has_referral_override":true} 
+[2025-05-26 16:47:12] production.INFO: No BV flush for user 2: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-26 16:47:12] production.INFO: No BV flush for user 3: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-26 16:47:12] production.INFO: No BV flush for user 4: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-26 16:47:12] production.INFO: No BV flush for user 5: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-26 16:47:12] production.INFO: No BV flush for user 6: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-26 16:47:12] production.INFO: No BV flush for user 7: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-26 16:47:12] production.INFO: calculateMatchingPairs: {"rows":1,"sum_eligible_pairs":"1"} 
+[2025-05-26 16:47:12] production.INFO: Payout recorded {"date":"2025-05-26 16:47:12","previous_balance":0,"new_balance":5500,"record_id":438} 
+[2025-05-26 16:47:12] production.INFO: UserPayoutDetail created for user 1 {"pairs":1,"gross":380.0,"tds":3.8000000000000003,"service":3.8000000000000003,"net":372.4,"referral":"180.00"} 
+[2025-05-26 16:47:17] production.INFO: LeftBV: 0  
+[2025-05-26 16:47:17] production.INFO: RightBV:300  
+[2025-05-26 16:48:12] production.INFO: LeftBV: 0  
+[2025-05-26 16:48:12] production.INFO: RightBV:300  
+[2025-05-26 16:48:29] production.INFO: LeftBV: 0  
+[2025-05-26 16:48:29] production.INFO: RightBV:300  
+[2025-05-26 16:49:19] production.INFO: LeftBV: 1200  
+[2025-05-26 16:49:19] production.INFO: RightBV:1200  
+[2025-05-26 16:50:31] production.INFO: Checking for BV flush. Now: 16:50, Configured: 16:50  
+[2025-05-26 16:50:31] production.INFO: BV Flush - Side left {"user_id":2,"flushed_bv":900.0} 
+[2025-05-26 16:50:31] production.INFO: BV Flush - Side right {"user_id":3,"flushed_bv":900.0} 
+[2025-05-26 16:50:31] production.INFO: Equal remainders; flushing left BV {"user_id":1,"left_over_bv":300.0} 
+[2025-05-26 16:50:31] production.INFO: BV Flush - Side left {"user_id":2,"flushed_bv":300.0} 
+[2025-05-26 16:50:31] production.INFO: BV flush for user 1 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0,"remaining_right_bv":300.0} 
+[2025-05-26 16:50:31] production.INFO: User qualifies via referral override {"user_id":1,"self_bv":"900.00","referral_commission":"180.00"} 
+[2025-05-26 16:50:31] production.INFO: Referral commission processed for eligible user {"user_id":1,"amount":"180.00","self_bv":"900.00","has_referral_override":true} 
+[2025-05-26 16:50:31] production.INFO: No BV flush for user 2: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-26 16:50:31] production.INFO: No BV flush for user 3: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-26 16:50:31] production.INFO: No BV flush for user 4: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-26 16:50:31] production.INFO: No BV flush for user 5: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-26 16:50:31] production.INFO: No BV flush for user 6: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-26 16:50:31] production.INFO: No BV flush for user 7: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-26 16:50:31] production.INFO: calculateMatchingPairs: {"rows":1,"sum_eligible_pairs":"1"} 
+[2025-05-26 16:50:31] production.INFO: Payout recorded {"date":"2025-05-26 16:50:31","previous_balance":5500,"new_balance":11000,"record_id":439} 
+[2025-05-26 16:50:31] production.INFO: UserPayoutDetail created for user 1 {"pairs":1,"gross":380.0,"tds":3.8000000000000003,"service":3.8000000000000003,"net":372.4,"referral":"180.00"} 
+[2025-05-26 16:50:39] production.INFO: LeftBV: 0  
+[2025-05-26 16:50:39] production.INFO: RightBV:300  
+[2025-05-26 16:50:45] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 16:50:45] production.INFO: last3: {"membership_id":608} 
+[2025-05-26 16:50:45] production.INFO: last5: {"membership_id":608} 
+[2025-05-26 16:50:45] production.INFO: last4: {"membership_id":608,"order_id":null} 
+[2025-05-26 16:50:45] production.INFO: after-charge: {"membership_id":608,"order_id":608} 
+[2025-05-26 16:51:03] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 16:51:03] production.INFO: last3: {"membership_id":609} 
+[2025-05-26 16:51:03] production.INFO: last5: {"membership_id":609} 
+[2025-05-26 16:51:03] production.INFO: last4: {"membership_id":609,"order_id":null} 
+[2025-05-26 16:51:03] production.INFO: after-charge: {"membership_id":609,"order_id":609} 
+[2025-05-26 16:51:22] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"609","payment_amount":5000,"transaction_id":"pay_QZXTyGr1p1eIy6"} 
+[2025-05-26 16:51:22] production.INFO: Updating membership database {"last_membership_id":"609","transaction_id":"pay_QZXTyGr1p1eIy6","membership_history_id":875,"upgrade_membership_id":3} 
+[2025-05-26 16:51:22] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":609} 
+[2025-05-26 16:51:22] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"left"} 
+[2025-05-26 16:51:22] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5066,"left_bv":900,"right_bv":300} 
+[2025-05-26 16:51:27] production.INFO: Membership email sent to user #2  
+[2025-05-26 16:51:28] production.INFO: LeftBV: 900  
+[2025-05-26 16:51:28] production.INFO: RightBV:300  
+[2025-05-26 16:51:29] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 16:51:29] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-26 16:51:30] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"608","payment_amount":5000,"transaction_id":"pay_QZXTmlW6cdslvG"} 
+[2025-05-26 16:51:30] production.INFO: Updating membership database {"last_membership_id":"608","transaction_id":"pay_QZXTmlW6cdslvG","membership_history_id":874,"upgrade_membership_id":3} 
+[2025-05-26 16:51:30] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":608} 
+[2025-05-26 16:51:30] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"right"} 
+[2025-05-26 16:51:30] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5068,"left_bv":900,"right_bv":1200} 
+[2025-05-26 16:51:35] production.INFO: Membership email sent to user #3  
+[2025-05-26 16:51:37] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 16:51:37] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-26 16:51:45] production.INFO: LeftBV: 900  
+[2025-05-26 16:51:45] production.INFO: RightBV:1200  
+[2025-05-26 16:51:55] production.INFO: LeftBV: 900  
+[2025-05-26 16:51:55] production.INFO: RightBV:1200  
+[2025-05-26 16:51:59] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-26 16:51:59] production.INFO: last3: {"membership_id":609} 
+[2025-05-26 16:51:59] production.INFO: last5: {"membership_id":609} 
+[2025-05-26 16:51:59] production.INFO: last4: {"membership_id":609,"order_id":null} 
+[2025-05-26 16:51:59] production.INFO: after-charge: {"membership_id":609,"order_id":609} 
+[2025-05-26 16:52:15] production.INFO: LeftBV: 900  
+[2025-05-26 16:52:15] production.INFO: RightBV:1200  
+[2025-05-26 16:52:18] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"609","payment_amount":1000,"transaction_id":"pay_QZXUvdOlBeAiY6"} 
+[2025-05-26 16:52:18] production.INFO: Updating membership database {"last_membership_id":"609","transaction_id":"pay_QZXUvdOlBeAiY6","membership_history_id":876,"upgrade_membership_id":2} 
+[2025-05-26 16:52:18] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":609} 
+[2025-05-26 16:52:18] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":300,"position":"left"} 
+[2025-05-26 16:52:18] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5070,"left_bv":1200,"right_bv":1200} 
+[2025-05-26 16:52:21] production.INFO: LeftBV: 1200  
+[2025-05-26 16:52:21] production.INFO: RightBV:1200  
+[2025-05-26 16:52:23] production.INFO: Membership email sent to user #2  
+[2025-05-26 16:52:25] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-26 16:52:25] production.INFO: Data to update: {"upgrade_membership_id":2} 
+[2025-05-26 16:52:26] production.INFO: LeftBV: 1200  
+[2025-05-26 16:52:26] production.INFO: RightBV:1200  
+[2025-05-26 16:52:36] production.INFO: LeftBV: 1200  
+[2025-05-26 16:52:36] production.INFO: RightBV:1200  
+[2025-05-26 16:52:44] production.INFO: LeftBV: 1200  
+[2025-05-26 16:52:44] production.INFO: RightBV:1200  
+[2025-05-26 16:52:54] production.INFO: Checking for BV flush. Now: 16:52, Configured: 16:50  
+[2025-05-26 16:52:57] production.INFO: Checking for BV flush. Now: 16:52, Configured: 16:50  
+[2025-05-26 16:52:59] production.INFO: Checking for BV flush. Now: 16:52, Configured: 16:50  
+[2025-05-26 16:53:11] production.INFO: Checking for BV flush. Now: 16:53, Configured: 16:53  
+[2025-05-26 16:53:11] production.INFO: BV Flush - Side left {"user_id":2,"flushed_bv":900.0} 
+[2025-05-26 16:53:11] production.INFO: BV Flush - Side right {"user_id":3,"flushed_bv":900.0} 
+[2025-05-26 16:53:11] production.INFO: Equal remainders; flushing left BV {"user_id":1,"left_over_bv":300.0} 
+[2025-05-26 16:53:11] production.INFO: BV Flush - Side left {"user_id":2,"flushed_bv":300.0} 
+[2025-05-26 16:53:11] production.INFO: BV flush for user 1 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0,"remaining_right_bv":300.0} 
+[2025-05-26 16:53:11] production.INFO: User qualifies via referral override {"user_id":1,"self_bv":"900.00","referral_commission":"180.00"} 
+[2025-05-26 16:53:11] production.INFO: Referral commission processed for eligible user {"user_id":1,"amount":"180.00","self_bv":"900.00","has_referral_override":true} 
+[2025-05-26 16:53:11] production.INFO: No BV flush for user 2: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-26 16:53:11] production.INFO: No BV flush for user 3: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-26 16:53:11] production.INFO: No BV flush for user 4: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-26 16:53:11] production.INFO: No BV flush for user 5: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-26 16:53:11] production.INFO: No BV flush for user 6: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-26 16:53:11] production.INFO: No BV flush for user 7: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-26 16:53:11] production.INFO: calculateMatchingPairs: {"rows":1,"sum_eligible_pairs":"1"} 
+[2025-05-26 16:53:11] production.INFO: Payout recorded {"date":"2025-05-26 16:53:11","previous_balance":11000,"new_balance":20880,"record_id":440} 
+[2025-05-26 16:53:11] production.INFO: UserPayoutDetail created for user 1 {"pairs":1,"gross":380.0,"tds":3.8000000000000003,"service":3.8000000000000003,"net":372.4,"referral":"180.00"} 
+[2025-05-26 16:53:17] production.INFO: LeftBV: 0  
+[2025-05-26 16:53:17] production.INFO: RightBV:300  

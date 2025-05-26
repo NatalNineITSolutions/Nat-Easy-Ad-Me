@@ -19,7 +19,8 @@ class AutoFlushBV extends Command
 
     protected $protectedTypes = [
         'genology',
-        'purchase'
+        'purchase',
+
     ];
 
     public function handle()
@@ -87,10 +88,10 @@ class AutoFlushBV extends Command
 
         // total BV on each side (excluding protected types)
         $leftBv = $leftChild->userBvs()
-            ->whereNotIn('type', $this->protectedTypes)
+            ->whereNotIn('type', array_merge($this->protectedTypes, ['referral_commission']))
             ->sum('bv_points');
         $rightBv = $rightChild->userBvs()
-            ->whereNotIn('type', $this->protectedTypes)
+            ->whereNotIn('type', array_merge($this->protectedTypes, ['referral_commission']))
             ->sum('bv_points');
 
         // How many WHOLE BP units on each side?

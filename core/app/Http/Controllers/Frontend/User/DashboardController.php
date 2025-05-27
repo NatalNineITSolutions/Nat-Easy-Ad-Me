@@ -209,6 +209,28 @@ class DashboardController extends Controller
             return redirect()->back()->withErrors(['error' => __('User not found')]);
         }
 
+        $bpConversionRate = get_static_option('bp_value') ?? 1;
+        $sealingLimit = get_static_option('sealing_limitation') ?? 1;
+
+        $userFlushBvs = DB::table('user_flush_bvs')
+            ->where('user_id', $user_id)
+            ->latest('id')
+            ->first();
+
+        // Sum BV points
+        $leftBvPoints = $userFlushBvs ? $userFlushBvs->left_bv : 0;
+        Log::info('LeftBV: ' . $leftBvPoints);
+
+        $rightBvPoints = $userFlushBvs ? $userFlushBvs->right_bv : 0;
+        Log::info('RightBV:' . $rightBvPoints);
+
+        $sealingLimitBv = $sealingLimit * $bpConversionRate;
+        $sealedLeftBv = min($leftBvPoints, $sealingLimitBv);
+        $sealedRightBv = min($rightBvPoints, $sealingLimitBv);
+        $leftBP = floor($sealedLeftBv / $bpConversionRate);
+        $rightBP = floor($sealedRightBv / $bpConversionRate);
+        $possiblePairs = min($leftBP, $rightBP);
+
         // Recursively calculate BV for each node
         $this->calculateBV($user);
 
@@ -222,7 +244,7 @@ class DashboardController extends Controller
             ]);
         }
 
-        return view('frontend.user.genology.genology', compact('mlmTree'));
+        return view('frontend.user.genology.genology', compact('mlmTree', 'possiblePairs'));
     }
 
     public function getChildren(Request $request, $id)
@@ -249,22 +271,24 @@ class DashboardController extends Controller
             return;
         }
 
-        // Calculate BV for the current node
-        $node->leftBV = $node->leftChild ? $node->leftChild->userBvs->sum('bv_points') : 0;
-        $node->rightBV = $node->rightChild ? $node->rightChild->userBvs->sum('bv_points') : 0;
+        $flush = DB::table('user_flush_bvs')
+            ->where('user_id', $node->id)
+            ->latest('id')
+            ->first();
 
-        // Debug: Log calculated BV points
+        $node->leftBV = $flush->left_bv ?? 0;
+        $node->rightBV = $flush->right_bv ?? 0;
+
         Log::info('Calculated BV points for node:', [
             'node_id' => $node->id,
             'leftBV' => $node->leftBV,
             'rightBV' => $node->rightBV,
         ]);
 
-        // Recursively calculate BV for left and right children
+        // Recurse
         if ($node->leftChild) {
             $this->calculateBV($node->leftChild);
         }
-
         if ($node->rightChild) {
             $this->calculateBV($node->rightChild);
         }

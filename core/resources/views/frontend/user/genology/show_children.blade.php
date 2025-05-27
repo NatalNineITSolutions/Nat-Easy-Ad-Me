@@ -16,13 +16,13 @@
                         {{-- Render the parent node --}}
                         <div class="node root-node">
                             <div class="avatar-circle {{ $parent->gender == 'female' ? 'female' : 'male' }} 
-                                {{ ($parent->leftBV ?? 0) == 0 && ($parent->rightBV ?? 0) == 0 ? 'zero-bv' : '' }}">
+                                    {{ ($parent->leftBV ?? 0) == 0 && ($parent->rightBV ?? 0) == 0 ? 'zero-bv' : '' }}">
                                 <a href="{{ route('user.user.mlm.children', ['id' => $parent->id]) }}">
                                     @if($parent->avatar)
                                         <img src="{{ asset($parent->avatar) }}" alt="User Avatar">
                                     @else
-                                        <img src="{{ asset($parent->gender == 'female' ? 'assets/uploads/media-uploader/girlavatart.jpg' : 'assets/uploads/media-uploader/avatar.jpg') }}" 
-                                             alt="Default Avatar">
+                                        <img src="{{ asset($parent->gender == 'female' ? 'assets/uploads/media-uploader/girlavatart.jpg' : 'assets/uploads/media-uploader/avatar.jpg') }}"
+                                            alt="Default Avatar">
                                     @endif
                                 </a>
                             </div>
@@ -44,7 +44,7 @@
                                             href="{{ route('user.mlm.addNewMember', ['sponsor' => $parent->id, 'position' => 'left']) }}">
                                             <div class="add-icon">
                                                 <i class="fas fa-user-plus"></i>
-                                         </div>
+                                            </div>
                                         </a>
                                     </div>
                                 @endif

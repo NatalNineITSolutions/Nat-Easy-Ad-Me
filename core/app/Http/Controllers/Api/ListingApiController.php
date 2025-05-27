@@ -44,6 +44,89 @@ class ListingApiController extends Controller
         ]);
     }
 
+    public function getCategory($id)
+    {
+        // Find active category by ID
+        $category = Category::where('status', 1)
+            ->find($id, ['id', 'name', 'slug', 'icon', 'image']);
+
+        // Return 404 if not found
+        if (!$category) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Category not found',
+                'data' => null,
+            ], 404);
+        }
+
+        // Resolve attachment URL
+        $category->image = get_attachment_url_by_ids($category->image);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Category retrieved successfully',
+            'data' => $category,
+        ]);
+    }
+
+    public function getListingsByCategory($slug, Request $request)
+    {
+        // 1) fetch the category
+        $category = Category::where('slug', $slug)->first();
+        if (! $category) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Category not found',
+                'data'    => null
+            ], 404);
+        }
+
+        // 2) list subcategories + their total listings count
+        $subcategories = Subcategory::where('category_id', $category->id)
+            ->orderBy('name', 'asc')
+            ->take(20)
+            ->get()
+            ->map(function($sub) {
+                $sub->total_listings = Listing::where('sub_category_id', $sub->id)->count();
+                return $sub;
+            });
+
+        // 3) build base listing query
+        $listingQuery = Listing::with('user')
+            ->where('category_id', $category->id)
+            ->where('status', 1)
+            ->where('is_published', 1);
+
+        // 4) if Membership module is active, only include members or admin-created
+        if (moduleExists('Membership') && membershipModuleExistsAndEnable('Membership')) {
+            $memberIds = Listing::join('user_memberships', 'user_memberships.user_id', '=', 'listings.user_id')
+                ->where('user_memberships.expire_date', '>=', now()->toDateString())
+                ->pluck('listings.user_id')
+                ->unique()
+                ->push(0)
+                ->toArray();
+
+            $listingQuery->where(function($q) use($memberIds) {
+                $q->whereIn('listings.user_id', $memberIds)
+                  ->orWhereNotNull('admin_id');
+            });
+        }
+
+        // 5) paginate
+        $perPage = $request->query('per_page', 10);
+        $listings = $listingQuery->paginate($perPage);
+
+        // 6) return JSON
+        return response()->json([
+            'success' => true,
+            'message' => 'Listings for category retrieved successfully',
+            'data'    => [
+                'category'      => $category,
+                'subcategories' => $subcategories,
+                'listings'      => $listings,
+            ],
+        ]);
+    }
 
     public function getSubcategories(Request $request)
     {
@@ -76,16 +159,16 @@ class ListingApiController extends Controller
         // Ensure we're working with JSON
         $request->headers->set('Content-Type', 'application/json');
         $request->headers->set('Accept', 'application/json');
-    
+
         $user = Auth::guard('sanctum')->user();
-    
+
         if (!$user) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized access'
             ], 401);
         }
-    
+
         // Manually handle JSON input if not automatically decoded
         if (is_string($request->getContent())) {
             try {
@@ -174,17 +257,17 @@ class ListingApiController extends Controller
             if (is_string($request->gallery_images)) {
                 $galleryImageIds = array_map('intval', explode(',', $request->gallery_images));
             }
-        
+
             // ✅ Add this block
             if (is_array($request->gallery_images) && is_numeric($request->gallery_images[0])) {
                 $galleryImageIds = $request->gallery_images;
             }
-        
+
             // Handle file uploads as array
             if (is_array($request->gallery_images) && isset($request->gallery_images[0]) && $request->gallery_images[0] instanceof \Illuminate\Http\UploadedFile) {
                 foreach ($request->gallery_images as $galleryImage) {
                     $galleryImagePath = $galleryImage->store('media_uploads', 'public');
-        
+
                     $media = MediaUpload::create([
                         'user_id' => $user->id,
                         'path' => $galleryImagePath,
@@ -196,11 +279,11 @@ class ListingApiController extends Controller
                         'alt' => '',
                         'dimensions' => getimagesize($galleryImage->getPathname()) ? implode('x', getimagesize($galleryImage->getPathname())) : null,
                     ]);
-        
+
                     $galleryImageIds[] = $media->id;
                 }
             }
-        }        
+        }
 
         $galleryImagesString = $galleryImageIds ? implode('|', $galleryImageIds) : null;
 

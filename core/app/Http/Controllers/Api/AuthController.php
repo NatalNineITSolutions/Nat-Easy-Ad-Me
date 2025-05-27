@@ -321,8 +321,20 @@ class AuthController extends Controller
         $bpConversionRate = get_static_option('bp_value') ?? 1;
         $sealingLimit = get_static_option('sealing_limit') ?? 1;
 
-        $leftBvPoints = $user->leftChild ? $user->leftChild->userBvs->sum('bv_points') : 0;
-        $rightBvPoints = $user->rightChild ? $user->rightChild->userBvs->sum('bv_points') : 0;
+        $userFlushBvs = DB::table('user_flush_bvs')
+            ->where('user_id', $user_id)
+            ->latest('id')
+            ->first();
+
+        $leftBvPoints = $userFlushBvs ? $userFlushBvs->left_bv : 0;
+        Log::info('LeftBV: ' . $leftBvPoints);
+
+        $rightBvPoints = $userFlushBvs ? $userFlushBvs->right_bv : 0;
+        Log::info('RightBV:' . $rightBvPoints);
+
+
+        // $leftBvPoints = $user->leftChild ? $user->leftChild->userBvs->sum('bv_points') : 0;
+        // $rightBvPoints = $user->rightChild ? $user->rightChild->userBvs->sum('bv_points') : 0;
 
         $sealingLimitBv = $sealingLimit * $bpConversionRate;
 

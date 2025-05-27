@@ -38,8 +38,10 @@ Route::get('/recent-listings', [ProductListingController::class, 'getRecentListi
 
 // Category
 Route::get('/categories', [ListingApiController::class, 'getCategories']);
+Route::get('/categories/{id}', [ListingApiController::class, 'getCategory']);
 Route::get('/subcategories', [ListingApiController::class, 'getSubcategories']);
 Route::get('/childcategories', [ListingApiController::class, 'getChildcategories']);
+Route::get('/categories/{slug}/listings', [ListingApiController::class, 'getListingsByCategory']);
 
 Route::post('/listings/filter', [ListingApiController::class, 'filterListings']);
 

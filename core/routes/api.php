@@ -95,4 +95,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/user/update-profile', [AuthController::class, 'updateProfile']);
     Route::get('/profiles/filter', [MatrimonyController::class, 'apiFilter']);
     Route::get('/profiles', [MatrimonyController::class, 'index']);
+    Route::get('/profile-requests', [MatrimonyController::class, 'requestlists']);
+    Route::get('/matrimony/userprofile', [MatrimonyController::class, 'profile']);
 });

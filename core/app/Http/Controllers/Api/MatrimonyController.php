@@ -72,6 +72,50 @@ class MatrimonyController extends Controller
         ]);
     }
 
+    public function requestlists(Request $request)
+    {
+        $userId = $request->user()->id;
+
+        $requests = ProfileRequest::with('profile')
+            ->where('sender_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'requests' => $requests,
+        ]);
+    }
+
+    public function profile(Request $request)
+    {
+        $userId = auth()->id();
+        Log::info("Fetching profile for user ID: {$userId}");
+
+        $kycRecord = DB::table('matrimony_kyc')
+            ->leftJoin('users', 'matrimony_kyc.user_id', '=', 'users.id')
+            ->select(
+                'matrimony_kyc.*',
+                'users.username'
+            )
+            ->where('matrimony_kyc.user_id', $userId)
+            ->first();
+
+        Log::info("MatrimonyKYC Data:", (array) $kycRecord);
+
+        if (!$kycRecord) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Profile not found.'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $kycRecord
+        ]);
+    }
+
     public function getProfileDetails($profile_id)
     {
         if (!$profile_id) {
@@ -755,43 +799,43 @@ class MatrimonyController extends Controller
                     }
                 }
                 if ($request->filled('marital_status')) {
-                $query->where('marital_status', $request->marital_status);
-            }
-
-            if ($request->filled('income')) {
-                $incomeRange = IncomeRange::find($request->income);
-                if ($incomeRange) {
-                    $query->where('annual_income', '>=', $incomeRange->from_income);
+                    $query->where('marital_status', $request->marital_status);
                 }
-            }
 
-            if ($request->filled('occupation')) {
-                $query->where('occupation', 'LIKE', "%{$request->occupation}%");
-            }
+                if ($request->filled('income')) {
+                    $incomeRange = IncomeRange::find($request->income);
+                    if ($incomeRange) {
+                        $query->where('annual_income', '>=', $incomeRange->from_income);
+                    }
+                }
 
-            if ($request->filled('religion')) {
-                $query->where('religion', $request->religion);
-            }
+                if ($request->filled('occupation')) {
+                    $query->where('occupation', 'LIKE', "%{$request->occupation}%");
+                }
 
-            if ($request->filled('caste')) {
-                $query->where('caste', $request->caste);
-            }
+                if ($request->filled('religion')) {
+                    $query->where('religion', $request->religion);
+                }
 
-            if ($request->filled('star')) {
-                $query->where('star', $request->star);
-            }
+                if ($request->filled('caste')) {
+                    $query->where('caste', $request->caste);
+                }
 
-            if ($request->filled('zodiac_sign')) {
-                $query->where('zodiac_sign', $request->zodiac_sign);
-            }
+                if ($request->filled('star')) {
+                    $query->where('star', $request->star);
+                }
 
-            if ($request->filled('country')) {
-                $query->where('country', $request->country);
-            }
+                if ($request->filled('zodiac_sign')) {
+                    $query->where('zodiac_sign', $request->zodiac_sign);
+                }
 
-            if ($request->filled('state')) {
-                $query->where('state', $request->state);
-            }
+                if ($request->filled('country')) {
+                    $query->where('country', $request->country);
+                }
+
+                if ($request->filled('state')) {
+                    $query->where('state', $request->state);
+                }
 
                 if ($request->filled('city')) {
                     $query->where('city', $request->city);
@@ -799,7 +843,7 @@ class MatrimonyController extends Controller
             }
             $items = $query->paginate(12);
         }
-    
+
         $filterOptions = [
             'ages' => AgeRange::orderBy('from_age')->get(),
             'income' => IncomeRange::orderBy('from_income')->get(),
@@ -849,7 +893,7 @@ class MatrimonyController extends Controller
 
     public function index(Request $request)
     {
-        $user = $request->user(); 
+        $user = $request->user();
 
         $profiles = ProfileListing::where('user_id', $user->id)
             ->select('id', 'name', 'date_of_birth', 'is_verified', 'rejection_reason')

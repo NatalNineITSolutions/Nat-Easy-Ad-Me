@@ -5,15 +5,17 @@
             <li>
                 <div class="node root-node">
                     @php
-                        $self  = $node->self_purchased_bv       ?? 0;
-                        $left  = $node->leftBV                   ?? 0;
-                        $right = $node->rightBV                  ?? 0;
-                        $ref   = $node->referral_commission      ?? 0;
+                        $self = $node->self_purchased_bv ?? 0;
+                        $left = $node->leftBV ?? 0;
+                        $right = $node->rightBV ?? 0;
+                        $ref = $node->referral_commission ?? 0;
 
                         // Determine status: red, yellow, green
                         $status = 'red';
-                        if (($self >= 900 && $left >= 900 && $right >= 900) ||
-                            ($ref >= 100 && $self >= 900)) {
+                        if (
+                            ($self >= 900 && $left >= 900 && $right >= 900) ||
+                            ($ref >= 100 && $self >= 900)
+                        ) {
                             $status = 'green';
                         } elseif ($left >= 900 && $right >= 900 && $self < 900) {
                             $status = 'yellow';
@@ -28,10 +30,9 @@
                             @if($node->avatar)
                                 <img src="{{ $node->avatar }}" alt="User Avatar">
                             @else
-                                <img src="{{ $node->gender === 'female'
-                                        ? asset('assets/uploads/media-uploader/girlavatart.jpg')
-                                        : asset('assets/uploads/media-uploader/avatar.jpg') }}"
-                                     alt="Default Avatar">
+                                                    <img src="{{ $node->gender === 'female'
+                                ? asset('assets/uploads/media-uploader/girlavatart.jpg')
+                                : asset('assets/uploads/media-uploader/avatar.jpg') }}" alt="Default Avatar">
                             @endif
                         </a>
                     </div>
@@ -41,7 +42,9 @@
 
                     {{-- Always show possible pairs for both root and child nodes --}}
                     <div class="possible-pairs">
-                        <span>Possible Pairs: <strong>{{ $possiblePairs }}</strong></span>
+                        <span>Possible Pairs:
+                            <strong>{{ $node->possible_pairs }}</strong>
+                        </span>
                     </div>
 
                     {{-- BV points remain only for root (optional) --}}
@@ -56,21 +59,24 @@
                 <ul>
                     <li>
                         @if ($node->leftChild)
-                            @include('frontend.user.genology.partials.tree-node', ['node' => $node->leftChild, 'isChild' => true, 'possiblePairs' => $possiblePairs])
+                            @include('frontend.user.genology.partials.tree-node', ['node' => $node->leftChild, 'isChild' => true])
                         @else
                             <div class="add-member-node">
-                                <a href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'left']) }}">
-                                    <div class="add-icon"><i class="fas fa-user-plus"></i></n></div>
+                                <a
+                                    href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'left']) }}">
+                                    <div class="add-icon"><i class="fas fa-user-plus"></i></n>
+                                    </div>
                                 </a>
                             </div>
                         @endif
                     </li>
                     <li>
                         @if ($node->rightChild)
-                            @include('frontend.user.genology.partials.tree-node', ['node' => $node->rightChild, 'isChild' => true, 'possiblePairs' => $possiblePairs])
+                            @include('frontend.user.genology.partials.tree-node', ['node' => $node->rightChild, 'isChild' => true])
                         @else
                             <div class="add-member-node">
-                                <a href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'right']) }}">
+                                <a
+                                    href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'right']) }}">
                                     <div class="add-icon"><i class="fas fa-user-plus"></i></div>
                                 </a>
                             </div>
@@ -260,10 +266,12 @@
             border: 5px solid red !important;
             background: transparent !important;
         }
+
         .avatar-circle.status-yellow {
             border: 5px solid yellow !important;
             background: transparent !important;
         }
+
         .avatar-circle.status-green {
             border: 5px solid green !important;
             background: transparent !important;

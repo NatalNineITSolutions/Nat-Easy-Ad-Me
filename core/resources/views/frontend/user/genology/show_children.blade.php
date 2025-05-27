@@ -1,79 +1,107 @@
+{{-- show_children.blade.php --}}
 @extends('frontend.layout.master')
-
-@section('site_title')
-    {{ __('MLM Tree - Parent Details') }}
-@endsection
+@section('site_title', __('MLM Tree - Parent Details'))
 
 @section('content')
-    <div class="genology-full-width">
-        <div class="mlm-tree box-shadow1">
-            <h4 class="dis-title text-center text-white">
-                From the sponser of {{ $parent->parent->partner_id ?? __('MLM Tree') }}
-            </h4>
-            <div class="tree">
-                <ul>
-                    <li>
-                        {{-- Render the parent node --}}
-                        <div class="node root-node">
-                            <div
-                                class="avatar-circle {{ $parent->gender == 'female' ? 'female' : 'male' }} 
-                                        {{ ($parent->leftBV ?? 0) == 0 && ($parent->rightBV ?? 0) == 0 ? 'zero-bv' : '' }}">
-                                <a href="{{ route('user.user.mlm.children', ['id' => $parent->id]) }}">
-                                    @if($parent->avatar)
-                                        <img src="{{ asset($parent->avatar) }}" alt="User Avatar">
-                                    @else
-                                        <img src="{{ asset($parent->gender == 'female' ? 'assets/uploads/media-uploader/girlavatart.jpg' : 'assets/uploads/media-uploader/avatar.jpg') }}"
-                                            alt="Default Avatar">
-                                    @endif
-                                </a>
-                            </div>
-                            <span class="node-id">{{ $parent->partner_id ?? 'N/A' }}</span>
-                            <span class="node-name">{{ $parent->first_name ?? 'N/A' }}</span>
-                            <div class="bv-points">
-                                <span>BV (L): <strong>{{ $parent->leftBV ?? 0 }}</strong></span>
-                                <span>BV (R): <strong>{{ $parent->rightBV ?? 0 }}</strong></span>
-                            </div>
-                            <div class="possible-pairs">
-                                <span>Possible Pairs: <strong>{{ $possiblePairs }}</strong></span>
-                            </div>
-                        </div>
-                        <ul>
-                            <li>
-                                @if ($parent->leftChild)
-                                    {{-- Render left child --}}
-                                    @include('frontend.user.genology.partials.tree-node', ['node' => $parent->leftChild, 'isChild' => true])
-                                @else
-                                    <div class="add-member-node">
-                                        <a
-                                            href="{{ route('user.mlm.addNewMember', ['sponsor' => $parent->id, 'position' => 'left']) }}">
-                                            <div class="add-icon">
-                                                <i class="fas fa-user-plus"></i>
-                                            </div>
-                                        </a>
-                                    </div>
-                                @endif
-                            </li>
-                            <li>
-                                @if ($parent->rightChild)
-                                    {{-- Render right child --}}
-                                    @include('frontend.user.genology.partials.tree-node', ['node' => $parent->rightChild, 'isChild' => true])
-                                @else
-                                    <div class="add-member-node">
-                                        <a
-                                            href="{{ route('user.mlm.addNewMember', ['sponsor' => $parent->id, 'position' => 'right']) }}">
-                                            <div class="add-icon">
-                                                <i class="fas fa-user-plus"></i>
-                                            </div>
-                                        </a>
-                                    </div>
-                                @endif
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+<div class="genology-full-width">
+  <div class="mlm-tree box-shadow1">
+    <h4 class="dis-title text-center text-white">
+      From the sponsor of {{ $parent->parent->partner_id ?? __('MLM Tree') }}
+    </h4>
+    <div class="tree">
+      <ul>
+        <li>
+          {{-- compute status --}}
+          @php
+            $self  = $parent->self_purchased_bv    ?? 0;
+            $left  = $parent->leftBV               ?? 0;
+            $right = $parent->rightBV              ?? 0;
+            $ref   = $parent->referral_commission  ?? 0;
+
+            $status = 'red';
+            if (
+                ($self >= 900 && $left >= 900 && $right >= 900) ||
+                ($ref  >= 100 && $self >= 900)
+            ) {
+                $status = 'green';
+            } elseif ($left >= 900 && $right >= 900 && $self < 900) {
+                $status = 'yellow';
+            }
+          @endphp
+
+          <div class="node root-node">
+            {{-- add status-{{ $status }} --}}
+            <div
+              class="avatar-circle
+                     {{ $parent->gender == 'female' ? 'female' : 'male' }}
+                     status-{{ $status }}
+                     {{ ($parent->leftBV ?? 0) == 0 && ($parent->rightBV ?? 0) == 0 ? 'zero-bv' : '' }}">
+              <a href="{{ route('user.user.mlm.children', ['id' => $parent->id]) }}">
+                @if($parent->avatar)
+                  <img src="{{ asset($parent->avatar) }}" alt="User Avatar">
+                @else
+                  <img src="{{ asset(
+                    $parent->gender === 'female'
+                      ? 'assets/uploads/media-uploader/girlavatart.jpg'
+                      : 'assets/uploads/media-uploader/avatar.jpg'
+                  ) }}" alt="Default Avatar">
+                @endif
+              </a>
             </div>
-        </div>
+
+            <span class="node-id">{{ $parent->partner_id ?? 'N/A' }}</span>
+            <span class="node-name">{{ $parent->first_name ?? 'N/A' }}</span>
+
+            <div class="possible-pairs">
+              <span>Possible Pairs: <strong>{{ $parent->possible_pairs }}</strong></span>
+            </div>
+            <div class="bv-points">
+              <span>BV (L): <strong>{{ $parent->leftBV }}</strong></span>
+              <span>BV (R): <strong>{{ $parent->rightBV }}</strong></span>
+            </div>
+          </div>
+
+          <ul>
+            <li>
+              @if ($parent->leftChild)
+                @include('frontend.user.genology.partials.tree-node', [
+                  'node'    => $parent->leftChild,
+                  'isChild' => true,
+                ])
+              @else
+                <div class="add-member-node">
+                  <a href="{{ route('user.mlm.addNewMember', [
+                      'sponsor'  => $parent->id,
+                      'position' => 'left',
+                  ]) }}">
+                    <div class="add-icon"><i class="fas fa-user-plus"></i></div>
+                  </a>
+                </div>
+              @endif
+            </li>
+            <li>
+              @if ($parent->rightChild)
+                @include('frontend.user.genology.partials.tree-node', [
+                  'node'    => $parent->rightChild,
+                  'isChild' => true,
+                ])
+              @else
+                <div class="add-member-node">
+                  <a href="{{ route('user.mlm.addNewMember', [
+                      'sponsor'  => $parent->id,
+                      'position' => 'right',
+                  ]) }}">
+                    <div class="add-icon"><i class="fas fa-user-plus"></i></div>
+                  </a>
+                </div>
+              @endif
+            </li>
+          </ul>
+        </li>
+      </ul>
     </div>
+  </div>
+</div>
 @endsection
 
 @section('scripts')
@@ -188,6 +216,22 @@
             color: #212121;
             font-weight: bold;
             font-size: 1rem;
+        }
+
+        /* Status border colors */
+        .avatar-circle.status-red {
+            border: 5px solid red !important;
+            background: transparent !important;
+        }
+
+        .avatar-circle.status-yellow {
+            border: 5px solid yellow !important;
+            background: transparent !important;
+        }
+
+        .avatar-circle.status-green {
+            border: 5px solid green !important;
+            background: transparent !important;
         }
     </style>
 @endsection

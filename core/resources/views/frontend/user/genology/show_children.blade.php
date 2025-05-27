@@ -15,8 +15,9 @@
                     <li>
                         {{-- Render the parent node --}}
                         <div class="node root-node">
-                            <div class="avatar-circle {{ $parent->gender == 'female' ? 'female' : 'male' }} 
-                                    {{ ($parent->leftBV ?? 0) == 0 && ($parent->rightBV ?? 0) == 0 ? 'zero-bv' : '' }}">
+                            <div
+                                class="avatar-circle {{ $parent->gender == 'female' ? 'female' : 'male' }} 
+                                        {{ ($parent->leftBV ?? 0) == 0 && ($parent->rightBV ?? 0) == 0 ? 'zero-bv' : '' }}">
                                 <a href="{{ route('user.user.mlm.children', ['id' => $parent->id]) }}">
                                     @if($parent->avatar)
                                         <img src="{{ asset($parent->avatar) }}" alt="User Avatar">
@@ -31,6 +32,9 @@
                             <div class="bv-points">
                                 <span>BV (L): <strong>{{ $parent->leftBV ?? 0 }}</strong></span>
                                 <span>BV (R): <strong>{{ $parent->rightBV ?? 0 }}</strong></span>
+                            </div>
+                            <div class="possible-pairs">
+                                <span>Possible Pairs: <strong>{{ $possiblePairs }}</strong></span>
                             </div>
                         </div>
                         <ul>
@@ -168,6 +172,22 @@
             object-fit: cover;
             border-radius: 50%;
             position: relative;
+        }
+
+        .possible-pairs {
+            margin-top: 6px;
+            padding: 6px 12px;
+            background: #ffeb3b;
+            border: 2px solid #fbc02d;
+            border-radius: 6px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+            animation: pulse-highlight 2s ease-in-out infinite;
+        }
+
+        .possible-pairs span {
+            color: #212121;
+            font-weight: bold;
+            font-size: 1rem;
         }
     </style>
 @endsection

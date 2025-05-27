@@ -39,13 +39,16 @@
                     <span class="node-id">{{ $node->partner_id ?? 'N/A' }}</span>
                     <span class="node-name">{{ $node->first_name ?? 'N/A' }}</span>
 
+                    {{-- Always show possible pairs for both root and child nodes --}}
+                    <div class="possible-pairs">
+                        <span>Possible Pairs: <strong>{{ $possiblePairs }}</strong></span>
+                    </div>
+
+                    {{-- BV points remain only for root (optional) --}}
                     @if (!isset($isChild))
                         <div class="bv-points">
                             <span>BV (L): <strong>{{ $node->leftBV ?? 0 }}</strong></span>
                             <span>BV (R): <strong>{{ $node->rightBV ?? 0 }}</strong></span>
-                        </div>
-                        <div class="possible-pairs">
-                            <span>Possible Pairs: <strong>{{ $possiblePairs }}</strong></span>
                         </div>
                     @endif
                 </div>
@@ -53,18 +56,18 @@
                 <ul>
                     <li>
                         @if ($node->leftChild)
-                            @include('frontend.user.genology.partials.tree-node', ['node' => $node->leftChild, 'isChild' => true])
+                            @include('frontend.user.genology.partials.tree-node', ['node' => $node->leftChild, 'isChild' => true, 'possiblePairs' => $possiblePairs])
                         @else
                             <div class="add-member-node">
                                 <a href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'left']) }}">
-                                    <div class="add-icon"><i class="fas fa-user-plus"></i></div>
+                                    <div class="add-icon"><i class="fas fa-user-plus"></i></n></div>
                                 </a>
                             </div>
                         @endif
                     </li>
                     <li>
                         @if ($node->rightChild)
-                            @include('frontend.user.genology.partials.tree-node', ['node' => $node->rightChild, 'isChild' => true])
+                            @include('frontend.user.genology.partials.tree-node', ['node' => $node->rightChild, 'isChild' => true, 'possiblePairs' => $possiblePairs])
                         @else
                             <div class="add-member-node">
                                 <a href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'right']) }}">

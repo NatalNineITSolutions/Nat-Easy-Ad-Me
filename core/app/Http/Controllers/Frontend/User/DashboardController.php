@@ -249,6 +249,7 @@ class DashboardController extends Controller
 
     public function getChildren(Request $request, $id)
     {
+        $user_id = Auth::id();
         // Find the parent by ID and eager load only its immediate children with BV data
         $parent = User::with([
             'leftChild.userBvs',
@@ -259,10 +260,32 @@ class DashboardController extends Controller
             return redirect()->back()->withErrors(['error' => __('Parent not found')]);
         }
 
+        $bpConversionRate = get_static_option('bp_value') ?? 1;
+        $sealingLimit = get_static_option('sealing_limitation') ?? 1;
+
+        $userFlushBvs = DB::table('user_flush_bvs')
+            ->where('user_id', $user_id)
+            ->latest('id')
+            ->first();
+
+        // Sum BV points
+        $leftBvPoints = $userFlushBvs ? $userFlushBvs->left_bv : 0;
+        Log::info('LeftBV: ' . $leftBvPoints);
+
+        $rightBvPoints = $userFlushBvs ? $userFlushBvs->right_bv : 0;
+        Log::info('RightBV:' . $rightBvPoints);
+
+        $sealingLimitBv = $sealingLimit * $bpConversionRate;
+        $sealedLeftBv = min($leftBvPoints, $sealingLimitBv);
+        $sealedRightBv = min($rightBvPoints, $sealingLimitBv);
+        $leftBP = floor($sealedLeftBv / $bpConversionRate);
+        $rightBP = floor($sealedRightBv / $bpConversionRate);
+        $possiblePairs = min($leftBP, $rightBP);
+
         // Calculate BV for the parent and its immediate children if needed
         $this->calculateBV($parent);
 
-        return view('frontend.user.genology.show_children', compact('parent'));
+        return view('frontend.user.genology.show_children', compact('parent', 'possiblePairs'));
     }
     private function calculateBV(&$node)
     {

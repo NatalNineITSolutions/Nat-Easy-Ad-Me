@@ -196,37 +196,28 @@ class DashboardController extends Controller
 
     public function genology()
     {
-        $user_id = Auth::id();
+        $userId = Auth::id();
 
+        // eager‐load exactly two levels of children (or deeper if you like)
         $user = User::with([
-            'leftChild.userBvs',
-            'rightChild.userBvs',
-            'leftChild.leftChild',
-            'rightChild.rightChild'
-        ])->where('id', $user_id)->first();
+            'leftChild.leftChild',    // for deeper trees add more relationships
+            'leftChild.rightChild',
+            'rightChild.leftChild',
+            'rightChild.rightChild',
+        ])->findOrFail($userId);
 
-        if (!$user) {
-            return redirect()->back()->withErrors(['error' => __('User not found')]);
-        }
-
-        // Recursively calculate BV for each node
+        // Walk the entire tree and compute BV & possible_pairs
         $this->calculateBV($user);
 
-        // Prepare the MLM tree data
-        $mlmTree = $user;
-
-        if (request()->expectsJson()) {
-            return response()->json([
-                'success' => true,
-                'mlmTree' => $mlmTree,
-            ]);
-        }
-
-        return view('frontend.user.genology.genology', compact('mlmTree'));
+        // render — each node now has ->leftBV, ->rightBV and ->possible_pairs
+        return view('frontend.user.genology.genology', [
+            'mlmTree' => $user,
+        ]);
     }
 
     public function getChildren(Request $request, $id)
     {
+        $user_id = Auth::id();
         // Find the parent by ID and eager load only its immediate children with BV data
         $parent = User::with([
             'leftChild.userBvs',
@@ -237,34 +228,82 @@ class DashboardController extends Controller
             return redirect()->back()->withErrors(['error' => __('Parent not found')]);
         }
 
+        $bpConversionRate = get_static_option('bp_value') ?? 1;
+        $sealingLimit = get_static_option('sealing_limitation') ?? 1;
+
+        $userFlushBvs = DB::table('user_flush_bvs')
+            ->where('user_id', $user_id)
+            ->latest('id')
+            ->first();
+
+        // Sum BV points
+        $leftBvPoints = $userFlushBvs ? $userFlushBvs->left_bv : 0;
+        Log::info('LeftBV: ' . $leftBvPoints);
+
+        $rightBvPoints = $userFlushBvs ? $userFlushBvs->right_bv : 0;
+        Log::info('RightBV:' . $rightBvPoints);
+
+        $sealingLimitBv = $sealingLimit * $bpConversionRate;
+        $sealedLeftBv = min($leftBvPoints, $sealingLimitBv);
+        $sealedRightBv = min($rightBvPoints, $sealingLimitBv);
+        $leftBP = floor($sealedLeftBv / $bpConversionRate);
+        $rightBP = floor($sealedRightBv / $bpConversionRate);
+        $possiblePairs = min($leftBP, $rightBP);
+
         // Calculate BV for the parent and its immediate children if needed
         $this->calculateBV($parent);
 
-        return view('frontend.user.genology.show_children', compact('parent'));
+        return view('frontend.user.genology.show_children', compact('parent', 'possiblePairs'));
     }
     private function calculateBV(&$node)
     {
         if (!$node) {
-            Log::warning('Node is null in calculateBV');
+            Log::warning('calculateBV called with null node');
             return;
         }
 
-        // Calculate BV for the current node
-        $node->leftBV = $node->leftChild ? $node->leftChild->userBvs->sum('bv_points') : 0;
-        $node->rightBV = $node->rightChild ? $node->rightChild->userBvs->sum('bv_points') : 0;
+        // 1) get the most recent flush record for this user
+        $flush = DB::table('user_flush_bvs')
+            ->where('user_id', $node->id)
+            ->latest('id')
+            ->first();
 
-        // Debug: Log calculated BV points
-        Log::info('Calculated BV points for node:', [
-            'node_id' => $node->id,
-            'leftBV' => $node->leftBV,
-            'rightBV' => $node->rightBV,
+        $leftBV = $flush->left_bv ?? 0;
+        $rightBV = $flush->right_bv ?? 0;
+
+        // 2) store raw BV on the node
+        $node->leftBV = $leftBV;
+        $node->rightBV = $rightBV;
+
+        // 3) apply sealing limit & BP conversion
+        $bpRate = (int) (get_static_option('bp_value') ?? 1);
+        $sealLimit = (int) (get_static_option('sealing_limitation') ?? 1);
+        $maxAllowed = $sealLimit * $bpRate;
+
+        $sealedL = min($leftBV, $maxAllowed);
+        $sealedR = min($rightBV, $maxAllowed);
+
+        $leftBP = floor($sealedL / $bpRate);
+        $rightBP = floor($sealedR / $bpRate);
+
+        // 4) attach possible_pairs
+        $node->possible_pairs = min($leftBP, $rightBP);
+
+        Log::info('Node BV/Pair calc', [
+            'user_id' => $node->id,
+            'leftBV' => $leftBV,
+            'rightBV' => $rightBV,
+            'sealedL' => $sealedL,
+            'sealedR' => $sealedR,
+            'leftBP' => $leftBP,
+            'rightBP' => $rightBP,
+            'possible_pairs' => $node->possible_pairs,
         ]);
 
-        // Recursively calculate BV for left and right children
+        // 5) recurse into children
         if ($node->leftChild) {
             $this->calculateBV($node->leftChild);
         }
-
         if ($node->rightChild) {
             $this->calculateBV($node->rightChild);
         }

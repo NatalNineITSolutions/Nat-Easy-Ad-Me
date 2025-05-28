@@ -1,21 +1,53 @@
+<!-- mlm-tree.blade.php -->
 <div class="mlm-tree-container">
     <div class="mlm-tree full-width desktop-tree">
         <ul class="tree">
             <li>
                 <div class="node root-node">
-                    <div class="avatar-circle {{ $node->gender == 'female' ? 'female' : 'male' }} 
-                            {{ ($node->leftBV ?? 0) == 0 && ($node->rightBV ?? 0) == 0 ? 'zero-bv' : '' }}">
+                    @php
+                        $self = $node->self_purchased_bv ?? 0;
+                        $left = $node->leftBV ?? 0;
+                        $right = $node->rightBV ?? 0;
+                        $ref = $node->referral_commission ?? 0;
+
+                        // Determine status: red, yellow, green
+                        $status = 'red';
+                        if (
+                            ($self >= 900 && $left >= 900 && $right >= 900) ||
+                            ($ref >= 100 && $self >= 900)
+                        ) {
+                            $status = 'green';
+                        } elseif ($left >= 900 && $right >= 900 && $self < 900) {
+                            $status = 'yellow';
+                        }
+                    @endphp
+
+                    <div class="avatar-circle
+                                 {{ $node->gender == 'female' ? 'female' : 'male' }}
+                                 status-{{ $status }}
+                                 {{ ($node->leftBV ?? 0) == 0 && ($node->rightBV ?? 0) == 0 ? 'zero-bv' : '' }}">
                         <a href="{{ route('user.user.mlm.children', ['id' => $node->id]) }}">
                             @if($node->avatar)
                                 <img src="{{ $node->avatar }}" alt="User Avatar">
                             @else
-                                <img src="{{ $node->gender === 'female' ? asset('assets/uploads/media-uploader/girlavatart.jpg') : asset('assets/uploads/media-uploader/avatar.jpg') }}"
-                                    alt="Default Avatar">
+                                                    <img src="{{ $node->gender === 'female'
+                                ? asset('assets/uploads/media-uploader/girlavatart.jpg')
+                                : asset('assets/uploads/media-uploader/avatar.jpg') }}" alt="Default Avatar">
                             @endif
                         </a>
                     </div>
+
                     <span class="node-id">{{ $node->partner_id ?? 'N/A' }}</span>
                     <span class="node-name">{{ $node->first_name ?? 'N/A' }}</span>
+
+                    {{-- Always show possible pairs for both root and child nodes --}}
+                    <div class="possible-pairs">
+                        <span>Possible Pairs:
+                            <strong>{{ $node->possible_pairs }}</strong>
+                        </span>
+                    </div>
+
+                    {{-- BV points remain only for root (optional) --}}
                     @if (!isset($isChild))
                         <div class="bv-points">
                             <span>BV (L): <strong>{{ $node->leftBV ?? 0 }}</strong></span>
@@ -32,8 +64,7 @@
                             <div class="add-member-node">
                                 <a
                                     href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'left']) }}">
-                                    <div class="add-icon">
-                                        <i class="fas fa-user-plus"></i>
+                                    <div class="add-icon"><i class="fas fa-user-plus"></i></n>
                                     </div>
                                 </a>
                             </div>
@@ -46,9 +77,7 @@
                             <div class="add-member-node">
                                 <a
                                     href="{{ route('user.mlm.addNewMember', ['sponsor' => $node->id, 'position' => 'right']) }}">
-                                    <div class="add-icon">
-                                        <i class="fas fa-user-plus"></i>
-                                    </div>
+                                    <div class="add-icon"><i class="fas fa-user-plus"></i></div>
                                 </a>
                             </div>
                         @endif
@@ -216,6 +245,50 @@
             font-size: 18px !important;
         }
 
+        .possible-pairs {
+            margin-top: 6px;
+            padding: 6px 12px;
+            background: #ffeb3b;
+            border: 2px solid #fbc02d;
+            border-radius: 6px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+            animation: pulse-highlight 2s ease-in-out infinite;
+        }
+
+        .possible-pairs span {
+            color: #212121;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        /* Status border colors */
+        .avatar-circle.status-red {
+            border: 5px solid red !important;
+            background: transparent !important;
+        }
+
+        .avatar-circle.status-yellow {
+            border: 5px solid yellow !important;
+            background: transparent !important;
+        }
+
+        .avatar-circle.status-green {
+            border: 5px solid green !important;
+            background: transparent !important;
+        }
+
+        @keyframes pulse-highlight {
+
+            0%,
+            100% {
+                box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 0 16px rgba(0, 0, 0, 0.4);
+            }
+        }
+
         /* Dynamic scaling based on tree depth */
         .tree-depth-1 {
             transform: scale(1);
@@ -332,7 +405,7 @@
                 font-size: 12px !important;
             }
 
-            .new-style .box-shadow1{
+            .new-style .box-shadow1 {
                 height: 250px;
             }
         }

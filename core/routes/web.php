@@ -32,9 +32,9 @@ Route::get('/razorpay-checkout', function () {
     return view('razorpay-checkout');
 })->name('razorpay.checkout');
 
-Route::get('/razorpay-checkout', function () {
-    return view('profile-checkout');
-})->name('profile.checkout');
+// Route::get('/razorpay-checkout', function () {
+//     return view('profile-checkout');
+// })->name('profile.checkout');
 
 Route::get('/payment-success', [MembershipApiController::class, 'handlePaymentSuccess'])
     ->name('payment.success');

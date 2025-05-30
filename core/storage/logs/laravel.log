@@ -1,805 +1,92 @@
-[2025-05-30 13:59:55] production.INFO: Checking for BV flush. Now: 13:59, Configured: 13:58  
-[2025-05-30 14:00:18] production.INFO: Checking for BV flush. Now: 14:00, Configured: 14:00  
-[2025-05-30 14:00:18] production.INFO: BV Flush - Side left {"user_id":2,"flushed_bv":9000} 
-[2025-05-30 14:00:18] production.INFO: BV Flush - Side right {"user_id":3,"flushed_bv":9000} 
-[2025-05-30 14:00:18] production.INFO: Flushing leftover left BV {"user_id":1,"left_over_bv":5100} 
-[2025-05-30 14:00:18] production.INFO: BV Flush - Side left {"user_id":2,"flushed_bv":5100} 
-[2025-05-30 14:00:18] production.INFO: BV flush for user 1 completed {"pairs_flushed":"10","bv_per_side_flushed":9000,"remaining_left_bv":0,"remaining_right_bv":5400} 
-[2025-05-30 14:00:18] production.INFO: User qualifies via referral override {"user_id":1,"self_bv":"900.00","referral_commission":"1080.00"} 
-[2025-05-30 14:00:18] production.INFO: Referral commission processed for eligible user {"user_id":1,"amount":"1080.00","self_bv":"900.00","has_referral_override":true} 
-[2025-05-30 14:00:18] production.INFO: BV Flush - Side left {"user_id":4,"flushed_bv":1800.0} 
-[2025-05-30 14:00:18] production.INFO: BV Flush - Side right {"user_id":5,"flushed_bv":1800.0} 
-[2025-05-30 14:00:18] production.INFO: Flushing leftover right BV {"user_id":2,"right_over_bv":300.0} 
-[2025-05-30 14:00:18] production.INFO: BV Flush - Side right {"user_id":5,"flushed_bv":300.0} 
-[2025-05-30 14:00:18] production.INFO: BV flush for user 2 completed {"pairs_flushed":2.0,"bv_per_side_flushed":1800.0,"remaining_left_bv":9300.0,"remaining_right_bv":0} 
-[2025-05-30 14:00:18] production.INFO: BV Flush - Side left {"user_id":6,"flushed_bv":2700.0} 
-[2025-05-30 14:00:18] production.INFO: BV Flush - Side right {"user_id":7,"flushed_bv":2700.0} 
-[2025-05-30 14:00:18] production.INFO: BV flush for user 3 completed {"pairs_flushed":3.0,"bv_per_side_flushed":2700.0,"remaining_left_bv":0.0,"remaining_right_bv":8100.0} 
-[2025-05-30 14:00:18] production.INFO: BV Flush - Side left {"user_id":8,"flushed_bv":900.0} 
-[2025-05-30 14:00:18] production.INFO: BV Flush - Side right {"user_id":9,"flushed_bv":900.0} 
-[2025-05-30 14:00:18] production.INFO: BV flush for user 4 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":9000.0,"remaining_right_bv":0.0} 
-[2025-05-30 14:00:18] production.INFO: BV Flush - Side left {"user_id":10,"flushed_bv":900.0} 
-[2025-05-30 14:00:18] production.INFO: BV Flush - Side right {"user_id":11,"flushed_bv":900.0} 
-[2025-05-30 14:00:18] production.INFO: BV flush for user 5 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0.0,"remaining_right_bv":0.0} 
-[2025-05-30 14:00:18] production.INFO: BV Flush - Side left {"user_id":12,"flushed_bv":900.0} 
-[2025-05-30 14:00:18] production.INFO: BV Flush - Side right {"user_id":13,"flushed_bv":900.0} 
-[2025-05-30 14:00:18] production.INFO: BV flush for user 6 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0.0,"remaining_right_bv":0.0} 
-[2025-05-30 14:00:18] production.INFO: BV Flush - Side left {"user_id":14,"flushed_bv":4500.0} 
-[2025-05-30 14:00:18] production.INFO: BV Flush - Side right {"user_id":15,"flushed_bv":4500.0} 
-[2025-05-30 14:00:18] production.INFO: BV flush for user 7 completed {"pairs_flushed":5.0,"bv_per_side_flushed":4500.0,"remaining_left_bv":0.0,"remaining_right_bv":900.0} 
-[2025-05-30 14:00:18] production.INFO: BV Flush - Side left {"user_id":16,"flushed_bv":3600.0} 
-[2025-05-30 14:00:18] production.INFO: BV Flush - Side right {"user_id":17,"flushed_bv":3600.0} 
-[2025-05-30 14:00:18] production.INFO: BV flush for user 8 completed {"pairs_flushed":4.0,"bv_per_side_flushed":3600.0,"remaining_left_bv":1800.0,"remaining_right_bv":0.0} 
-[2025-05-30 14:00:18] production.INFO: User qualifies via referral override {"user_id":8,"self_bv":"900.00","referral_commission":"900.00"} 
-[2025-05-30 14:00:18] production.INFO: Referral commission processed for eligible user {"user_id":8,"amount":"900.00","self_bv":"900.00","has_referral_override":true} 
-[2025-05-30 14:00:18] production.INFO: User qualifies via referral override {"user_id":14,"self_bv":"900.00","referral_commission":"360.00"} 
-[2025-05-30 14:00:18] production.INFO: Referral commission processed for eligible user {"user_id":14,"amount":"360.00","self_bv":"900.00","has_referral_override":true} 
-[2025-05-30 14:00:18] production.INFO: User qualifies via referral override {"user_id":15,"self_bv":"900.00","referral_commission":"450.00"} 
-[2025-05-30 14:00:18] production.INFO: Referral commission processed for eligible user {"user_id":15,"amount":"450.00","self_bv":"900.00","has_referral_override":true} 
-[2025-05-30 14:00:19] production.INFO: calculateMatchingPairs: {"rows":8,"sum_eligible_pairs":"27"} 
-[2025-05-30 14:00:19] production.INFO: Payout recorded {"date":"2025-05-30 14:00:18","previous_balance":40300,"new_balance":199400,"record_id":452} 
-[2025-05-30 14:00:19] production.INFO: UserPayoutDetail created for user 1 {"pairs":10,"gross":3080.0,"tds":154.0,"service":154.0,"net":2772.0,"referral":"1080.00"} 
-[2025-05-30 14:00:19] production.INFO: UserPayoutDetail created for user 2 {"pairs":2,"gross":400.0,"tds":20.0,"service":20.0,"net":360.0,"referral":"0.00"} 
-[2025-05-30 14:00:19] production.INFO: UserPayoutDetail created for user 3 {"pairs":3,"gross":600.0,"tds":30.0,"service":30.0,"net":540.0,"referral":"0.00"} 
-[2025-05-30 14:00:19] production.INFO: Skipping user 4: self_purchased_bv too low  
-[2025-05-30 14:00:19] production.INFO: Skipping user 5: self_purchased_bv too low  
-[2025-05-30 14:00:19] production.INFO: UserPayoutDetail created for user 6 {"pairs":1,"gross":200.0,"tds":10.0,"service":10.0,"net":180.0,"referral":"0.00"} 
-[2025-05-30 14:00:19] production.INFO: UserPayoutDetail created for user 7 {"pairs":5,"gross":1000.0,"tds":50.0,"service":50.0,"net":900.0,"referral":"0.00"} 
-[2025-05-30 14:00:19] production.INFO: UserPayoutDetail created for user 8 {"pairs":4,"gross":1700.0,"tds":85.0,"service":85.0,"net":1530.0,"referral":"900.00"} 
-[2025-05-30 14:00:19] production.INFO: Override-only payout recorded for user 14 {"gross":"360.00","tds":18.0,"service":18.0,"net":324.0,"referral":"360.00"} 
-[2025-05-30 14:00:19] production.INFO: Override-only payout recorded for user 15 {"gross":"450.00","tds":22.5,"service":22.5,"net":405.0,"referral":"450.00"} 
-[2025-05-30 14:02:08] production.INFO: LeftBV: 0  
-[2025-05-30 14:02:08] production.INFO: RightBV:5400  
-[2025-05-30 14:05:10] production.INFO: LeftBV: 0  
-[2025-05-30 14:05:10] production.INFO: RightBV:4500  
-[2025-05-30 14:05:32] production.INFO: LeftBV: 1800  
-[2025-05-30 14:05:32] production.INFO: RightBV:0  
-[2025-05-30 14:05:41] production.INFO: LeftBV: 3600  
-[2025-05-30 14:05:41] production.INFO: RightBV:0  
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":1,"leftBV":0,"rightBV":5400,"sealedL":0,"sealedR":5400,"leftBP":0.0,"rightBP":6.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":2,"leftBV":0,"rightBV":300,"sealedL":0,"sealedR":300,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":4,"leftBV":9000,"rightBV":0,"sealedL":9000,"sealedR":0,"leftBP":10.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":8,"leftBV":1800,"rightBV":0,"sealedL":1800,"sealedR":0,"leftBP":2.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":16,"leftBV":4500,"rightBV":0,"sealedL":4500,"sealedR":0,"leftBP":5.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":21,"leftBV":3600,"rightBV":0,"sealedL":3600,"sealedR":0,"leftBP":4.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":22,"leftBV":2700,"rightBV":0,"sealedL":2700,"sealedR":0,"leftBP":3.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":23,"leftBV":1800,"rightBV":0,"sealedL":1800,"sealedR":0,"leftBP":2.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":24,"leftBV":900,"rightBV":0,"sealedL":900,"sealedR":0,"leftBP":1.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":25,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":17,"leftBV":2700,"rightBV":0,"sealedL":2700,"sealedR":0,"leftBP":3.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":18,"leftBV":0,"rightBV":1800,"sealedL":0,"sealedR":1800,"leftBP":0.0,"rightBP":2.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":19,"leftBV":0,"rightBV":900,"sealedL":0,"sealedR":900,"leftBP":0.0,"rightBP":1.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":20,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":9,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":5,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":10,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":11,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":3,"leftBV":0,"rightBV":8100,"sealedL":0,"sealedR":8100,"leftBP":0.0,"rightBP":9.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":6,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":12,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":13,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":7,"leftBV":0,"rightBV":900,"sealedL":0,"sealedR":900,"leftBP":0.0,"rightBP":1.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":14,"leftBV":3600,"rightBV":0,"sealedL":3600,"sealedR":0,"leftBP":4.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":30,"leftBV":2700,"rightBV":0,"sealedL":2700,"sealedR":0,"leftBP":3.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":31,"leftBV":1800,"rightBV":0,"sealedL":1800,"sealedR":0,"leftBP":2.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":32,"leftBV":900,"rightBV":0,"sealedL":900,"sealedR":0,"leftBP":1.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":33,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":15,"leftBV":0,"rightBV":4500,"sealedL":0,"sealedR":4500,"leftBP":0.0,"rightBP":5.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":26,"leftBV":0,"rightBV":3600,"sealedL":0,"sealedR":3600,"leftBP":0.0,"rightBP":4.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":27,"leftBV":0,"rightBV":2700,"sealedL":0,"sealedR":2700,"leftBP":0.0,"rightBP":3.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":28,"leftBV":0,"rightBV":1800,"sealedL":0,"sealedR":1800,"leftBP":0.0,"rightBP":2.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":29,"leftBV":0,"rightBV":900,"sealedL":0,"sealedR":900,"leftBP":0.0,"rightBP":1.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:16] production.INFO: Node BV/Pair calc {"user_id":34,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 14:10:29] production.INFO: LeftBV: 0  
-[2025-05-30 14:10:29] production.INFO: RightBV:300  
-[2025-05-30 14:43:35] production.INFO: LeftBV: 0  
-[2025-05-30 14:43:35] production.INFO: RightBV:300  
-[2025-05-30 14:43:52] production.INFO: LeftBV: 0  
-[2025-05-30 14:43:52] production.INFO: RightBV:8100  
-[2025-05-30 14:44:23] production.INFO: LeftBV: 9300  
-[2025-05-30 14:44:23] production.INFO: RightBV:0  
-[2025-05-30 14:53:09] production.ERROR: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'darvin' for key 'users.users_username_unique' (Connection: mysql, SQL: insert into `users` (`first_name`, `last_name`, `email`, `username`, `phone`, `country_id`, `password`, `parent_id`, `sponsor_id`, `position`, `gender`, `dob`, `partner_id`, `partner_name`, `otp_verified`, `_lft`, `_rgt`, `updated_at`, `created_at`) values (Darvin, raj, darvin@gmail.com, darvin, 9000000060, 91, $2y$12$/1dEhCCAGE32IR7my5PAJu02x42UwW2.KCATPTdGhNuIJ/lpoCTtK, 14, 14, left, male, 1998-04-15, GL2025560864, EASYADME-DARVIN, 1, 49, 50, 2025-05-30 14:53:09, 2025-05-30 14:53:09)) {"exception":"[object] (Illuminate\\Database\\UniqueConstraintViolationException(code: 23000): SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'darvin' for key 'users.users_username_unique' (Connection: mysql, SQL: insert into `users` (`first_name`, `last_name`, `email`, `username`, `phone`, `country_id`, `password`, `parent_id`, `sponsor_id`, `position`, `gender`, `dob`, `partner_id`, `partner_name`, `otp_verified`, `_lft`, `_rgt`, `updated_at`, `created_at`) values (Darvin, raj, darvin@gmail.com, darvin, 9000000060, 91, $2y$12$/1dEhCCAGE32IR7my5PAJu02x42UwW2.KCATPTdGhNuIJ/lpoCTtK, 14, 14, left, male, 1998-04-15, GL2025560864, EASYADME-DARVIN, 1, 49, 50, 2025-05-30 14:53:09, 2025-05-30 14:53:09)) at C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:824)
-[stacktrace]
-#0 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('insert into `us...', Array, Object(Closure))
-#1 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\MySqlConnection.php(34): Illuminate\\Database\\Connection->run('insert into `us...', Array, Object(Closure))
-#2 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Processors\\MySqlProcessor.php(35): Illuminate\\Database\\MySqlConnection->insert('insert into `us...', Array, 'id')
-#3 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3549): Illuminate\\Database\\Query\\Processors\\MySqlProcessor->processInsertGetId(Object(Illuminate\\Database\\Query\\Builder), 'insert into `us...', Array, 'id')
-#4 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(1982): Illuminate\\Database\\Query\\Builder->insertGetId(Array, 'id')
-#5 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1334): Illuminate\\Database\\Eloquent\\Builder->__call('insertGetId', Array)
-#6 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1299): Illuminate\\Database\\Eloquent\\Model->insertAndSetId(Object(Kalnoy\\Nestedset\\QueryBuilder), Array)
-#7 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1138): Illuminate\\Database\\Eloquent\\Model->performInsert(Object(Kalnoy\\Nestedset\\QueryBuilder))
-#8 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\kalnoy\\nestedset\\src\\NodeTrait.php(764): Illuminate\\Database\\Eloquent\\Model->save()
-#9 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\database\\seeders\\UserSeeder.php(154): App\\Models\\User::create(Array)
-#10 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Database\\Seeders\\UserSeeder->run()
-#11 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
-#12 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
-#13 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
-#14 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
-#15 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Seeder.php(184): Illuminate\\Container\\Container->call(Array, Array)
-#16 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Seeder.php(193): Illuminate\\Database\\Seeder->Illuminate\\Database\\{closure}()
-#17 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Seeds\\SeedCommand.php(70): Illuminate\\Database\\Seeder->__invoke()
-#18 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Concerns\\GuardsAttributes.php(155): Illuminate\\Database\\Console\\Seeds\\SeedCommand->Illuminate\\Database\\Console\\Seeds\\{closure}()
-#19 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Seeds\\SeedCommand.php(69): Illuminate\\Database\\Eloquent\\Model::unguarded(Object(Closure))
-#20 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Database\\Console\\Seeds\\SeedCommand->handle()
-#21 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
-#22 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
-#23 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
-#24 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
-#25 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
-#26 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
-#27 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
-#28 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#29 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Seeds\\SeedCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#30 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#31 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#32 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#33 {main}
-
-[previous exception] [object] (PDOException(code: 23000): SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'darvin' for key 'users.users_username_unique' at C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\MySqlConnection.php:45)
-[stacktrace]
-#0 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\MySqlConnection.php(45): PDOStatement->execute()
-#1 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(816): Illuminate\\Database\\MySqlConnection->Illuminate\\Database\\{closure}('insert into `us...', Array)
-#2 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('insert into `us...', Array, Object(Closure))
-#3 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\MySqlConnection.php(34): Illuminate\\Database\\Connection->run('insert into `us...', Array, Object(Closure))
-#4 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Processors\\MySqlProcessor.php(35): Illuminate\\Database\\MySqlConnection->insert('insert into `us...', Array, 'id')
-#5 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3549): Illuminate\\Database\\Query\\Processors\\MySqlProcessor->processInsertGetId(Object(Illuminate\\Database\\Query\\Builder), 'insert into `us...', Array, 'id')
-#6 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(1982): Illuminate\\Database\\Query\\Builder->insertGetId(Array, 'id')
-#7 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1334): Illuminate\\Database\\Eloquent\\Builder->__call('insertGetId', Array)
-#8 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1299): Illuminate\\Database\\Eloquent\\Model->insertAndSetId(Object(Kalnoy\\Nestedset\\QueryBuilder), Array)
-#9 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1138): Illuminate\\Database\\Eloquent\\Model->performInsert(Object(Kalnoy\\Nestedset\\QueryBuilder))
-#10 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\kalnoy\\nestedset\\src\\NodeTrait.php(764): Illuminate\\Database\\Eloquent\\Model->save()
-#11 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\database\\seeders\\UserSeeder.php(154): App\\Models\\User::create(Array)
-#12 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Database\\Seeders\\UserSeeder->run()
-#13 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
-#14 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
-#15 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
-#16 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
-#17 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Seeder.php(184): Illuminate\\Container\\Container->call(Array, Array)
-#18 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Seeder.php(193): Illuminate\\Database\\Seeder->Illuminate\\Database\\{closure}()
-#19 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Seeds\\SeedCommand.php(70): Illuminate\\Database\\Seeder->__invoke()
-#20 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Concerns\\GuardsAttributes.php(155): Illuminate\\Database\\Console\\Seeds\\SeedCommand->Illuminate\\Database\\Console\\Seeds\\{closure}()
-#21 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Seeds\\SeedCommand.php(69): Illuminate\\Database\\Eloquent\\Model::unguarded(Object(Closure))
-#22 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Database\\Console\\Seeds\\SeedCommand->handle()
-#23 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
-#24 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
-#25 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
-#26 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
-#27 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
-#28 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
-#29 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
-#30 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#31 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Seeds\\SeedCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#32 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#33 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#34 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#35 {main}
-"} 
-[2025-05-30 14:54:47] production.ERROR: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'darvin' for key 'users.users_username_unique' (Connection: mysql, SQL: insert into `users` (`first_name`, `last_name`, `email`, `username`, `phone`, `country_id`, `password`, `parent_id`, `sponsor_id`, `position`, `gender`, `dob`, `partner_id`, `partner_name`, `otp_verified`, `_lft`, `_rgt`, `updated_at`, `created_at`) values (Darvin, raj, darvin@gmail.com, darvin, 9000000060, 91, $2y$12$UYMLcv6DmDgloAO0hmcmv.wURzxC2sOKAP.bgwgflSnC4KVNCmjc., 14, 14, left, male, 1998-04-15, GL2025536869, EASYADME-DARVIN, 1, 51, 52, 2025-05-30 14:54:47, 2025-05-30 14:54:47)) {"exception":"[object] (Illuminate\\Database\\UniqueConstraintViolationException(code: 23000): SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'darvin' for key 'users.users_username_unique' (Connection: mysql, SQL: insert into `users` (`first_name`, `last_name`, `email`, `username`, `phone`, `country_id`, `password`, `parent_id`, `sponsor_id`, `position`, `gender`, `dob`, `partner_id`, `partner_name`, `otp_verified`, `_lft`, `_rgt`, `updated_at`, `created_at`) values (Darvin, raj, darvin@gmail.com, darvin, 9000000060, 91, $2y$12$UYMLcv6DmDgloAO0hmcmv.wURzxC2sOKAP.bgwgflSnC4KVNCmjc., 14, 14, left, male, 1998-04-15, GL2025536869, EASYADME-DARVIN, 1, 51, 52, 2025-05-30 14:54:47, 2025-05-30 14:54:47)) at C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:824)
-[stacktrace]
-#0 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('insert into `us...', Array, Object(Closure))
-#1 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\MySqlConnection.php(34): Illuminate\\Database\\Connection->run('insert into `us...', Array, Object(Closure))
-#2 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Processors\\MySqlProcessor.php(35): Illuminate\\Database\\MySqlConnection->insert('insert into `us...', Array, 'id')
-#3 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3549): Illuminate\\Database\\Query\\Processors\\MySqlProcessor->processInsertGetId(Object(Illuminate\\Database\\Query\\Builder), 'insert into `us...', Array, 'id')
-#4 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(1982): Illuminate\\Database\\Query\\Builder->insertGetId(Array, 'id')
-#5 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1334): Illuminate\\Database\\Eloquent\\Builder->__call('insertGetId', Array)
-#6 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1299): Illuminate\\Database\\Eloquent\\Model->insertAndSetId(Object(Kalnoy\\Nestedset\\QueryBuilder), Array)
-#7 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1138): Illuminate\\Database\\Eloquent\\Model->performInsert(Object(Kalnoy\\Nestedset\\QueryBuilder))
-#8 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\kalnoy\\nestedset\\src\\NodeTrait.php(764): Illuminate\\Database\\Eloquent\\Model->save()
-#9 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\database\\seeders\\UserSeeder.php(180): App\\Models\\User::create(Array)
-#10 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Database\\Seeders\\UserSeeder->run()
-#11 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
-#12 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
-#13 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
-#14 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
-#15 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Seeder.php(184): Illuminate\\Container\\Container->call(Array, Array)
-#16 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Seeder.php(193): Illuminate\\Database\\Seeder->Illuminate\\Database\\{closure}()
-#17 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Seeds\\SeedCommand.php(70): Illuminate\\Database\\Seeder->__invoke()
-#18 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Concerns\\GuardsAttributes.php(155): Illuminate\\Database\\Console\\Seeds\\SeedCommand->Illuminate\\Database\\Console\\Seeds\\{closure}()
-#19 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Seeds\\SeedCommand.php(69): Illuminate\\Database\\Eloquent\\Model::unguarded(Object(Closure))
-#20 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Database\\Console\\Seeds\\SeedCommand->handle()
-#21 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
-#22 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
-#23 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
-#24 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
-#25 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
-#26 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
-#27 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
-#28 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#29 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Seeds\\SeedCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#30 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#31 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#32 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#33 {main}
-
-[previous exception] [object] (PDOException(code: 23000): SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'darvin' for key 'users.users_username_unique' at C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\MySqlConnection.php:45)
-[stacktrace]
-#0 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\MySqlConnection.php(45): PDOStatement->execute()
-#1 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(816): Illuminate\\Database\\MySqlConnection->Illuminate\\Database\\{closure}('insert into `us...', Array)
-#2 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('insert into `us...', Array, Object(Closure))
-#3 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\MySqlConnection.php(34): Illuminate\\Database\\Connection->run('insert into `us...', Array, Object(Closure))
-#4 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Processors\\MySqlProcessor.php(35): Illuminate\\Database\\MySqlConnection->insert('insert into `us...', Array, 'id')
-#5 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3549): Illuminate\\Database\\Query\\Processors\\MySqlProcessor->processInsertGetId(Object(Illuminate\\Database\\Query\\Builder), 'insert into `us...', Array, 'id')
-#6 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(1982): Illuminate\\Database\\Query\\Builder->insertGetId(Array, 'id')
-#7 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1334): Illuminate\\Database\\Eloquent\\Builder->__call('insertGetId', Array)
-#8 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1299): Illuminate\\Database\\Eloquent\\Model->insertAndSetId(Object(Kalnoy\\Nestedset\\QueryBuilder), Array)
-#9 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1138): Illuminate\\Database\\Eloquent\\Model->performInsert(Object(Kalnoy\\Nestedset\\QueryBuilder))
-#10 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\kalnoy\\nestedset\\src\\NodeTrait.php(764): Illuminate\\Database\\Eloquent\\Model->save()
-#11 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\database\\seeders\\UserSeeder.php(180): App\\Models\\User::create(Array)
-#12 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Database\\Seeders\\UserSeeder->run()
-#13 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
-#14 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
-#15 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
-#16 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
-#17 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Seeder.php(184): Illuminate\\Container\\Container->call(Array, Array)
-#18 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Seeder.php(193): Illuminate\\Database\\Seeder->Illuminate\\Database\\{closure}()
-#19 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Seeds\\SeedCommand.php(70): Illuminate\\Database\\Seeder->__invoke()
-#20 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Concerns\\GuardsAttributes.php(155): Illuminate\\Database\\Console\\Seeds\\SeedCommand->Illuminate\\Database\\Console\\Seeds\\{closure}()
-#21 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Seeds\\SeedCommand.php(69): Illuminate\\Database\\Eloquent\\Model::unguarded(Object(Closure))
-#22 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Database\\Console\\Seeds\\SeedCommand->handle()
-#23 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
-#24 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
-#25 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
-#26 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
-#27 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
-#28 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
-#29 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
-#30 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#31 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Seeds\\SeedCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#32 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#33 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#34 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#35 {main}
-"} 
-[2025-05-30 14:55:49] production.ERROR: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'einstein' for key 'users.users_username_unique' (Connection: mysql, SQL: insert into `users` (`first_name`, `last_name`, `email`, `username`, `phone`, `country_id`, `password`, `parent_id`, `sponsor_id`, `position`, `gender`, `dob`, `partner_id`, `partner_name`, `otp_verified`, `_lft`, `_rgt`, `updated_at`, `created_at`) values (Einstein, raj, einstein@gmail.com, einstein, 9000000061, 91, $2y$12$32/DooPnM3kAXC/ZeZe3GOwpXtofZtV1aYofgb7N1YnYJUrfAcozS, 14, 14, right, male, 1998-05-15, GL2025578470, EASYADME-EINSTEIN, 1, 53, 54, 2025-05-30 14:55:49, 2025-05-30 14:55:49)) {"exception":"[object] (Illuminate\\Database\\UniqueConstraintViolationException(code: 23000): SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'einstein' for key 'users.users_username_unique' (Connection: mysql, SQL: insert into `users` (`first_name`, `last_name`, `email`, `username`, `phone`, `country_id`, `password`, `parent_id`, `sponsor_id`, `position`, `gender`, `dob`, `partner_id`, `partner_name`, `otp_verified`, `_lft`, `_rgt`, `updated_at`, `created_at`) values (Einstein, raj, einstein@gmail.com, einstein, 9000000061, 91, $2y$12$32/DooPnM3kAXC/ZeZe3GOwpXtofZtV1aYofgb7N1YnYJUrfAcozS, 14, 14, right, male, 1998-05-15, GL2025578470, EASYADME-EINSTEIN, 1, 53, 54, 2025-05-30 14:55:49, 2025-05-30 14:55:49)) at C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:824)
-[stacktrace]
-#0 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('insert into `us...', Array, Object(Closure))
-#1 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\MySqlConnection.php(34): Illuminate\\Database\\Connection->run('insert into `us...', Array, Object(Closure))
-#2 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Processors\\MySqlProcessor.php(35): Illuminate\\Database\\MySqlConnection->insert('insert into `us...', Array, 'id')
-#3 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3549): Illuminate\\Database\\Query\\Processors\\MySqlProcessor->processInsertGetId(Object(Illuminate\\Database\\Query\\Builder), 'insert into `us...', Array, 'id')
-#4 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(1982): Illuminate\\Database\\Query\\Builder->insertGetId(Array, 'id')
-#5 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1334): Illuminate\\Database\\Eloquent\\Builder->__call('insertGetId', Array)
-#6 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1299): Illuminate\\Database\\Eloquent\\Model->insertAndSetId(Object(Kalnoy\\Nestedset\\QueryBuilder), Array)
-#7 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1138): Illuminate\\Database\\Eloquent\\Model->performInsert(Object(Kalnoy\\Nestedset\\QueryBuilder))
-#8 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\kalnoy\\nestedset\\src\\NodeTrait.php(764): Illuminate\\Database\\Eloquent\\Model->save()
-#9 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\database\\seeders\\UserSeeder.php(180): App\\Models\\User::create(Array)
-#10 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Database\\Seeders\\UserSeeder->run()
-#11 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
-#12 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
-#13 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
-#14 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
-#15 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Seeder.php(184): Illuminate\\Container\\Container->call(Array, Array)
-#16 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Seeder.php(193): Illuminate\\Database\\Seeder->Illuminate\\Database\\{closure}()
-#17 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Seeds\\SeedCommand.php(70): Illuminate\\Database\\Seeder->__invoke()
-#18 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Concerns\\GuardsAttributes.php(155): Illuminate\\Database\\Console\\Seeds\\SeedCommand->Illuminate\\Database\\Console\\Seeds\\{closure}()
-#19 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Seeds\\SeedCommand.php(69): Illuminate\\Database\\Eloquent\\Model::unguarded(Object(Closure))
-#20 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Database\\Console\\Seeds\\SeedCommand->handle()
-#21 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
-#22 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
-#23 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
-#24 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
-#25 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
-#26 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
-#27 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
-#28 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#29 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Seeds\\SeedCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#30 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#31 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#32 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#33 {main}
-
-[previous exception] [object] (PDOException(code: 23000): SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'einstein' for key 'users.users_username_unique' at C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\MySqlConnection.php:45)
-[stacktrace]
-#0 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\MySqlConnection.php(45): PDOStatement->execute()
-#1 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(816): Illuminate\\Database\\MySqlConnection->Illuminate\\Database\\{closure}('insert into `us...', Array)
-#2 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('insert into `us...', Array, Object(Closure))
-#3 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\MySqlConnection.php(34): Illuminate\\Database\\Connection->run('insert into `us...', Array, Object(Closure))
-#4 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Processors\\MySqlProcessor.php(35): Illuminate\\Database\\MySqlConnection->insert('insert into `us...', Array, 'id')
-#5 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3549): Illuminate\\Database\\Query\\Processors\\MySqlProcessor->processInsertGetId(Object(Illuminate\\Database\\Query\\Builder), 'insert into `us...', Array, 'id')
-#6 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(1982): Illuminate\\Database\\Query\\Builder->insertGetId(Array, 'id')
-#7 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1334): Illuminate\\Database\\Eloquent\\Builder->__call('insertGetId', Array)
-#8 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1299): Illuminate\\Database\\Eloquent\\Model->insertAndSetId(Object(Kalnoy\\Nestedset\\QueryBuilder), Array)
-#9 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1138): Illuminate\\Database\\Eloquent\\Model->performInsert(Object(Kalnoy\\Nestedset\\QueryBuilder))
-#10 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\kalnoy\\nestedset\\src\\NodeTrait.php(764): Illuminate\\Database\\Eloquent\\Model->save()
-#11 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\database\\seeders\\UserSeeder.php(180): App\\Models\\User::create(Array)
-#12 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Database\\Seeders\\UserSeeder->run()
-#13 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
-#14 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
-#15 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
-#16 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
-#17 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Seeder.php(184): Illuminate\\Container\\Container->call(Array, Array)
-#18 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Seeder.php(193): Illuminate\\Database\\Seeder->Illuminate\\Database\\{closure}()
-#19 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Seeds\\SeedCommand.php(70): Illuminate\\Database\\Seeder->__invoke()
-#20 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Concerns\\GuardsAttributes.php(155): Illuminate\\Database\\Console\\Seeds\\SeedCommand->Illuminate\\Database\\Console\\Seeds\\{closure}()
-#21 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Seeds\\SeedCommand.php(69): Illuminate\\Database\\Eloquent\\Model::unguarded(Object(Closure))
-#22 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Database\\Console\\Seeds\\SeedCommand->handle()
-#23 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
-#24 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
-#25 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
-#26 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
-#27 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
-#28 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
-#29 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
-#30 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#31 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Seeds\\SeedCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#32 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#33 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#34 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#35 {main}
-"} 
-[2025-05-30 14:57:16] production.INFO: LeftBV: 0  
-[2025-05-30 14:57:16] production.INFO: RightBV:0  
-[2025-05-30 14:57:25] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
-[2025-05-30 14:57:25] production.INFO: last3: {"membership_id":715} 
-[2025-05-30 14:57:25] production.INFO: last5: {"membership_id":715} 
-[2025-05-30 14:57:25] production.INFO: last4: {"membership_id":715,"order_id":null} 
-[2025-05-30 14:57:25] production.INFO: after-charge: {"membership_id":715,"order_id":715} 
-[2025-05-30 14:57:47] production.INFO: LeftBV: 0  
-[2025-05-30 14:57:47] production.INFO: RightBV:0  
-[2025-05-30 14:57:51] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"715","payment_amount":5000,"transaction_id":"pay_Qb5gUCnwMj3bHL"} 
-[2025-05-30 14:57:51] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
-[2025-05-30 14:57:51] production.INFO: Updating membership database {"last_membership_id":"715","transaction_id":"pay_Qb5gUCnwMj3bHL","membership_history_id":989,"upgrade_membership_id":3} 
-[2025-05-30 14:57:51] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":715} 
-[2025-05-30 14:57:51] production.INFO: ReferralLogic: START {"purchasing_user_id":1,"sponsor_id":null} 
-[2025-05-30 14:57:52] production.INFO: ReferralLogic: Eligible for commission {"amount":90.0} 
-[2025-05-30 14:57:52] production.WARNING: ReferralLogic: No sponsor found {"user_id":1,"sponsor_id":null} 
-[2025-05-30 14:57:52] production.INFO: ReferralLogic: END {"user_id":1} 
-[2025-05-30 14:57:55] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
-[2025-05-30 14:57:56] production.INFO: last3: {"membership_id":716} 
-[2025-05-30 14:57:56] production.INFO: last5: {"membership_id":716} 
-[2025-05-30 14:57:56] production.INFO: last4: {"membership_id":716,"order_id":null} 
-[2025-05-30 14:57:56] production.INFO: after-charge: {"membership_id":716,"order_id":716} 
-[2025-05-30 14:57:59] production.INFO: Membership email sent to user #1  
-[2025-05-30 14:58:01] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
-[2025-05-30 14:58:01] production.INFO: Data to update: {"upgrade_membership_id":3} 
-[2025-05-30 14:58:09] production.INFO: LeftBV: 0  
-[2025-05-30 14:58:09] production.INFO: RightBV:0  
-[2025-05-30 14:58:18] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
-[2025-05-30 14:58:18] production.INFO: last3: {"membership_id":717} 
-[2025-05-30 14:58:18] production.INFO: last5: {"membership_id":717} 
-[2025-05-30 14:58:18] production.INFO: last4: {"membership_id":717,"order_id":null} 
-[2025-05-30 14:58:18] production.INFO: after-charge: {"membership_id":717,"order_id":717} 
-[2025-05-30 14:58:34] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"716","payment_amount":5000,"transaction_id":"pay_Qb5gz3a30FgOfe"} 
-[2025-05-30 14:58:34] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
-[2025-05-30 14:58:34] production.INFO: Updating membership database {"last_membership_id":"716","transaction_id":"pay_Qb5gz3a30FgOfe","membership_history_id":990,"upgrade_membership_id":3} 
-[2025-05-30 14:58:34] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":716} 
-[2025-05-30 14:58:34] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"left"} 
-[2025-05-30 14:58:34] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5582,"left_bv":900,"right_bv":null} 
-[2025-05-30 14:58:34] production.INFO: ReferralLogic: START {"purchasing_user_id":2,"sponsor_id":1} 
-[2025-05-30 14:58:34] production.INFO: ReferralLogic: Eligible for commission {"amount":90.0} 
-[2025-05-30 14:58:34] production.INFO: ReferralLogic: Commission credited {"sponsor_id":1,"before":"0.00","after":90.0,"incremented_by":90.0} 
-[2025-05-30 14:58:34] production.INFO: ReferralLogic: Flagged user as commissioned {"user_id":2} 
-[2025-05-30 14:58:34] production.INFO: ReferralLogic: END {"user_id":2} 
-[2025-05-30 14:58:37] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"717","payment_amount":5000,"transaction_id":"pay_Qb5hLfhZSDE1T2"} 
-[2025-05-30 14:58:37] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
-[2025-05-30 14:58:37] production.INFO: Updating membership database {"last_membership_id":"717","transaction_id":"pay_Qb5hLfhZSDE1T2","membership_history_id":991,"upgrade_membership_id":3} 
-[2025-05-30 14:58:37] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":717} 
-[2025-05-30 14:58:38] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"right"} 
-[2025-05-30 14:58:38] production.INFO: Membership email sent to user #2  
-[2025-05-30 14:58:38] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5584,"left_bv":900,"right_bv":900} 
-[2025-05-30 14:58:38] production.INFO: ReferralLogic: START {"purchasing_user_id":3,"sponsor_id":1} 
-[2025-05-30 14:58:38] production.INFO: ReferralLogic: Eligible for commission {"amount":90.0} 
-[2025-05-30 14:58:38] production.INFO: ReferralLogic: Commission credited {"sponsor_id":1,"before":"90.00","after":180.0,"incremented_by":90.0} 
-[2025-05-30 14:58:38] production.INFO: ReferralLogic: Flagged user as commissioned {"user_id":3} 
-[2025-05-30 14:58:38] production.INFO: ReferralLogic: END {"user_id":3} 
-[2025-05-30 14:58:40] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
-[2025-05-30 14:58:40] production.INFO: Data to update: {"upgrade_membership_id":3} 
-[2025-05-30 14:58:42] production.INFO: Membership email sent to user #3  
-[2025-05-30 14:58:43] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
-[2025-05-30 14:58:43] production.INFO: Data to update: {"upgrade_membership_id":3} 
-[2025-05-30 14:58:53] production.INFO: LeftBV: 900  
-[2025-05-30 14:58:53] production.INFO: RightBV:900  
-[2025-05-30 14:59:07] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
-[2025-05-30 14:59:07] production.INFO: last3: {"membership_id":718} 
-[2025-05-30 14:59:07] production.INFO: last5: {"membership_id":718} 
-[2025-05-30 14:59:07] production.INFO: last4: {"membership_id":718,"order_id":null} 
-[2025-05-30 14:59:07] production.INFO: after-charge: {"membership_id":718,"order_id":718} 
-[2025-05-30 14:59:15] production.INFO: LeftBV: 0  
-[2025-05-30 14:59:15] production.INFO: RightBV:0  
-[2025-05-30 14:59:31] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"718","payment_amount":1000,"transaction_id":"pay_Qb5iCVZk6DQuTs"} 
-[2025-05-30 14:59:31] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":2} 
-[2025-05-30 14:59:31] production.INFO: Updating membership database {"last_membership_id":"718","transaction_id":"pay_Qb5iCVZk6DQuTs","membership_history_id":992,"upgrade_membership_id":2} 
-[2025-05-30 14:59:31] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":718} 
-[2025-05-30 14:59:31] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":300,"position":"left"} 
-[2025-05-30 14:59:31] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5586,"left_bv":1200,"right_bv":900} 
-[2025-05-30 14:59:31] production.INFO: ReferralLogic: START {"purchasing_user_id":4,"sponsor_id":1} 
-[2025-05-30 14:59:31] production.INFO: ReferralLogic: Not eligible or already commissioned {"commission_given":0,"self_purchased_bv":300.0} 
-[2025-05-30 14:59:31] production.INFO: ReferralLogic: END {"user_id":4} 
-[2025-05-30 14:59:35] production.INFO: Membership email sent to user #4  
-[2025-05-30 14:59:37] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
-[2025-05-30 14:59:37] production.INFO: Data to update: {"upgrade_membership_id":2} 
-[2025-05-30 14:59:44] production.INFO: LeftBV: 0  
-[2025-05-30 14:59:44] production.INFO: RightBV:0  
-[2025-05-30 15:00:13] production.INFO: LeftBV: 0  
-[2025-05-30 15:00:13] production.INFO: RightBV:0  
-[2025-05-30 15:00:17] production.INFO: LeftBV: 0  
-[2025-05-30 15:00:17] production.INFO: RightBV:0  
-[2025-05-30 15:00:37] production.INFO: LeftBV: 0  
-[2025-05-30 15:00:37] production.INFO: RightBV:0  
-[2025-05-30 15:00:45] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
-[2025-05-30 15:00:45] production.INFO: last3: {"membership_id":719} 
-[2025-05-30 15:00:45] production.INFO: last5: {"membership_id":719} 
-[2025-05-30 15:00:45] production.INFO: last4: {"membership_id":719,"order_id":null} 
-[2025-05-30 15:00:45] production.INFO: after-charge: {"membership_id":719,"order_id":719} 
-[2025-05-30 15:01:04] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"719","payment_amount":1000,"transaction_id":"pay_Qb5jv3j7N2QYKv"} 
-[2025-05-30 15:01:04] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":2} 
-[2025-05-30 15:01:04] production.INFO: Updating membership database {"last_membership_id":"719","transaction_id":"pay_Qb5jv3j7N2QYKv","membership_history_id":993,"upgrade_membership_id":2} 
-[2025-05-30 15:01:04] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":719} 
-[2025-05-30 15:01:06] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":300,"position":"right"} 
-[2025-05-30 15:01:06] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5588,"left_bv":1200,"right_bv":1200} 
-[2025-05-30 15:01:06] production.INFO: ReferralLogic: START {"purchasing_user_id":5,"sponsor_id":1} 
-[2025-05-30 15:01:06] production.INFO: ReferralLogic: Not eligible or already commissioned {"commission_given":0,"self_purchased_bv":300.0} 
-[2025-05-30 15:01:06] production.INFO: ReferralLogic: END {"user_id":5} 
-[2025-05-30 15:01:09] production.INFO: Membership email sent to user #5  
-[2025-05-30 15:01:11] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
-[2025-05-30 15:01:11] production.INFO: Data to update: {"upgrade_membership_id":2} 
-[2025-05-30 15:01:24] production.INFO: LeftBV: 0  
-[2025-05-30 15:01:24] production.INFO: RightBV:0  
-[2025-05-30 15:01:27] production.INFO: LeftBV: 0  
-[2025-05-30 15:01:27] production.INFO: RightBV:0  
-[2025-05-30 15:04:41] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
-[2025-05-30 15:04:41] production.INFO: last3: {"membership_id":716} 
-[2025-05-30 15:04:41] production.INFO: last5: {"membership_id":716} 
-[2025-05-30 15:04:41] production.INFO: last4: {"membership_id":716,"order_id":null} 
-[2025-05-30 15:04:41] production.INFO: after-charge: {"membership_id":716,"order_id":716} 
-[2025-05-30 15:05:22] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"716","payment_amount":1000,"transaction_id":"pay_Qb5o8FTc8EIyiu"} 
-[2025-05-30 15:05:22] production.INFO: Updating membership database {"last_membership_id":"716","transaction_id":"pay_Qb5o8FTc8EIyiu","membership_history_id":994,"upgrade_membership_id":2} 
-[2025-05-30 15:05:22] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":716} 
-[2025-05-30 15:05:22] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":300,"position":"left"} 
-[2025-05-30 15:05:22] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5590,"left_bv":1500,"right_bv":1200} 
-[2025-05-30 15:05:22] production.INFO: ReferralLogic: START {"purchasing_user_id":2,"sponsor_id":1} 
-[2025-05-30 15:05:22] production.INFO: ReferralLogic: Not eligible or already commissioned {"commission_given":1,"self_purchased_bv":1200.0} 
-[2025-05-30 15:05:22] production.INFO: ReferralLogic: END {"user_id":2} 
-[2025-05-30 15:05:25] production.INFO: Node BV/Pair calc {"user_id":1,"leftBV":1500,"rightBV":1200,"sealedL":1500,"sealedR":1200,"leftBP":1.0,"rightBP":1.0,"possible_pairs":1.0} 
-[2025-05-30 15:05:25] production.INFO: Node BV/Pair calc {"user_id":2,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:05:25] production.INFO: Node BV/Pair calc {"user_id":3,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:05:28] production.INFO: Membership email sent to user #2  
-[2025-05-30 15:05:30] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
-[2025-05-30 15:05:30] production.INFO: Data to update: {"upgrade_membership_id":2} 
-[2025-05-30 15:21:07] production.ERROR: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SET_FOREIGN_KEY_CHECKS=1' at line 1 (Connection: mysql, SQL: SET_FOREIGN_KEY_CHECKS=1;) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42000): SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SET_FOREIGN_KEY_CHECKS=1' at line 1 (Connection: mysql, SQL: SET_FOREIGN_KEY_CHECKS=1;) at C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
-[stacktrace]
-#0 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('SET_FOREIGN_KEY...', Array, Object(Closure))
-#1 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(576): Illuminate\\Database\\Connection->run('SET_FOREIGN_KEY...', Array, Object(Closure))
-#2 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\DatabaseManager.php(509): Illuminate\\Database\\Connection->statement('SET_FOREIGN_KEY...')
-#3 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Database\\DatabaseManager->__call('statement', Array)
-#4 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\database\\seeders\\UserSeeder.php(30): Illuminate\\Support\\Facades\\Facade::__callStatic('statement', Array)
-#5 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Database\\Seeders\\UserSeeder->run()
-#6 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
-#7 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
-#8 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
-#9 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
-#10 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Seeder.php(184): Illuminate\\Container\\Container->call(Array, Array)
-#11 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Seeder.php(193): Illuminate\\Database\\Seeder->Illuminate\\Database\\{closure}()
-#12 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Seeds\\SeedCommand.php(70): Illuminate\\Database\\Seeder->__invoke()
-#13 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Concerns\\GuardsAttributes.php(155): Illuminate\\Database\\Console\\Seeds\\SeedCommand->Illuminate\\Database\\Console\\Seeds\\{closure}()
-#14 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Seeds\\SeedCommand.php(69): Illuminate\\Database\\Eloquent\\Model::unguarded(Object(Closure))
-#15 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Database\\Console\\Seeds\\SeedCommand->handle()
-#16 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
-#17 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
-#18 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
-#19 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
-#20 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
-#21 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
-#22 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
-#23 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#24 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Seeds\\SeedCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#25 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#26 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#27 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#28 {main}
-
-[previous exception] [object] (PDOException(code: 42000): SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SET_FOREIGN_KEY_CHECKS=1' at line 1 at C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:581)
-[stacktrace]
-#0 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(581): PDO->prepare('SET_FOREIGN_KEY...')
-#1 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(816): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('SET_FOREIGN_KEY...', Array)
-#2 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('SET_FOREIGN_KEY...', Array, Object(Closure))
-#3 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(576): Illuminate\\Database\\Connection->run('SET_FOREIGN_KEY...', Array, Object(Closure))
-#4 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\DatabaseManager.php(509): Illuminate\\Database\\Connection->statement('SET_FOREIGN_KEY...')
-#5 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Database\\DatabaseManager->__call('statement', Array)
-#6 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\database\\seeders\\UserSeeder.php(30): Illuminate\\Support\\Facades\\Facade::__callStatic('statement', Array)
-#7 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Database\\Seeders\\UserSeeder->run()
-#8 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
-#9 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
-#10 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
-#11 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
-#12 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Seeder.php(184): Illuminate\\Container\\Container->call(Array, Array)
-#13 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Seeder.php(193): Illuminate\\Database\\Seeder->Illuminate\\Database\\{closure}()
-#14 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Seeds\\SeedCommand.php(70): Illuminate\\Database\\Seeder->__invoke()
-#15 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Concerns\\GuardsAttributes.php(155): Illuminate\\Database\\Console\\Seeds\\SeedCommand->Illuminate\\Database\\Console\\Seeds\\{closure}()
-#16 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Seeds\\SeedCommand.php(69): Illuminate\\Database\\Eloquent\\Model::unguarded(Object(Closure))
-#17 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Database\\Console\\Seeds\\SeedCommand->handle()
-#18 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
-#19 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
-#20 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
-#21 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
-#22 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
-#23 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
-#24 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
-#25 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#26 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Seeds\\SeedCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#27 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#28 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#29 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#30 {main}
-"} 
-[2025-05-30 15:29:10] production.INFO: LeftBV: 0  
-[2025-05-30 15:29:10] production.INFO: RightBV:0  
-[2025-05-30 15:29:26] production.INFO: LeftBV: 0  
-[2025-05-30 15:29:26] production.INFO: RightBV:0  
-[2025-05-30 15:29:33] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
-[2025-05-30 15:29:33] production.INFO: last3: {"membership_id":649} 
-[2025-05-30 15:29:34] production.INFO: last5: {"membership_id":649} 
-[2025-05-30 15:29:34] production.INFO: last4: {"membership_id":649,"order_id":null} 
-[2025-05-30 15:29:34] production.INFO: after-charge: {"membership_id":649,"order_id":649} 
-[2025-05-30 15:29:53] production.INFO: LeftBV: 0  
-[2025-05-30 15:29:53] production.INFO: RightBV:0  
-[2025-05-30 15:30:00] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
-[2025-05-30 15:30:00] production.INFO: last3: {"membership_id":650} 
-[2025-05-30 15:30:00] production.INFO: last5: {"membership_id":650} 
-[2025-05-30 15:30:00] production.INFO: last4: {"membership_id":650,"order_id":null} 
-[2025-05-30 15:30:00] production.INFO: after-charge: {"membership_id":650,"order_id":650} 
-[2025-05-30 15:30:15] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"649","payment_amount":5000,"transaction_id":"pay_Qb6EQKrToGisiN"} 
-[2025-05-30 15:30:15] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
-[2025-05-30 15:30:15] production.INFO: Updating membership database {"last_membership_id":"649","transaction_id":"pay_Qb6EQKrToGisiN","membership_history_id":921,"upgrade_membership_id":3} 
-[2025-05-30 15:30:15] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":649} 
-[2025-05-30 15:30:15] production.INFO: ReferralLogic: START {"purchasing_user_id":1,"sponsor_id":null} 
-[2025-05-30 15:30:15] production.INFO: ReferralLogic: Eligible for commission {"amount":90.0} 
-[2025-05-30 15:30:15] production.WARNING: ReferralLogic: No sponsor found {"user_id":1,"sponsor_id":null} 
-[2025-05-30 15:30:15] production.INFO: ReferralLogic: END {"user_id":1} 
-[2025-05-30 15:30:22] production.INFO: Membership email sent to user #1  
-[2025-05-30 15:30:24] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
-[2025-05-30 15:30:24] production.INFO: Data to update: {"upgrade_membership_id":3} 
-[2025-05-30 15:30:31] production.INFO: LeftBV: 0  
-[2025-05-30 15:30:31] production.INFO: RightBV:0  
-[2025-05-30 15:30:36] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"650","payment_amount":5000,"transaction_id":"pay_Qb6EpUChOBYtNa"} 
-[2025-05-30 15:30:36] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
-[2025-05-30 15:30:36] production.INFO: Updating membership database {"last_membership_id":"650","transaction_id":"pay_Qb6EpUChOBYtNa","membership_history_id":922,"upgrade_membership_id":3} 
-[2025-05-30 15:30:36] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":650} 
-[2025-05-30 15:30:36] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"right"} 
-[2025-05-30 15:30:36] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5271,"left_bv":null,"right_bv":900} 
-[2025-05-30 15:30:36] production.INFO: ReferralLogic: START {"purchasing_user_id":3,"sponsor_id":1} 
-[2025-05-30 15:30:36] production.INFO: ReferralLogic: Eligible for commission {"amount":90.0} 
-[2025-05-30 15:30:36] production.INFO: ReferralLogic: Commission credited {"sponsor_id":1,"before":"0.00","after":90.0,"incremented_by":90.0} 
-[2025-05-30 15:30:36] production.INFO: ReferralLogic: Flagged user as commissioned {"user_id":3} 
-[2025-05-30 15:30:36] production.INFO: ReferralLogic: END {"user_id":3} 
-[2025-05-30 15:30:40] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
-[2025-05-30 15:30:40] production.INFO: last3: {"membership_id":651} 
-[2025-05-30 15:30:40] production.INFO: last5: {"membership_id":651} 
-[2025-05-30 15:30:40] production.INFO: last4: {"membership_id":651,"order_id":null} 
-[2025-05-30 15:30:40] production.INFO: after-charge: {"membership_id":651,"order_id":651} 
-[2025-05-30 15:30:41] production.INFO: Membership email sent to user #3  
-[2025-05-30 15:30:43] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
-[2025-05-30 15:30:43] production.INFO: Data to update: {"upgrade_membership_id":3} 
-[2025-05-30 15:30:48] production.INFO: LeftBV: 0  
-[2025-05-30 15:30:48] production.INFO: RightBV:0  
-[2025-05-30 15:31:10] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"651","payment_amount":5000,"transaction_id":"pay_Qb6FWvWuwXoMGc"} 
-[2025-05-30 15:31:10] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
-[2025-05-30 15:31:10] production.INFO: Updating membership database {"last_membership_id":"651","transaction_id":"pay_Qb6FWvWuwXoMGc","membership_history_id":923,"upgrade_membership_id":3} 
-[2025-05-30 15:31:10] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":651} 
-[2025-05-30 15:31:11] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"left"} 
-[2025-05-30 15:31:11] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5273,"left_bv":900,"right_bv":900} 
-[2025-05-30 15:31:11] production.INFO: ReferralLogic: START {"purchasing_user_id":2,"sponsor_id":1} 
-[2025-05-30 15:31:11] production.INFO: ReferralLogic: Eligible for commission {"amount":90.0} 
-[2025-05-30 15:31:11] production.INFO: ReferralLogic: Commission credited {"sponsor_id":1,"before":"90.00","after":180.0,"incremented_by":90.0} 
-[2025-05-30 15:31:11] production.INFO: ReferralLogic: Flagged user as commissioned {"user_id":2} 
-[2025-05-30 15:31:11] production.INFO: ReferralLogic: END {"user_id":2} 
-[2025-05-30 15:31:16] production.INFO: Membership email sent to user #2  
-[2025-05-30 15:31:18] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
-[2025-05-30 15:31:18] production.INFO: Data to update: {"upgrade_membership_id":3} 
-[2025-05-30 15:31:25] production.INFO: LeftBV: 0  
-[2025-05-30 15:31:25] production.INFO: RightBV:0  
-[2025-05-30 15:31:43] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
-[2025-05-30 15:31:43] production.INFO: last3: {"membership_id":652} 
-[2025-05-30 15:31:43] production.INFO: last5: {"membership_id":652} 
-[2025-05-30 15:31:43] production.INFO: last4: {"membership_id":652,"order_id":null} 
-[2025-05-30 15:31:43] production.INFO: after-charge: {"membership_id":652,"order_id":652} 
-[2025-05-30 15:32:02] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"652","payment_amount":1000,"transaction_id":"pay_Qb6GdR9rDIDLEX"} 
-[2025-05-30 15:32:02] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":2} 
-[2025-05-30 15:32:02] production.INFO: Updating membership database {"last_membership_id":"652","transaction_id":"pay_Qb6GdR9rDIDLEX","membership_history_id":924,"upgrade_membership_id":2} 
-[2025-05-30 15:32:02] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":652} 
-[2025-05-30 15:32:03] production.INFO: Distributed BV referral to parent {"parent_id":2,"bv_points":300,"position":"left"} 
-[2025-05-30 15:32:03] production.INFO: Incremented flush BV totals {"user_id":2,"bv_id":5275,"left_bv":300,"right_bv":null} 
-[2025-05-30 15:32:03] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":300,"position":"left"} 
-[2025-05-30 15:32:03] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5276,"left_bv":1200,"right_bv":900} 
-[2025-05-30 15:32:03] production.INFO: ReferralLogic: START {"purchasing_user_id":4,"sponsor_id":1} 
-[2025-05-30 15:32:03] production.INFO: ReferralLogic: Not eligible or already commissioned {"commission_given":0,"self_purchased_bv":300.0} 
-[2025-05-30 15:32:03] production.INFO: ReferralLogic: END {"user_id":4} 
-[2025-05-30 15:32:08] production.INFO: Membership email sent to user #4  
-[2025-05-30 15:32:09] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
-[2025-05-30 15:32:09] production.INFO: Data to update: {"upgrade_membership_id":2} 
-[2025-05-30 15:32:19] production.INFO: LeftBV: 300  
-[2025-05-30 15:32:19] production.INFO: RightBV:0  
-[2025-05-30 15:32:27] production.INFO: LeftBV: 1200  
-[2025-05-30 15:32:27] production.INFO: RightBV:900  
-[2025-05-30 15:32:44] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
-[2025-05-30 15:32:44] production.INFO: last3: {"membership_id":653} 
-[2025-05-30 15:32:44] production.INFO: last5: {"membership_id":653} 
-[2025-05-30 15:32:44] production.INFO: last4: {"membership_id":653,"order_id":null} 
-[2025-05-30 15:32:44] production.INFO: after-charge: {"membership_id":653,"order_id":653} 
-[2025-05-30 15:33:03] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"653","payment_amount":1000,"transaction_id":"pay_Qb6Hicq6dvNTK2"} 
-[2025-05-30 15:33:03] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":2} 
-[2025-05-30 15:33:03] production.INFO: Updating membership database {"last_membership_id":"653","transaction_id":"pay_Qb6Hicq6dvNTK2","membership_history_id":925,"upgrade_membership_id":2} 
-[2025-05-30 15:33:03] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":653} 
-[2025-05-30 15:33:04] production.INFO: Distributed BV referral to parent {"parent_id":2,"bv_points":300,"position":"right"} 
-[2025-05-30 15:33:04] production.INFO: Incremented flush BV totals {"user_id":2,"bv_id":5278,"left_bv":300,"right_bv":300} 
-[2025-05-30 15:33:04] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":300,"position":"left"} 
-[2025-05-30 15:33:04] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5279,"left_bv":1500,"right_bv":900} 
-[2025-05-30 15:33:04] production.INFO: ReferralLogic: START {"purchasing_user_id":5,"sponsor_id":1} 
-[2025-05-30 15:33:04] production.INFO: ReferralLogic: Not eligible or already commissioned {"commission_given":0,"self_purchased_bv":300.0} 
-[2025-05-30 15:33:04] production.INFO: ReferralLogic: END {"user_id":5} 
-[2025-05-30 15:33:09] production.INFO: Membership email sent to user #5  
-[2025-05-30 15:33:11] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
-[2025-05-30 15:33:11] production.INFO: Data to update: {"upgrade_membership_id":2} 
-[2025-05-30 15:33:38] production.INFO: LeftBV: 300  
-[2025-05-30 15:33:38] production.INFO: RightBV:300  
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":1,"leftBV":1500,"rightBV":900,"sealedL":1500,"sealedR":900,"leftBP":1.0,"rightBP":1.0,"possible_pairs":1.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":2,"leftBV":300,"rightBV":300,"sealedL":300,"sealedR":300,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":4,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":8,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":16,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":21,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":22,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":23,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":24,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":25,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":17,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":18,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":19,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":20,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":9,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":5,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":10,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":11,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":3,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":6,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":12,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":13,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":7,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":14,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":30,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":31,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":32,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":33,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":15,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":26,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":27,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":28,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":29,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:09] production.INFO: Node BV/Pair calc {"user_id":34,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:18] production.INFO: LeftBV: 1500  
-[2025-05-30 15:34:18] production.INFO: RightBV:900  
-[2025-05-30 15:34:18] production.INFO: Node BV/Pair calc {"user_id":3,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:18] production.INFO: Node BV/Pair calc {"user_id":6,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:18] production.INFO: Node BV/Pair calc {"user_id":12,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:18] production.INFO: Node BV/Pair calc {"user_id":13,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:18] production.INFO: Node BV/Pair calc {"user_id":7,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:18] production.INFO: Node BV/Pair calc {"user_id":14,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:18] production.INFO: Node BV/Pair calc {"user_id":30,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:18] production.INFO: Node BV/Pair calc {"user_id":31,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:18] production.INFO: Node BV/Pair calc {"user_id":32,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:18] production.INFO: Node BV/Pair calc {"user_id":33,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:18] production.INFO: Node BV/Pair calc {"user_id":15,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:18] production.INFO: Node BV/Pair calc {"user_id":26,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:18] production.INFO: Node BV/Pair calc {"user_id":27,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:18] production.INFO: Node BV/Pair calc {"user_id":28,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:18] production.INFO: Node BV/Pair calc {"user_id":29,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:34:18] production.INFO: Node BV/Pair calc {"user_id":34,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":1,"leftBV":1500,"rightBV":900,"sealedL":1500,"sealedR":900,"leftBP":1.0,"rightBP":1.0,"possible_pairs":1.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":2,"leftBV":300,"rightBV":300,"sealedL":300,"sealedR":300,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":4,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":8,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":16,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":21,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":22,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":23,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":24,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":25,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":17,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":18,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":19,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":20,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":9,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":5,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":10,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":11,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":3,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":6,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":12,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":13,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":7,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":14,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":30,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":31,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":32,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":33,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":15,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":26,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":27,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":28,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":29,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:36:59] production.INFO: Node BV/Pair calc {"user_id":34,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":1,"leftBV":1500,"rightBV":900,"sealedL":1500,"sealedR":900,"leftBP":1.0,"rightBP":1.0,"possible_pairs":1.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":2,"leftBV":300,"rightBV":300,"sealedL":300,"sealedR":300,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":4,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":8,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":16,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":21,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":22,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":23,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":24,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":25,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":17,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":18,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":19,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":20,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":9,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":5,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":10,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":11,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":3,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":6,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":12,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":13,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":7,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":14,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":30,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":31,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":32,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":33,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":15,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":26,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":27,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":28,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":29,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:21] production.INFO: Node BV/Pair calc {"user_id":34,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":1,"leftBV":1500,"rightBV":900,"sealedL":1500,"sealedR":900,"leftBP":1.0,"rightBP":1.0,"possible_pairs":1.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":2,"leftBV":300,"rightBV":300,"sealedL":300,"sealedR":300,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":4,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":8,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":16,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":21,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":22,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":23,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":24,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":25,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":17,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":18,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":19,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":20,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":9,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":5,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":10,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":11,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":3,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":6,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":12,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":13,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":7,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":14,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":30,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":31,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":32,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":33,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":15,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":26,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":27,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":28,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":29,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:37:46] production.INFO: Node BV/Pair calc {"user_id":34,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:38:18] production.INFO: LeftBV: 1500  
-[2025-05-30 15:38:18] production.INFO: RightBV:900  
-[2025-05-30 15:38:18] production.INFO: Node BV/Pair calc {"user_id":3,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:38:18] production.INFO: Node BV/Pair calc {"user_id":6,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:38:18] production.INFO: Node BV/Pair calc {"user_id":12,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:38:18] production.INFO: Node BV/Pair calc {"user_id":13,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:38:18] production.INFO: Node BV/Pair calc {"user_id":7,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:38:18] production.INFO: Node BV/Pair calc {"user_id":14,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:38:18] production.INFO: Node BV/Pair calc {"user_id":30,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:38:18] production.INFO: Node BV/Pair calc {"user_id":31,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:38:18] production.INFO: Node BV/Pair calc {"user_id":32,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:38:18] production.INFO: Node BV/Pair calc {"user_id":33,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:38:18] production.INFO: Node BV/Pair calc {"user_id":15,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:38:18] production.INFO: Node BV/Pair calc {"user_id":26,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:38:18] production.INFO: Node BV/Pair calc {"user_id":27,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:38:18] production.INFO: Node BV/Pair calc {"user_id":28,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:38:18] production.INFO: Node BV/Pair calc {"user_id":29,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
-[2025-05-30 15:38:18] production.INFO: Node BV/Pair calc {"user_id":34,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-30 21:04:47] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-30 21:04:48] production.INFO: last3: {"membership_id":653} 
+[2025-05-30 21:04:48] production.INFO: last5: {"membership_id":653} 
+[2025-05-30 21:04:48] production.INFO: last4: {"membership_id":653,"order_id":null} 
+[2025-05-30 21:04:48] production.INFO: after-charge: {"membership_id":653,"order_id":653} 
+[2025-05-30 21:05:15] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"653","payment_amount":5000,"transaction_id":"pay_QbBwZyf3wABz1d"} 
+[2025-05-30 21:05:15] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-30 21:05:15] production.INFO: Updating membership database {"last_membership_id":"653","transaction_id":"pay_QbBwZyf3wABz1d","membership_history_id":925,"upgrade_membership_id":3} 
+[2025-05-30 21:05:15] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":653} 
+[2025-05-30 21:05:15] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"left"} 
+[2025-05-30 21:05:15] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5278,"left_bv":1800,"right_bv":0} 
+[2025-05-30 21:05:15] production.INFO: ReferralLogic: START {"purchasing_user_id":2,"sponsor_id":1} 
+[2025-05-30 21:05:15] production.INFO: ReferralLogic: Eligible for commission {"amount":90.0} 
+[2025-05-30 21:05:16] production.INFO: ReferralLogic: Commission credited {"sponsor_id":1,"before":"0.00","after":90.0,"incremented_by":90.0} 
+[2025-05-30 21:05:16] production.INFO: ReferralLogic: Flagged user as commissioned {"user_id":2} 
+[2025-05-30 21:05:16] production.INFO: ReferralLogic: END {"user_id":2} 
+[2025-05-30 21:05:24] production.INFO: Membership email sent to user #2  
+[2025-05-30 21:05:26] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-30 21:05:26] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-30 21:06:26] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-30 21:06:26] production.INFO: last3: {"membership_id":654} 
+[2025-05-30 21:06:26] production.INFO: last5: {"membership_id":654} 
+[2025-05-30 21:06:26] production.INFO: last4: {"membership_id":654,"order_id":null} 
+[2025-05-30 21:06:26] production.INFO: after-charge: {"membership_id":654,"order_id":654} 
+[2025-05-30 21:06:48] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"654","payment_amount":1000,"transaction_id":"pay_QbByF7SCngyF1l"} 
+[2025-05-30 21:06:48] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":2} 
+[2025-05-30 21:06:48] production.INFO: Updating membership database {"last_membership_id":"654","transaction_id":"pay_QbByF7SCngyF1l","membership_history_id":926,"upgrade_membership_id":2} 
+[2025-05-30 21:06:48] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":654} 
+[2025-05-30 21:06:49] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":300,"position":"right"} 
+[2025-05-30 21:06:49] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5280,"left_bv":1800,"right_bv":300} 
+[2025-05-30 21:06:49] production.INFO: ReferralLogic: START {"purchasing_user_id":3,"sponsor_id":1} 
+[2025-05-30 21:06:49] production.INFO: ReferralLogic: Not eligible or already commissioned {"commission_given":0,"self_purchased_bv":300.0} 
+[2025-05-30 21:06:49] production.INFO: ReferralLogic: END {"user_id":3} 
+[2025-05-30 21:06:55] production.INFO: Membership email sent to user #3  
+[2025-05-30 21:06:57] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-30 21:06:57] production.INFO: Data to update: {"upgrade_membership_id":2} 
+[2025-05-30 21:08:29] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-30 21:08:29] production.INFO: last3: {"membership_id":655} 
+[2025-05-30 21:08:29] production.INFO: last5: {"membership_id":655} 
+[2025-05-30 21:08:29] production.INFO: last4: {"membership_id":655,"order_id":null} 
+[2025-05-30 21:08:29] production.INFO: after-charge: {"membership_id":655,"order_id":655} 
+[2025-05-30 21:08:50] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"655","payment_amount":1000,"transaction_id":"pay_QbC0PHx1JfYQV1"} 
+[2025-05-30 21:08:50] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":2} 
+[2025-05-30 21:08:51] production.INFO: Updating membership database {"last_membership_id":"655","transaction_id":"pay_QbC0PHx1JfYQV1","membership_history_id":927,"upgrade_membership_id":2} 
+[2025-05-30 21:08:51] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":655} 
+[2025-05-30 21:08:52] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":300,"position":"right"} 
+[2025-05-30 21:08:52] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5282,"left_bv":1800,"right_bv":600} 
+[2025-05-30 21:08:52] production.INFO: ReferralLogic: START {"purchasing_user_id":3,"sponsor_id":1} 
+[2025-05-30 21:08:52] production.INFO: ReferralLogic: Eligible for commission {"amount":30.0} 
+[2025-05-30 21:08:52] production.INFO: ReferralLogic: Commission credited {"sponsor_id":1,"before":"90.00","after":120.0,"incremented_by":30.0} 
+[2025-05-30 21:08:52] production.INFO: ReferralLogic: Flagged user as commissioned {"user_id":3} 
+[2025-05-30 21:08:52] production.INFO: ReferralLogic: END {"user_id":3} 
+[2025-05-30 21:08:58] production.INFO: Membership email sent to user #3  
+[2025-05-30 21:09:00] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-30 21:09:00] production.INFO: Data to update: {"upgrade_membership_id":2} 
+[2025-05-30 21:09:44] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-30 21:09:44] production.INFO: last3: {"membership_id":656} 
+[2025-05-30 21:09:44] production.INFO: last5: {"membership_id":656} 
+[2025-05-30 21:09:44] production.INFO: last4: {"membership_id":656,"order_id":null} 
+[2025-05-30 21:09:44] production.INFO: after-charge: {"membership_id":656,"order_id":656} 
+[2025-05-30 21:10:12] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"656","payment_amount":5000,"transaction_id":"pay_QbC1quKcUDiIE9"} 
+[2025-05-30 21:10:12] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-30 21:10:12] production.INFO: Updating membership database {"last_membership_id":"656","transaction_id":"pay_QbC1quKcUDiIE9","membership_history_id":928,"upgrade_membership_id":3} 
+[2025-05-30 21:10:12] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":656} 
+[2025-05-30 21:10:13] production.INFO: ReferralLogic: START {"purchasing_user_id":1,"sponsor_id":null} 
+[2025-05-30 21:10:13] production.INFO: ReferralLogic: Eligible for commission {"amount":90.0} 
+[2025-05-30 21:10:13] production.WARNING: ReferralLogic: No sponsor found {"user_id":1,"sponsor_id":null} 
+[2025-05-30 21:10:13] production.INFO: ReferralLogic: END {"user_id":1} 
+[2025-05-30 21:10:19] production.INFO: Membership email sent to user #1  
+[2025-05-30 21:10:21] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-30 21:10:21] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-30 21:10:34] production.INFO: Pending profile requests count for user 3: 0  
+[2025-05-30 21:10:42] production.INFO: Fetching profile for user ID: 3  
+[2025-05-30 21:10:42] production.INFO: MatrimonyKYC Data:  
+[2025-05-30 21:10:45] production.INFO: [MATCHING] Starting matching process for user ID: 3  
+[2025-05-30 21:10:46] production.DEBUG: [MATCHING] User preferences: {"message":"No preferences found"} 
+[2025-05-30 21:10:46] production.INFO: [MATCHING] Found 0 potential matches for initial filtering  
+[2025-05-30 21:10:55] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":5,"user_current_profile_limit":0,"calculated_profile_limit":5} 
+[2025-05-30 21:10:55] production.INFO: last3: {"membership_id":655} 
+[2025-05-30 21:10:56] production.INFO: last5: {"membership_id":655} 
+[2025-05-30 21:10:56] production.INFO: last4: {"membership_id":655,"order_id":null} 
+[2025-05-30 21:10:56] production.INFO: after-charge: {"membership_id":655,"order_id":655} 
+[2025-05-30 21:11:20] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"655","payment_amount":500000,"transaction_id":"pay_QbC32EDw46pyG2"} 
+[2025-05-30 21:11:20] production.INFO: Updating membership database {"last_membership_id":"655","transaction_id":"pay_QbC32EDw46pyG2","membership_history_id":929,"upgrade_membership_id":25} 
+[2025-05-30 21:11:20] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":200,"position":"right"} 
+[2025-05-30 21:11:21] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5285,"left_bv":1800,"right_bv":800} 
+[2025-05-30 21:11:21] production.INFO: ReferralLogic: START {"purchasing_user_id":3,"sponsor_id":1} 
+[2025-05-30 21:11:21] production.INFO: ReferralLogic: Not eligible or already commissioned {"commission_given":1,"self_purchased_bv":500.0} 
+[2025-05-30 21:11:21] production.INFO: ReferralLogic: END {"user_id":3} 
+[2025-05-30 21:11:26] production.INFO: Membership email sent to user #3  
+[2025-05-30 21:11:28] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-30 21:11:28] production.INFO: Data to update: {"upgrade_membership_id":25} 

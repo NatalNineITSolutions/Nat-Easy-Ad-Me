@@ -160,8 +160,8 @@ class MembershipService
             ]);
 
             // 1) Only proceed if the purchasing user hasn't already triggered a referral commission
-            if ($user->commission_given == 0 && $user->self_purchased_bv >= 900) {
-                $referralValue = (float) get_static_option('referral_value');
+            if ($user->commission_given == 0 && $user->self_purchased_bv <= 900) {
+                $referralValue = $user->self_purchased_bv ?? 0;
                 $referralPercentage = (float) get_static_option('referral_percentage');
                 $commissionAmount = ($referralPercentage / 100) * $referralValue;
 

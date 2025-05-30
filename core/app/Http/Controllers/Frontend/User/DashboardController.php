@@ -116,25 +116,25 @@ class DashboardController extends Controller
         $bvFromReferrals = $user->children()->with('userBvs')->get()->sum(fn($c) => $c->userBvs->where('type', '!=', 'referral_commission')->sum('bv_points'));
 
         // ─── Referral Commission Logic ─────────────────────────────────────────────
-        $referralValue = (float) get_static_option('referral_value');
-        $referralPercentage = (float) get_static_option('referral_percentage');
-        $perReferralCommission = ($referralPercentage / 100) * $referralValue;
+        // $referralValue = (float) get_static_option('referral_value');
+        // $referralPercentage = (float) get_static_option('referral_percentage');
+        // $perReferralCommission = ($referralPercentage / 100) * $referralValue;
 
-        // Only process new referrals (flagged is_commissioned = 0)
-        $qualifiedReferrals = User::where('sponsor_id', $user_id)
-            ->where('self_purchased_bv', '>=', 900)
-            ->where('commission_given', 0)
-            ->get();
+        // // Only process new referrals (flagged is_commissioned = 0)
+        // $qualifiedReferrals = User::where('sponsor_id', $user_id)
+        //     ->where('self_purchased_bv', '>=', 900)
+        //     ->where('commission_given', 0)
+        //     ->get();
 
-        $pendingReferralCommission = 0;
-        foreach ($qualifiedReferrals as $ref) {
-            $pendingReferralCommission += $perReferralCommission;
-            $ref->update(['commission_given' => 1]);
-        }
+        // $pendingReferralCommission = 0;
+        // foreach ($qualifiedReferrals as $ref) {
+        //     $pendingReferralCommission += $perReferralCommission;
+        //     $ref->update(['commission_given' => 1]);
+        // }
 
-        if ($pendingReferralCommission > 0) {
-            $user->increment('referral_commission', $pendingReferralCommission);
-        }
+        // if ($pendingReferralCommission > 0) {
+        //     $user->increment('referral_commission', $pendingReferralCommission);
+        // }
 
         // Now read the stored commission for display
         $referralCommission = $user->referral_commission;
@@ -168,7 +168,7 @@ class DashboardController extends Controller
             'totalBvPoints' => $businesspoint,
             'directReferralsCount' => User::where('sponsor_id', $user_id)->count(),
             'referralCommission' => $referralCommission,
-            'referralCommissionRate' => $referralPercentage,
+            // 'referralCommissionRate' => $referralPercentage,
             'totalBP' => $totalBP,
             'equalizedBP' => $equalizedBP,
             'balancedBP' => $balancedBP,

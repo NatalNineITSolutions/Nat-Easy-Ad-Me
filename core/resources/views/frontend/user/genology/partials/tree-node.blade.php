@@ -42,18 +42,22 @@
 
                     {{-- Always show possible pairs for both root and child nodes --}}
                     <div class="possible-pairs">
-                        <span>Possible Pairs:
+                        <span>Pairs:
                             <strong>{{ $node->possible_pairs }}</strong>
                         </span>
+                        <div class="bv-inside-pairs">
+                            <span>BV (L): <strong>{{ $node->leftBV ?? 0 }}</strong></span>
+                            <span>BV (R): <strong>{{ $node->rightBV ?? 0 }}</strong></span>
+                        </div>
                     </div>
 
                     {{-- BV points remain only for root (optional) --}}
-                    @if (!isset($isChild))
+                    <!-- @if (!isset($isChild))
                         <div class="bv-points">
                             <span>BV (L): <strong>{{ $node->leftBV ?? 0 }}</strong></span>
                             <span>BV (R): <strong>{{ $node->rightBV ?? 0 }}</strong></span>
                         </div>
-                    @endif
+                    @endif -->
                 </div>
 
                 <ul>
@@ -138,7 +142,7 @@
             background-color: #008081;
             border: none;
             border-radius: 0px;
-            height: 500px;
+            height: 1000px;
         }
 
         .add-icon {
@@ -253,12 +257,24 @@
             border-radius: 6px;
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
             animation: pulse-highlight 2s ease-in-out infinite;
+            display: inline-block;
+            text-align: left;
         }
 
         .possible-pairs span {
             color: #212121;
             font-weight: bold;
             font-size: 1rem;
+        }
+
+        .possible-pairs .bv-inside-pairs {
+            margin-top: 4px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .possible-pairs .bv-inside-pairs span {
+            font-size: 0.9rem;
         }
 
         /* Status border colors */

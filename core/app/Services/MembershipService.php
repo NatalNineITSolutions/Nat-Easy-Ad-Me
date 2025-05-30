@@ -66,13 +66,13 @@ class MembershipService
 
                 'listing_limit' => $new_membership->listing_limit,
                 'price' => $new_membership->price,
-                'gallery_images' => $new_membership->gallery_images ,
-                'featured_listing' => $new_membership->featured_listing ,
+                'gallery_images' => $new_membership->gallery_images,
+                'featured_listing' => $new_membership->featured_listing,
 
-                'enquiry_form' => $new_membership->enquiry_form  ? 1 : 0,
+                'enquiry_form' => $new_membership->enquiry_form ? 1 : 0,
                 'business_hour' => $new_membership->business_hour ? 1 : 0,
                 'membership_badge' => $new_membership->membership_badge ? 1 : 0,
-    
+
             ];
 
             // MATRIMONY MEMBERSHIP (Category = 1)
@@ -96,28 +96,28 @@ class MembershipService
             } else {
                 $expire_date = Carbon::now()->addDays(
                     Carbon::parse($membership_details->expire_date)->diffInDays(Carbon::now()) +
-                        Carbon::parse(optional($membership_history)->expire_date)->diffInDays(Carbon::now())
+                    Carbon::parse(optional($membership_history)->expire_date)->diffInDays(Carbon::now())
                 );
                 $baseData['expire_date'] = $expire_date;
 
-                $overlap_matrimony_membership = UserMembership::where('user_id',  $membership_details->user_id)
+                $overlap_matrimony_membership = UserMembership::where('user_id', $membership_details->user_id)
                     ->whereHas('membership', fn($q) => $q->where('category', 0))
                     ->first();
 
                 \Log::info('Overlap Matrimony Membership', [
                     'overlap_matrimony_membership' => $overlap_matrimony_membership->id ?? 0,
                 ]);
-             
+
                 if ($overlap_matrimony_membership) {
                     UserMembership::where('id', $overlap_matrimony_membership->id)
-                    ->where('user_id', $membership_details->user_id)
-                    ->update($baseData);
-                   
+                        ->where('user_id', $membership_details->user_id)
+                        ->update($baseData);
+
                 } else {
                     $baseData['user_id'] = $membership_details->user_id;
                     UserMembership::create($baseData);
                 }
-               
+
             }
 
             // Update Membership History
@@ -152,6 +152,57 @@ class MembershipService
 
             $bvService = new BVDistributionService();
             $bvService->distributeBVPoints($user, $usersBv->bv_points, $upgrade_membership_id, $membership_details->user_id);
+
+            // ─── Referral Commission Logic (run immediately upon membership purchase) ───
+            \Log::info('ReferralLogic: START', [
+                'purchasing_user_id' => $user->id,
+                'sponsor_id' => $user->sponsor_id,
+            ]);
+
+            // 1) Only proceed if the purchasing user hasn't already triggered a referral commission
+            if ($user->commission_given == 0 && $user->self_purchased_bv >= 900) {
+                $referralValue = (float) get_static_option('referral_value');
+                $referralPercentage = (float) get_static_option('referral_percentage');
+                $commissionAmount = ($referralPercentage / 100) * $referralValue;
+
+                \Log::info('ReferralLogic: Eligible for commission', [
+                    'amount' => $commissionAmount,
+                ]);
+
+                // 2) Credit the sponsor
+                $sponsor = User::find($user->sponsor_id);
+                if ($sponsor) {
+                    $before = $sponsor->referral_commission;
+                    $sponsor->increment('referral_commission', $commissionAmount);
+                    $sponsor->save();
+
+                    \Log::info('ReferralLogic: Commission credited', [
+                        'sponsor_id' => $sponsor->id,
+                        'before' => $before,
+                        'after' => $sponsor->referral_commission,
+                        'incremented_by' => $commissionAmount,
+                    ]);
+
+                    // 3) Flag the purchasing user so we don’t pay again
+                    $user->update(['commission_given' => 1]);
+                    \Log::info('ReferralLogic: Flagged user as commissioned', [
+                        'user_id' => $user->id,
+                    ]);
+                } else {
+                    \Log::warning('ReferralLogic: No sponsor found', [
+                        'user_id' => $user->id,
+                        'sponsor_id' => $user->sponsor_id,
+                    ]);
+                }
+            } else {
+                \Log::info('ReferralLogic: Not eligible or already commissioned', [
+                    'commission_given' => $user->commission_given,
+                    'self_purchased_bv' => $user->self_purchased_bv,
+                ]);
+            }
+
+            \Log::info('ReferralLogic: END', ['user_id' => $user->id]);
+
 
             // Admin Notification
             AdminNotification::create([

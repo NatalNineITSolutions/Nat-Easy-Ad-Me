@@ -54,7 +54,15 @@
                                                 </div>
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('Direct Business Income:') }}</span>
-                                                    <span class="stat-value">{{ $referralCommission }}</span>
+                                                    <span class="stat-value">{{ $totalReferralCommission }}</span>
+                                                </div>
+                                                <div class="stat-item">
+                                                    <span class="stat-label">{{ __('Existing Income:') }}</span>
+                                                    <span class="stat-value">{{ 90 }}</span>
+                                                </div>
+                                                <div class="stat-item">
+                                                    <span class="stat-label">{{ __('Newly added Income:') }}</span>
+                                                    <span class="stat-value">{{ 90 }}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -84,7 +92,7 @@
 
                                                 <!-- Team BV Left -->
                                                 <div class="stat-item">
-                                                    <span class="stat-label">{{ __('Team BV Left:') }}</span>
+                                                    <span class="stat-label">{{ __('A Team:') }}</span>
                                                     <div class="stat-value-group">
                                                         <span class="stat-value">{{ number_format($leftBvPoints) }}</span>
                                                     </div>
@@ -92,7 +100,7 @@
 
                                                 <!-- Team BV Right -->
                                                 <div class="stat-item">
-                                                    <span class="stat-label">{{ __('Team BV Right:') }}</span>
+                                                    <span class="stat-label">{{ __('B Team:') }}</span>
                                                     <div class="stat-value-group">
                                                         <span class="stat-value">{{ number_format($rightBvPoints) }}</span>
                                                     </div>
@@ -177,7 +185,7 @@
                                         </div>
                                         <div class="col-md-3 col-6">
                                             <div class="list-state bg-red text-white">
-                                            <h4 class="list-head">{{ $membershipInfo['profile_limit'] ?? 0 }}</h4>
+                                                <h4 class="list-head">{{ $membershipInfo['profile_limit'] ?? 0 }}</h4>
                                                 <p class="post-state">{{ __('Remaining Profile Limit') }}</p>
                                             </div>
                                         </div>

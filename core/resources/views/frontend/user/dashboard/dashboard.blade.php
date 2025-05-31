@@ -58,11 +58,11 @@
                                                 </div>
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('Existing Income:') }}</span>
-                                                    <span class="stat-value">{{ 90 }}</span>
+                                                    <span class="stat-value">{{ $existingIncome }}</span>
                                                 </div>
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('Newly added Income:') }}</span>
-                                                    <span class="stat-value">{{ 90 }}</span>
+                                                    <span class="stat-value">{{ $newlyAddedIncome }}</span>
                                                 </div>
                                             </div>
                                         </div>

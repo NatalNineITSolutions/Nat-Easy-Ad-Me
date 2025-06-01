@@ -56,8 +56,8 @@
               <span>Possible Pairs: <strong>{{ $parent->possible_pairs }}</strong></span>
             </div>
             <div class="bv-points">
-              <span>BV (L): <strong>{{ $parent->leftBV }}</strong></span>
-              <span>BV (R): <strong>{{ $parent->rightBV }}</strong></span>
+              <span>Team A: <strong>{{ $parent->leftBV }}</strong></span>
+              <span>Team B: <strong>{{ $parent->rightBV }}</strong></span>
             </div>
           </div>
 

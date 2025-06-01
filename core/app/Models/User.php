@@ -77,7 +77,9 @@ class User extends Authenticatable
         'placement_id',
         'deleted_at',
         'net_amount',
-        'commission_given'
+        'commission_given',
+        'sponsor_commission_bv',
+        'self_commission_bv'
     ];
 
     /**

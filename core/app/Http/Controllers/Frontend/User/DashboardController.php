@@ -113,7 +113,19 @@ class DashboardController extends Controller
         $businesspoint = "$leftBvPoints <> $rightBvPoints";
         $totalBP = "$leftBP <> $rightBP";
         $balancedBP = "$leftBvPoints <> $rightBvPoints";
-        $bvFromReferrals = $user->children()->with('userBvs')->get()->sum(fn($c) => $c->userBvs->where('type', '!=', 'referral_commission')->sum('bv_points'));
+        $sponsorId = $user->id;
+
+        $bvFromReferrals = User::where('sponsor_id', $sponsorId)
+            ->with([
+                'userBvs' => function ($query) {
+                    $query->where('type', '!=', 'referral_commission');
+                }
+            ])
+            ->get()
+            ->sum(function ($child) {
+                return $child->userBvs->sum('bv_points');
+            });
+
 
         // ─── Referral Commission Logic ─────────────────────────────────────────────
         // $referralValue = (float) get_static_option('referral_value');
@@ -137,7 +149,13 @@ class DashboardController extends Controller
         // }
 
         // Now read the stored commission for display
-        $referralCommission = $user->referral_commission;
+        $oldReferralBalance = $user->referral_commission;
+        $newReferralBalance = $user->fresh()->referral_commission;
+
+        $existingIncome = $oldReferralBalance;
+        $newlyAddedIncome = $newReferralBalance - $oldReferralBalance;
+
+        $totalReferralCommission = $newReferralBalance;
 
         // Determine sponsor display
         if ($user->sponsor) {
@@ -167,7 +185,7 @@ class DashboardController extends Controller
             'age' => $age,
             'totalBvPoints' => $businesspoint,
             'directReferralsCount' => User::where('sponsor_id', $user_id)->count(),
-            'referralCommission' => $referralCommission,
+            // 'referralCommission' => $referralCommission,
             // 'referralCommissionRate' => $referralPercentage,
             'totalBP' => $totalBP,
             'equalizedBP' => $equalizedBP,
@@ -191,6 +209,9 @@ class DashboardController extends Controller
             'membershipInfo' => $membershipInfo,
             'profilesViewed' => $profilesViewed,
             'remainingProfileLimit' => $remainingProfileLimit,
+            'totalReferralCommission' => $totalReferralCommission,
+            'existingIncome' => $existingIncome,
+            'newlyAddedIncome' => $newlyAddedIncome,
         ]);
     }
 

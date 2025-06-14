@@ -140,6 +140,23 @@ Route::middleware(['setlang'])->group(function () {
         });
     });
 
+    // Product Manage
+    Route::group(['prefix' => 'products'], function () {
+        Route::controller(\App\Http\Controllers\Backend\ProductController::class)->group(function () {
+            // Product listing
+            Route::get('/', 'index')->name('admin.products.index')->permission('product-view');
+            Route::get('/add-product', 'addProduct')->name('admin.products.add')->permission('product-add');
+
+            // Category
+            Route::get('/categories', 'categoryIndex')->name('admin.products.category.index')->permission('product-category-view');
+            Route::get('/add-category', 'addCategory')->name('admin.products.category.add')->permission('product-category-add');
+            Route::post('/store-category', 'storeCategory')->name('admin.products.category.store')->permission('product-category-store');
+            Route::get('/edit-category/{id}', 'editCategory')->name('admin.products.category.edit')->permission('product-category-edit');
+            Route::put('/update-category/{id}', 'updateCategory')->name('admin.products.category.update')->permission('product-category-update');
+            Route::delete('/delete-category/{id}', 'deleteCategory')->name('admin.products.category.delete')->permission('product-category-delete');
+        });
+    });
+
     // General Settings
     Route::get('/dark-mode-toggle', 'AdminDashboardController@dark_mode_toggle')->name('admin.dark.mode.toggle');
     Route::get('/settings', [AdminDashboardController::class, 'adminSettings'])->name('admin.profile.settings');

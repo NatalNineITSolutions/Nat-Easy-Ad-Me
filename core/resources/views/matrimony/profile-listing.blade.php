@@ -380,68 +380,67 @@
                             </div>
 
                             <div class="col-xl-6">
-                                            <div class="address box-shadow1 p-24">
-                                                @if(get_static_option('google_map_settings_on_off') == null)
-                                                <div class="address-wraper">
-                                                    <div class="row g-3">
-                                                        <div class="col-sm-4">
-                                                            <div class="country">
-                                                                <label for="country">{{ __('Select Your Country') }}</label>
-                                                                <select name="country_id" id="country_id" class="select2_activation">
-                                                                    <option value="">{{ __('Select Country') }}</option>
-                                                                    @foreach($all_countries as $country)
-                                                                        <option value="{{ $country->id }}" @if(Auth::guard('web')->check() && $country->id == Auth::guard('web')->user()->country_id) selected @endif>{{ $country->country }}</option>
-                                                                    @endforeach
-                                                                </select><br>
-                                                                <span class="country_info"></span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <div class="country">
-                                                                <label for="country">{{ __('Select Your State') }}</label>
-                                                                <select name="state_id" id="state_id" class="get_country_state select2_activation">
-                                                                    <option value="">{{ __('Select State') }}</option>
-                                                                    @foreach($all_states as $state)
-                                                                        <option value="{{ $state->id }}" @if(Auth::guard('web')->check() && $state->id == Auth::guard('web')->user()->state_id) selected @endif>{{ $state->state }}</option>
-                                                                    @endforeach
-                                                                </select> <br>
-                                                                <span class="state_info"></span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <div class="country">
-                                                                <label for="country">{{ __('Select Your City') }}</label>
-                                                                <select name="city_id" id="city_id" class="get_state_city select2_activation">
-                                                                    <option value="">{{ __('Select City') }}</option>
-                                                                    @foreach($all_cities as $city)
-                                                                        <option value="{{ $city->id }}" @if($city->id == Auth::guard('web')->user()->city_id) selected @endif>{{ $city->city }}</option>
-                                                                    @endforeach
-                                                                </select><br>
-                                                                <span class="city_info"></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                @else
-                                                    <!--Google Map -->
-                                                    <div class="location-map mt-3">
-                                                        <div class="input-form input-form2">
-                                                            <div class="map-warper dark-support rounded overflow-hidden">
-                                                                <input id="pac-input" class="controls rounded" type="text" placeholder="{{ __('Search your location')}}"/>
-                                                                <div id="map_canvas" style="height: 480px"></div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                @endif
-                                                <div class="address-text mt-3">
-                                                    <input type="hidden" name="latitude" id="latitude">
-                                                    <input type="hidden" name="longitude" id="longitude">
-                                                    <label for="address-text">{{ __('Address') }}</label>
-                                                    <input type="text" class="w-100 input-filed" name="address" id="user_address" value="{{ old('address') }}" placeholder="{{__('Address')}}">
+                                <div class="address box-shadow1 p-24">
+                                    @if(get_static_option('google_map_settings_on_off') == null)
+                                    <div class="address-wraper">
+                                        <div class="row g-3">
+                                            <div class="col-sm-4">
+                                                <div class="country">
+                                                    <label for="country">{{ __('Select Your Country') }}</label>
+                                                    <select name="country_id" id="country_id" class="select2_activation">
+                                                        <option value="">{{ __('Select Country') }}</option>
+                                                        @foreach($all_countries as $country)
+                                                            <option value="{{ $country->id }}" @if(Auth::guard('web')->check() && $country->id == Auth::guard('web')->user()->country_id) selected @endif>{{ $country->country }}</option>
+                                                        @endforeach
+                                                    </select><br>
+                                                    <span class="country_info"></span>
                                                 </div>
                                             </div>
-
+                                            <div class="col-sm-4">
+                                                <div class="country">
+                                                    <label for="country">{{ __('Select Your State') }}</label>
+                                                    <select name="state_id" id="state_id" class="get_country_state select2_activation">
+                                                        <option value="">{{ __('Select State') }}</option>
+                                                        @foreach($all_states as $state)
+                                                            <option value="{{ $state->id }}" @if(Auth::guard('web')->check() && $state->id == Auth::guard('web')->user()->state_id) selected @endif>{{ $state->state }}</option>
+                                                        @endforeach
+                                                    </select> <br>
+                                                    <span class="state_info"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="country">
+                                                    <label for="country">{{ __('Select Your City') }}</label>
+                                                    <select name="city_id" id="city_id" class="get_state_city select2_activation">
+                                                        <option value="">{{ __('Select City') }}</option>
+                                                        @foreach($all_cities as $city)
+                                                            <option value="{{ $city->id }}" @if($city->id == Auth::guard('web')->user()->city_id) selected @endif>{{ $city->city }}</option>
+                                                        @endforeach
+                                                    </select><br>
+                                                    <span class="city_info"></span>
+                                                </div>
+                                            </div>
                                         </div>
+                                    </div>
+                                    @else
+                                        <!--Google Map -->
+                                        <div class="location-map mt-3">
+                                            <div class="input-form input-form2">
+                                                <div class="map-warper dark-support rounded overflow-hidden">
+                                                    <input id="pac-input" class="controls rounded" type="text" placeholder="{{ __('Search your location')}}"/>
+                                                    <div id="map_canvas" style="height: 480px"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                    <div class="address-text mt-3">
+                                        <input type="hidden" name="latitude" id="latitude">
+                                        <input type="hidden" name="longitude" id="longitude">
+                                        <label for="address-text">{{ __('Address') }}</label>
+                                        <input type="text" class="w-100 input-filed" name="address" id="user_address" value="{{ old('address') }}" placeholder="{{__('Address')}}">
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="row mb-3">
                                 <div class="col-12">

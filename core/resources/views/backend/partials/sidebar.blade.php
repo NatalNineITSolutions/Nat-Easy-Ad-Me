@@ -69,16 +69,18 @@
                     </li>
                 @endcanany
 
-                {{-- Admin Matrimony manage --}}
-                {{-- <li  class="dashboard__bottom__list__item has-children @if (request()->is('admin/listings/*')) active open show @endif">
-                    <a href="javascript:void(0)"> <i class="las la-th-list"></i> {{ __('Matrimony Manage') }} </a>
+                {{-- Product Manage --}}
+                <li class="dashboard__bottom__list__item has-children @if (request()->is('admin/products*')) active open show @endif">
+                    <a href="javascript:void(0)"> <i class="las la-th-list"></i> {{ __('Product Manage') }} </a>
                     <ul class="submenu">
-                        <li class="dashboard__bottom__list__item @if (request()->is('admin/listings/user-all-listings')) selected @endif">
-                            <a href="#"> {{ __('Matrimony Listing') }} </a>
+                        <li class="dashboard__bottom__list__item @if (request()->is('admin/products')) selected @endif">
+                            <a href="{{ route('admin.products.index') }}"> {{ __('All Products') }} </a>
                         </li>
-                        
+                        <li class="dashboard__bottom__list__item @if (request()->is('admin/products/categories')) selected @endif">
+                            <a href="{{ route('admin.products.category.index') }}"> {{ __('All Categories') }} </a>
+                        </li>
                     </ul>
-                </li> --}}
+                </li>
 
                 {{-- Matrimony manage --}}
                 <li class="dashboard__bottom__list__item has-children @if (request()->is('admin/matrimony/*')) active open show @endif">

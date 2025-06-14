@@ -251,47 +251,47 @@ class BuyMembershipIPNController extends Controller
     {
         return $this->common_ipn_data($data);
     }
-    
+
     public function send_jobs_mail($last_membership_id, $user_id)
     {
-        if (! $last_membership_id) {
+        if (!$last_membership_id) {
             return redirect()->route('homepage');
         }
-    
-        $user = User::find($user_id, ['first_name','last_name','email']);
-        $name = $user 
-            ? trim("{$user->first_name} {$user->last_name}") 
+
+        $user = User::find($user_id, ['first_name', 'last_name', 'email']);
+        $name = $user
+            ? trim("{$user->first_name} {$user->last_name}")
             : 'Guest';
         $email = $user->email ?? null;
-    
+
         $membership = UserMembership::find($last_membership_id);
-        if (! $membership) {
+        if (!$membership) {
             Log::error("Membership #{$last_membership_id} not found");
             return;
         }
-    
+
         // Safely compute price
         $symbols = get_static_option('site_currency_symbol') ?: [];
         $currency = $membership->price_currency ?? 'INR';
-        $symbol   = $symbols[$currency] ?? '₹';
+        $symbol = $symbols[$currency] ?? '₹';
         $membership_price = $symbol . number_format($membership->price, 2);
-    
-        $membership_type        = $membership->membership?->membership_type?->type ?: '—';
+
+        $membership_type = $membership->membership?->membership_type?->type ?: '—';
         $membership_expire_date = optional($membership->expire_date)
             ? Carbon::parse($membership->expire_date)->toFormattedDateString()
             : '';
-    
+
         // Prepare user email
         $userSubject = get_static_option('user_membership_purchase_email_subject')
-                       ?? __('Membership purchase email');
+            ?? __('Membership purchase email');
         $userMessage = get_static_option('user_membership_purchase_message')
-                       ?? __('Your membership purchase successfully completed.');
+            ?? __('Your membership purchase successfully completed.');
         $userMessage = str_replace(
-            ["@membership_id","@membership_type","@membership_price","@membership_expire_date"],
-            [$last_membership_id,$membership_type,$membership_price,$membership_expire_date],
+            ["@membership_id", "@membership_type", "@membership_price", "@membership_expire_date"],
+            [$last_membership_id, $membership_type, $membership_price, $membership_expire_date],
             $userMessage
         );
-    
+
         // Send user email
         try {
             Mail::to($email)
@@ -303,19 +303,19 @@ class BuyMembershipIPNController extends Controller
         } catch (\Exception $e) {
             Log::error('Failed to send user membership email: ' . $e->getMessage());
         }
-    
+
         // Prepare admin email
-        $adminEmail   = get_static_option('site_global_email');
+        $adminEmail = get_static_option('site_global_email');
         $adminSubject = get_static_option('user_membership_purchase_email_subject')
-                        ?? __('Membership purchase email');
+            ?? __('Membership purchase email');
         $adminMessage = get_static_option('user_membership_purchase_message_for_admin')
-                        ?? __('A user just purchased a membership.');
+            ?? __('A user just purchased a membership.');
         $adminMessage = str_replace(
-            ["@membership_id","@membership_type","@membership_price","@membership_expire_date","@name","@email"],
-            [$last_membership_id,$membership_type,$membership_price,$membership_expire_date,$name,$email],
+            ["@membership_id", "@membership_type", "@membership_price", "@membership_expire_date", "@name", "@email"],
+            [$last_membership_id, $membership_type, $membership_price, $membership_expire_date, $name, $email],
             $adminMessage
         );
-    
+
         // Send admin email
         try {
             Mail::to($adminEmail)
@@ -328,7 +328,7 @@ class BuyMembershipIPNController extends Controller
             Log::error('Failed to send admin membership email: ' . $e->getMessage());
         }
     }
-    
+
     // private function update_profile_listing($order_id, $payment_method)
     // {
     //     // Update the profile listing record
@@ -359,44 +359,43 @@ class BuyMembershipIPNController extends Controller
     // }
 
 
-    private function update_profile_listing($order_id, $payment_method)
+    private function update_profile_listing(int $order_id, string $payment_method)
     {
-        // Update the profile listing record
-        $update = ProfileListing::where('id', $order_id)->update([
-            'paid' => 1,
-            'payment_method' => $payment_method,
-        ]);
+        $updated = ProfileListing::where('id', $order_id)
+            ->update([
+                'paid' => 1,
+                'payment_method' => $payment_method,
+            ]);
 
-        // Retrieve the updated profile listing record
         $profileListing = ProfileListing::find($order_id);
         if (!$profileListing) {
-            return $update;
+            return $updated;
         }
 
-        // Get BV points from config
-        $bvPoints = get_static_option('matrimony_bv_points') ?? 0;
+        $bvPoints = (int) (get_static_option('matrimony_bv_points') ?? 0);
 
-        // Create a BV record for the user
         $usersBv = UsersBV::create([
             'user_id' => $profileListing->user_id,
             'bv_points' => $bvPoints,
-            'upgrade_time' => \Carbon\Carbon::now(),
-            'type'=> 'Profile Listing',
+            'upgrade_time' => Carbon::now(),
+            'type' => 'Profile Listing',
         ]);
 
-        // Find the user
         $user = User::find($profileListing->user_id);
         if ($user) {
-            // Update user's self purchased BV
             $user->self_purchased_bv = ($user->self_purchased_bv ?? 0) + $bvPoints;
             $user->save();
 
-            // Distribute BV
             $bvService = new BVDistributionService();
-            $bvService->distributeBVPoints($user, $bvPoints, null, $profileListing->user_id);
+            $bvService->distributeBVPoints(
+                $user,
+                $bvPoints,
+                $usersBv->id,              
+                $profileListing->user_id
+            );
         }
 
-        return $update;
+        return $updated;
     }
 
     private function update_database($last_membership_id, $transaction_id, $membership_history_id, $upgrade_membership_id)

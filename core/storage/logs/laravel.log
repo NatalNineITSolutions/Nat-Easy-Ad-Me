@@ -2,3 +2,537 @@
 [2025-06-14 12:30:18] production.INFO: Profile Listing Created: {"user_id":1,"name":"Naini","date_of_birth":"2001-01-14","age":24,"gender":"female","religion":"1","occupation":"Teacher","marital_status":"unmarried","annual_income":"3000000","caste":"1","mother_tongue":"Telugu","country":"7","state":"81","city":"41","image":"980|979","description":"Test","paid":0,"payment_method":null,"zodiac_sign":"6","star":"2","visibility":"0","address":"Coimbatore, India","lat":"10.9973691","lon":"76.9588876","updated_at":"2025-06-14T07:00:18.000000Z","created_at":"2025-06-14T07:00:18.000000Z","id":102} 
 [2025-06-14 12:30:18] production.INFO: IPN Route, matrimony price: 500  
 [2025-06-14 12:30:42] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"102","payment_amount":50000,"transaction_id":"pay_QgzBqJW6hie28G"} 
+[2025-05-31 18:12:35] production.INFO: LeftBV: 2700  
+[2025-05-31 18:12:35] production.INFO: RightBV:0  
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":1,"leftBV":2700,"rightBV":0,"sealedL":2700,"sealedR":0,"leftBP":3.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":2,"leftBV":8100,"rightBV":900,"sealedL":8100,"sealedR":900,"leftBP":9.0,"rightBP":1.0,"possible_pairs":1.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":4,"leftBV":9000,"rightBV":0,"sealedL":9000,"sealedR":0,"leftBP":10.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":8,"leftBV":1800,"rightBV":0,"sealedL":1800,"sealedR":0,"leftBP":2.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":16,"leftBV":0,"rightBV":4500,"sealedL":0,"sealedR":4500,"leftBP":0.0,"rightBP":5.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":21,"leftBV":3600,"rightBV":0,"sealedL":3600,"sealedR":0,"leftBP":4.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":22,"leftBV":0,"rightBV":2700,"sealedL":0,"sealedR":2700,"leftBP":0.0,"rightBP":3.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":23,"leftBV":1800,"rightBV":0,"sealedL":1800,"sealedR":0,"leftBP":2.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":24,"leftBV":0,"rightBV":900,"sealedL":0,"sealedR":900,"leftBP":0.0,"rightBP":1.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":25,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":17,"leftBV":2700,"rightBV":0,"sealedL":2700,"sealedR":0,"leftBP":3.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":18,"leftBV":0,"rightBV":1800,"sealedL":0,"sealedR":1800,"leftBP":0.0,"rightBP":2.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":19,"leftBV":900,"rightBV":0,"sealedL":900,"sealedR":0,"leftBP":1.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":20,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":9,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":5,"leftBV":300,"rightBV":1200,"sealedL":300,"sealedR":1200,"leftBP":0.0,"rightBP":1.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":10,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":11,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":3,"leftBV":0,"rightBV":8100,"sealedL":0,"sealedR":8100,"leftBP":0.0,"rightBP":9.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":6,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":12,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":13,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":7,"leftBV":0,"rightBV":5400,"sealedL":0,"sealedR":5400,"leftBP":0.0,"rightBP":6.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":14,"leftBV":600,"rightBV":0,"sealedL":600,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":30,"leftBV":0,"rightBV":300,"sealedL":0,"sealedR":300,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":31,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":32,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":33,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":15,"leftBV":5400,"rightBV":0,"sealedL":5400,"sealedR":0,"leftBP":6.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":26,"leftBV":0,"rightBV":4500,"sealedL":0,"sealedR":4500,"leftBP":0.0,"rightBP":5.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":27,"leftBV":3600,"rightBV":0,"sealedL":3600,"sealedR":0,"leftBP":4.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":28,"leftBV":0,"rightBV":2700,"sealedL":0,"sealedR":2700,"leftBP":0.0,"rightBP":3.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":29,"leftBV":1800,"rightBV":0,"sealedL":1800,"sealedR":0,"leftBP":2.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:12:48] production.INFO: Node BV/Pair calc {"user_id":34,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":1,"leftBV":2700,"rightBV":0,"sealedL":2700,"sealedR":0,"leftBP":3.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":2,"leftBV":8100,"rightBV":900,"sealedL":8100,"sealedR":900,"leftBP":9.0,"rightBP":1.0,"possible_pairs":1.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":4,"leftBV":9000,"rightBV":0,"sealedL":9000,"sealedR":0,"leftBP":10.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":8,"leftBV":1800,"rightBV":0,"sealedL":1800,"sealedR":0,"leftBP":2.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":16,"leftBV":0,"rightBV":4500,"sealedL":0,"sealedR":4500,"leftBP":0.0,"rightBP":5.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":21,"leftBV":3600,"rightBV":0,"sealedL":3600,"sealedR":0,"leftBP":4.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":22,"leftBV":0,"rightBV":2700,"sealedL":0,"sealedR":2700,"leftBP":0.0,"rightBP":3.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":23,"leftBV":1800,"rightBV":0,"sealedL":1800,"sealedR":0,"leftBP":2.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":24,"leftBV":0,"rightBV":900,"sealedL":0,"sealedR":900,"leftBP":0.0,"rightBP":1.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":25,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":17,"leftBV":2700,"rightBV":0,"sealedL":2700,"sealedR":0,"leftBP":3.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":18,"leftBV":0,"rightBV":1800,"sealedL":0,"sealedR":1800,"leftBP":0.0,"rightBP":2.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":19,"leftBV":900,"rightBV":0,"sealedL":900,"sealedR":0,"leftBP":1.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":20,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":9,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":5,"leftBV":300,"rightBV":1200,"sealedL":300,"sealedR":1200,"leftBP":0.0,"rightBP":1.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":10,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":11,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":3,"leftBV":0,"rightBV":8100,"sealedL":0,"sealedR":8100,"leftBP":0.0,"rightBP":9.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":6,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":12,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":13,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":7,"leftBV":0,"rightBV":5400,"sealedL":0,"sealedR":5400,"leftBP":0.0,"rightBP":6.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":14,"leftBV":600,"rightBV":0,"sealedL":600,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":30,"leftBV":0,"rightBV":300,"sealedL":0,"sealedR":300,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":31,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":32,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":33,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":15,"leftBV":5400,"rightBV":0,"sealedL":5400,"sealedR":0,"leftBP":6.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":26,"leftBV":0,"rightBV":4500,"sealedL":0,"sealedR":4500,"leftBP":0.0,"rightBP":5.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":27,"leftBV":3600,"rightBV":0,"sealedL":3600,"sealedR":0,"leftBP":4.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":28,"leftBV":0,"rightBV":2700,"sealedL":0,"sealedR":2700,"leftBP":0.0,"rightBP":3.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":29,"leftBV":1800,"rightBV":0,"sealedL":1800,"sealedR":0,"leftBP":2.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:34] production.INFO: Node BV/Pair calc {"user_id":34,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:45] production.INFO: LeftBV: 2700  
+[2025-05-31 18:13:45] production.INFO: RightBV:0  
+[2025-05-31 18:13:45] production.INFO: Node BV/Pair calc {"user_id":3,"leftBV":0,"rightBV":8100,"sealedL":0,"sealedR":8100,"leftBP":0.0,"rightBP":9.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:45] production.INFO: Node BV/Pair calc {"user_id":6,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:45] production.INFO: Node BV/Pair calc {"user_id":12,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:45] production.INFO: Node BV/Pair calc {"user_id":13,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:45] production.INFO: Node BV/Pair calc {"user_id":7,"leftBV":0,"rightBV":5400,"sealedL":0,"sealedR":5400,"leftBP":0.0,"rightBP":6.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:45] production.INFO: Node BV/Pair calc {"user_id":14,"leftBV":600,"rightBV":0,"sealedL":600,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:45] production.INFO: Node BV/Pair calc {"user_id":30,"leftBV":0,"rightBV":300,"sealedL":0,"sealedR":300,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:45] production.INFO: Node BV/Pair calc {"user_id":31,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:45] production.INFO: Node BV/Pair calc {"user_id":32,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:45] production.INFO: Node BV/Pair calc {"user_id":33,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:45] production.INFO: Node BV/Pair calc {"user_id":15,"leftBV":5400,"rightBV":0,"sealedL":5400,"sealedR":0,"leftBP":6.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:45] production.INFO: Node BV/Pair calc {"user_id":26,"leftBV":0,"rightBV":4500,"sealedL":0,"sealedR":4500,"leftBP":0.0,"rightBP":5.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:45] production.INFO: Node BV/Pair calc {"user_id":27,"leftBV":3600,"rightBV":0,"sealedL":3600,"sealedR":0,"leftBP":4.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:45] production.INFO: Node BV/Pair calc {"user_id":28,"leftBV":0,"rightBV":2700,"sealedL":0,"sealedR":2700,"leftBP":0.0,"rightBP":3.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:45] production.INFO: Node BV/Pair calc {"user_id":29,"leftBV":1800,"rightBV":0,"sealedL":1800,"sealedR":0,"leftBP":2.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:13:45] production.INFO: Node BV/Pair calc {"user_id":34,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:14:24] production.INFO: LeftBV: 2700  
+[2025-05-31 18:14:24] production.INFO: RightBV:0  
+[2025-05-31 18:14:24] production.INFO: Node BV/Pair calc {"user_id":3,"leftBV":0,"rightBV":8100,"sealedL":0,"sealedR":8100,"leftBP":0.0,"rightBP":9.0,"possible_pairs":0.0} 
+[2025-05-31 18:14:24] production.INFO: Node BV/Pair calc {"user_id":6,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:14:24] production.INFO: Node BV/Pair calc {"user_id":12,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:14:24] production.INFO: Node BV/Pair calc {"user_id":13,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:14:24] production.INFO: Node BV/Pair calc {"user_id":7,"leftBV":0,"rightBV":5400,"sealedL":0,"sealedR":5400,"leftBP":0.0,"rightBP":6.0,"possible_pairs":0.0} 
+[2025-05-31 18:14:24] production.INFO: Node BV/Pair calc {"user_id":14,"leftBV":600,"rightBV":0,"sealedL":600,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:14:24] production.INFO: Node BV/Pair calc {"user_id":30,"leftBV":0,"rightBV":300,"sealedL":0,"sealedR":300,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:14:24] production.INFO: Node BV/Pair calc {"user_id":31,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:14:24] production.INFO: Node BV/Pair calc {"user_id":32,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:14:24] production.INFO: Node BV/Pair calc {"user_id":33,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:14:24] production.INFO: Node BV/Pair calc {"user_id":15,"leftBV":5400,"rightBV":0,"sealedL":5400,"sealedR":0,"leftBP":6.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:14:24] production.INFO: Node BV/Pair calc {"user_id":26,"leftBV":0,"rightBV":4500,"sealedL":0,"sealedR":4500,"leftBP":0.0,"rightBP":5.0,"possible_pairs":0.0} 
+[2025-05-31 18:14:24] production.INFO: Node BV/Pair calc {"user_id":27,"leftBV":3600,"rightBV":0,"sealedL":3600,"sealedR":0,"leftBP":4.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:14:24] production.INFO: Node BV/Pair calc {"user_id":28,"leftBV":0,"rightBV":2700,"sealedL":0,"sealedR":2700,"leftBP":0.0,"rightBP":3.0,"possible_pairs":0.0} 
+[2025-05-31 18:14:24] production.INFO: Node BV/Pair calc {"user_id":29,"leftBV":1800,"rightBV":0,"sealedL":1800,"sealedR":0,"leftBP":2.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:14:24] production.INFO: Node BV/Pair calc {"user_id":34,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 18:14:57] production.INFO: LeftBV: 8100  
+[2025-05-31 18:14:57] production.INFO: RightBV:900  
+[2025-05-31 18:38:09] production.INFO: LeftBV: 0  
+[2025-05-31 18:38:09] production.INFO: RightBV:0  
+[2025-05-31 18:38:34] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-31 18:38:34] production.INFO: last3: {"membership_id":722} 
+[2025-05-31 18:38:34] production.INFO: last5: {"membership_id":722} 
+[2025-05-31 18:38:34] production.INFO: last4: {"membership_id":722,"order_id":null} 
+[2025-05-31 18:38:34] production.INFO: after-charge: {"membership_id":722,"order_id":722} 
+[2025-05-31 18:39:01] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"722","payment_amount":5000,"transaction_id":"pay_QbXzDilpF5vsJN"} 
+[2025-05-31 18:39:01] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-31 18:39:01] production.INFO: Updating membership database {"last_membership_id":"722","transaction_id":"pay_QbXzDilpF5vsJN","membership_history_id":1010,"upgrade_membership_id":3} 
+[2025-05-31 18:39:01] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":722} 
+[2025-05-31 18:39:01] production.INFO: ReferralLogic: START {"purchasing_user_id":1,"sponsor_id":null} 
+[2025-05-31 18:39:01] production.INFO: ReferralLogic: BV reached 900+, switched to self commission {"user_id":1} 
+[2025-05-31 18:39:01] production.INFO: ReferralLogic: END {"user_id":1,"total_self_bv":900.0,"paid_to_sponsor_bv":0,"paid_to_self_bv":0} 
+[2025-05-31 18:39:14] production.INFO: Membership email sent to user #1  
+[2025-05-31 18:39:16] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-31 18:39:16] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-31 18:44:08] production.INFO: LeftBV: 0  
+[2025-05-31 18:44:08] production.INFO: RightBV:0  
+[2025-05-31 18:44:16] production.INFO: LeftBV: 0  
+[2025-05-31 18:44:16] production.INFO: RightBV:0  
+[2025-05-31 18:44:45] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-31 18:44:45] production.INFO: last3: {"membership_id":723} 
+[2025-05-31 18:44:45] production.INFO: last5: {"membership_id":723} 
+[2025-05-31 18:44:45] production.INFO: last4: {"membership_id":723,"order_id":null} 
+[2025-05-31 18:44:45] production.INFO: after-charge: {"membership_id":723,"order_id":723} 
+[2025-05-31 18:45:05] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"723","payment_amount":5000,"transaction_id":"pay_QbY5gQg6zOTfT3"} 
+[2025-05-31 18:45:05] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-31 18:45:05] production.INFO: Updating membership database {"last_membership_id":"723","transaction_id":"pay_QbY5gQg6zOTfT3","membership_history_id":1011,"upgrade_membership_id":3} 
+[2025-05-31 18:45:06] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":723} 
+[2025-05-31 18:45:07] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"left"} 
+[2025-05-31 18:45:07] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5562,"left_bv":900,"right_bv":null} 
+[2025-05-31 18:45:07] production.INFO: ReferralLogic: START {"purchasing_user_id":2,"sponsor_id":1} 
+[2025-05-31 18:45:07] production.INFO: ReferralLogic: Sponsor commission credited (first time) {"sponsor_id":1,"incremented_by":90.0,"net_new_bv_for_sponsor":900.0} 
+[2025-05-31 18:45:07] production.INFO: ReferralLogic: BV reached 900+, switched to self commission {"user_id":2} 
+[2025-05-31 18:45:07] production.INFO: ReferralLogic: END {"user_id":2,"total_self_bv":900.0,"paid_to_sponsor_bv":900.0,"paid_to_self_bv":0} 
+[2025-05-31 18:45:12] production.INFO: Membership email sent to user #2  
+[2025-05-31 18:45:14] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-31 18:45:14] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-31 18:45:24] production.INFO: LeftBV: 900  
+[2025-05-31 18:45:24] production.INFO: RightBV:0  
+[2025-05-31 18:45:41] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-31 18:45:41] production.INFO: last3: {"membership_id":724} 
+[2025-05-31 18:45:41] production.INFO: last5: {"membership_id":724} 
+[2025-05-31 18:45:41] production.INFO: last4: {"membership_id":724,"order_id":null} 
+[2025-05-31 18:45:41] production.INFO: after-charge: {"membership_id":724,"order_id":724} 
+[2025-05-31 18:46:06] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"724","payment_amount":1000,"transaction_id":"pay_QbY6kj8zSiyC0Q"} 
+[2025-05-31 18:46:06] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":2} 
+[2025-05-31 18:46:06] production.INFO: Updating membership database {"last_membership_id":"724","transaction_id":"pay_QbY6kj8zSiyC0Q","membership_history_id":1012,"upgrade_membership_id":2} 
+[2025-05-31 18:46:06] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":724} 
+[2025-05-31 18:46:06] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":300,"position":"right"} 
+[2025-05-31 18:46:06] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5564,"left_bv":900,"right_bv":300} 
+[2025-05-31 18:46:06] production.INFO: ReferralLogic: START {"purchasing_user_id":3,"sponsor_id":1} 
+[2025-05-31 18:46:06] production.INFO: ReferralLogic: Sponsor commission credited (first time) {"sponsor_id":1,"incremented_by":30.0,"net_new_bv_for_sponsor":300.0} 
+[2025-05-31 18:46:06] production.INFO: ReferralLogic: END {"user_id":3,"total_self_bv":300.0,"paid_to_sponsor_bv":300.0,"paid_to_self_bv":0} 
+[2025-05-31 18:46:12] production.INFO: Membership email sent to user #3  
+[2025-05-31 18:46:14] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-31 18:46:14] production.INFO: Data to update: {"upgrade_membership_id":2} 
+[2025-05-31 18:46:21] production.INFO: LeftBV: 900  
+[2025-05-31 18:46:21] production.INFO: RightBV:300  
+[2025-05-31 18:46:42] production.INFO: LeftBV: 0  
+[2025-05-31 18:46:42] production.INFO: RightBV:0  
+[2025-05-31 18:46:49] production.INFO: LeftBV: 0  
+[2025-05-31 18:46:49] production.INFO: RightBV:0  
+[2025-05-31 18:46:52] production.ERROR: No application encryption key has been specified. {"exception":"[object] (Illuminate\\Encryption\\MissingAppKeyException(code: 0): No application encryption key has been specified. at C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Encryption\\EncryptionServiceProvider.php:79)
+[stacktrace]
+#0 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\helpers.php(307): Illuminate\\Encryption\\EncryptionServiceProvider->Illuminate\\Encryption\\{closure}(NULL)
+#1 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Encryption\\EncryptionServiceProvider.php(77): tap(NULL, Object(Closure))
+#2 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Encryption\\EncryptionServiceProvider.php(60): Illuminate\\Encryption\\EncryptionServiceProvider->key(Array)
+#3 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Encryption\\EncryptionServiceProvider.php(32): Illuminate\\Encryption\\EncryptionServiceProvider->parseKey(Array)
+#4 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(908): Illuminate\\Encryption\\EncryptionServiceProvider->Illuminate\\Encryption\\{closure}(Object(Illuminate\\Foundation\\Application), Array)
+#5 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(795): Illuminate\\Container\\Container->build(Object(Closure))
+#6 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(961): Illuminate\\Container\\Container->resolve('encrypter', Array, true)
+#7 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(731): Illuminate\\Foundation\\Application->resolve('encrypter', Array)
+#8 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(946): Illuminate\\Container\\Container->make('encrypter', Array)
+#9 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(1066): Illuminate\\Foundation\\Application->make('encrypter')
+#10 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(982): Illuminate\\Container\\Container->resolveClass(Object(ReflectionParameter))
+#11 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(943): Illuminate\\Container\\Container->resolveDependencies(Array)
+#12 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(795): Illuminate\\Container\\Container->build('App\\\\Http\\\\Middle...')
+#13 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(961): Illuminate\\Container\\Container->resolve('App\\\\Http\\\\Middle...', Array, true)
+#14 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(731): Illuminate\\Foundation\\Application->resolve('App\\\\Http\\\\Middle...', Array)
+#15 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(946): Illuminate\\Container\\Container->make('App\\\\Http\\\\Middle...', Array)
+#16 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(172): Illuminate\\Foundation\\Application->make('App\\\\Http\\\\Middle...')
+#17 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#18 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#19 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#20 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#21 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#22 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#23 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#24 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\xgenious\\installer\\src\\Http\\Middleware\\InstallerMiddleware.php(18): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Xgenious\\Installer\\Http\\Middleware\\InstallerMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#28 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#29 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#30 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#31 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#32 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#33 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#34 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#35 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#36 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#37 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#38 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#39 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#40 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#41 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#42 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#43 C:\\laragon\\www\\Nat-Easy-Ad-Me\\index.php(54): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#44 {main}
+"} 
+[2025-05-31 18:46:52] production.ERROR: No application encryption key has been specified. {"exception":"[object] (Illuminate\\Encryption\\MissingAppKeyException(code: 0): No application encryption key has been specified. at C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Encryption\\EncryptionServiceProvider.php:79)
+[stacktrace]
+#0 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\helpers.php(307): Illuminate\\Encryption\\EncryptionServiceProvider->Illuminate\\Encryption\\{closure}(NULL)
+#1 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Encryption\\EncryptionServiceProvider.php(77): tap(NULL, Object(Closure))
+#2 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Encryption\\EncryptionServiceProvider.php(60): Illuminate\\Encryption\\EncryptionServiceProvider->key(Array)
+#3 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Encryption\\EncryptionServiceProvider.php(32): Illuminate\\Encryption\\EncryptionServiceProvider->parseKey(Array)
+#4 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(908): Illuminate\\Encryption\\EncryptionServiceProvider->Illuminate\\Encryption\\{closure}(Object(Illuminate\\Foundation\\Application), Array)
+#5 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(795): Illuminate\\Container\\Container->build(Object(Closure))
+#6 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(961): Illuminate\\Container\\Container->resolve('encrypter', Array, true)
+#7 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(731): Illuminate\\Foundation\\Application->resolve('encrypter', Array)
+#8 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(946): Illuminate\\Container\\Container->make('encrypter', Array)
+#9 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(1066): Illuminate\\Foundation\\Application->make('encrypter')
+#10 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(982): Illuminate\\Container\\Container->resolveClass(Object(ReflectionParameter))
+#11 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(943): Illuminate\\Container\\Container->resolveDependencies(Array)
+#12 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(795): Illuminate\\Container\\Container->build('App\\\\Http\\\\Middle...')
+#13 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(961): Illuminate\\Container\\Container->resolve('App\\\\Http\\\\Middle...', Array, true)
+#14 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(731): Illuminate\\Foundation\\Application->resolve('App\\\\Http\\\\Middle...', Array)
+#15 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(946): Illuminate\\Container\\Container->make('App\\\\Http\\\\Middle...', Array)
+#16 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(255): Illuminate\\Foundation\\Application->make('App\\\\Http\\\\Middle...')
+#17 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(213): Illuminate\\Foundation\\Http\\Kernel->terminateMiddleware(Object(Illuminate\\Http\\Request), Object(Illuminate\\Http\\Response))
+#18 C:\\laragon\\www\\Nat-Easy-Ad-Me\\index.php(60): Illuminate\\Foundation\\Http\\Kernel->terminate(Object(Illuminate\\Http\\Request), Object(Illuminate\\Http\\Response))
+#19 {main}
+"} 
+[2025-05-31 18:47:03] production.INFO: LeftBV: 0  
+[2025-05-31 18:47:03] production.INFO: RightBV:0  
+[2025-05-31 18:47:10] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-31 18:47:10] production.INFO: last3: {"membership_id":725} 
+[2025-05-31 18:47:10] production.INFO: last5: {"membership_id":725} 
+[2025-05-31 18:47:10] production.INFO: last4: {"membership_id":725,"order_id":null} 
+[2025-05-31 18:47:10] production.INFO: after-charge: {"membership_id":725,"order_id":725} 
+[2025-05-31 18:47:30] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"725","payment_amount":1000,"transaction_id":"pay_QbY8EWTnRp7y9G"} 
+[2025-05-31 18:47:30] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":2} 
+[2025-05-31 18:47:30] production.INFO: Updating membership database {"last_membership_id":"725","transaction_id":"pay_QbY8EWTnRp7y9G","membership_history_id":1013,"upgrade_membership_id":2} 
+[2025-05-31 18:47:30] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":725} 
+[2025-05-31 18:47:31] production.INFO: Distributed BV referral to parent {"parent_id":2,"bv_points":300,"position":"right"} 
+[2025-05-31 18:47:31] production.INFO: Incremented flush BV totals {"user_id":2,"bv_id":5566,"left_bv":null,"right_bv":300} 
+[2025-05-31 18:47:31] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":300,"position":"left"} 
+[2025-05-31 18:47:31] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5567,"left_bv":1200,"right_bv":300} 
+[2025-05-31 18:47:31] production.INFO: ReferralLogic: START {"purchasing_user_id":5,"sponsor_id":2} 
+[2025-05-31 18:47:31] production.INFO: ReferralLogic: Sponsor commission credited (first time) {"sponsor_id":2,"incremented_by":30.0,"net_new_bv_for_sponsor":300.0} 
+[2025-05-31 18:47:31] production.INFO: ReferralLogic: END {"user_id":5,"total_self_bv":300.0,"paid_to_sponsor_bv":300.0,"paid_to_self_bv":0} 
+[2025-05-31 18:47:36] production.INFO: Membership email sent to user #5  
+[2025-05-31 18:47:38] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-31 18:47:38] production.INFO: Data to update: {"upgrade_membership_id":2} 
+[2025-05-31 18:47:46] production.INFO: LeftBV: 1200  
+[2025-05-31 18:47:46] production.INFO: RightBV:300  
+[2025-05-31 18:51:48] production.INFO: LeftBV: 1200  
+[2025-05-31 18:51:48] production.INFO: RightBV:300  
+[2025-05-31 18:52:13] production.INFO: LeftBV: 1200  
+[2025-05-31 18:52:13] production.INFO: RightBV:300  
+[2025-05-31 18:52:38] production.INFO: LeftBV: 900  
+[2025-05-31 18:52:38] production.INFO: RightBV:300  
+[2025-05-31 18:52:44] production.INFO: LeftBV: 0  
+[2025-05-31 18:52:44] production.INFO: RightBV:0  
+[2025-05-31 18:53:27] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-31 18:53:27] production.INFO: last3: {"membership_id":726} 
+[2025-05-31 18:53:27] production.INFO: last5: {"membership_id":726} 
+[2025-05-31 18:53:27] production.INFO: last4: {"membership_id":726,"order_id":null} 
+[2025-05-31 18:53:27] production.INFO: after-charge: {"membership_id":726,"order_id":726} 
+[2025-05-31 18:53:47] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"726","payment_amount":1000,"transaction_id":"pay_QbYEqyfNFk4Nxn"} 
+[2025-05-31 18:53:47] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":2} 
+[2025-05-31 18:53:47] production.INFO: Updating membership database {"last_membership_id":"726","transaction_id":"pay_QbYEqyfNFk4Nxn","membership_history_id":1014,"upgrade_membership_id":2} 
+[2025-05-31 18:53:47] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":726} 
+[2025-05-31 18:53:48] production.INFO: Distributed BV referral to parent {"parent_id":2,"bv_points":300,"position":"right"} 
+[2025-05-31 18:53:48] production.INFO: Incremented flush BV totals {"user_id":2,"bv_id":5569,"left_bv":0,"right_bv":600} 
+[2025-05-31 18:53:48] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":300,"position":"left"} 
+[2025-05-31 18:53:48] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5570,"left_bv":1200,"right_bv":300} 
+[2025-05-31 18:53:48] production.INFO: ReferralLogic: START {"purchasing_user_id":5,"sponsor_id":2} 
+[2025-05-31 18:53:48] production.INFO: ReferralLogic: Sponsor commission credited (first time) {"sponsor_id":2,"incremented_by":30.0,"net_new_bv_for_sponsor":300.0} 
+[2025-05-31 18:53:48] production.INFO: ReferralLogic: END {"user_id":5,"total_self_bv":300.0,"paid_to_sponsor_bv":300.0,"paid_to_self_bv":0} 
+[2025-05-31 18:53:53] production.INFO: Membership email sent to user #5  
+[2025-05-31 18:53:55] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-31 18:53:55] production.INFO: Data to update: {"upgrade_membership_id":2} 
+[2025-05-31 18:54:02] production.INFO: LeftBV: 1200  
+[2025-05-31 18:54:02] production.INFO: RightBV:300  
+[2025-05-31 18:56:39] production.INFO: LeftBV: 1200  
+[2025-05-31 18:56:39] production.INFO: RightBV:300  
+[2025-05-31 19:35:39] production.INFO: LeftBV: 1200  
+[2025-05-31 19:35:39] production.INFO: RightBV:300  
+[2025-05-31 19:36:03] production.INFO: LeftBV: 0  
+[2025-05-31 19:36:03] production.INFO: RightBV:600  
+[2025-05-31 19:36:20] production.INFO: LeftBV: 0  
+[2025-05-31 19:36:20] production.INFO: RightBV:0  
+[2025-05-31 19:37:55] production.INFO: LeftBV: 0  
+[2025-05-31 19:37:55] production.INFO: RightBV:0  
+[2025-05-31 19:38:26] production.INFO: LeftBV: 0  
+[2025-05-31 19:38:26] production.INFO: RightBV:0  
+[2025-05-31 19:38:47] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-31 19:38:47] production.INFO: last3: {"membership_id":727} 
+[2025-05-31 19:38:47] production.INFO: last5: {"membership_id":727} 
+[2025-05-31 19:38:47] production.INFO: last4: {"membership_id":727,"order_id":null} 
+[2025-05-31 19:38:47] production.INFO: after-charge: {"membership_id":727,"order_id":727} 
+[2025-05-31 19:39:13] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"727","payment_amount":5000,"transaction_id":"pay_QbZ0pAEeXvBb5Z"} 
+[2025-05-31 19:39:13] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":3} 
+[2025-05-31 19:39:13] production.INFO: Updating membership database {"last_membership_id":"727","transaction_id":"pay_QbZ0pAEeXvBb5Z","membership_history_id":1015,"upgrade_membership_id":3} 
+[2025-05-31 19:39:13] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":727} 
+[2025-05-31 19:39:13] production.INFO: Distributed BV referral to parent {"parent_id":3,"bv_points":900,"position":"right"} 
+[2025-05-31 19:39:14] production.INFO: Incremented flush BV totals {"user_id":3,"bv_id":5572,"left_bv":null,"right_bv":900} 
+[2025-05-31 19:39:14] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"right"} 
+[2025-05-31 19:39:14] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5573,"left_bv":1200,"right_bv":1200} 
+[2025-05-31 19:39:14] production.INFO: ReferralLogic: START {"purchasing_user_id":7,"sponsor_id":3} 
+[2025-05-31 19:39:14] production.INFO: ReferralLogic: Sponsor commission credited (first time) {"sponsor_id":3,"incremented_by":90.0,"net_new_bv_for_sponsor":900.0} 
+[2025-05-31 19:39:14] production.INFO: ReferralLogic: BV reached 900+, switched to self commission {"user_id":7} 
+[2025-05-31 19:39:14] production.INFO: ReferralLogic: END {"user_id":7,"total_self_bv":900.0,"paid_to_sponsor_bv":900.0,"paid_to_self_bv":0} 
+[2025-05-31 19:39:23] production.INFO: Membership email sent to user #7  
+[2025-05-31 19:39:25] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-31 19:39:25] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-31 19:39:38] production.INFO: LeftBV: 0  
+[2025-05-31 19:39:38] production.INFO: RightBV:900  
+[2025-05-31 19:41:09] production.INFO: Checking for BV flush. Now: 19:41, Configured: 19:40  
+[2025-05-31 19:41:31] production.INFO: Checking for BV flush. Now: 19:41, Configured: 19:41  
+[2025-05-31 19:41:31] production.INFO: BV Flush - Side left {"user_id":2,"flushed_bv":900.0} 
+[2025-05-31 19:41:31] production.INFO: BV Flush - Side right {"user_id":3,"flushed_bv":900.0} 
+[2025-05-31 19:41:31] production.INFO: Equal remainders; flushing left BV {"user_id":1,"left_over_bv":300.0} 
+[2025-05-31 19:41:31] production.INFO: BV Flush - Side left {"user_id":2,"flushed_bv":300.0} 
+[2025-05-31 19:41:31] production.INFO: BV flush for user 1 completed {"pairs_flushed":1.0,"bv_per_side_flushed":900.0,"remaining_left_bv":0,"remaining_right_bv":300.0} 
+[2025-05-31 19:41:31] production.INFO: User qualifies via referral override {"user_id":1,"self_bv":"900.00","referral_commission":"120.00"} 
+[2025-05-31 19:41:31] production.INFO: Referral commission processed for eligible user {"user_id":1,"amount":"120.00","self_bv":"900.00","has_referral_override":true} 
+[2025-05-31 19:41:31] production.INFO: No BV flush for user 2: not enough BV to form even one pair {"left_bv":0,"right_bv":"300","bp_rate":"900"} 
+[2025-05-31 19:41:31] production.INFO: User eligibility check {"user_id":2,"self_bv":"900.00","left_bv":0.0,"right_bv":300.0,"referral_commission":"30.00","is_eligible":false} 
+[2025-05-31 19:41:31] production.INFO: Referral commission held - user not eligible {"user_id":2,"amount":"30.00","self_bv":"900.00"} 
+[2025-05-31 19:41:31] production.INFO: No BV flush for user 3: not enough BV to form even one pair {"left_bv":0,"right_bv":"900","bp_rate":"900"} 
+[2025-05-31 19:41:31] production.INFO: User eligibility check {"user_id":3,"self_bv":"300.00","left_bv":0.0,"right_bv":900.0,"referral_commission":"90.00","is_eligible":false} 
+[2025-05-31 19:41:31] production.INFO: Referral commission held - user not eligible {"user_id":3,"amount":"90.00","self_bv":"300.00"} 
+[2025-05-31 19:41:31] production.INFO: No BV flush for user 4: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-31 19:41:31] production.INFO: No BV flush for user 5: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-31 19:41:31] production.INFO: No BV flush for user 6: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-31 19:41:31] production.INFO: No BV flush for user 7: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-31 19:41:31] production.INFO: No BV flush for user 8: not enough BV to form even one pair {"left_bv":0,"right_bv":0,"bp_rate":"900"} 
+[2025-05-31 19:41:31] production.INFO: calculateMatchingPairs: {"rows":1,"sum_eligible_pairs":"1"} 
+[2025-05-31 19:41:31] production.INFO: Payout recorded {"date":"2025-05-31 19:41:31","previous_balance":120910,"new_balance":127610,"record_id":455} 
+[2025-05-31 19:41:31] production.INFO: UserPayoutDetail created for user 1 {"pairs":1,"gross":320.0,"tds":16.0,"service":16.0,"net":288.0,"referral":"120.00"} 
+[2025-05-31 19:41:41] production.INFO: LeftBV: 0  
+[2025-05-31 19:41:41] production.INFO: RightBV:900  
+[2025-05-31 19:41:55] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-31 19:41:55] production.INFO: last3: {"membership_id":727} 
+[2025-05-31 19:41:55] production.INFO: last5: {"membership_id":727} 
+[2025-05-31 19:41:55] production.INFO: last4: {"membership_id":727,"order_id":null} 
+[2025-05-31 19:41:55] production.INFO: after-charge: {"membership_id":727,"order_id":727} 
+[2025-05-31 19:42:27] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"727","payment_amount":1000,"transaction_id":"pay_QbZ451Mrv2OzvA"} 
+[2025-05-31 19:42:27] production.INFO: Updating membership database {"last_membership_id":"727","transaction_id":"pay_QbZ451Mrv2OzvA","membership_history_id":1016,"upgrade_membership_id":2} 
+[2025-05-31 19:42:27] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":727} 
+[2025-05-31 19:42:27] production.INFO: Distributed BV referral to parent {"parent_id":3,"bv_points":300,"position":"right"} 
+[2025-05-31 19:42:27] production.INFO: Incremented flush BV totals {"user_id":3,"bv_id":5579,"left_bv":0,"right_bv":1200} 
+[2025-05-31 19:42:27] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":300,"position":"right"} 
+[2025-05-31 19:42:27] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5580,"left_bv":0,"right_bv":600} 
+[2025-05-31 19:42:27] production.INFO: ReferralLogic: START {"purchasing_user_id":7,"sponsor_id":3} 
+[2025-05-31 19:42:27] production.INFO: ReferralLogic: Self commission credited {"user_id":7,"incremented_by":30.0,"net_new_bv_for_self":300.0} 
+[2025-05-31 19:42:27] production.INFO: ReferralLogic: END {"user_id":7,"total_self_bv":1200.0,"paid_to_sponsor_bv":900,"paid_to_self_bv":300.0} 
+[2025-05-31 19:42:35] production.INFO: Membership email sent to user #7  
+[2025-05-31 19:42:39] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-31 19:42:39] production.INFO: Data to update: {"upgrade_membership_id":2} 
+[2025-05-31 19:42:47] production.INFO: LeftBV: 0  
+[2025-05-31 19:42:47] production.INFO: RightBV:600  
+[2025-05-31 19:42:58] production.INFO: LeftBV: 0  
+[2025-05-31 19:42:58] production.INFO: RightBV:1200  
+[2025-05-31 19:43:15] production.INFO: LeftBV: 0  
+[2025-05-31 19:43:15] production.INFO: RightBV:0  
+[2025-05-31 19:43:26] production.INFO: LeftBV: 0  
+[2025-05-31 19:43:26] production.INFO: RightBV:0  
+[2025-05-31 19:43:56] production.INFO: LeftBV: 0  
+[2025-05-31 19:43:56] production.INFO: RightBV:0  
+[2025-05-31 19:44:07] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-31 19:44:07] production.INFO: last3: {"membership_id":728} 
+[2025-05-31 19:44:07] production.INFO: last5: {"membership_id":728} 
+[2025-05-31 19:44:07] production.INFO: last4: {"membership_id":728,"order_id":null} 
+[2025-05-31 19:44:07] production.INFO: after-charge: {"membership_id":728,"order_id":728} 
+[2025-05-31 19:44:30] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"728","payment_amount":1000,"transaction_id":"pay_QbZ6Rtc1Vcc2L0"} 
+[2025-05-31 19:44:30] production.INFO: Fallback in common_ipn_data: upgrade_membership_id was null, fetched from UserMembership {"fallback_upgrade_id":2} 
+[2025-05-31 19:44:30] production.INFO: Updating membership database {"last_membership_id":"728","transaction_id":"pay_QbZ6Rtc1Vcc2L0","membership_history_id":1017,"upgrade_membership_id":2} 
+[2025-05-31 19:44:30] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":728} 
+[2025-05-31 19:44:31] production.INFO: Distributed BV referral to parent {"parent_id":7,"bv_points":300,"position":"right"} 
+[2025-05-31 19:44:31] production.INFO: Incremented flush BV totals {"user_id":7,"bv_id":5582,"left_bv":null,"right_bv":300} 
+[2025-05-31 19:44:31] production.INFO: Distributed BV referral to parent {"parent_id":3,"bv_points":300,"position":"right"} 
+[2025-05-31 19:44:31] production.INFO: Incremented flush BV totals {"user_id":3,"bv_id":5583,"left_bv":0,"right_bv":1500} 
+[2025-05-31 19:44:31] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":300,"position":"right"} 
+[2025-05-31 19:44:31] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5584,"left_bv":0,"right_bv":900} 
+[2025-05-31 19:44:31] production.INFO: ReferralLogic: START {"purchasing_user_id":15,"sponsor_id":3} 
+[2025-05-31 19:44:31] production.INFO: ReferralLogic: Sponsor commission credited (first time) {"sponsor_id":3,"incremented_by":30.0,"net_new_bv_for_sponsor":300.0} 
+[2025-05-31 19:44:31] production.INFO: ReferralLogic: END {"user_id":15,"total_self_bv":300.0,"paid_to_sponsor_bv":300.0,"paid_to_self_bv":0} 
+[2025-05-31 19:44:37] production.INFO: Membership email sent to user #15  
+[2025-05-31 19:44:39] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-31 19:44:39] production.INFO: Data to update: {"upgrade_membership_id":2} 
+[2025-05-31 19:45:47] production.INFO: LeftBV: 0  
+[2025-05-31 19:45:47] production.INFO: RightBV:1500  
+[2025-05-31 19:48:19] production.INFO: LeftBV: 0  
+[2025-05-31 19:48:19] production.INFO: RightBV:1500  
+[2025-05-31 19:48:57] production.INFO: LeftBV: 0  
+[2025-05-31 19:48:57] production.INFO: RightBV:0  
+[2025-05-31 19:49:07] production.DEBUG: Profile Limit Calculation: {"membership_profile_limit":null,"user_current_profile_limit":0,"calculated_profile_limit":0} 
+[2025-05-31 19:49:07] production.INFO: last3: {"membership_id":728} 
+[2025-05-31 19:49:07] production.INFO: last5: {"membership_id":728} 
+[2025-05-31 19:49:07] production.INFO: last4: {"membership_id":728,"order_id":null} 
+[2025-05-31 19:49:07] production.INFO: after-charge: {"membership_id":728,"order_id":728} 
+[2025-05-31 19:49:29] production.INFO: Razorpay IPN Data:  {"status":"complete","order_id":"728","payment_amount":5000,"transaction_id":"pay_QbZBigLWaK3rBg"} 
+[2025-05-31 19:49:30] production.INFO: Updating membership database {"last_membership_id":"728","transaction_id":"pay_QbZBigLWaK3rBg","membership_history_id":1018,"upgrade_membership_id":3} 
+[2025-05-31 19:49:30] production.INFO: Overlap Matrimony Membership {"overlap_matrimony_membership":728} 
+[2025-05-31 19:49:30] production.INFO: Distributed BV referral to parent {"parent_id":7,"bv_points":900,"position":"right"} 
+[2025-05-31 19:49:30] production.INFO: Incremented flush BV totals {"user_id":7,"bv_id":5586,"left_bv":0,"right_bv":1200} 
+[2025-05-31 19:49:30] production.INFO: Distributed BV referral to parent {"parent_id":3,"bv_points":900,"position":"right"} 
+[2025-05-31 19:49:30] production.INFO: Incremented flush BV totals {"user_id":3,"bv_id":5587,"left_bv":0,"right_bv":2400} 
+[2025-05-31 19:49:30] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":900,"position":"right"} 
+[2025-05-31 19:49:30] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":5588,"left_bv":0,"right_bv":1800} 
+[2025-05-31 19:49:30] production.INFO: ReferralLogic: START {"purchasing_user_id":15,"sponsor_id":3} 
+[2025-05-31 19:49:30] production.INFO: ReferralLogic: Sponsor commission credited (repeated) {"sponsor_id":3,"incremented_by":60.0,"net_new_bv_for_sponsor":600} 
+[2025-05-31 19:49:30] production.INFO: ReferralLogic: BV reached 900+, switched to self commission {"user_id":15} 
+[2025-05-31 19:49:30] production.INFO: ReferralLogic: Self commission credited {"user_id":15,"incremented_by":30.0,"net_new_bv_for_self":300.0} 
+[2025-05-31 19:49:30] production.INFO: ReferralLogic: END {"user_id":15,"total_self_bv":1200.0,"paid_to_sponsor_bv":900,"paid_to_self_bv":300.0} 
+[2025-05-31 19:49:36] production.INFO: Membership email sent to user #15  
+[2025-05-31 19:49:38] production.INFO: Membership notification sent to admin (vikashinij1904@gmail.com)  
+[2025-05-31 19:49:38] production.INFO: Data to update: {"upgrade_membership_id":3} 
+[2025-05-31 19:49:52] production.INFO: LeftBV: 0  
+[2025-05-31 19:49:52] production.INFO: RightBV:2400  
+[2025-05-31 19:51:54] production.INFO: LeftBV: 0  
+[2025-05-31 19:51:54] production.INFO: RightBV:2400  
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":1,"leftBV":0,"rightBV":1800,"sealedL":0,"sealedR":1800,"leftBP":0.0,"rightBP":2.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":2,"leftBV":0,"rightBV":600,"sealedL":0,"sealedR":600,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":4,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":8,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":16,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":21,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":22,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":23,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":24,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":25,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":17,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":18,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":19,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":20,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":9,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":5,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":10,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":11,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":3,"leftBV":0,"rightBV":2400,"sealedL":0,"sealedR":2400,"leftBP":0.0,"rightBP":2.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":6,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":12,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":13,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":7,"leftBV":0,"rightBV":1200,"sealedL":0,"sealedR":1200,"leftBP":0.0,"rightBP":1.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":14,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":30,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":31,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":32,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":33,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":15,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":26,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":27,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":28,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":29,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:52:37] production.INFO: Node BV/Pair calc {"user_id":34,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:53:02] production.ERROR: file_put_contents(C:\laragon\www\Nat-Easy-Ad-Me\core\storage\framework/cache/data/ea/e9/eae92712371ddbfa779467c2df6c4263e9002ebe): Failed to open stream: Permission denied {"exception":"[object] (ErrorException(code: 0): file_put_contents(C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\storage\\framework/cache/data/ea/e9/eae92712371ddbfa779467c2df6c4263e9002ebe): Failed to open stream: Permission denied at C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php:204)
+[stacktrace]
+#0 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'file_put_conten...', 'C:\\\\laragon\\\\www\\\\...', 204)
+#1 [internal function]: Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'file_put_conten...', 'C:\\\\laragon\\\\www\\\\...', 204)
+#2 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(204): file_put_contents('C:\\\\laragon\\\\www\\\\...', '1748701441O:31:...', 2)
+#3 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cache\\FileStore.php(83): Illuminate\\Filesystem\\Filesystem->put('C:\\\\laragon\\\\www\\\\...', '1748701441O:31:...', true)
+#4 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cache\\Repository.php(216): Illuminate\\Cache\\FileStore->put('google_callback...', Object(App\\Models\\Backend\\StaticOption), 60)
+#5 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cache\\Repository.php(398): Illuminate\\Cache\\Repository->put('google_callback...', Object(App\\Models\\Backend\\StaticOption), 60)
+#6 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cache\\CacheManager.php(429): Illuminate\\Cache\\Repository->remember('google_callback...', 60, Object(Closure))
+#7 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Cache\\CacheManager->__call('remember', Array)
+#8 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Helpers\\helpers.php(115): Illuminate\\Support\\Facades\\Facade::__callStatic('remember', Array)
+#9 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Providers\\CustomConfigServiceProvider.php(25): get_static_option('google_callback...')
+#10 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Providers\\CustomConfigServiceProvider->boot()
+#11 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#12 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#13 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#14 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#15 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1034): Illuminate\\Container\\Container->call(Array)
+#16 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1015): Illuminate\\Foundation\\Application->bootProvider(Object(App\\Providers\\CustomConfigServiceProvider))
+#17 [internal function]: Illuminate\\Foundation\\Application->Illuminate\\Foundation\\{closure}(Object(App\\Providers\\CustomConfigServiceProvider), 46)
+#18 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1014): array_walk(Array, Object(Closure))
+#19 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\BootProviders.php(17): Illuminate\\Foundation\\Application->boot()
+#20 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\BootProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#21 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(186): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#22 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(170): Illuminate\\Foundation\\Http\\Kernel->bootstrap()
+#23 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#24 C:\\laragon\\www\\Nat-Easy-Ad-Me\\index.php(54): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#25 {main}
+"} 
+[2025-05-31 19:53:02] production.ERROR: file_put_contents(C:\laragon\www\Nat-Easy-Ad-Me\core\storage\framework/cache/data/b3/0b/b30bf1fe18381be3d8abda0649c645fc60931d75): Failed to open stream: Permission denied {"exception":"[object] (ErrorException(code: 0): file_put_contents(C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\storage\\framework/cache/data/b3/0b/b30bf1fe18381be3d8abda0649c645fc60931d75): Failed to open stream: Permission denied at C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php:204)
+[stacktrace]
+#0 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'file_put_conten...', 'C:\\\\laragon\\\\www\\\\...', 204)
+#1 [internal function]: Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'file_put_conten...', 'C:\\\\laragon\\\\www\\\\...', 204)
+#2 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(204): file_put_contents('C:\\\\laragon\\\\www\\\\...', '1748701441O:31:...', 2)
+#3 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cache\\FileStore.php(83): Illuminate\\Filesystem\\Filesystem->put('C:\\\\laragon\\\\www\\\\...', '1748701441O:31:...', true)
+#4 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cache\\Repository.php(216): Illuminate\\Cache\\FileStore->put('google_client_i...', Object(App\\Models\\Backend\\StaticOption), 60)
+#5 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cache\\Repository.php(398): Illuminate\\Cache\\Repository->put('google_client_i...', Object(App\\Models\\Backend\\StaticOption), 60)
+#6 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cache\\CacheManager.php(429): Illuminate\\Cache\\Repository->remember('google_client_i...', 60, Object(Closure))
+#7 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Cache\\CacheManager->__call('remember', Array)
+#8 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Helpers\\helpers.php(115): Illuminate\\Support\\Facades\\Facade::__callStatic('remember', Array)
+#9 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Providers\\CustomConfigServiceProvider.php(23): get_static_option('google_client_i...')
+#10 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Providers\\CustomConfigServiceProvider->boot()
+#11 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#12 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#13 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#14 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#15 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1034): Illuminate\\Container\\Container->call(Array)
+#16 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1015): Illuminate\\Foundation\\Application->bootProvider(Object(App\\Providers\\CustomConfigServiceProvider))
+#17 [internal function]: Illuminate\\Foundation\\Application->Illuminate\\Foundation\\{closure}(Object(App\\Providers\\CustomConfigServiceProvider), 46)
+#18 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1014): array_walk(Array, Object(Closure))
+#19 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\BootProviders.php(17): Illuminate\\Foundation\\Application->boot()
+#20 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\BootProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#21 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(186): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#22 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(170): Illuminate\\Foundation\\Http\\Kernel->bootstrap()
+#23 C:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#24 C:\\laragon\\www\\Nat-Easy-Ad-Me\\index.php(54): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#25 {main}
+"} 
+[2025-05-31 19:53:34] production.INFO: LeftBV: 0  
+[2025-05-31 19:53:34] production.INFO: RightBV:1800  
+[2025-05-31 19:53:34] production.INFO: Node BV/Pair calc {"user_id":14,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:53:34] production.INFO: Node BV/Pair calc {"user_id":30,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:53:34] production.INFO: Node BV/Pair calc {"user_id":31,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:53:34] production.INFO: Node BV/Pair calc {"user_id":32,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-05-31 19:53:34] production.INFO: Node BV/Pair calc {"user_id":33,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 

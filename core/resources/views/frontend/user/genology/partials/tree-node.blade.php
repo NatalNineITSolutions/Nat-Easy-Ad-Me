@@ -46,8 +46,8 @@
                             <strong>{{ $node->possible_pairs }}</strong>
                         </span>
                         <div class="bv-inside-pairs">
-                            <span>BV (L): <strong>{{ $node->leftBV ?? 0 }}</strong></span>
-                            <span>BV (R): <strong>{{ $node->rightBV ?? 0 }}</strong></span>
+                            <span>Team A: <strong>{{ $node->leftBV ?? 0 }}</strong></span>
+                            <span>Team B: <strong>{{ $node->rightBV ?? 0 }}</strong></span>
                         </div>
                     </div>
 

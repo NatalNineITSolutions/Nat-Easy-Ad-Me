@@ -104,11 +104,11 @@ class RecentListingOne extends PageBuilderBase
 
 
         $listings = Listing::where('status', 1)->where('is_published', 1);
-        if (moduleExists('Membership') && membershipModuleExistsAndEnable('Membership')) {
-            $listings = $listings->where(function ($query) {
-                $query->whereHas('user_membership');
-            });
-        }
+        // if (moduleExists('Membership') && membershipModuleExistsAndEnable('Membership')) {
+        //     $listings = $listings->where(function ($query) {
+        //         $query->whereHas('user_membership');
+        //     });
+        // }
 
          $listings = $listings->orderByDesc('created_at')
             ->take($items)

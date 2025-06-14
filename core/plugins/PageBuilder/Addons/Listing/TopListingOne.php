@@ -103,11 +103,11 @@ class TopListingOne extends PageBuilderBase
         $static_text = static_text();
 
         $listings = Listing::where('status', 1)->where('is_published', 1);
-        if (moduleExists('Membership') && membershipModuleExistsAndEnable('Membership')) {
-            $listings = $listings->where(function ($query) {
-                $query->whereHas('user_membership');
-            });
-        }
+        // if (moduleExists('Membership') && membershipModuleExistsAndEnable('Membership')) {
+        //     $listings = $listings->where(function ($query) {
+        //         $query->whereHas('user_membership');
+        //     });
+        // }
 
         $listings = $listings->orderBy('view', 'desc')
             ->take($items)

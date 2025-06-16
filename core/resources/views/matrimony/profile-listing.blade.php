@@ -449,7 +449,7 @@
                                         file size is under 25 MB. You can upload multiple images.</p>
 
                                     <!-- Single Upload Section for Multiple Images -->
-                                    <div class="upload-img text-center">
+                                    <div class="upload-img text-center"> 
                                         <div class="media-upload-btn-wrapper">
                                             <div class="img-wrap new_image_add_listing">
                                                 <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}"

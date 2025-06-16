@@ -146,6 +146,7 @@ Route::middleware(['setlang'])->group(function () {
             // Product listing
             Route::get('/', 'index')->name('admin.products.index')->permission('product-view');
             Route::get('/add-product', 'addProduct')->name('admin.products.add')->permission('product-add');
+            Route::post('/add-product', 'storeProduct')->name('admin.products.store')->permission('product-add');
 
             // Category
             Route::get('/categories', 'categoryIndex')->name('admin.products.category.index')->permission('product-category-view');

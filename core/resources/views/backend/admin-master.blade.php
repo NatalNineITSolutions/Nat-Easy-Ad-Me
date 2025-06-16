@@ -1,3 +1,7 @@
+<style>
+    <x-media.css />
+</style>
+
 <body>
 <!-- preloader area start -->
 @if(!empty(get_static_option('admin_loader_animation')))
@@ -46,7 +50,14 @@
     </div>
 </div>
 
+
+
 @include('backend/partials/footer')
+
+<x-media.markup :type="'web'" />
 </body>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.bundle.min.js"></script>
+<x-media.js :type="'web'" />
 </html>
 

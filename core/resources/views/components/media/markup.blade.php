@@ -8,7 +8,7 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">{{__('Media Uploads')}}</h5>
                 <div class="popup_contents__header__close">
-                    <button type="button" class="popup_contents__close popup_close close" aria-label="Close" data-dismiss="modal">
+                    <button type="button" class="popup_contents__close popup_close close" aria-label="Close"  data-bs-dismiss="modal">
                         <span aria-hidden="true"></span>
                         <i class="fas fa-times"></i>
                     </button>

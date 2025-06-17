@@ -29,7 +29,7 @@ use App\Http\Controllers\Backend\PageSettingsController;
 use App\Http\Controllers\Backend\MapSettings;
 
 
-Route::middleware(['setlang'])->group(function () {
+Route::middleware(['auth','setlang'])->group(function () {
     // Dashboard
     Route::prefix('dashboard')->group(function () {
         Route::get('/', [AdminDashboardController::class, 'adminDashboard'])->name('admin.dashboard')->permission('admin-dashboard');

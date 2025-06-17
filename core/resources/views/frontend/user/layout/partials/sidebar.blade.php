@@ -27,6 +27,15 @@
         <span class="ms-2">{{ __('Jobs') }}</span>
     </a>
 
+    <a href="{{ route('user.product.slider') }}"
+        class="menu-item @if(request()->is('user/info/product-slider*')) active @endif">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748B"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 6H4V4h16v2zM4 10h16v10H4V10zm4 4h8v2H8v-2z"></path>
+        </svg>
+        <span class="ms-2">{{ __('Products') }}</span>
+    </a>
+
     <a href="{{ route('user.bv.history') }}"
         class="menu-item @if(request()->is('user/info/bv-history*')) active @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748B"

@@ -370,7 +370,7 @@
                                                             <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}" alt="images" class="w-100">
                                                         </div>
                                                         <input type="hidden" name="image">
-                                                        <button type="button" class="btn btn-info media_upload_form_btn"
+                                                        <button type="button" class="btn btn-info "
                                                                 data-btntitle="{{__('Select Image')}}"
                                                                 data-modaltitle="{{__('Upload Image')}}"
                                                                 data-bs-toggle="modal"
@@ -406,6 +406,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                
                                                 <!-- start previous / next buttons -->
                                                 <div class="continue-btn mt-3">
                                                     <div class="btn-wrapper mb-10 d-flex justify-content-end gap-3">

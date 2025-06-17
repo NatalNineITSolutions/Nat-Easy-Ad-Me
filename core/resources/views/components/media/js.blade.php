@@ -135,6 +135,13 @@ $spinner_icon =  $type === 'admin' ? 'fas fa-spinner fa-spin' : 'fa-spin las la-
             maxFiles: 50,
             maxFilesize: 10, //MB
             acceptedFiles: 'image/*',
+
+            headers: {
+                'X-CSRF-TOKEN': document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute('content')
+            },
+            
             success: function (file, response) {
                 if (file.previewElement) {
                     return file.previewElement.classList.add("dz-success");
@@ -145,11 +152,21 @@ $spinner_icon =  $type === 'admin' ? 'fas fa-spinner fa-spin' : 'fa-spin las la-
             error: function (file, message) {
                 if (file.previewElement) {
                     file.previewElement.classList.add("dz-error");
-                    if ((typeof message !== "String") && message.error) {
-                        message = message.error;
+
+                    // Normalize message format
+                    let errorMsg = "Upload failed";
+
+                    // Case 1: Laravel validation error like { errors: { file: ['msg'] } }
+                    if (typeof message === "object" && message.errors?.file?.[0]) {
+                        errorMsg = message.errors.file[0];
+
+                    // Case 2: message is a string
+                    } else if (typeof message === "string") {
+                        errorMsg = message;
                     }
+
                     for (let node of file.previewElement.querySelectorAll("[data-dz-errormessage]")) {
-                        node.textContent = message.errors.file[0];
+                        node.textContent = errorMsg;
                     }
                 }
             }

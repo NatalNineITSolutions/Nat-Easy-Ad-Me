@@ -86,6 +86,14 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
             });
         });
 
+        // Products
+        Route::controller(DashboardController::class)->group(function () {
+            Route::group(['prefix' => 'info'], function () {
+                Route::get('/product-slider', 'productSlider')->name('product.slider');
+                Route::get('/product-details/{id}', 'productDetails')->name('product.details');
+            });
+        });
+
         // Income 
         Route::controller(DashboardController::class)->group(function () {
             Route::group(['prefix' => 'info'], function () {

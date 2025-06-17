@@ -330,7 +330,6 @@ class ListingController extends Controller
             return redirect()->route('user.all.listing')->with(toastr_success(__('Listing Added Success')));
         }
 
-
         //check membership
         if (moduleExists('Membership')) {
             if (membershipModuleExistsAndEnable('Membership')) {

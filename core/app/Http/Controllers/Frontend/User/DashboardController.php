@@ -24,6 +24,7 @@ use App\Models\Backend\Admin;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Modules\Membership\app\Models\UserMembership;
 use Illuminate\Support\Facades\DB;
+use App\Models\Product;
 
 class DashboardController extends Controller
 {
@@ -850,4 +851,23 @@ class DashboardController extends Controller
 
         return view('frontend.user.bv_history', compact('bvHistory'));
     }
+
+    public function productSlider()
+    {
+        $products = Product::latest()->paginate(10); // Show 10 products per page
+        return view('frontend.user.product-slider', compact('products'));
+    }
+
+    public function productDetails($id)
+    {
+        $product = Product::with('category')->findOrFail($id);
+        return view('frontend.user.product-details', compact('product'));
+    }
+
+    public function allProducts()
+    {
+        $products = Product::all(); 
+        return view('frontend.user.all-products', compact('products'));
+    }
+
 }

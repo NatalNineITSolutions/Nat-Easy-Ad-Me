@@ -119,30 +119,23 @@
                     <textarea name="description" class="form-control" rows="4" placeholder="{{ __('Enter product description') }}"></textarea>
                 </div>
 
-                <!-- Featured Image using Media Modal -->
-                <div class="mb-3">
-                    <label class="form-label fw-bold">{{ __('Featured Image') }}</label>
+                {{-- Add before submit button --}}
+                <div class="upload-img text-center mt-3">
                     <div class="media-upload-btn-wrapper">
-                        <div class="img-wrap featured_image_preview">
-                            <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}" alt="images"
-                                class="w-100">
+                        <div class="img-wrap new_image_add_listing">
+                            <img src="{{ asset('assets/common/img/listing_single_image.jpg') }}" alt="images" class="w-100">
                         </div>
-                        <input type="hidden" name="featured_image" id="featured_image_input">
+                        <input type="hidden" name="image">
                         <button type="button" class="btn btn-info media_upload_form_btn"
-                            data-btntitle="{{ __('Select Featured Image') }}"
-                            data-modaltitle="{{ __('Upload Featured Image') }}" data-mulitple="false"
-                            data-bs-toggle="modal" data-bs-target="#media_upload_modal">
-                            {{ __('Click to Upload Image') }}
+                                data-btntitle="{{__('Select Image')}}"
+                                data-modaltitle="{{__('Upload Image')}}"
+                                data-bs-toggle="modal"
+                                data-bs-target="#media_upload_modal">
+                            {{ __('Click to browse & Upload Featured Image') }}
                         </button>
-                        <small>{{ __('Image format: jpg, jpeg, png, gif, webp') }}</small><br>
-                        <small>{{ __('Recommended size: 810×450') }}</small>
+                        <small>{{ __('image format: jpg,jpeg,png,gif,webp')}}</small> <br>
+                        <small>{{ __('recommended size 810x450') }}</small>
                     </div>
-                </div>
-
-                <!-- Gallery fallback (optional) -->
-                <div class="mb-3">
-                    <label class="form-label">{{ __('Gallery Images') }}</label>
-                    <input type="file" name="gallery[]" class="form-control" multiple>
                 </div>
 
                 <button type="submit" class="btn btn-primary">{{ __('Save Product') }}</button>

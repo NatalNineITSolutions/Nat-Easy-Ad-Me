@@ -3,26 +3,6 @@
     {{ __('Products') }}
 @endsection
 
-@section('style')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
-
-<style>
-    .swiper-button-next,
-    .swiper-button-prev {
-        color: #EF4444;
-        top: 35%;
-    }
-
-    .swiper {
-        padding-bottom: 50px;
-    }
-
-    .swiper-slide {
-        height: auto;
-    }
-</style>
-
-@endsection
 
 @section('content')
     <div class="profile-setting setting-page section-padding2">
@@ -42,8 +22,12 @@
                                     <div class="setting-tab-content tab-content">
                                         <div class="tab-pane fade show active">
                                             <div class="tab-content-wraper box-shadow1 p-4">
-                                                <h3 class="mb-5">{{ __('Products Slider Section') }}</h3>
-
+                                                <div class="d-flex justify-content-between align-items-center mb-5">
+                                                    <h3 class="mb-0">{{ __('Products Section') }}</h3>
+                                                    <a href="{{ route('user.all.products') }}" class="btn btn-outline-primary btn-sm">
+                                                        {{ __('View All') }}
+                                                    </a>
+                                                </div>
                                                 <div class="row">
                                                     @forelse($products as $product)
                                                         <div class="col-md-4 col-lg-3 mb-4">
@@ -65,6 +49,14 @@
                                                     @endforelse
                                                 </div>
 
+                                                {{-- 🔻 Pagination Links --}}
+                                                <div class="row">
+                                                    <div class="col-12 mt-4">
+                                                        <div class="pagination-wrapper d-flex justify-content-center">
+                                                            {{ $products->links('pagination::bootstrap-4') }}
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -77,26 +69,3 @@
         </div>
     </div>
 @endsection
-
-<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-<script>
-    const swiper = new Swiper('.swiper', {
-        slidesPerView: 1,
-        spaceBetween: 20,
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-        breakpoints: {
-            640: {
-                slidesPerView: 2,
-            },
-            768: {
-                slidesPerView: 3,
-            },
-            1024: {
-                slidesPerView: 4,
-            },
-        },
-    });
-</script>

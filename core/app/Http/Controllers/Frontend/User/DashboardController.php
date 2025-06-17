@@ -854,7 +854,7 @@ class DashboardController extends Controller
 
     public function productSlider()
     {
-        $products = Product::all();
+        $products = Product::latest()->paginate(10); // Show 10 products per page
         return view('frontend.user.product-slider', compact('products'));
     }
 
@@ -862,6 +862,12 @@ class DashboardController extends Controller
     {
         $product = Product::with('category')->findOrFail($id);
         return view('frontend.user.product-details', compact('product'));
+    }
+
+    public function allProducts()
+    {
+        $products = Product::all(); 
+        return view('frontend.user.all-products', compact('products'));
     }
 
 }

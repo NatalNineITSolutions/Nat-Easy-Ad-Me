@@ -89,8 +89,9 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
         // Products
         Route::controller(DashboardController::class)->group(function () {
             Route::group(['prefix' => 'info'], function () {
-                Route::get('/product-slider', 'productSlider')->name('product.slider');
+                Route::get('/products', 'productSlider')->name('products');
                 Route::get('/product-details/{id}', 'productDetails')->name('product.details');
+                Route::get('/all-products', 'allProducts')->name('all.products');
             });
         });
 

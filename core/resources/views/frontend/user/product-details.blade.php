@@ -39,9 +39,9 @@
     }
 
     .product-detail-info .price {
-        font-size: 20px;
+        font-size: 25px;
+        font-weight: 600;
         color: #EF4444;
-        margin-top: 10px;
         margin-bottom: 15px;
     }
 
@@ -52,6 +52,11 @@
 
     .product-detail-info p.description {
         color: #4B5563;
+    }
+
+    .gst {
+        font-size: 11px;
+        font-weight: 400;
     }
 </style>
 @endsection
@@ -68,17 +73,83 @@
             <div class="product-detail-info">
                 <h2>{{ $product->name }}</h2>
                 <p class="description">{{ $product->description ?? 'No description available for this product.' }}</p>
-                <div class="price">₹{{ $product->price }}</div>
+                <div><strong>Category:</strong> {{ $product->category->category ?? 'Uncategorized' }}</div>
 
-                <div class="meta">
-                    <div><strong>Stock:</strong> {{ $product->stock ?? 'N/A' }}</div>
-                    <div><strong>Category:</strong> {{ $product->category->category ?? 'Uncategorized' }}</div>
+                @php
+                    $gstPercent = $product->gst ?? 0;
+                    $distributorPrice = $product->distributor_price ?? 0;
+                    $gstAmount = ($distributorPrice * $gstPercent) / 100;
+                    $priceWithGst = $distributorPrice + $gstAmount;
+                @endphp
+
+                <div class="text-muted gst mt-4" id="gstAmount">
+                    <!-- Filled dynamically -->
+                </div>
+                <div class="price" id="totalPrice">
+                    <!-- Filled dynamically -->
                 </div>
 
-                
 
-                <a href="{{ route('user.product.slider') }}" class="btn btn-outline-secondary mt-4">Back to Products</a>
+                <div class="quantity-selector mt-2 mb-3">
+                    <label for="quantity" class="form-label fw-bold">Quantity:</label>
+                    <div class="d-flex align-items-center gap-2">
+                        <button type="button" id="decreaseQty" class="btn btn-outline-secondary btn-sm h-100 px-3">−</button>
+                        
+                        <input type="text" id="quantity" name="quantity" value="1" readonly
+                            class="form-control text-center h-100" style="width: 60px; min-height: 38px;">
+                        
+                        <button type="button" id="increaseQty" class="btn btn-outline-secondary btn-sm h-100 px-3">+</button>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <a href="#" class="btn btn-danger px-4 py-2">
+                        Buy Now
+                    </a>
+                </div>
+
             </div>
         </div>
     </div>
 @endsection
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const decreaseBtn = document.getElementById("decreaseQty");
+        const increaseBtn = document.getElementById("increaseQty");
+        const quantityInput = document.getElementById("quantity");
+        const priceDisplay = document.getElementById("totalPrice");
+        const gstDisplay = document.getElementById("gstAmount");
+
+        // Set base values from PHP using data attributes
+        const distributorPrice = parseFloat({{ $distributorPrice }});
+        const gstPercent = parseFloat({{ $gstPercent }});
+
+        function updatePrice() {
+            const qty = parseInt(quantityInput.value);
+            const subtotal = distributorPrice * qty;
+            const gst = (subtotal * gstPercent) / 100;
+            const total = subtotal + gst;
+
+            gstDisplay.textContent = `GST ( ${gstPercent}% ): ₹${gst.toFixed(2)}`;
+            priceDisplay.textContent = `Total: ₹${total.toFixed(2)}`;
+        }
+
+        decreaseBtn.addEventListener("click", function () {
+            let value = parseInt(quantityInput.value);
+            if (value > 1) {
+                quantityInput.value = value - 1;
+                updatePrice();
+            }
+        });
+
+        increaseBtn.addEventListener("click", function () {
+            let value = parseInt(quantityInput.value);
+            quantityInput.value = value + 1;
+            updatePrice();
+        });
+
+        // Initial update on load
+        updatePrice();
+    });
+</script>

@@ -13,6 +13,7 @@ class MediaHelper
     public static function fetch_media_image($request, $type = 'admin')
     {
         $image_query = MediaUpload::query();
+        \Log::info("type" . auth($type)->id());
 
         if ($type === 'web') {
             $image_query->where(['user_id' => auth($type)->id()]);
@@ -20,6 +21,8 @@ class MediaHelper
         $all_images = $image_query->where(['type' => $type])->orderBy('id', 'DESC')->take(20)->get();
         $selected_image = MediaUpload::find($request->selected);
         $all_image_files = [];
+
+        \Log::info($all_images);
 
         if (!empty($selected_image)) {
             if (file_exists('assets/uploads/media-uploader/' . $selected_image->path)) {

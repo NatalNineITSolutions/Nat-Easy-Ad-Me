@@ -1,83 +1,101 @@
-
 @php
-$type = $type ?? 'admin';
-$trash_icon =  $type === 'admin' ? 'ti-trash' : 'las la-trash';
-$check_icon =  $type === 'admin' ? 'fas fa-check' : 'las la-check';
-$spinner_icon =  $type === 'admin' ? 'fas fa-spinner fa-spin' : 'fa-spin las la-spinner';
+    $segment = request()->segment(1);
+
+    // If the URL is like /user/..., treat it as “web”
+    if ($segment === 'user') {
+        $type = 'web';
+    }
+    // Otherwise, if there’s any segment, use it; else default to admin
+    elseif ($segment) {
+        $type = $segment;
+    } else {
+        $type = 'admin';
+    }
+
+    $trash_icon = $type === 'admin' ? 'ti-trash' : 'las la-trash';
+    $check_icon = $type === 'admin' ? 'fas fa-check' : 'las la-check';
+    $spinner_icon = $type === 'admin' ? 'fas fa-spinner fa-spin' : 'fa-spin las la-spinner';
+
 @endphp
 
-<script src="{{asset('assets/backend/js/dropzone.js')}}"></script>
+<input type="hidden" id="mediaType" value="{{ $type }}">
+<script src="{{ asset('assets/backend/js/dropzone.js') }}"></script>
 <script>
-    (function ($) {
+    (function($) {
         "use strict";
         var mainUploadBtn = '';
         //after select image
-        $(document).on('click','.media_upload_modal_submit_btn',function (e) {
+        $(document).on('click', '.media_upload_modal_submit_btn', function(e) {
             e.preventDefault();
             var allData = $('.media-uploader-image-list li.selected');
-            if( typeof allData != 'undefined'){
+            if (typeof allData != 'undefined') {
                 mainUploadBtn.parent().find('.img-wrap').html('');
                 var imageId = '';
-                $.each(allData,function(index,value){
+                $.each(allData, function(index, value) {
                     var el = $(this).data();
                     var separator = allData.length == index ? '' : '|';
                     imageId += el.imgid + separator;
-                    mainUploadBtn.prev('input').attr('data-imgsrc',el.imgsrc);
-                    mainUploadBtn.parent().find('.img-wrap').append('<div class="img-inner-wrap"><div class="rmv-span" data-imageid='+el.imgid+'><i class="{{$trash_icon}}"></i></div><div class="attachment-preview"><div class="thumbnail"><div class="centered"><img src="'+el.imgsrc+'"></div></div></div></div>');
+                    mainUploadBtn.prev('input').attr('data-imgsrc', el.imgsrc);
+                    mainUploadBtn.parent().find('.img-wrap').append(
+                        '<div class="img-inner-wrap"><div class="rmv-span" data-imageid=' + el
+                        .imgid +
+                        '><i class="{{ $trash_icon }}"></i></div><div class="attachment-preview"><div class="thumbnail"><div class="centered"><img src="' +
+                        el.imgsrc + '"></div></div></div></div>');
                 });
-                 mainUploadBtn.prev('input').val(imageId.substring(0,imageId.length -1));
+                mainUploadBtn.prev('input').val(imageId.substring(0, imageId.length - 1));
 
             }
             $('#media_upload_modal').modal('hide');
 
             mainUploadBtn.text('Change Image');
-            mainUploadBtn.attr('data-image-ids', imageId.substring(0,imageId.length -1));
+            mainUploadBtn.attr('data-image-ids', imageId.substring(0, imageId.length - 1));
         });
 
 
         //delete image form media uploader
-        $(document).on('click','.media_library_image_delete_btn',function (e) {
+        $(document).on('click', '.media_library_image_delete_btn', function(e) {
             e.preventDefault();
 
             var type = $(this).data('type');
 
             Swal.fire({
-                title: '{{__("Are you sure to delete this image")}}',
-                text: '{{__("This image will remove permanently")}}',
+                title: '{{ __('Are you sure to delete this image') }}',
+                text: '{{ __('This image will remove permanently') }}',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: '{{__("Yes, Delete It")}}'
+                confirmButtonText: '{{ __('Yes, Delete It') }}'
             }).then((result) => {
                 if (result.isConfirmed) {
                     deleteImage(type);
                 }
             });
         });
-        function deleteImage(type){
+
+        function deleteImage(type) {
             $.ajax({
                 type: "POST",
-                url: "{{route($type.'.upload.media.file.delete') }}",
+                url: "{{ route($type . '.upload.media.file.delete') }}",
                 data: {
-                    _token: "{{csrf_token()}}",
-                    img_id : $('.image_id').text(),
-                    type : type,
+                    _token: "{{ csrf_token() }}",
+                    img_id: $('.image_id').text(),
+                    type: type,
                 },
-                success: function (data) {
+                success: function(data) {
                     $('.media-uploader-image-info a,.media-uploader-image-info .img-meta').hide();
                     $('.media-uploader-image-list li.selected').remove();
-                    $('.media-uploader-image-info .img-wrapper img').attr('src','');
+                    $('.media-uploader-image-info .img-wrapper img').attr('src', '');
                     $('.media-uploader-image-info .img-info .img-title').text('');
                 },
-                error: function (error) {
+                error: function(error) {
 
                 }
             });
         }
 
 
-        $(document).on('click','.media_upload_form_btn',function (e) {
+        $(document).on('click', '.media_upload_form_btn', function(e) {
             e.preventDefault();
 
             var parent = $('#media_upload_modal');
@@ -87,34 +105,36 @@ $spinner_icon =  $type === 'admin' ? 'fas fa-spinner fa-spin' : 'fa-spin las la-
             mainUploadBtn = el;
 
             parent.find('.media_upload_modal_submit_btn').text(el.data('btntitle'));
-            parent.find('.media_upload_modal_submit_btn').attr('data-inputname',$(this).prev('input').attr('name'));
+            parent.find('.media_upload_modal_submit_btn').attr('data-inputname', $(this).prev('input').attr(
+                'name'));
             parent.find('.modal-title').text(el.data('modaltitle'));
 
-            if(el.data('mulitple')){
-                parent.attr('data-mulitple','true')
-            }else{
+            if (el.data('mulitple')) {
+                parent.attr('data-mulitple', 'true')
+            } else {
                 parent.removeAttr('data-mulitple');
             }
 
-            loadAllImage.attr('data-selectedimage','');
-            if(imageId =! ''){
-                loadAllImage.attr('data-selectedimage',el.prev('input').val());
+            loadAllImage.attr('data-selectedimage', '');
+            if (imageId = !'') {
+                loadAllImage.attr('data-selectedimage', el.prev('input').val());
                 loadAllImage.trigger('click');
             }
         });
 
-        $('body').on('click', '.media-uploader-image-list > li', function (e) {
+        $('body').on('click', '.media-uploader-image-list > li', function(e) {
             e.preventDefault();
             var el = $(this);
             var allData = el.data();
 
-            if( typeof $('#media_upload_modal').attr('data-mulitple') == 'undefined'){
+            if (typeof $('#media_upload_modal').attr('data-mulitple') == 'undefined') {
                 el.toggleClass('selected').siblings().removeClass('selected');
-            }else{
+            } else {
                 el.toggleClass('selected');
             }
 
-            $('.media-uploader-image-info a,.media-uploader-image-info .img-meta,.delete_image_form').show();
+            $('.media-uploader-image-info a,.media-uploader-image-info .img-meta,.delete_image_form')
+                .show();
 
             var parent = $('.img-meta');
             parent.children('.date').text(allData.date);
@@ -125,24 +145,24 @@ $spinner_icon =  $type === 'admin' ? 'fas fa-spinner fa-spin' : 'fa-spin las la-
             parent.find('input[name="img_alt_tag"]').val(allData.alt);
             parent.parent().find('input[name="img_id"]').val(allData.imgid);
 
-            $('.img_alt_submit_btn').html('<i class="{{$check_icon}}"></i>');
+            $('.img_alt_submit_btn').html('<i class="{{ $check_icon }}"></i>');
             $('.img-info .img-title').text(allData.title)
-            $('.media-uploader-image-info .img-wrapper img').attr('src',allData.imgsrc);
+            $('.media-uploader-image-info .img-wrapper img').attr('src', allData.imgsrc);
         });
 
         Dropzone.options.placeholderfForm = {
-            dictDefaultMessage: "{{__('Drag or Select Your Image')}}",
+            dictDefaultMessage: "{{ __('Drag or Select Your Image') }}",
             maxFiles: 50,
             maxFilesize: 10, //MB
             acceptedFiles: 'image/*',
-            success: function (file, response) {
+            success: function(file, response) {
                 if (file.previewElement) {
                     return file.previewElement.classList.add("dz-success");
                 }
                 $('#load_all_media_images').trigger('click');
                 $('.media-uploader-image-list li:first-child').addClass('selected');
             },
-            error: function (file, message) {
+            error: function(file, message) {
                 if (file.previewElement) {
                     file.previewElement.classList.add("dz-error");
                     if ((typeof message !== "String") && message.error) {
@@ -156,17 +176,17 @@ $spinner_icon =  $type === 'admin' ? 'fas fa-spinner fa-spin' : 'fa-spin las la-
         };
 
 
-        $(document).on('click', '#upload_media_image', function (e) {
+        $(document).on('click', '#upload_media_image', function(e) {
             e.preventDefault();
             $('.media_upload_modal_submit_btn').hide();
         });
 
 
-        $(document).on('click', '#load_all_media_images', function (e) {
+        $(document).on('click', '#load_all_media_images', function(e) {
             e.preventDefault();
             loadAllImages();
         });
-        $(document).on('click', '.img_alt_submit_btn', function (e) {
+        $(document).on('click', '.img_alt_submit_btn', function(e) {
             e.preventDefault();
             var parent = $(this).parent().parent().parent();
             var alt = $(this).prev('input').val();
@@ -174,88 +194,118 @@ $spinner_icon =  $type === 'admin' ? 'fas fa-spinner fa-spin' : 'fa-spin las la-
 
             $.ajax({
                 type: "POST",
-                url: "{{ route($type.'.upload.media.file.alt.change')}}",
+                url: "{{ route($type . '.upload.media.file.alt.change') }}",
                 data: {
-                    _token: "{{csrf_token()}}",
+                    _token: "{{ csrf_token() }}",
                     imgid: parseInt(imgId),
                     alt: alt
                 },
-                success: function (data) {
-                    $('.img_alt_submit_btn').html('<i class="{{$check_icon}}"></i>');
-                    $('.media-uploader-image-list li[data-imgid="'+imgId+'"]').data('alt',alt);
+                success: function(data) {
+                    $('.img_alt_submit_btn').html('<i class="{{ $check_icon }}"></i>');
+                    $('.media-uploader-image-list li[data-imgid="' + imgId + '"]').data('alt',
+                        alt);
                 }
             });
         });
+
         function arrayRemove(arr, value) {
 
-            return arr.filter(function(ele){
+            return arr.filter(function(ele) {
                 return ele != value;
             });
         }
-        $(document).on('click','.media-upload-btn-wrapper .img-wrap > .rmv-span,.media-upload-btn-wrapper .img-wrap .img-inner-wrap > .rmv-span',function (e) {
-            //imlement remove image icon
-            var el = $(this);
-            let parentClass = el.parent().attr('class');
-            if( parentClass === 'img-inner-wrap'){
-                let button = el.parent().parent().parent().find('.media_upload_form_btn');
-                let value = el.parent().parent().parent().find('input[type="hidden"]').val();
+        $(document).on('click',
+            '.media-upload-btn-wrapper .img-wrap > .rmv-span,.media-upload-btn-wrapper .img-wrap .img-inner-wrap > .rmv-span',
+            function(e) {
+                //imlement remove image icon
+                var el = $(this);
+                let parentClass = el.parent().attr('class');
+                if (parentClass === 'img-inner-wrap') {
+                    let button = el.parent().parent().parent().find('.media_upload_form_btn');
+                    let value = el.parent().parent().parent().find('input[type="hidden"]').val();
 
-                el.parent().hide();
-                //work on remove only the remove item
-                if(el.parent().parent().find('.img-inner-wrap').length > 1){
-                    let oldValue = el.parent().parent().parent().find('input[type="hidden"]').val('');
-                    let currentImageId = '';
-                    let newValue = '';
+                    el.parent().hide();
+                    //work on remove only the remove item
+                    if (el.parent().parent().find('.img-inner-wrap').length > 1) {
+                        let oldValue = el.parent().parent().parent().find('input[type="hidden"]').val('');
+                        let currentImageId = '';
+                        let newValue = '';
 
-                    if (button.data('mulitple') != undefined){
-                        let oldImageId = el.data('imageid');
-                        let allImageArry = value.split('|');
+                        if (button.data('mulitple') != undefined) {
+                            let oldImageId = el.data('imageid');
+                            let allImageArry = value.split('|');
 
-                        let result  = arrayRemove(allImageArry,oldImageId);
-                        allImageArry = result;
-                        el.parent().parent().parent().find('input[type="hidden"]').val(allImageArry.join("|"));
-                        el.parent().parent().parent().find('.media_upload_form_btn').attr('data-imgid',allImageArry.join("|"));
+                            let result = arrayRemove(allImageArry, oldImageId);
+                            allImageArry = result;
+                            el.parent().parent().parent().find('input[type="hidden"]').val(allImageArry.join(
+                                "|"));
+                            el.parent().parent().parent().find('.media_upload_form_btn').attr('data-imgid',
+                                allImageArry.join("|"));
+                        }
+
+                    } else {
+                        el.parent().parent().parent().find('input[type="hidden"]').val('');
+                        el.parent().parent().parent().find('.media_upload_form_btn').attr('data-imgid', '');
                     }
 
-                }else {
+                } else {
+                    el.parent().parent().find('.attachment-preview').html('');
                     el.parent().parent().parent().find('input[type="hidden"]').val('');
-                    el.parent().parent().parent().find('.media_upload_form_btn').attr('data-imgid','');
+                    el.parent().parent().parent().find('.media_upload_form_btn').attr('data-imgid', '');
                 }
+                //check if this coming from -img-inner-wrap or not
 
-            }else {
-                el.parent().parent().find('.attachment-preview').html('');
-                el.parent().parent().parent().find('input[type="hidden"]').val('');
-                el.parent().parent().parent().find('.media_upload_form_btn').attr('data-imgid','');
-            }
-            //check if this coming from -img-inner-wrap or not
+                el.hide();
+            });
 
-            el.hide();
-        });
+
+
+
+        console.log("i", uploadUrl)
 
         function loadAllImages() {
-            var selectedImage = $('#load_all_media_images').attr('data-selectedimage');
+            const $trigger = $('#load_all_media_images');
+            const selectedImage = $trigger.data('selectedimage');
+            // const type = $trigger.data('type');
 
+            // const url = `/${type}/upload/media/file/all`;
+            const type = document.getElementById('mediaType').value;
+            const routes = {
+                admin: @json(route('admin.upload.media.file.all')),
+                web: @json(route('web.upload.media.file.all')),
+                // add more if needed
+            };
+
+            const uploadUrl = routes[type] ?? routes['admin']; // fallback to admin
+
+            console.log('Loading images for type:', uploadUrl);
             $.ajax({
                 type: "POST",
-                url: "{{route($type.'.upload.media.file.all')}}",
+                url: "{{ route($type . '.upload.media.file.all') }}",
                 data: {
-                    _token: "{{csrf_token()}}",
-                    'selected' : selectedImage
+                    _token: "{{ csrf_token() }}",
+                    'selected': selectedImage
                 },
-                success: function (data) {
+                success: function(data) {
                     $('.media-uploader-image-list').html('');
-                    $.each(data,function (index,value) {
+                    $.each(data, function(index, value) {
 
-                        if($('.media-uploader-image-list li[data-imgid="'+value.image_id+'"]').length < 1){
-                            $('.media-uploader-image-list').append('<li data-date="'+value.upload_at+'" data-imgid="'+value.image_id+'" data-imgsrc="'+value.img_url+'" data-size="'+value.size+'" data-dimension="'+value.dimensions+'" data-title="'+value.title+'" data-alt="'+value.alt+'">\n' +
-                            '<div class="attachment-preview">\n' +
-                            '<div class="thumbnail">\n' +
-                            '<div class="centered">\n' +
-                            '<img src="'+value.img_url+'" alt="">\n' +
-                            '</div>\n' +
-                            '</div>\n' +
-                            '</div>\n' +
-                            '</li>');
+                        if ($('.media-uploader-image-list li[data-imgid="' + value.image_id +
+                                '"]').length < 1) {
+                            $('.media-uploader-image-list').append('<li data-date="' + value
+                                .upload_at + '" data-imgid="' + value.image_id +
+                                '" data-imgsrc="' + value.img_url + '" data-size="' + value
+                                .size + '" data-dimension="' + value.dimensions +
+                                '" data-title="' + value.title + '" data-alt="' + value
+                                .alt + '">\n' +
+                                '<div class="attachment-preview">\n' +
+                                '<div class="thumbnail">\n' +
+                                '<div class="centered">\n' +
+                                '<img src="' + value.img_url + '" alt="">\n' +
+                                '</div>\n' +
+                                '</div>\n' +
+                                '</div>\n' +
+                                '</li>');
                         }
 
                     });
@@ -264,7 +314,7 @@ $spinner_icon =  $type === 'admin' ? 'fas fa-spinner fa-spin' : 'fa-spin las la-
                     selectOldImage();
                     $('#loadmorewrap button').show();
                 },
-                error: function (error) {
+                error: function(error) {
 
                 }
             });
@@ -284,57 +334,66 @@ $spinner_icon =  $type === 'admin' ? 'fas fa-spinner fa-spin' : 'fa-spin las la-
          * Select preveiously selected image
          * @since 2.2
          * */
-        function selectOldImage(){
+        function selectOldImage() {
             var imageId = mainUploadBtn.prev('input').val();
             var matches = imageId.match(/([|])/g);
-            if(matches != null){
+            if (matches != null) {
                 var imgArr = imageId.split('|');
-                var filtered = imgArr.filter(function (el) {
+                var filtered = imgArr.filter(function(el) {
                     return el != "";
                 });
-                $.each(filtered,function(index,value){
-                    $('.media-uploader-image-list li[data-imgid="'+value+'"]').trigger('click');
+                $.each(filtered, function(index, value) {
+                    $('.media-uploader-image-list li[data-imgid="' + value + '"]').trigger('click');
                 });
-            }else{
-                $('.media-uploader-image-list li[data-imgid="'+imageId+'"]').trigger('click').siblings().removeClass('selected');
+            } else {
+                $('.media-uploader-image-list li[data-imgid="' + imageId + '"]').trigger('click').siblings()
+                    .removeClass('selected');
             }
         }
 
 
 
         /* loadmore image  */
-        $(document).on('click','#loadmorewrap',function (){
+        $(document).on('click', '#loadmorewrap', function() {
             var mediaImageWrapper = $('#media_library');
             var skipp = mediaImageWrapper.find('ul.media-uploader-image-list li').length - 1;
-            $('#loadmorewrap button').append(' <i class="{{$spinner_icon}}"></i>'); //la spinner
+            $('#loadmorewrap button').append(' <i class="{{ $spinner_icon }}"></i>'); //la spinner
             $.ajax({
                 type: "POST",
-                url: "{{route($type.'.upload.media.file.loadmore')}}",
+                url: "{{ route($type . '.upload.media.file.loadmore') }}",
                 data: {
-                    _token: "{{csrf_token()}}",
-                    'skip' : skipp
+                    _token: "{{ csrf_token() }}",
+                    'skip': skipp
                 },
-                success: function (data) {
-                    $.each(data,function (index,value) {
-                        if($('.media-uploader-image-list li[data-imgid="'+value.image_id+'"]').length < 1){
+                success: function(data) {
+                    $.each(data, function(index, value) {
+                        if ($('.media-uploader-image-list li[data-imgid="' + value
+                                .image_id + '"]').length < 1) {
 
-                            mediaImageWrapper.find('.media-uploader-image-list').append('<li data-date="'+value.upload_at+'" data-imgid="'+value.image_id+'" data-imgsrc="'+value.img_url+'" data-size="'+value.size+'" data-dimension="'+value.dimensions+'" data-title="'+value.title+'" data-alt="'+value.alt+'">\n' +
+                            mediaImageWrapper.find('.media-uploader-image-list').append(
+                                '<li data-date="' + value.upload_at +
+                                '" data-imgid="' + value.image_id +
+                                '" data-imgsrc="' + value.img_url +
+                                '" data-size="' + value.size +
+                                '" data-dimension="' + value.dimensions +
+                                '" data-title="' + value.title + '" data-alt="' +
+                                value.alt + '">\n' +
                                 '<div class="attachment-preview">\n' +
                                 '<div class="thumbnail">\n' +
                                 '<div class="centered">\n' +
-                                '<img src="'+value.img_url+'" alt="">\n' +
+                                '<img src="' + value.img_url + '" alt="">\n' +
                                 '</div>\n' +
                                 '</div>\n' +
                                 '</div>\n' +
                                 '</li>');
                         }
                     });
-                    if(data == ''){
+                    if (data == '') {
                         $('#loadmorewrap button').hide();
                     }
                     $('#loadmorewrap button i').remove();
                 },
-                error: function (error) {
+                error: function(error) {
 
                 }
             });

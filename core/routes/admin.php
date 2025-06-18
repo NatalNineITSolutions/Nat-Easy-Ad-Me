@@ -148,6 +148,13 @@ Route::middleware(['auth','setlang'])->group(function () {
             Route::get('/add-product', 'addProduct')->name('admin.products.add')->permission('product-add');
             Route::post('/add-product', 'storeProduct')->name('admin.products.store')->permission('product-add');
 
+            Route::get('/edit-product/{id}', 'editProduct')->name('admin.products.edit')->permission('product-edit');
+
+            Route::put('/update-product/{id}', 'updateProduct')->name('admin.products.update')->permission('product-edit');
+
+            Route::delete('/delete-product/{id}','destroy')->name('admin.products.destroy')
+                ->permission('product-delete');
+
             // Category
             Route::get('/categories', 'categoryIndex')->name('admin.products.category.index')->permission('product-category-view');
             Route::get('/add-category', 'addCategory')->name('admin.products.category.add')->permission('product-category-add');

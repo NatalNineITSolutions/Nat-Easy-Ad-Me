@@ -32,7 +32,13 @@
                                                     @forelse($products as $product)
                                                         <div class="col-md-4 col-lg-3 mb-4">
                                                             <div class="card h-100 border-0" style="border: 1px solid #e5e7eb;">
-                                                                <img src="{{ asset('uploads/products/' . $product->image) }}" class="card-img-top" alt="{{ $product->name }}" style="height: 200px; object-fit: cover;">
+                                                                @php
+                                                                    $imgPath = $product->imageFile->path ?? 'no-image.png';
+                                                                @endphp
+                                                                <img src="{{ asset('assets/uploads/media-uploader/' . $imgPath) }}"
+                                                                class="card-img-top"
+                                                                alt="{{ $product->name }}"
+                                                                style="height: 200px; object-fit: contain;">
                                                                 <div class="card-body d-flex flex-column">
                                                                     <h5 class="card-title">{{ $product->name }}</h5>
                                                                     <p class="card-text text-muted mb-1">₹{{ $product->price }}</p>

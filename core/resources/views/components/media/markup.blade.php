@@ -96,8 +96,14 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="red-btn cmnBtn btn_5 btn_bg_blue radius-5 media_upload_modal_submit_btn"
-                    style="display: none">{{ __('Set Image') }}</button>
+                <button
+                type="button"
+                class="red-btn cmnBtn btn_5 btn_bg_blue radius-5 media_upload_modal_submit_btn"
+                data-bs-dismiss="modal"
+                style="display: none"
+                >
+                {{ __('Set Image') }}
+                </button>
             </div>
         </div>
     </div>

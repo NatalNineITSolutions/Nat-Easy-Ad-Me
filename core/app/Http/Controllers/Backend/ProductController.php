@@ -8,12 +8,13 @@ use App\Models\ProductCategory;
 use App\Models\Product;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\RedirectResponse;
 
 class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
+        $products = Product::with('imageFile')->get();
         return view('backend.pages.products.product-index', compact('products'));
     }
 
@@ -23,50 +24,6 @@ class ProductController extends Controller
         return view('backend.pages.products.add-product', compact('categories'));
     }
 
-    // public function storeProduct(Request $request)
-    // {
-    //     // 1) Validate all fields, including the hidden “image” input
-    //     $data = $request->validate([
-    //         'name'             => 'required|string|max:255',
-    //         'price'            => 'required|numeric|min:0',
-    //         'distributor_price'=> 'required|numeric|min:0',
-    //         'bv_points'        => 'nullable|integer|min:0',
-    //         'stock'            => 'required|integer|min:0',
-    //         'weight'           => 'nullable|numeric|min:0',
-    //         'gst'              => 'nullable|numeric|min:0|max:100',
-    //         'category'         => 'required|exists:product_categories,id',
-    //         'description'      => 'nullable|string',
-    //         'featured_image'   => 'nullable|integer',   
-    //         'image'            => 'nullable|string',    
-    //     ]);
-
-    //     // 2) Create the product itself
-    //     $product = Product::create([
-    //         'name'              => $data['name'],
-    //         'price'             => $data['price'],
-    //         'distributor_price' => $data['distributor_price'],
-    //         'bv_points'         => $data['bv_points'] ?? 0,
-    //         'stock'             => $data['stock'],
-    //         'weight'            => $data['weight'] ?? 0,
-    //         'gst'               => $data['gst'] ?? 0,
-    //         'category_id'       => $data['category'],
-    //         'description'       => $data['description'] ?? null,
-    //         'image'             => $data['image'] ?? null,
-    //     ]);
-
-    //     // 3) Attach featured image ID in its own relation if desired
-    //     if (!empty($data['featured_image'])) {
-    //         $product->attachMedia($data['featured_image'], 'featured');
-    //     }
-
-    //     // 4) (Optional) If you still have gallery[] file inputs, handle them here…
-
-    //     return redirect()
-    //         ->route('admin.products.add')
-    //         ->with('success', 'Product created successfully!');
-    // }
-
-    
     
     public function storeProduct(Request $request)
     {
@@ -81,7 +38,7 @@ class ProductController extends Controller
             'stock'             => 'required|integer',
             'weight'            => 'nullable|numeric',
             'gst'               => 'nullable|numeric',
-            'category'          => 'required|exists:categories,id',
+            'category_id' => 'required|integer|exists:product_categories,id',
             'description'       => 'nullable|string',
             'image'             => 'nullable|string', // could be an ID or path
         ]);
@@ -107,7 +64,7 @@ class ProductController extends Controller
             'stock'             => $request->stock,
             'weight'            => $request->weight ?? 0,
             'gst'               => $request->gst ?? 0,
-            'category_id'       => $request->category,
+            'category_id' => $request->category_id,
             'description'       => $request->description,
             'image'             => $image,
         ]);
@@ -115,13 +72,64 @@ class ProductController extends Controller
         Log::info('Product Created:', $product->toArray());
 
         // ✅ Return JSON for AJAX success (Dropzone style)
-        return response()->json([
-            'success' => true,
-            'redirect' => route('admin.products.index'),
-            'message' => 'Product saved successfully!',
-        ]);
+        return redirect()->route('admin.products.index')->with('message', 'Product saved successfully!');
     }
-    
+
+    public function editProduct($id)
+    {
+        $product    = Product::findOrFail($id);
+        $categories = ProductCategory::all();
+        return view('backend.pages.products.add-product', compact('product','categories'));
+    }
+
+    public function updateProduct(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'name'              => 'required|string|max:255',
+            'price'             => 'required|numeric',
+            'distributor_price' => 'required|numeric',
+            'bv_points'         => 'nullable|numeric',
+            'stock'             => 'required|integer',
+            'weight'            => 'nullable|numeric',
+            'gst'               => 'nullable|numeric',
+            'category_id'       => 'required|integer|exists:product_categories,id',
+            'description'       => 'nullable|string',
+            'image'             => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $product->update([
+            'name'              => $request->name,
+            'price'             => $request->price,
+            'distributor_price' => $request->distributor_price,
+            'bv_points'         => $request->bv_points ?? 0,
+            'stock'             => $request->stock,
+            'weight'            => $request->weight ?? 0,
+            'gst'               => $request->gst ?? 0,
+            'category_id'       => $request->category_id,
+            'description'       => $request->description,
+            'image'             => $request->image,
+        ]);
+
+        return redirect()->route('admin.products.index')
+                        ->with('message','Product updated successfully!');
+    }
+
+    public function destroy(int $id): RedirectResponse
+    {
+        $product = Product::findOrFail($id);
+        $product->delete();
+
+        return redirect()
+            ->route('admin.products.index')
+            ->with('success', 'Product deleted successfully.');
+    }
+
     // Product Category
     public function categoryIndex()
     {

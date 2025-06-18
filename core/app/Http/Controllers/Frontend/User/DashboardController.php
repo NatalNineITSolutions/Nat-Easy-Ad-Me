@@ -870,4 +870,28 @@ class DashboardController extends Controller
         return view('frontend.user.all-products', compact('products'));
     }
 
+    public function productBuyForm($id)
+    {
+        $product = Product::with('category', 'imageFile')->findOrFail($id);
+        $countries = Country::all();
+
+        return view('frontend.user.product-buy', compact('product', 'countries'));
+    }
+
+    public function getStatesByCountry(Request $request)
+    {
+        $request->validate([
+            'country_id' => 'required|integer|exists:countries,id',
+        ]);
+
+        // Assuming you have a State model related to Country
+        $states = State::where('country_id', $request->country_id)
+                                    ->select('id', 'state') // match keys you use in JS
+                                    ->orderBy('state')
+                                    ->get();
+
+        return response()->json($states);
+    }
+
+
 }

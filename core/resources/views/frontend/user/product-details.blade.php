@@ -66,8 +66,14 @@
         <div class="product-detail-container">
             <!-- Product Image -->
             <div class="product-detail-image">
-                <img src="{{ asset('uploads/products/' . $product->image) }}" alt="{{ $product->name }}">
-            </div>
+                @php
+                    $imgPath = $product->imageFile->path ?? 'no-image.png';
+                @endphp
+                <img src="{{ asset('assets/uploads/media-uploader/' . $imgPath) }}"
+                class="card-img-top"
+                alt="{{ $product->name }}"
+                style="object-fit: contain;">
+            </div> 
 
             <!-- Product Info -->
             <div class="product-detail-info">
@@ -89,7 +95,6 @@
                     <!-- Filled dynamically -->
                 </div>
 
-
                 <div class="quantity-selector mt-2 mb-3">
                     <label for="quantity" class="form-label fw-bold">Quantity:</label>
                     <div class="d-flex align-items-center gap-2">
@@ -103,7 +108,7 @@
                 </div>
 
                 <div class="mb-4">
-                    <a href="#" class="btn btn-danger px-4 py-2">
+                    <a href="{{ route('user.product.buy', $product->id) }}" class="btn btn-danger px-4 py-2">
                         Buy Now
                     </a>
                 </div>

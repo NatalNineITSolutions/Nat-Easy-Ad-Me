@@ -92,6 +92,11 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
                 Route::get('/products', 'productSlider')->name('products');
                 Route::get('/product-details/{id}', 'productDetails')->name('product.details');
                 Route::get('/all-products', 'allProducts')->name('all.products');
+
+                Route::get('/product-buy/{id}', 'productBuyForm')->name('product.buy');
+                Route::post('/get-states', 'getStatesByCountry')
+                ->name('products.get.states');
+
             });
         });
 

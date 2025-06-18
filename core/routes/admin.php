@@ -27,6 +27,7 @@ use App\Http\Controllers\Backend\PageBuilderController;
 use App\Http\Controllers\Backend\PagesController;
 use App\Http\Controllers\Backend\PageSettingsController;
 use App\Http\Controllers\Backend\MapSettings;
+use App\Http\Controllers\Backend\ShippingController;
 
 
 Route::middleware(['auth','setlang'])->group(function () {
@@ -164,6 +165,42 @@ Route::middleware(['auth','setlang'])->group(function () {
             Route::delete('/delete-category/{id}', 'deleteCategory')->name('admin.products.category.delete')->permission('product-category-delete');
         });
     });
+
+    // Shipping manage
+    Route::group(['prefix' => 'shipping'], function () {
+        Route::controller(ShippingController::class)->group(function () {
+            // Shipping Zone listing
+            Route::get('/zones', 'shippingZones')->name('admin.shipping.zones')->permission('shipping-view');
+            
+            Route::get('/add-zone', 'addZone')->name('admin.shipping.add')->permission('shipping-add');
+            
+            Route::post('/get-states', 'getStates')->name('admin.shipping.get.states');
+
+            Route::post('/store-zone', 'storeZone')->name('admin.shipping.store')->permission('shipping-add');
+
+            Route::get('/edit-zone/{id}', 'editZone')->name('admin.shipping.edit')->permission('shipping-edit');
+
+            Route::post('/update-zone/{id}', 'updateZone')->name('admin.shipping.update')->permission('shipping-edit');
+
+            Route::post('/delete-zone/{id}', 'deleteZone')->name('admin.shipping.delete')->permission('shipping-delete');
+
+            // Delivery charges
+            Route::get('/delivery-charge', 'deliveryCharge')->name('admin.shipping.delivery.charge')->permission('shipping-view');
+
+            Route::get('/add-delivery-charge', 'addDeliveryCharge')->name('admin.shipping.add.delivery.charge')->permission('shipping-add');
+
+            Route::post('/store-delivery-charge', 'storeDeliveryCharge')->name('admin.shipping.store.delivery.charge')->permission('shipping-add');
+
+            Route::get('/edit-delivery-charge/{id}', 'editDeliveryCharge')->name('admin.shipping.edit.delivery.charge')->permission('shipping-edit');
+
+            Route::put('/update-delivery-charge/{id}', 'updateDeliveryCharge')->name('admin.shipping.update.delivery.charge')->permission('shipping-edit');
+
+            // Delete delivery charge
+            Route::delete('/delete-delivery-charge/{id}', 'deleteDeliveryCharge')->name('admin.shipping.delete.delivery.charge')->permission('shipping-delete');
+
+        });
+    });
+
 
     // General Settings
     Route::get('/dark-mode-toggle', 'AdminDashboardController@dark_mode_toggle')->name('admin.dark.mode.toggle');

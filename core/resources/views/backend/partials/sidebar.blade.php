@@ -82,6 +82,29 @@
                     </ul>
                 </li>
 
+                {{-- Shipping Manage --}}
+                <li class="dashboard__bottom__list__item has-children @if (request()->is('admin/shipping*')) active open show @endif">
+                    <a href="javascript:void(0)"> <i class="las la-truck"></i> {{ __('Shipping Manage') }} </a>
+                    <ul class="submenu">
+                        <li class="dashboard__bottom__list__item @if (request()->is('admin/shipping/zones')) selected @endif">
+                            <a href="{{ route('admin.shipping.zones') }}"> {{ __('Shipping Zone') }} </a>
+                        </li>
+                        <li class="dashboard__bottom__list__item @if (request()->is('admin/shipping/delivery-charge')) selected @endif">
+                            <a href="{{ route('admin.shipping.delivery.charge') }}"> {{ __('Delivery Charges') }} </a>
+                        </li>
+                    </ul>
+                </li>
+
+                {{-- Order Manage --}}
+                <li class="dashboard__bottom__list__item has-children @if (request()->is('admin/orders*')) active open show @endif">
+                    <a href="javascript:void(0)"> <i class="las la-shopping-basket"></i> {{ __('Order Manage') }} </a>
+                    <ul class="submenu">
+                        <li class="dashboard__bottom__list__item @if (request()->is('admin/orders')) selected @endif">
+                            <a href="#"> {{ __('All Orders') }} </a>
+                        </li>
+                    </ul>
+                </li>
+
                 {{-- Matrimony manage --}}
                 <li class="dashboard__bottom__list__item has-children @if (request()->is('admin/matrimony/*')) active open show @endif">
                     <a href="javascript:void(0)"> <i class="las la-th-list"></i> {{ __('Matrimony Manage') }} </a>

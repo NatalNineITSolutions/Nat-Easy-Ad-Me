@@ -108,7 +108,8 @@
                 </div>
 
                 <div class="mb-4">
-                    <a href="{{ route('user.product.buy', $product->id) }}" class="btn btn-danger px-4 py-2">
+                    <a href="{{ route('user.product.buy', $product->id) }}?quantity=1" 
+                    class="btn btn-danger px-4 py-2" id="buyNowBtn">
                         Buy Now
                     </a>
                 </div>
@@ -120,41 +121,47 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const decreaseBtn = document.getElementById("decreaseQty");
-        const increaseBtn = document.getElementById("increaseQty");
-        const quantityInput = document.getElementById("quantity");
-        const priceDisplay = document.getElementById("totalPrice");
-        const gstDisplay = document.getElementById("gstAmount");
+    const decreaseBtn = document.getElementById("decreaseQty");
+    const increaseBtn = document.getElementById("increaseQty");
+    const quantityInput = document.getElementById("quantity");
+    const priceDisplay = document.getElementById("totalPrice");
+    const gstDisplay = document.getElementById("gstAmount");
+    const buyNowBtn = document.getElementById("buyNowBtn");
 
-        // Set base values from PHP using data attributes
-        const distributorPrice = parseFloat({{ $distributorPrice }});
-        const gstPercent = parseFloat({{ $gstPercent }});
+    // Set base values from PHP using data attributes
+    const distributorPrice = parseFloat({{ $distributorPrice }});
+    const gstPercent = parseFloat({{ $gstPercent }});
 
-        function updatePrice() {
-            const qty = parseInt(quantityInput.value);
-            const subtotal = distributorPrice * qty;
-            const gst = (subtotal * gstPercent) / 100;
-            const total = subtotal + gst;
+    function updatePriceAndLink() {
+        const qty = parseInt(quantityInput.value);
+        const subtotal = distributorPrice * qty;
+        const gst = (subtotal * gstPercent) / 100;
+        const total = subtotal + gst;
 
-            gstDisplay.textContent = `GST ( ${gstPercent}% ): ₹${gst.toFixed(2)}`;
-            priceDisplay.textContent = `Total: ₹${total.toFixed(2)}`;
+        // Update price display
+        gstDisplay.textContent = `GST ( ${gstPercent}% ): ₹${gst.toFixed(2)}`;
+        priceDisplay.textContent = `Total: ₹${total.toFixed(2)}`;
+        
+        // Update Buy Now link with current quantity
+        buyNowBtn.href = `{{ route('user.product.buy', $product->id) }}?quantity=${qty}`;
+    }
+
+    // Quantity button handlers
+    decreaseBtn.addEventListener("click", function () {
+        let value = parseInt(quantityInput.value);
+        if (value > 1) {
+            quantityInput.value = value - 1;
+            updatePriceAndLink();
         }
-
-        decreaseBtn.addEventListener("click", function () {
-            let value = parseInt(quantityInput.value);
-            if (value > 1) {
-                quantityInput.value = value - 1;
-                updatePrice();
-            }
-        });
-
-        increaseBtn.addEventListener("click", function () {
-            let value = parseInt(quantityInput.value);
-            quantityInput.value = value + 1;
-            updatePrice();
-        });
-
-        // Initial update on load
-        updatePrice();
     });
+
+    increaseBtn.addEventListener("click", function () {
+        let value = parseInt(quantityInput.value);
+        quantityInput.value = value + 1;
+        updatePriceAndLink();
+    });
+
+    // Initialize
+    updatePriceAndLink();
+});
 </script>

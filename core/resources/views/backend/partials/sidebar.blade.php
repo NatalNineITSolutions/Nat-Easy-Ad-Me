@@ -97,10 +97,12 @@
 
                 {{-- Order Manage --}}
                 <li class="dashboard__bottom__list__item has-children @if (request()->is('admin/orders*')) active open show @endif">
-                    <a href="javascript:void(0)"> <i class="las la-shopping-basket"></i> {{ __('Order Manage') }} </a>
+                    <a href="javascript:void(0)"> 
+                        <i class="las la-shopping-basket"></i> {{ __('Order Manage') }} 
+                    </a>
                     <ul class="submenu">
-                        <li class="dashboard__bottom__list__item @if (request()->is('admin/orders')) selected @endif">
-                            <a href="#"> {{ __('All Orders') }} </a>
+                        <li class="dashboard__bottom__list__item @if (request()->is('admin/orders/all')) selected @endif">
+                            <a href="{{ route('admin.orders.all') }}"> {{ __('All Orders') }} </a>
                         </li>
                     </ul>
                 </li>

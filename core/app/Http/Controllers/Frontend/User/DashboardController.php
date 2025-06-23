@@ -25,6 +25,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Modules\Membership\app\Models\UserMembership;
 use Illuminate\Support\Facades\DB;
 use App\Models\Product;
+use App\Models\DeliveryCharge;
+use App\Models\OrderDetail;
 
 class DashboardController extends Controller
 {
@@ -874,23 +876,69 @@ class DashboardController extends Controller
     {
         $product = Product::with('category', 'imageFile')->findOrFail($id);
         $countries = Country::all();
+        $deliveryCharges = DeliveryCharge::with('zone')->get();
+        $quantity = request()->query('quantity', 1);
 
-        return view('frontend.user.product-buy', compact('product', 'countries'));
+        return view('frontend.user.product-buy', compact('product', 'countries', 'quantity', 'deliveryCharges'));
     }
 
-    public function getStatesByCountry(Request $request)
+    public function userGetStates(Request $request)
+    {
+        $states = State::where('country_id', $request->country_id)->get();
+        return response()->json($states);
+    }
+
+    public function userGetCities(Request $request)
+    {
+        $request->validate(['state_id' => 'required|integer']);
+        $cities = City::where('state_id', $request->state_id)->get(['id', 'city']);
+        return response()->json($cities);
+    }
+
+    public function storeOrder(Request $request)
     {
         $request->validate([
-            'country_id' => 'required|integer|exists:countries,id',
+            'product_id' => 'required',
+            'product_quantity' => 'required|integer|min:1',
+            'product_total_price' => 'required|numeric',
+            'total_delivery_charge' => 'nullable|numeric',
+            'grand_total' => 'required|numeric',
+            'name' => 'required|string|max:191',
+            'email' => 'required|email',
+            'phone_number' => 'required|digits:10',
+            'address' => 'required|string',
+            'country_id' => 'required|integer',
+            'state_id' => 'required|integer',
+            'city_id' => 'required|integer',
+            'transaction_id' => 'nullable|string',
         ]);
 
-        // Assuming you have a State model related to Country
-        $states = State::where('country_id', $request->country_id)
-                                    ->select('id', 'state') // match keys you use in JS
-                                    ->orderBy('state')
-                                    ->get();
+        $order = OrderDetail::create([
+            'user_id' => auth()->id(),
+            'product_id' => $request->product_id,
+            'product_quantity' => $request->product_quantity,
+            'product_total_price' => $request->product_total_price,
+            'total_delivery_charge' => $request->total_delivery_charge ?? 0,
+            'grand_total' => $request->grand_total,
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone_number' => $request->phone_number,
+            'address' => $request->address,
+            'country_id' => $request->country_id,
+            'state_id' => $request->state_id,
+            'city_id' => $request->city_id,
+            'order_status' => 'pending',
+            'is_paid' => $request->is_paid ? 1 : 0,
+            'transaction_id' => $request->transaction_id,
+        ]);
 
-        return response()->json($states);
+        return redirect()->route('user.products')->with('success', 'Order placed successfully!');
+    }
+
+    public function orderHistory()
+    {
+        $orders = OrderDetail::where('user_id', auth()->id())->latest()->get();
+        return view('frontend.user.order-history', compact('orders'));
     }
 
 

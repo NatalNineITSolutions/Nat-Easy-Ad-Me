@@ -36,6 +36,18 @@
         <span class="ms-2">{{ __('Products') }}</span>
     </a>
 
+    <a href="{{ route('user.order.history') }}"
+    class="menu-item @if(request()->is('user/info/order-history')) active @endif">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 3v5h5"></path>
+            <path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"></path>
+            <path d="M12 7v5l4 2"></path>
+        </svg>
+        <span class="ms-2">{{ __('Order History') }}</span>
+    </a>
+
+
     <a href="{{ route('user.bv.history') }}"
         class="menu-item @if(request()->is('user/info/bv-history*')) active @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748B"

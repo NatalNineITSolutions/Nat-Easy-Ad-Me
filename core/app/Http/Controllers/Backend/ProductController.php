@@ -82,6 +82,7 @@ class ProductController extends Controller
         return view('backend.pages.products.add-product', compact('product','categories'));
     }
 
+    
     public function updateProduct(Request $request, $id)
     {
         $product = Product::findOrFail($id);
@@ -103,6 +104,9 @@ class ProductController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
+        // Safely handle image update - only update if new image is provided
+        $image = $request->filled('image') ? $request->input('image') : $product->image;
+
         $product->update([
             'name'              => $request->name,
             'price'             => $request->price,
@@ -113,12 +117,22 @@ class ProductController extends Controller
             'gst'               => $request->gst ?? 0,
             'category_id'       => $request->category_id,
             'description'       => $request->description,
-            'image'             => $request->image,
+            'image'             => $image, // Use the new image or keep the existing one
         ]);
 
         return redirect()->route('admin.products.index')
                         ->with('message','Product updated successfully!');
     }
+    
+    // public function destroy(int $id): RedirectResponse
+    // {
+    //     $product = Product::findOrFail($id);
+    //     $product->delete();
+
+    //     return redirect()
+    //         ->route('admin.products.index')
+    //         ->with('success', 'Product deleted successfully.');
+    // }
 
     public function destroy(int $id): RedirectResponse
     {
@@ -127,7 +141,7 @@ class ProductController extends Controller
 
         return redirect()
             ->route('admin.products.index')
-            ->with('success', 'Product deleted successfully.');
+            ->with('message', 'Product deleted successfully.'); 
     }
 
     // Product Category

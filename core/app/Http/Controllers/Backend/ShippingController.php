@@ -98,11 +98,12 @@ class ShippingController extends Controller
     public function storeDeliveryCharge(Request $request)
     {
         $request->validate([
-            'zone_id' => 'required|exists:shipping_zones,id',
-            'weight_in_grams' => 'required|numeric|min:0',
-            'delivery_charge' => 'required|numeric|min:0',
-            'setting_type' => 'required|in:na,min_order',
-            'min_order' => 'nullable|numeric|min:0|required_if:setting_type,min_order',
+            'zone_id'                => 'required|exists:shipping_zones,id',
+            'weight_in_grams'        => 'required|numeric|min:0',
+            'delivery_charge'        => 'required|numeric|min:0',
+            'default_delivery_charge'=> 'required|numeric|min:0',
+            'setting_type'           => 'required|in:na,min_order',
+            'min_order'              => 'nullable|numeric|min:0|required_if:setting_type,min_order',
         ]);
 
         // Check if a delivery charge already exists for the selected zone
@@ -114,14 +115,15 @@ class ShippingController extends Controller
 
         // Create the new delivery charge
         DeliveryCharge::create([
-            'zone_id' => $request->zone_id,
-            'weight_in_grams' => $request->weight_in_grams,
-            'delivery_charge' => $request->delivery_charge,
-            'setting_type' => $request->setting_type,
-            'min_order' => $request->setting_type === 'min_order' ? $request->min_order : null,
+            'zone_id'                => $request->zone_id,
+            'weight_in_grams'        => $request->weight_in_grams,
+            'delivery_charge'        => $request->delivery_charge,
+            'default_delivery_charge'=> $request->default_delivery_charge,
+            'setting_type'           => $request->setting_type,
+            'min_order'              => $request->setting_type === 'min_order' ? $request->min_order : null,
         ]);
 
-        return redirect()->route('admin.shipping.delivery.charge')->with('success', 'Delivery charge added successfully.');
+        return redirect()->route('admin.shipping.delivery.charge')->with('success', 'Product created successfully');
     }
 
     public function editDeliveryCharge($id)
@@ -135,27 +137,26 @@ class ShippingController extends Controller
     public function updateDeliveryCharge(Request $request, $id)
     {
         $request->validate([
-            'zone_id'       => 'required|exists:shipping_zones,id',
-            'weight_in_grams' => 'required|numeric|min:0',
-            'delivery_charge' => 'required|numeric|min:0',
-            'setting_type'    => 'required|in:na,min_order',
-            'min_order'       => 'nullable|numeric|min:0|required_if:setting_type,min_order',
+            'zone_id'                => 'required|exists:shipping_zones,id',
+            'weight_in_grams'        => 'required|numeric|min:0',
+            'delivery_charge'        => 'required|numeric|min:0',
+            'default_delivery_charge'=> 'required|numeric|min:0',
+            'setting_type'           => 'required|in:na,min_order',
+            'min_order'              => 'nullable|numeric|min:0|required_if:setting_type,min_order',
         ]);
 
         $deliveryCharge = DeliveryCharge::findOrFail($id);
 
         $deliveryCharge->update([
-            'zone_id'          => $request->zone_id,
-            'weight_in_grams'  => $request->weight_in_grams,
-            'delivery_charge'  => $request->delivery_charge,
-            'setting_type'     => $request->setting_type,
-            'min_order'        => $request->setting_type === 'min_order'
-                                    ? $request->min_order
-                                    : null,
+            'zone_id'                => $request->zone_id,
+            'weight_in_grams'        => $request->weight_in_grams,
+            'delivery_charge'        => $request->delivery_charge,
+            'default_delivery_charge'=> $request->default_delivery_charge,
+            'setting_type'           => $request->setting_type,
+            'min_order'              => $request->setting_type === 'min_order' ? $request->min_order : null,
         ]);
 
-        return redirect()->route('admin.shipping.delivery.charge')
-        ->with('success', 'Delivery charge updated successfully.');
+        return redirect()->route('admin.shipping.delivery.charge')->with('success', 'Product updated successfully.');
     }
 
     public function deleteDeliveryCharge($id)

@@ -18,6 +18,13 @@
         </a>
     </div>
 
+     {{-- Success Message --}}
+    @if(session('message'))
+      <div class="alert alert-success mt-3">
+          {{ session('message') }}
+      </div>
+    @endif
+
     <table class="table table-bordered mt-25">
         <thead>
             <tr>

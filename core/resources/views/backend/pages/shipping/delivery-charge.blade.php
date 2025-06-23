@@ -11,6 +11,13 @@
         </a>
     </div>
 
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <div class="table-responsive">
         <table class="table table-bordered">
             <thead>
@@ -18,6 +25,7 @@
                     <th>#</th>
                     <th>{{ __('Zone') }}</th>
                     <th>{{ __('Weight (in grams)') }}</th>
+                    <th>{{ __('Default Delivery Charge') }}</th> {{-- ✅ New Column --}}
                     <th>{{ __('Setting type') }}</th>
                     <th>{{ __('Minimum Order Amount') }}</th>
                     <th>{{ __('Delivery charge') }}</th>
@@ -30,6 +38,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $charge->zone->zone_name ?? '-' }}</td>
                         <td>{{ $charge->weight_in_grams }}</td>
+                        <td>₹{{ number_format($charge->default_delivery_charge, 2) }}</td> {{-- ✅ New Column --}}
                         <td>{{ ucfirst(str_replace('_', ' ', $charge->setting_type)) }}</td>
                         <td>{{ $charge->min_order ? number_format($charge->min_order, 2) : __('N/A') }}</td>
                         <td>₹{{ number_format($charge->delivery_charge, 2) }}</td>
@@ -53,7 +62,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="text-center">
+                        <td colspan="8" class="text-center">
                             {{ __('No delivery charges found.') }}
                         </td>
                     </tr>

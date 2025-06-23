@@ -28,6 +28,7 @@ use App\Http\Controllers\Backend\PagesController;
 use App\Http\Controllers\Backend\PageSettingsController;
 use App\Http\Controllers\Backend\MapSettings;
 use App\Http\Controllers\Backend\ShippingController;
+use App\Http\Controllers\Backend\OrderController;
 
 
 Route::middleware(['auth','setlang'])->group(function () {
@@ -201,6 +202,15 @@ Route::middleware(['auth','setlang'])->group(function () {
         });
     });
 
+    Route::group(['prefix' => 'orders'], function () {
+        Route::controller(OrderController::class)->group(function () {
+
+            // Show All Orders (List)
+            Route::get('/all', 'allOrders')->name('admin.orders.all')->permission('order-view');
+            Route::put('/admin/orders/{id}/update-status', 'updateStatus')->name('admin.orders.update.status');
+
+        });
+    });
 
     // General Settings
     Route::get('/dark-mode-toggle', 'AdminDashboardController@dark_mode_toggle')->name('admin.dark.mode.toggle');

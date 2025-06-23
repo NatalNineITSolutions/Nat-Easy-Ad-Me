@@ -14,6 +14,7 @@ class DeliveryCharge extends Model
         'min_order',
         'delivery_charge',
         'weight_in_grams',
+        'default_delivery_charge',
         'setting_type',
     ];
 

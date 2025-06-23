@@ -49,6 +49,12 @@
         </div>
 
         <div class="mb-3">
+            <label class="form-label">{{ __('Default Delivery Charge (₹)') }}</label>
+            <input type="number" step="0.01" name="default_delivery_charge" class="form-control"
+            value="{{ old('default_delivery_charge', $deliveryCharge->default_delivery_charge ?? '') }}" required>
+        </div>
+
+        <div class="mb-3">
             <label class="form-label">{{ __('Setting') }}</label>
             <select name="setting_type" id="setting_type" class="form-control" required>
                 <option value="na" {{ (old('setting_type', $deliveryCharge->setting_type ?? '') === 'na') ? 'selected' : '' }}>{{ __('N/A') }}</option>

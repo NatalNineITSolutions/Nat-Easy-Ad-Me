@@ -27,6 +27,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Product;
 use App\Models\DeliveryCharge;
 use App\Models\OrderDetail;
+use App\Services\BVDistributionService;
+use App\Models\UserFlushBv;
 
 class DashboardController extends Controller
 {
@@ -895,10 +897,73 @@ class DashboardController extends Controller
         return response()->json($cities);
     }
 
+    // public function storeOrder(Request $request)
+    // {
+    //     $request->validate([
+    //         'product_id' => 'required|exists:products,id',
+    //         'product_quantity' => 'required|integer|min:1',
+    //         'product_total_price' => 'required|numeric',
+    //         'total_delivery_charge' => 'nullable|numeric',
+    //         'grand_total' => 'required|numeric',
+    //         'name' => 'required|string|max:191',
+    //         'email' => 'required|email',
+    //         'phone_number' => 'required|digits:10',
+    //         'address' => 'required|string',
+    //         'country_id' => 'required|integer',
+    //         'state_id' => 'required|integer',
+    //         'city_id' => 'required|integer',
+    //         'transaction_id' => 'nullable|string',
+    //     ]);
+
+    //     $user = Auth::user();
+    //     $product = Product::findOrFail($request->product_id);
+    //     $bvPoints = $product->bv_points * $request->product_quantity;
+
+    //     // 1. Create the order
+    //     $order = OrderDetail::create([
+    //         'user_id' => $user->id,
+    //         'product_id' => $product->id,
+    //         'product_quantity' => $request->product_quantity,
+    //         'product_total_price' => $request->product_total_price,
+    //         'total_delivery_charge' => $request->total_delivery_charge ?? 0,
+    //         'grand_total' => $request->grand_total,
+    //         'name' => $request->name,
+    //         'email' => $request->email,
+    //         'phone_number' => $request->phone_number,
+    //         'address' => $request->address,
+    //         'country_id' => $request->country_id,
+    //         'state_id' => $request->state_id,
+    //         'city_id' => $request->city_id,
+    //         'order_status' => 'pending',
+    //         'is_paid' => $request->is_paid ? 1 : 0,
+    //         'transaction_id' => $request->transaction_id,
+    //     ]);
+
+    //     // 2. Add BV to user's self_purchased_bv
+    //     $user->self_purchased_bv += $bvPoints;
+    //     $user->save();
+
+    //     // 3. Distribute BV to sponsor (parent)
+    //     if ($user->sponsor_id) {
+    //         $sponsor = User::find($user->sponsor_id);
+    //         if ($sponsor) {
+    //             $bvService = new BVDistributionService();
+    //             $bvService->distributeBVPoints(
+    //                 $user,                   // the current user
+    //                 $bvPoints,              // total BV to distribute
+    //                 $user->membership_id,   // membership_id used by UsersBV
+    //                 $user->id               // original user to prevent loops
+    //             );
+    //         }
+    //     }
+
+    //     return redirect()->route('user.products')->with('success', 'Order placed successfully!');
+    // }
+
     public function storeOrder(Request $request)
     {
         $request->validate([
-            'product_id' => 'required',
+            'product_id' => 'required|exists:products,id',
             'product_quantity' => 'required|integer|min:1',
             'product_total_price' => 'required|numeric',
             'total_delivery_charge' => 'nullable|numeric',
@@ -913,9 +978,14 @@ class DashboardController extends Controller
             'transaction_id' => 'nullable|string',
         ]);
 
+        $user = Auth::user();
+        $product = Product::findOrFail($request->product_id);
+        $bvPoints = $product->bv_points * $request->product_quantity;
+
+        // 1. Create the order
         $order = OrderDetail::create([
-            'user_id' => auth()->id(),
-            'product_id' => $request->product_id,
+            'user_id' => $user->id,
+            'product_id' => $product->id,
             'product_quantity' => $request->product_quantity,
             'product_total_price' => $request->product_total_price,
             'total_delivery_charge' => $request->total_delivery_charge ?? 0,
@@ -932,8 +1002,37 @@ class DashboardController extends Controller
             'transaction_id' => $request->transaction_id,
         ]);
 
+        // 2. Add BV to user's self_purchased_bv
+        $user->self_purchased_bv += $bvPoints;
+        $user->save();
+
+        // 2b. Record in users_bvs with type 'Self'
+        $bvRecord = UsersBV::create([
+            'user_id'       => $user->id,
+            'membership_id' => $user->membership_id,
+            'bv_points'     => $bvPoints,
+            'upgrade_time'  => Carbon::now(),
+            'type'          => 'Self-purchased',
+            'position'      => $user->position, // Important for flush logic
+        ]);
+
+        // 3. Distribute BV to sponsor (parent)
+        if ($user->sponsor_id) {
+            $sponsor = User::find($user->sponsor_id);
+            if ($sponsor) {
+                $bvService = new BVDistributionService();
+                $bvService->distributeBVPoints(
+                    $user,                   // the current user
+                    $bvPoints,              // total BV to distribute
+                    $user->membership_id,   // membership_id used by UsersBV
+                    $user->id               // original user to prevent loops
+                );
+            }
+        }
+
         return redirect()->route('user.products')->with('success', 'Order placed successfully!');
     }
+
 
     public function orderHistory()
     {

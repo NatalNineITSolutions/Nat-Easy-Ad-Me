@@ -41,7 +41,7 @@
                                                                 style="height: 200px; object-fit: contain;">
                                                                 <div class="card-body d-flex flex-column">
                                                                     <h5 class="card-title">{{ $product->name }}</h5>
-                                                                    <p class="card-text text-muted mb-1">₹{{ $product->price }}</p>
+                                                                    <p class="card-text text-muted mb-1">₹{{ $product->distributor_price }}</p>
                                                                     <a href="{{ route('user.product.details', $product->id) }}" class="btn btn-sm btn-primary mt-auto">View Details</a>
                                                                 </div>
                                                             </div>

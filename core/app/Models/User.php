@@ -79,7 +79,8 @@ class User extends Authenticatable
         'net_amount',
         'commission_given',
         'sponsor_commission_bv',
-        'self_commission_bv'
+        'self_commission_bv',
+        'cart_count',
     ];
 
     /**
@@ -301,4 +302,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserPayoutDetail::class)->where('status', 'payout_eligible');
     }
+
+    public function cartItems()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
 }

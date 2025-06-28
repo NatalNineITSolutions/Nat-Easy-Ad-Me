@@ -48,6 +48,16 @@
 
         <li class="single"><a href="{{ route('user.listing.favorite.all') }}" class="heart"><i
                     class="lar la-heart icon"></i></a></li>
+
+        <li class="single position-relative">
+            <a href="#" class="heart position-relative">
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count" style="font-size: 10px;">
+                    {{ $cart_count }}
+                </span>
+                <i class="las la-shopping-cart icon"></i>
+            </a>
+        </li>
+
         <li class="single userAccount"> 
             <x-frontend.user.user-profile-image />
             <div class="userAccount-wrapper">

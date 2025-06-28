@@ -80,6 +80,9 @@
                 <h2>{{ $product->name }}</h2>
                 <p class="description">{{ $product->description ?? 'No description available for this product.' }}</p>
                 <div><strong>Category:</strong> {{ $product->category->category ?? 'Uncategorized' }}</div>
+                <p class="card-text text-muted">
+                    <small>BV Points: {{ $product->bv_points ?? 0 }}</small>
+                </p>
 
                 @php
                     $gstPercent = $product->gst ?? 0;
@@ -88,12 +91,19 @@
                     $priceWithGst = $distributorPrice + $gstAmount;
                 @endphp
 
-                <div class="text-muted gst mt-4" id="gstAmount">
+                <div class="text-muted gst mt-3" id="gstAmount" style="font-size: 11px;">
                     <!-- Filled dynamically -->
                 </div>
-                <div class="price" id="totalPrice">
-                    <!-- Filled dynamically -->
+
+                <div class="d-flex align-items-center gap-3">
+                    <div class="price mb-0" id="totalPrice" style="font-size: 20px;">
+                        <!-- Filled dynamically -->
+                    </div>
+                    <div class="text-muted" style="font-size: 14px;">
+                        MRP: <span style="text-decoration: line-through;">₹{{ number_format($product->price, 2) }}</span>
+                    </div>
                 </div>
+                
 
                 <div class="quantity-selector mt-2 mb-3">
                     <label for="quantity" class="form-label fw-bold">Quantity:</label>

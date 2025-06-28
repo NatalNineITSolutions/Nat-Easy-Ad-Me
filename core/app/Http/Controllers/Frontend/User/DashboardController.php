@@ -28,7 +28,7 @@ use App\Models\Product;
 use App\Models\DeliveryCharge;
 use App\Models\OrderDetail;
 use App\Services\BVDistributionService;
-use App\Models\UserFlushBv;
+use App\Models\Cart;
 
 class DashboardController extends Controller
 {
@@ -856,9 +856,21 @@ class DashboardController extends Controller
         return view('frontend.user.bv_history', compact('bvHistory'));
     }
 
+    // public function productSlider()
+    // {
+    //     $products = Product::latest()->paginate(10); 
+    //     return view('frontend.user.product-slider', compact('products'));
+    // }
+
     public function productSlider()
     {
-        $products = Product::latest()->paginate(10); // Show 10 products per page
+        $user = auth()->user();
+
+        if ($user->verified_status != 1) {
+            return view('frontend.user.product-slider')->with('notVerified', true);
+        }
+
+        $products = Product::latest()->paginate(10); 
         return view('frontend.user.product-slider', compact('products'));
     }
 
@@ -868,20 +880,46 @@ class DashboardController extends Controller
         return view('frontend.user.product-details', compact('product'));
     }
 
+    // public function allProducts()
+    // {
+    //     $products = Product::all(); 
+    //     return view('frontend.user.all-products', compact('products'));
+    // }
+
     public function allProducts()
     {
+        $user = auth()->user();
+
+        if ($user->verified_status != 1) {
+            return redirect()->route('user.account.settings')
+            ->with('warning', 'Please verify your identity to access all products.');
+        }
+
         $products = Product::all(); 
         return view('frontend.user.all-products', compact('products'));
     }
 
-    public function productBuyForm($id)
+    public function productBuyForm()
     {
-        $product = Product::with('category', 'imageFile')->findOrFail($id);
+        $user = auth()->user();
+
+        // Fetch all cart items with related product and image
+        $cartItems = Cart::with(['product.imageFile'])->where('user_id', $user->id)->get();
+
+        // If cart is empty, redirect back or show message
+        if ($cartItems->isEmpty()) {
+            return redirect()->back()->with('error', 'Your cart is empty.');
+        }
+
+        // Fetch all countries and delivery charges
         $countries = Country::all();
         $deliveryCharges = DeliveryCharge::with('zone')->get();
-        $quantity = request()->query('quantity', 1);
 
-        return view('frontend.user.product-buy', compact('product', 'countries', 'quantity', 'deliveryCharges'));
+        return view('frontend.user.product-buy', [
+            'cartItems' => $cartItems,
+            'countries' => $countries,
+            'deliveryCharges' => $deliveryCharges
+        ]);
     }
 
     public function userGetStates(Request $request)
@@ -896,69 +934,6 @@ class DashboardController extends Controller
         $cities = City::where('state_id', $request->state_id)->get(['id', 'city']);
         return response()->json($cities);
     }
-
-    // public function storeOrder(Request $request)
-    // {
-    //     $request->validate([
-    //         'product_id' => 'required|exists:products,id',
-    //         'product_quantity' => 'required|integer|min:1',
-    //         'product_total_price' => 'required|numeric',
-    //         'total_delivery_charge' => 'nullable|numeric',
-    //         'grand_total' => 'required|numeric',
-    //         'name' => 'required|string|max:191',
-    //         'email' => 'required|email',
-    //         'phone_number' => 'required|digits:10',
-    //         'address' => 'required|string',
-    //         'country_id' => 'required|integer',
-    //         'state_id' => 'required|integer',
-    //         'city_id' => 'required|integer',
-    //         'transaction_id' => 'nullable|string',
-    //     ]);
-
-    //     $user = Auth::user();
-    //     $product = Product::findOrFail($request->product_id);
-    //     $bvPoints = $product->bv_points * $request->product_quantity;
-
-    //     // 1. Create the order
-    //     $order = OrderDetail::create([
-    //         'user_id' => $user->id,
-    //         'product_id' => $product->id,
-    //         'product_quantity' => $request->product_quantity,
-    //         'product_total_price' => $request->product_total_price,
-    //         'total_delivery_charge' => $request->total_delivery_charge ?? 0,
-    //         'grand_total' => $request->grand_total,
-    //         'name' => $request->name,
-    //         'email' => $request->email,
-    //         'phone_number' => $request->phone_number,
-    //         'address' => $request->address,
-    //         'country_id' => $request->country_id,
-    //         'state_id' => $request->state_id,
-    //         'city_id' => $request->city_id,
-    //         'order_status' => 'pending',
-    //         'is_paid' => $request->is_paid ? 1 : 0,
-    //         'transaction_id' => $request->transaction_id,
-    //     ]);
-
-    //     // 2. Add BV to user's self_purchased_bv
-    //     $user->self_purchased_bv += $bvPoints;
-    //     $user->save();
-
-    //     // 3. Distribute BV to sponsor (parent)
-    //     if ($user->sponsor_id) {
-    //         $sponsor = User::find($user->sponsor_id);
-    //         if ($sponsor) {
-    //             $bvService = new BVDistributionService();
-    //             $bvService->distributeBVPoints(
-    //                 $user,                   // the current user
-    //                 $bvPoints,              // total BV to distribute
-    //                 $user->membership_id,   // membership_id used by UsersBV
-    //                 $user->id               // original user to prevent loops
-    //             );
-    //         }
-    //     }
-
-    //     return redirect()->route('user.products')->with('success', 'Order placed successfully!');
-    // }
 
     public function storeOrder(Request $request)
     {
@@ -1038,6 +1013,102 @@ class DashboardController extends Controller
     {
         $orders = OrderDetail::where('user_id', auth()->id())->latest()->get();
         return view('frontend.user.order-history', compact('orders'));
+    }
+
+    public function addToCart(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        $user = auth()->user();
+        $product = Product::findOrFail($request->product_id);
+
+        // Check if product already exists in cart
+        $existingCartItem = Cart::where('user_id', $user->id)
+            ->where('product_id', $product->id)
+            ->first();
+
+        if ($existingCartItem) {
+            return response()->json([
+                'status' => 'info',
+                'message' => 'Product is already in your cart'
+            ]);
+        }
+
+        $quantity = $request->quantity;
+        $weight = $product->weight * $quantity;
+        $price = $product->distributor_price;
+        $totalPrice = $price * $quantity;
+
+        $deliveryCharge = 0;
+
+        Cart::create([
+            'user_id' => $user->id,
+            'product_id' => $product->id,
+            'weight' => $weight,
+            'quantity' => $quantity,
+            'price' => $price,
+            'delivery_charges' => $deliveryCharge,
+            'grand_total' => $totalPrice + $deliveryCharge,
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Product added to cart',
+            'cart_count' => Cart::where('user_id', $user->id)->count()
+        ]);
+    }
+
+    public function updateCartQuantity(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer|exists:carts,id',
+            'action' => 'required|in:increase,decrease',
+        ]);
+
+        $cartItem = Cart::findOrFail($request->id);
+        $quantity = $cartItem->quantity;
+
+        if ($request->action === 'increase') {
+            $quantity++;
+        } elseif ($request->action === 'decrease' && $quantity > 1) {
+            $quantity--;
+        }
+
+        $cartItem->quantity = $quantity;
+        $cartItem->save();
+
+        return response()->json([
+            'success' => true,
+            'quantity' => $quantity
+        ]);
+    }
+
+    public function removeCartItem(Request $request)
+    {
+        $item = Cart::find($request->id);
+
+        if (!$item) {
+            return response()->json(['success' => false, 'message' => 'Item not found'], 404);
+        }
+
+        $item->delete();
+
+        return response()->json(['success' => true, 'message' => 'Item removed successfully'], 200);
+    }
+
+    public function checkProductInCart(Request $request)
+    {
+        $productId = $request->query('product_id');
+
+        $cart = session()->get('cart', []);
+
+        // Check if product is in cart
+        $inCart = isset($cart[$productId]);
+
+        return response()->json(['in_cart' => $inCart]);
     }
 
 

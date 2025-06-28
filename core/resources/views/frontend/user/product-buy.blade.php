@@ -47,8 +47,96 @@
 <div class="section">
     <div class="container buy-section"> 
         <div class="row">
+
+            <!-- Right: Product Summary -->
+            <div class="col-md-12">
+                <div class="right">
+                    <div class="mt-2">
+                        <h5 class="mb-3">{{ __('Order Summary') }}</h5>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm" id="order-summary-table">
+                                <thead class="table-light text-center">
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Product Name</th>
+                                        <th>BV Points</th>
+                                        <th>Weight</th>
+                                        <th>Price (1 qty)</th>
+                                        <th>Quantity</th>
+                                        <th>Delivery Charge</th> <!-- Individual delivery charge column -->
+                                        <th>Total Price</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-center">
+                                    @php
+                                        $grandTotal = 0;
+                                        $totalDelivery = 0;
+                                        $index = 1;
+                                    @endphp
+
+                                    @foreach($cartItems as $item)
+                                        @php
+                                            $product = $item->product;
+                                            $quantity = $item->quantity ?? 1;
+                                            $price = $product->distributor_price ?? 0;
+                                            $gst = $product->gst ?? 0;
+                                            $weight = $product->weight ?? 0;
+                                            $bv = $product->bv_points ?? 0;
+
+                                            $gstAmount = ($price * $gst) / 100;
+                                            $totalPerItem = $price + $gstAmount;
+                                            $totalWeight = $weight * $quantity;
+                                            $finalTotal = $totalPerItem * $quantity;
+                                            
+                                            // Initialize delivery charge for each product
+                                            $deliveryCharge = 0;
+                                            $grandTotal += $finalTotal;
+                                        @endphp
+                                        <tr data-product-id="{{ $product->id }}" data-weight="{{ $weight }}" data-quantity="{{ $quantity }}" data-price="{{ $totalPerItem }}">
+                                            <td>{{ $index++ }}</td>
+                                            <td>{{ $product->name }}</td>
+                                            <td>{{ $bv }}</td>
+                                            <td>
+                                                @if($weight > 0)
+                                                    {{ rtrim(rtrim(number_format($weight, 2, '.', ''), '0'), '.') }}kg × {{ $quantity }} =
+                                                    {{ rtrim(rtrim(number_format($totalWeight, 2, '.', ''), '0'), '.') }}kg
+                                                @else
+                                                    —
+                                                @endif
+                                            </td>
+                                            <td>₹{{ number_format($totalPerItem, 2) }}</td>
+                                            <td>
+                                                <div class="d-flex justify-content-center align-items-center">
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-circle me-1 update-qty-btn" data-action="decrease" data-id="{{ $item->id }}">−</button>
+                                                    <input type="text" class="form-control form-control-sm text-center px-1 qty-input" value="{{ $quantity }}" readonly style="width: 40px;" data-id="{{ $item->id }}">
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-circle ms-1 update-qty-btn" data-action="increase" data-id="{{ $item->id }}">+</button>
+                                                </div>
+                                            </td>
+                                            <td class="delivery-charge-cell">₹0.00</td> <!-- Will be updated via JavaScript -->
+                                            <td class="product-total-cell">₹{{ number_format($finalTotal, 2) }}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-danger remove-cart-item" data-id="{{ $item->id }}">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+
+                                    <tr class="fw-bold text-dark">
+                                        <td colspan="6" class="text-end">Subtotal:</td>
+                                        <td id="total-delivery-charge">₹0.00</td>
+                                        <td id="grand-total-amount">₹{{ number_format($grandTotal, 2) }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Left: Buy Form -->
-            <div class="col-md-6">
+            <div class="col-md-12 mt-3">
                 <div class="left">
                     <h3 class="mb-4">{{ __('Shipping Information') }}</h3>
                     <form action="#" method="POST">
@@ -57,29 +145,37 @@
                         <input type="hidden" name="quantity" value="{{ $quantity }}">
 
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Full Name <span class="text-danger">*</span></label>
                                     <input type="text" name="name" id="name" class="form-control" required>
                                 </div>
                             </div>  
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="email" class="form-label">{{ __('Email') }}<span class="text-danger">*</span></label>
                                     <input type="email" name="email" id="email" class="form-control" required>
                                 </div>
                             </div>
+
+                            <div class="col-md-4">
+                                <label for="phone" class="form-label">{{ __('Phone Number') }}<span class="text-danger">*</span></label>
+                                <input type="text" name="phone" id="phone" class="form-control" maxlength="10" pattern="\d{10}" required>
+                            </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">{{ __('Phone Number') }}<span class="text-danger">*</span></label>
-                            <input type="text" name="phone" id="phone" class="form-control" maxlength="10" pattern="\d{10}" required>
-                        </div>
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="address" class="form-label">{{ __('Address') }}<span class="text-danger">*</span></label>
+                                <textarea name="address" id="address" rows="3" class="form-control" required></textarea>
+                            </div>
 
-                        <div class="mb-3">
-                            <label for="address" class="form-label">{{ __('Address') }}<span class="text-danger">*</span></label>
-                            <textarea name="address" id="address" rows="3" class="form-control" required></textarea>
+                            <div class="mb-3 col-md-6">
+                                <label for="pincode" class="form-label">{{ __('Pincode') }}<span class="text-danger">*</span></label>
+                                <input type="text" name="pincode" id="pincode" class="form-control" maxlength="6" pattern="\d{6}" required>
+                            </div>
+
                         </div>
 
                         <div class="row mb-3">
@@ -111,10 +207,7 @@
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="pincode" class="form-label">{{ __('Pincode') }}<span class="text-danger">*</span></label>
-                            <input type="text" name="pincode" id="pincode" class="form-control" maxlength="6" pattern="\d{6}" required>
-                        </div>
+                        
 
                         <button type="button" id="placeOrderBtn" class="btn btn-primary px-4">
                             {{ __('Place Order') }}
@@ -123,57 +216,6 @@
                 </div>
             </div>
 
-            <!-- Right: Product Summary -->
-            <div class="col-md-6 right">
-                <h3 class="mb-4">{{ __('Product Summary') }}</h3>
-                @php
-                    $imgPath = $product->imageFile->path ?? 'no-image.png';
-                    $quantity = request()->query('quantity', 1); // Get from query parameter
-                    $gst = $product->gst ?? 0;
-                    $price = $product->distributor_price ?? 0;
-                    $weight = $product->weight ?? 0;
-                    $totalWeight = $weight * $quantity;
-                    $gstAmount = ($price * $gst) / 100;
-                    $totalPerItem = $price + $gstAmount;
-                    $finalTotal = $totalPerItem * $quantity;
-                @endphp
-
-                <div class="d-flex align-items-center gap-3">
-                    <img src="{{ asset('assets/uploads/media-uploader/' . $imgPath) }}"
-                        alt="{{ $product->name }}"
-                        style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
-                    
-                    <div class="flex-grow-1">
-                        <div class="d-flex justify-content-between">
-                            <strong>{{ $product->name }} × {{ $quantity }}</strong>
-                            <strong>₹{{ number_format($finalTotal, 2) }}</strong>
-                        </div>
-                        <div class="text-muted" style="font-size: 14px;">
-                            (₹{{ number_format($totalPerItem, 2) }} per item incl. GST)
-                        </div>
-                        @if($weight > 0)
-                            <div class="d-flex justify-content-between text-muted" style="font-size: 13px;">
-                                <span><strong>Weight:</strong> {{ $weight }}kg × {{ $quantity }}</span>
-                                <span><strong>{{ number_format($totalWeight, 2) }}kg</strong></span>
-                            </div>
-                        @endif
-                        <!-- In your product summary section -->
-                        <div id="delivery-charge-container" class="mt-2" style="display: none;">
-                            <div class="d-flex justify-content-between text-muted" style="font-size: 13px;">
-                                <span><strong>Delivery Charge:</strong></span>
-                                <span><strong id="delivery-charge-amount"></strong></span>
-                            </div>
-                            <div id="delivery-calculation" class="text-muted" style="font-size: 11px; display: none;">
-                                <span id="calculation-text"></span>
-                            </div>
-                        </div>
-                        <div id="grand-total-container" class="d-flex justify-content-between fw-bold text-dark mt-2" style="font-size: 14px; display: none;">
-                            <span><strong>Grand Total:</strong></span>
-                            <span><strong id="grand-total-amount"></strong></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
@@ -185,31 +227,19 @@
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-
 {{-- State and city fetch --}}
 <script>
-    $(function(){
+    $(function () {
         $('#country, #state, #city').select2({ theme: 'bootstrap4' });
 
         const csrfToken = $('meta[name="csrf-token"]').attr('content');
-        const $country  = $('#country');
-        const $state    = $('#state');
-        const $city     = $('#city');
-
+        const $country = $('#country');
+        const $state = $('#state');
+        const $city = $('#city');
         const deliveryCharges = @json($deliveryCharges);
-        const productWeight = {{ $product->weight ?? 0 }};
-        const quantity = {{ $quantity }};
-        const totalWeightInGrams = productWeight * quantity * 1000;
-        const productTotal = {{ $finalTotal }};
-
-        // Initialize with product total as grand total
-        $('#grand-total-amount').text(`₹${productTotal.toFixed(2)}`);
-        $('#grand-total-container').show();
-        $('#delivery-charge-amount').text('₹0.00');
-        $('#delivery-charge-container').show();
 
         // Fetch states
-        $country.on('select2:select', function(e){
+        $country.on('select2:select', function (e) {
             const countryID = e.params.data.id;
 
             $state.prop('disabled', true)
@@ -225,33 +255,32 @@
                 },
                 body: JSON.stringify({ country_id: countryID })
             })
-            .then(r => r.json())
-            .then(states => {
-                $state.prop('disabled', false)
-                    .empty()
-                    .append(states.length
-                        ? '<option value="">Select State</option>'
-                        : '<option selected disabled>No states available</option>');
+                .then(r => r.json())
+                .then(states => {
+                    $state.prop('disabled', false)
+                        .empty()
+                        .append(states.length
+                            ? '<option value="">Select State</option>'
+                            : '<option selected disabled>No states available</option>');
 
-                states.forEach(st => $state.append(new Option(st.state, st.id)));
-                $state.trigger('change.select2');
-            })
-            .catch(() => {
-                $state.prop('disabled', false)
-                    .html('<option selected disabled>Failed to load states</option>')
-                    .trigger('change.select2');
-            });
+                    states.forEach(st => $state.append(new Option(st.state, st.id)));
+                    $state.trigger('change.select2');
+                })
+                .catch(() => {
+                    $state.prop('disabled', false)
+                        .html('<option selected disabled>Failed to load states</option>')
+                        .trigger('change.select2');
+                });
         });
 
-        // Fetch cities + Calculate delivery & grand total
-        $state.on('select2:select', function (e) {
+        // Fetch cities + Calculate delivery charges
+        $state.on('select2:select', function () {
             const stateID = $state.val();
 
             $city.prop('disabled', true)
                 .html('<option selected disabled>Loading…</option>')
                 .trigger('change.select2');
 
-            // Fetch cities
             fetch("{{ route('user.get.cities') }}", {
                 method: 'POST',
                 headers: {
@@ -261,61 +290,147 @@
                 },
                 body: JSON.stringify({ state_id: stateID })
             })
-            .then(r => r.json())
-            .then(cities => {
-                $city.prop('disabled', false)
-                    .empty()
-                    .append(cities.length
-                        ? '<option value="">Select City</option>'
-                        : '<option selected disabled>No cities available</option>');
+                .then(r => r.json())
+                .then(cities => {
+                    $city.prop('disabled', false)
+                        .empty()
+                        .append(cities.length
+                            ? '<option value="">Select City</option>'
+                            : '<option selected disabled>No cities available</option>');
 
-                cities.forEach(city => $city.append(new Option(city.city, city.id)));
-                $city.trigger('change.select2');
+                    cities.forEach(city => $city.append(new Option(city.city, city.id)));
+                    $city.trigger('change.select2');
 
-                // === DELIVERY & GRAND TOTAL ===
-                const charge = deliveryCharges.find(c => parseInt(c.zone?.state_id) === parseInt(stateID));
+                    // Calculate delivery charges for each product
+                    calculateDeliveryCharges(stateID);
+                })
+                .catch(() => {
+                    $city.prop('disabled', false)
+                        .html('<option selected disabled>Failed to load cities</option>')
+                        .trigger('change.select2');
+                });
+        });
+
+        function calculateDeliveryCharges(stateID) {
+            const charge = deliveryCharges.find(c => parseInt(c.zone?.state_id) === parseInt(stateID));
+            let totalDelivery = 0;
+            let grandTotal = 0;
+
+            // Calculate for each product row
+            $('#order-summary-table tbody tr[data-product-id]').each(function() {
+                const $row = $(this);
+                const weight = parseFloat($row.data('weight')) || 0;
+                const quantity = parseInt($row.data('quantity')) || 1;
+                const price = parseFloat($row.data('price')) || 0;
+                const totalWeightInGrams = weight * quantity * 1000;
+                const productTotal = price * quantity;
+
                 let deliveryCharge = 0;
-                let calculationText = '';
-                let perUnitCharge = 0;
-                let perUnitGrams = 0;
+                let calculationText = 'Free delivery';
 
                 if (charge && charge.weight_in_grams) {
-                    perUnitGrams = charge.weight_in_grams;
-                    
-                    // Check if product total meets minimum order for discounted rate
+                    const perUnitGrams = charge.weight_in_grams;
+                    let perUnitCharge = 0;
+
                     if (productTotal >= charge.min_order) {
-                        perUnitCharge = charge.delivery_charge; // ₹25 for orders ₹2500+
-                        calculationText = `Discounted rate applied (order ≥ ₹${charge.min_order})`;
+                        perUnitCharge = charge.delivery_charge;
+                        calculationText = `Discounted rate (≥ ₹${charge.min_order})`;
                     } else {
-                        perUnitCharge = charge.default_delivery_charge; // ₹38 for orders < ₹2500
-                        calculationText = `Standard rate (order < ₹${charge.min_order})`;
+                        perUnitCharge = charge.default_delivery_charge;
+                        calculationText = `Standard rate (< ₹${charge.min_order})`;
                     }
 
                     const unitCount = Math.ceil(totalWeightInGrams / perUnitGrams);
                     deliveryCharge = unitCount * perUnitCharge;
-                    
-                    // Add calculation details
-                    calculationText += `<br>${totalWeightInGrams}g / ${perUnitGrams}g = ${unitCount} units × ₹${perUnitCharge} = ₹${deliveryCharge.toFixed(2)}`;
-                } else {
-                    calculationText = "Free delivery";
-                    deliveryCharge = 0;
+
+                    calculationText += ` (${totalWeightInGrams}g / ${perUnitGrams}g = ${unitCount} × ₹${perUnitCharge})`;
                 }
 
-                const grandTotal = productTotal + deliveryCharge;
-
-                $('#delivery-charge-amount').text(`₹${deliveryCharge.toFixed(2)}`);
-                $('#calculation-text').html(calculationText);
-                $('#delivery-calculation').show();
-                $('#delivery-charge-container').show();
-
-                $('#grand-total-amount').text(`₹${grandTotal.toFixed(2)}`);
-                $('#grand-total-container').show();
-            })
-            .catch(() => {
-                $city.prop('disabled', false)
-                    .html('<option selected disabled>Failed to load cities</option>')
-                    .trigger('change.select2');
+                // Update the row
+                $row.find('.delivery-charge-cell').text(`₹${deliveryCharge.toFixed(2)}`);
+                $row.find('.product-total-cell').text(`₹${(productTotal + deliveryCharge).toFixed(2)}`);
+                
+                // Add to totals
+                totalDelivery += deliveryCharge;
+                grandTotal += productTotal + deliveryCharge;
             });
+
+            // Update summary row
+            $('#total-delivery-charge').text(`₹${totalDelivery.toFixed(2)}`);
+            $('#grand-total-amount').text(`₹${grandTotal.toFixed(2)}`);
+
+            // Update hidden fields for form submission
+            $('#modal_delivery_charge').val(totalDelivery);
+            $('#modal_grand_total').val(grandTotal);
+        }
+    });
+</script>
+
+{{-- Update quantity --}}
+<script>
+    $(document).ready(function () {
+        // Always unbind previous click events before binding new ones
+        $('.update-qty-btn').off('click').on('click', function () {
+            const $btn = $(this);
+            const itemId = $btn.data('id');
+            const action = $btn.data('action');
+            const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+            $.ajax({
+                url: "{{ route('user.cart.update.quantity') }}",
+                method: "POST",
+                data: {
+                    _token: csrfToken,
+                    id: itemId,
+                    action: action
+                },
+                success: function (response) {
+                    if (response.success) {
+                        // Update only the quantity field
+                        $('.qty-input[data-id="' + itemId + '"]').val(response.quantity);
+
+                        // Soft reload: update weight, price, delivery, total dynamically
+                        location.reload(); // OR use your delivery calculation method
+                    } else {
+                        alert('Something went wrong.');
+                    }
+                },
+                error: function () {
+                    alert('Failed to update quantity.');
+                }
+            });
+        });
+    });
+</script>
+
+{{-- Delete function --}}
+<script>
+    $(document).ready(function () {
+        $('.remove-cart-item').on('click', function () {
+            const itemId = $(this).data('id');
+            const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+            if (confirm('Are you sure you want to remove this item from your cart?')) {
+                $.ajax({
+                    url: "{{ route('user.user.cart.remove') }}",
+                    method: "POST",
+                    data: {
+                        _token: csrfToken,
+                        id: itemId
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            location.reload(); 
+                        } else {
+                            alert('Failed to remove item.');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText); // log exact Laravel response
+                        alert('An error occurred: ' + (xhr.responseJSON?.message || error || 'Unknown error'));
+                    }
+                });
+            }
         });
     });
 </script>
@@ -391,49 +506,50 @@
 </script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const payBtn = document.querySelector('#orderPaymentModal button[type="submit"]');
+    document.addEventListener('DOMContentLoaded', function () {
+        const payBtn = document.querySelector('#orderPaymentModal button[type="submit"]');
 
-    payBtn.addEventListener('click', function (e) {
-        e.preventDefault();
+        payBtn.addEventListener('click', function (e) {
+            e.preventDefault();
 
-        const form = this.closest('form');
+            const form = this.closest('form');
 
-        const grandTotal = parseFloat(document.getElementById('modal_grand_total').value) || 0;
-        const userName = document.getElementById('modal_name').value;
-        const email = document.getElementById('modal_email').value;
-        const phone = document.getElementById('modal_phone').value;
+            const grandTotal = parseFloat(document.getElementById('modal_grand_total').value) || 0;
+            const userName = document.getElementById('modal_name').value;
+            const email = document.getElementById('modal_email').value;
+            const phone = document.getElementById('modal_phone').value;
 
-        if (!grandTotal || !userName || !email || !phone) {
-            alert('Missing order information.');
-            return;
-        }
-
-        const options = {
-            key: "rzp_test_1DP5mmOlF5G5ag", 
-            amount: Math.round(grandTotal * 100), // Razorpay expects amount in paise
-            currency: "INR",
-            name: "EasyAdMe",
-            description: "Order Payment",
-            handler: function (response) {
-                // On successful payment
-                document.getElementById('modal_transaction_id').value = response.razorpay_payment_id;
-                document.getElementById('modal_is_paid').value = 1;
-                form.submit(); // Submit the form to backend (Laravel)
-            },
-            prefill: {
-                name: userName,
-                email: email,
-                contact: phone
-            },
-            theme: {
-                color: "#0d6efd"
+            if (!grandTotal || !userName || !email || !phone) {
+                alert('Missing order information.');
+                return;
             }
-        };
 
-        const razorpay = new Razorpay(options);
-        razorpay.open();
+            const options = {
+                key: "rzp_test_1DP5mmOlF5G5ag", 
+                amount: Math.round(grandTotal * 100), // Razorpay expects amount in paise
+                currency: "INR",
+                name: "EasyAdMe",
+                description: "Order Payment",
+                handler: function (response) {
+                    // On successful payment
+                    document.getElementById('modal_transaction_id').value = response.razorpay_payment_id;
+                    document.getElementById('modal_is_paid').value = 1;
+                    form.submit(); // Submit the form to backend (Laravel)
+                },
+                prefill: {
+                    name: userName,
+                    email: email,
+                    contact: phone
+                },
+                theme: {
+                    color: "#0d6efd"
+                }
+            };
+
+            const razorpay = new Razorpay(options);
+            razorpay.open();
+        });
     });
-});
 </script>
+
 @endsection

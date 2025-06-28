@@ -3,6 +3,9 @@
         <form action="{{ route('user.order.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
+            <input type="hidden" name="delivery_charge" id="modal_delivery_charge" value="0">
+            <input type="hidden" name="grand_total" id="modal_grand_total" value="0">
+
             <!-- Hidden fields -->
             <input type="hidden" name="product_id" value="{{ $product->id }}">
             <input type="hidden" name="product_quantity" value="{{ $quantity }}">

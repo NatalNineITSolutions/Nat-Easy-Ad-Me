@@ -92,11 +92,14 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
                 Route::get('/products', 'productSlider')->name('products');
                 Route::get('/product-details/{id}', 'productDetails')->name('product.details');
                 Route::get('/all-products', 'allProducts')->name('all.products');
-                Route::get('/product-buy/{id}', 'productBuyForm')->name('product.buy');
+                Route::get('/product-buy', 'productBuyForm')->name('product.buy');
                 Route::post('/get-states', 'userGetStates')->name('get.states');
                 Route::post('/get-cities', 'userGetCities')->name('get.cities');
-
                 Route::post('/info/place-order', 'storeOrder')->name('order.store');
+                Route::post('/add-to-cart', 'addToCart')->name('add.to.cart');
+                Route::post('/update-cart-quantity', 'updateCartQuantity')->name('cart.update.quantity');
+                Route::post('/remove-cart-item', 'removeCartItem')->name('user.cart.remove');
+                Route::get('/check-cart', 'checkProductInCart')->name('check.cart');
             });
         });
 

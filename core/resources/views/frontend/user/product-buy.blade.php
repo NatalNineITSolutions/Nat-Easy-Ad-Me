@@ -93,7 +93,13 @@
                                             $deliveryCharge = 0;
                                             $grandTotal += $finalTotal;
                                         @endphp
-                                        <tr data-product-id="{{ $product->id }}" data-weight="{{ $weight }}" data-quantity="{{ $quantity }}" data-price="{{ $totalPerItem }}">
+                                        <tr 
+                                            data-product-id="{{ $product->id }}" 
+                                            data-cart-id="{{ $item->id }}"         
+                                            data-weight="{{ $weight }}" 
+                                            data-quantity="{{ $quantity }}" 
+                                            data-price="{{ $totalPerItem }}"
+                                        >
                                             <td>{{ $index++ }}</td>
                                             <td>{{ $product->name }}</td>
                                             <td>{{ $bv }}</td>
@@ -314,52 +320,65 @@
         function calculateDeliveryCharges(stateID) {
             const charge = deliveryCharges.find(c => parseInt(c.zone?.state_id) === parseInt(stateID));
             let totalDelivery = 0;
-            let grandTotal = 0;
+            let grandTotal   = 0;
 
-            // Calculate for each product row
+            // for each row we need its cart ID, weight, quantity, unit‑price
             $('#order-summary-table tbody tr[data-product-id]').each(function() {
-                const $row = $(this);
-                const weight = parseFloat($row.data('weight')) || 0;
-                const quantity = parseInt($row.data('quantity')) || 1;
-                const price = parseFloat($row.data('price')) || 0;
+                const $row      = $(this);
+                const cartId    = $row.data('cart-id');             // ← make sure your <tr> has data-cart-id="{{ $item->id }}"
+                const weight    = parseFloat($row.data('weight')) || 0;
+                const quantity  = parseInt($row.data('quantity')) || 1;
+                const unitPrice = parseFloat($row.data('price'))    || 0;
+
                 const totalWeightInGrams = weight * quantity * 1000;
-                const productTotal = price * quantity;
+                const productTotal       = unitPrice * quantity;
 
+                // compute deliveryCharge per your existing logic
                 let deliveryCharge = 0;
-                let calculationText = 'Free delivery';
-
                 if (charge && charge.weight_in_grams) {
                     const perUnitGrams = charge.weight_in_grams;
-                    let perUnitCharge = 0;
-
-                    if (productTotal >= charge.min_order) {
-                        perUnitCharge = charge.delivery_charge;
-                        calculationText = `Discounted rate (≥ ₹${charge.min_order})`;
-                    } else {
-                        perUnitCharge = charge.default_delivery_charge;
-                        calculationText = `Standard rate (< ₹${charge.min_order})`;
-                    }
+                    const perUnitCharge = productTotal >= charge.min_order
+                                        ? charge.delivery_charge
+                                        : charge.default_delivery_charge;
 
                     const unitCount = Math.ceil(totalWeightInGrams / perUnitGrams);
-                    deliveryCharge = unitCount * perUnitCharge;
-
-                    calculationText += ` (${totalWeightInGrams}g / ${perUnitGrams}g = ${unitCount} × ₹${perUnitCharge})`;
+                    deliveryCharge   = unitCount * perUnitCharge;
                 }
 
-                // Update the row
+                // update the row cells
                 $row.find('.delivery-charge-cell').text(`₹${deliveryCharge.toFixed(2)}`);
                 $row.find('.product-total-cell').text(`₹${(productTotal + deliveryCharge).toFixed(2)}`);
-                
-                // Add to totals
+
                 totalDelivery += deliveryCharge;
-                grandTotal += productTotal + deliveryCharge;
+                grandTotal   += productTotal + deliveryCharge;
+
+                // persist this deliveryCharge back to your DB
+                $.ajax({
+                    url: "{{ route('user.cart.update.delivery') }}",
+                    method: 'POST',
+                    dataType: 'json',
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        cart_id: cartId,
+                        delivery_charge: deliveryCharge
+                    },
+                    success(data) {
+                        if (data.success) {
+                            // optionally update the overall grand total in the footer
+                            $('#grand-total-amount').text(`₹${data.new_grand}`);
+                        }
+                    },
+                    error(xhr) {
+                        console.error('Delivery update failed:', xhr.responseText);
+                    }
+                });
             });
 
-            // Update summary row
+            // update the summary row (before AJAX responses come back)
             $('#total-delivery-charge').text(`₹${totalDelivery.toFixed(2)}`);
             $('#grand-total-amount').text(`₹${grandTotal.toFixed(2)}`);
 
-            // Update hidden fields for form submission
+            // also keep your hidden fields in sync
             $('#modal_delivery_charge').val(totalDelivery);
             $('#modal_grand_total').val(grandTotal);
         }
@@ -405,34 +424,56 @@
 
 {{-- Delete function --}}
 <script>
-    $(document).ready(function () {
-        $('.remove-cart-item').on('click', function () {
-            const itemId = $(this).data('id');
-            const csrfToken = $('meta[name="csrf-token"]').attr('content');
+$(document).ready(function () {
+    // Use event delegation with .off() to prevent duplicate bindings
+    $(document).off('click', '.remove-cart-item').on('click', '.remove-cart-item', function (e) {
+        e.stopImmediatePropagation(); // Prevent other handlers from executing
+        
+        const itemId = $(this).data('id');
+        const csrfToken = $('meta[name="csrf-token"]').attr('content');
+        const $button = $(this);
 
-            if (confirm('Are you sure you want to remove this item from your cart?')) {
-                $.ajax({
-                    url: "{{ route('user.user.cart.remove') }}",
-                    method: "POST",
-                    data: {
-                        _token: csrfToken,
-                        id: itemId
-                    },
-                    success: function (response) {
-                        if (response.success) {
-                            location.reload(); 
-                        } else {
-                            alert('Failed to remove item.');
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error(xhr.responseText); // log exact Laravel response
-                        alert('An error occurred: ' + (xhr.responseJSON?.message || error || 'Unknown error'));
-                    }
-                });
+        if (!confirm('Are you sure you want to remove this item from your cart?')) {
+            return false;
+        }
+
+        $button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>');
+
+        $.ajax({
+            url: "{{ route('user.cart.remove') }}",
+            type: "POST",
+            dataType: "json",
+            data: {
+                _token: csrfToken,
+                id: itemId
+            },
+            success: function (response) {
+                if (response.success) {
+                    $button.closest('tr').fadeOut(300, function() {
+                        $(this).remove();
+                        // Update serial numbers
+                        $('#order-summary-table tbody tr[data-product-id]').each(function(index) {
+                            $(this).find('td:first').text(index + 1);
+                        });
+                        // Recalculate if needed
+                        const stateID = $('#state').val();
+                        if (stateID) calculateDeliveryCharges(stateID);
+                    });
+                } else {
+                    alert(response.message || 'Failed to remove item.');
+                    $button.prop('disabled', false).html('<i class="fas fa-trash-alt"></i>');
+                }
+            },
+            error: function (xhr) {
+                console.error(xhr.responseText);
+                alert('Failed to remove item. Please try again.');
+                $button.prop('disabled', false).html('<i class="fas fa-trash-alt"></i>');
             }
         });
+        
+        return false; // Prevent default action and bubbling
     });
+});
 </script>
 
 {{-- Form validation and modal opening --}}

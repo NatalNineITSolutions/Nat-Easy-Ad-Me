@@ -54,7 +54,7 @@
     </div>
 @endsection
 
-@section('scripts')
+{{-- @section('scripts')
 <!-- Toastr -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
@@ -164,4 +164,122 @@
     });
 </script>
 
+@endsection --}}
+
+@section('scripts')
+<!-- Toastr -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script>
+    $(function() {
+        const addToCartUrl = "{{ route('user.add.to.cart') }}";
+        const checkCartUrl = "{{ route('user.check.cart') }}";
+        const buyNowRedirectUrl = "{{ route('user.product.buy') }}";
+
+        function showSpinner($btn, text = 'Loading...') {
+            $btn.data('original-text', $btn.html());
+            $btn.html(`<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>${text}`);
+        }
+
+        function restoreButton($btn) {
+            const originalText = $btn.data('original-text');
+            if (originalText) $btn.html(originalText);
+        }
+
+        // Add to Cart
+        $('.container-1920').off('click', '.add-to-cart-btn').on('click', '.add-to-cart-btn', function(e) {
+            e.preventDefault();
+            const $btn = $(this);
+            if ($btn.hasClass('processing')) return;
+
+            $btn.addClass('processing').prop('disabled', true);
+            showSpinner($btn, 'Adding...');
+
+            const productId = $btn.data('product-id');
+            const quantity = $btn.data('quantity') || 1;
+
+            fetch(addToCartUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                body: JSON.stringify({ product_id: productId, quantity })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    toastr.success(data.message);
+                    if (data.cart_count !== undefined) {
+                        const $cartBadge = $('.cart-count');
+                        $cartBadge.text(data.cart_count).addClass('pulse');
+                        setTimeout(() => $cartBadge.removeClass('pulse'), 600);
+                    }
+                } else if (data.status === 'info') {
+                    toastr.info(data.message);
+                } else {
+                    toastr.error(data.message || 'Failed to add product.');
+                }
+            })
+            .catch(() => {
+                toastr.error('Something went wrong!');
+            })
+            .finally(() => {
+                restoreButton($btn);
+                $btn.removeClass('processing').prop('disabled', false);
+            });
+        });
+
+        // Buy Now
+        $('.container-1920').off('click', '.buy-now-btn').on('click', '.buy-now-btn', function(e) {
+            e.preventDefault();
+            const $btn = $(this);
+            if ($btn.hasClass('processing')) return;
+
+            $btn.addClass('processing').prop('disabled', true);
+            showSpinner($btn, 'Buying...');
+
+            const productId = $btn.data('product-id');
+            const quantity = $btn.data('quantity') || 1;
+
+            fetch(checkCartUrl + '?product_id=' + productId, {
+                method: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.in_cart) {
+                    window.location.href = buyNowRedirectUrl;
+                } else {
+                    return fetch(addToCartUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        },
+                        body: JSON.stringify({ product_id: productId, quantity })
+                    })
+                    .then(res => res.json())
+                    .then(cartData => {
+                        if (cartData.status === 'success' || cartData.status === 'info') {
+                            toastr.success(cartData.message || 'Added to cart.');
+                            window.location.href = buyNowRedirectUrl;
+                        } else {
+                            toastr.error(cartData.message || 'Failed to add to cart.');
+                        }
+                    });
+                }
+            })
+            .catch(() => {
+                toastr.error('Something went wrong during Buy Now!');
+            })
+            .finally(() => {
+                restoreButton($btn);
+                $btn.removeClass('processing').prop('disabled', false);
+            });
+        });
+    });
+</script>
 @endsection

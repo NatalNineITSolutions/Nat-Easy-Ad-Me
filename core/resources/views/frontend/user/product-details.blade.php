@@ -117,9 +117,16 @@
                     </div>
                 </div>
 
-                <div class="mb-4">
-                    <a href="{{ route('user.product.buy', $product->id) }}?quantity=1" 
-                    class="btn btn-danger px-4 py-2" id="buyNowBtn">
+                <div class="mb-4 d-flex gap-3">
+                    <a href="#" 
+                        class="btn btn-outline-secondary px-4 py-2 w-50 add-to-cart-btn"
+                        data-product-id="{{ $product->id }}">
+                        Add to Cart
+                    </a>
+
+                    <a href="#" 
+                        class="btn btn-danger px-4 py-2 w-50 buy-now-btn"
+                        data-product-id="{{ $product->id }}">
                         Buy Now
                     </a>
                 </div>
@@ -174,4 +181,124 @@
     // Initialize
     updatePriceAndLink();
 });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const addToCartUrl = "{{ route('user.add.to.cart') }}";
+        const checkCartUrl = "{{ route('user.check.cart') }}";
+        const buyNowRedirectUrl = "{{ route('user.product.buy') }}";
+        const quantityInput = document.getElementById("quantity");
+
+        const addToCartBtn = document.querySelector(".add-to-cart-btn");
+        const buyNowBtn = document.querySelector(".buy-now-btn");
+
+        function showSpinner(btn, label = 'Loading...') {
+            btn.dataset.originalText = btn.innerHTML;
+            btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> ${label}`;
+            btn.disabled = true;
+        }
+
+        function restoreButton(btn) {
+            if (btn.dataset.originalText) {
+                btn.innerHTML = btn.dataset.originalText;
+            }
+            btn.disabled = false;
+        }
+
+        // Add to Cart Handler
+        addToCartBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            const productId = this.dataset.productId;
+            const quantity = parseInt(quantityInput.value) || 1;
+
+            showSpinner(this, 'Adding...');
+
+            fetch(addToCartUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                },
+                body: JSON.stringify({
+                    product_id: productId,
+                    quantity: quantity
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    toastr.success(data.message);
+                    if (data.cart_count !== undefined) {
+                        const cartBadge = document.querySelector('.cart-count');
+                        if (cartBadge) {
+                            cartBadge.textContent = data.cart_count;
+                            cartBadge.classList.add('pulse');
+                            setTimeout(() => cartBadge.classList.remove('pulse'), 600);
+                        }
+                    }
+                } else if (data.status === 'info') {
+                    toastr.info(data.message);
+                } else {
+                    toastr.error(data.message || 'Failed to add product.');
+                }
+            })
+            .catch(() => {
+                toastr.error('Something went wrong!');
+            })
+            .finally(() => {
+                restoreButton(this);
+            });
+        });
+
+        // Buy Now Handler
+        buyNowBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            const productId = this.dataset.productId;
+            const quantity = parseInt(quantityInput.value) || 1;
+
+            showSpinner(this, 'Buying...');
+
+            fetch(`${checkCartUrl}?product_id=${productId}`, {
+                method: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.in_cart) {
+                    window.location.href = `${buyNowRedirectUrl}?product_id=${productId}&quantity=${quantity}`;
+                } else {
+                    return fetch(addToCartUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        },
+                        body: JSON.stringify({
+                            product_id: productId,
+                            quantity: quantity
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(cartData => {
+                        if (cartData.status === 'success' || cartData.status === 'info') {
+                            toastr.success(cartData.message || 'Added to cart.');
+                            window.location.href = `${buyNowRedirectUrl}?product_id=${productId}&quantity=${quantity}`;
+                        } else {
+                            toastr.error(cartData.message || 'Failed to add to cart.');
+                        }
+                    });
+                }
+            })
+            .catch(() => {
+                toastr.error('Something went wrong during Buy Now!');
+            })
+            .finally(() => {
+                restoreButton(this);
+            });
+        });
+    });
 </script>

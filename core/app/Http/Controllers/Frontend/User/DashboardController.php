@@ -856,12 +856,6 @@ class DashboardController extends Controller
         return view('frontend.user.bv_history', compact('bvHistory'));
     }
 
-    // public function productSlider()
-    // {
-    //     $products = Product::latest()->paginate(10); 
-    //     return view('frontend.user.product-slider', compact('products'));
-    // }
-
     public function productSlider()
     {
         $user = auth()->user();
@@ -880,12 +874,6 @@ class DashboardController extends Controller
         return view('frontend.user.product-details', compact('product'));
     }
 
-    // public function allProducts()
-    // {
-    //     $products = Product::all(); 
-    //     return view('frontend.user.all-products', compact('products'));
-    // }
-
     public function allProducts()
     {
         $user = auth()->user();
@@ -899,19 +887,27 @@ class DashboardController extends Controller
         return view('frontend.user.all-products', compact('products'));
     }
 
-    public function productBuyForm()
+    public function productBuyForm(Request $request)
     {
         $user = auth()->user();
+        $productId = $request->query('product_id');
+        $quantity = (int) $request->query('quantity', 0);
 
-        // Fetch all cart items with related product and image
-        $cartItems = Cart::with(['product.imageFile'])->where('user_id', $user->id)->get();
+        // If productId and quantity are passed, update it in the cart
+        if ($productId && $quantity > 0) {
+            Cart::where('user_id', $user->id)
+                ->where('product_id', $productId)
+                ->update(['quantity' => $quantity]);
+        }
 
-        // If cart is empty, redirect back or show message
+        $cartItems = Cart::with(['product.imageFile'])
+                        ->where('user_id', $user->id)
+                        ->get();
+
         if ($cartItems->isEmpty()) {
             return redirect()->back()->with('error', 'Your cart is empty.');
         }
 
-        // Fetch all countries and delivery charges
         $countries = Country::all();
         $deliveryCharges = DeliveryCharge::with('zone')->get();
 
@@ -935,6 +931,79 @@ class DashboardController extends Controller
         return response()->json($cities);
     }
 
+    // public function storeOrder(Request $request)
+    // {
+    //     $request->validate([
+    //         'product_id' => 'required|exists:products,id',
+    //         'product_quantity' => 'required|integer|min:1',
+    //         'product_total_price' => 'required|numeric',
+    //         'total_delivery_charge' => 'nullable|numeric',
+    //         'grand_total' => 'required|numeric',
+    //         'name' => 'required|string|max:191',
+    //         'email' => 'required|email',
+    //         'phone_number' => 'required|digits:10',
+    //         'address' => 'required|string',
+    //         'country_id' => 'required|integer',
+    //         'state_id' => 'required|integer',
+    //         'city_id' => 'required|integer',
+    //         'transaction_id' => 'nullable|string',
+    //     ]);
+
+    //     $user = Auth::user();
+    //     $product = Product::findOrFail($request->product_id);
+    //     $bvPoints = $product->bv_points * $request->product_quantity;
+
+    //     // 1. Create the order
+    //     $order = OrderDetail::create([
+    //         'user_id' => $user->id,
+    //         'product_id' => $product->id,
+    //         'product_quantity' => $request->product_quantity,
+    //         'product_total_price' => $request->product_total_price,
+    //         'total_delivery_charge' => $request->total_delivery_charge ?? 0,
+    //         'grand_total' => $request->grand_total,
+    //         'name' => $request->name,
+    //         'email' => $request->email,
+    //         'phone_number' => $request->phone_number,
+    //         'address' => $request->address,
+    //         'country_id' => $request->country_id,
+    //         'state_id' => $request->state_id,
+    //         'city_id' => $request->city_id,
+    //         'order_status' => 'pending',
+    //         'is_paid' => $request->is_paid ? 1 : 0,
+    //         'transaction_id' => $request->transaction_id,
+    //     ]);
+
+    //     // 2. Add BV to user's self_purchased_bv
+    //     $user->self_purchased_bv += $bvPoints;
+    //     $user->save();
+
+    //     // 2b. Record in users_bvs with type 'Self'
+    //     $bvRecord = UsersBV::create([
+    //         'user_id'       => $user->id,
+    //         'membership_id' => $user->membership_id,
+    //         'bv_points'     => $bvPoints,
+    //         'upgrade_time'  => Carbon::now(),
+    //         'type'          => 'Self-purchased',
+    //         'position'      => $user->position, // Important for flush logic
+    //     ]);
+
+    //     // 3. Distribute BV to sponsor (parent)
+    //     if ($user->sponsor_id) {
+    //         $sponsor = User::find($user->sponsor_id);
+    //         if ($sponsor) {
+    //             $bvService = new BVDistributionService();
+    //             $bvService->distributeBVPoints(
+    //                 $user,                   // the current user
+    //                 $bvPoints,              // total BV to distribute
+    //                 $user->membership_id,   // membership_id used by UsersBV
+    //                 $user->id               // original user to prevent loops
+    //             );
+    //         }
+    //     }
+
+    //     return redirect()->route('user.products')->with('success', 'Order placed successfully!');
+    // }
+
     public function storeOrder(Request $request)
     {
         $request->validate([
@@ -955,6 +1024,9 @@ class DashboardController extends Controller
 
         $user = Auth::user();
         $product = Product::findOrFail($request->product_id);
+        
+        // Calculate GST amount from the stored total price
+        $gstAmount = ($product->distributor_price * $product->gst) / 100;
         $bvPoints = $product->bv_points * $request->product_quantity;
 
         // 1. Create the order
@@ -962,6 +1034,8 @@ class DashboardController extends Controller
             'user_id' => $user->id,
             'product_id' => $product->id,
             'product_quantity' => $request->product_quantity,
+            'product_base_price' => $product->distributor_price,
+            'product_gst_amount' => $gstAmount,
             'product_total_price' => $request->product_total_price,
             'total_delivery_charge' => $request->total_delivery_charge ?? 0,
             'grand_total' => $request->grand_total,
@@ -988,7 +1062,7 @@ class DashboardController extends Controller
             'bv_points'     => $bvPoints,
             'upgrade_time'  => Carbon::now(),
             'type'          => 'Self-purchased',
-            'position'      => $user->position, // Important for flush logic
+            'position'      => $user->position,
         ]);
 
         // 3. Distribute BV to sponsor (parent)
@@ -1005,15 +1079,63 @@ class DashboardController extends Controller
             }
         }
 
+        // Clear the cart after successful order
+        Cart::where('user_id', $user->id)->delete();
+
         return redirect()->route('user.products')->with('success', 'Order placed successfully!');
     }
-
 
     public function orderHistory()
     {
         $orders = OrderDetail::where('user_id', auth()->id())->latest()->get();
         return view('frontend.user.order-history', compact('orders'));
     }
+
+    // public function addToCart(Request $request)
+    // {
+    //     $request->validate([
+    //         'product_id' => 'required|exists:products,id',
+    //         'quantity' => 'required|integer|min:1',
+    //     ]);
+
+    //     $user = auth()->user();
+    //     $product = Product::findOrFail($request->product_id);
+
+    //     // Check if product already exists in cart
+    //     $existingCartItem = Cart::where('user_id', $user->id)
+    //         ->where('product_id', $product->id)
+    //         ->first();
+
+    //     if ($existingCartItem) {
+    //         return response()->json([
+    //             'status' => 'info',
+    //             'message' => 'Product is already in your cart'
+    //         ]);
+    //     }
+
+    //     $quantity = $request->quantity;
+    //     $weight = $product->weight * $quantity;
+    //     $price = $product->distributor_price;
+    //     $totalPrice = $price * $quantity;
+
+    //     $deliveryCharge = 0;
+
+    //     Cart::create([
+    //         'user_id' => $user->id,
+    //         'product_id' => $product->id,
+    //         'weight' => $weight,
+    //         'quantity' => $quantity,
+    //         'price' => $price,
+    //         'delivery_charges' => $deliveryCharge,
+    //         'grand_total' => $totalPrice + $deliveryCharge,
+    //     ]);
+
+    //     return response()->json([
+    //         'status' => 'success',
+    //         'message' => 'Product added to cart',
+    //         'cart_count' => Cart::where('user_id', $user->id)->count()
+    //     ]);
+    // }
 
     public function addToCart(Request $request)
     {
@@ -1040,8 +1162,9 @@ class DashboardController extends Controller
         $quantity = $request->quantity;
         $weight = $product->weight * $quantity;
         $price = $product->distributor_price;
-        $totalPrice = $price * $quantity;
-
+        $gstAmount = ($price * $product->gst) / 100;
+        $totalPerItem = $price + $gstAmount;
+        $totalPrice = $totalPerItem * $quantity;
         $deliveryCharge = 0;
 
         Cart::create([
@@ -1050,6 +1173,8 @@ class DashboardController extends Controller
             'weight' => $weight,
             'quantity' => $quantity,
             'price' => $price,
+            'gst_amount' => $gstAmount,
+            'total_price' => $totalPerItem, // Price per item after GST
             'delivery_charges' => $deliveryCharge,
             'grand_total' => $totalPrice + $deliveryCharge,
         ]);
@@ -1061,30 +1186,72 @@ class DashboardController extends Controller
         ]);
     }
 
+    // public function updateCartQuantity(Request $request)
+    // {
+    //     $request->validate([
+    //         'id' => 'required|integer|exists:carts,id',
+    //         'action' => 'required|in:increase,decrease',
+    //     ]);
+
+    //     $cartItem = Cart::findOrFail($request->id);
+    //     $quantity = $cartItem->quantity;
+
+    //     if ($request->action === 'increase') {
+    //         $quantity++;
+    //     } elseif ($request->action === 'decrease' && $quantity > 1) {
+    //         $quantity--;
+    //     }
+
+    //     $cartItem->quantity = $quantity;
+    //     $cartItem->save();
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'quantity' => $quantity
+    //     ]);
+    // }
+
     public function updateCartQuantity(Request $request)
     {
         $request->validate([
-            'id' => 'required|integer|exists:carts,id',
+            'id'     => 'required|integer|exists:carts,id',
             'action' => 'required|in:increase,decrease',
         ]);
 
-        $cartItem = Cart::findOrFail($request->id);
+        // eager‑load product so we can recalc
+        $cartItem = Cart::with('product')->findOrFail($request->id);
         $quantity = $cartItem->quantity;
 
+        // adjust qty
         if ($request->action === 'increase') {
             $quantity++;
         } elseif ($request->action === 'decrease' && $quantity > 1) {
             $quantity--;
         }
 
-        $cartItem->quantity = $quantity;
+        // pull price + gst from product
+        $price         = $cartItem->product->distributor_price ?? 0;
+        $gstPercent    = $cartItem->product->gst ?: 0;
+        $gstAmount     = ($price * $gstPercent) / 100;
+        $unitPrice     = $price + $gstAmount;
+
+        // recalc grand total
+        $newGrandTotal = $unitPrice * $quantity;
+
+        // save back to cart
+        $cartItem->quantity    = $quantity;
+        // if you have a per‑unit price column, set it; otherwise skip
+        // $cartItem->price     = $unitPrice;
+        $cartItem->grand_total = $newGrandTotal;
         $cartItem->save();
 
         return response()->json([
-            'success' => true,
-            'quantity' => $quantity
+            'success'     => true,
+            'quantity'    => $quantity,
+            'grand_total' => number_format($newGrandTotal, 2),
         ]);
     }
+    
 
     public function removeCartItem(Request $request)
     {
@@ -1110,6 +1277,26 @@ class DashboardController extends Controller
 
         return response()->json(['in_cart' => $inCart]);
     }
+
+    public function updateDeliveryCharge(Request $request)
+{
+    $request->validate([
+        'cart_id'        => 'required|integer|exists:carts,id',
+        'delivery_charge'=> 'required|numeric|min:0',
+    ]);
+
+    $cart = Cart::findOrFail($request->cart_id);
+
+    $baseTotal = $cart->grand_total - $cart->delivery_charges;
+    $cart->delivery_charges = $request->delivery_charge;
+    $cart->grand_total     = $baseTotal + $request->delivery_charge;
+    $cart->save();
+
+    return response()->json([
+        'success'      => true,
+        'new_grand'    => number_format($cart->grand_total, 2),
+    ]);
+}
 
 
 }

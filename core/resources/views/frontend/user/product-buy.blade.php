@@ -318,70 +318,52 @@
         });
 
         function calculateDeliveryCharges(stateID) {
-            const charge = deliveryCharges.find(c => parseInt(c.zone?.state_id) === parseInt(stateID));
-            let totalDelivery = 0;
-            let grandTotal   = 0;
+  const charge = deliveryCharges.find(c => parseInt(c.zone?.state_id) === parseInt(stateID));
+  let totalDelivery = 0;
 
-            // for each row we need its cart ID, weight, quantity, unit‑price
-            $('#order-summary-table tbody tr[data-product-id]').each(function() {
-                const $row      = $(this);
-                const cartId    = $row.data('cart-id');             // ← make sure your <tr> has data-cart-id="{{ $item->id }}"
-                const weight    = parseFloat($row.data('weight')) || 0;
-                const quantity  = parseInt($row.data('quantity')) || 1;
-                const unitPrice = parseFloat($row.data('price'))    || 0;
+  // first, clear (or init) the grand‐total accumulator
+  let grandTotal = 0;
 
-                const totalWeightInGrams = weight * quantity * 1000;
-                const productTotal       = unitPrice * quantity;
+  // loop every product row
+  $('#order-summary-table tbody tr[data-product-id]').each(function() {
+    const $row      = $(this);
+    const weight    = parseFloat($row.data('weight'))   || 0;
+    const quantity  = parseInt($row.data('quantity'))   || 1;
+    const unitPrice = parseFloat($row.data('price'))    || 0;
 
-                // compute deliveryCharge per your existing logic
-                let deliveryCharge = 0;
-                if (charge && charge.weight_in_grams) {
-                    const perUnitGrams = charge.weight_in_grams;
-                    const perUnitCharge = productTotal >= charge.min_order
-                                        ? charge.delivery_charge
-                                        : charge.default_delivery_charge;
+    const totalWeightGrams = weight * quantity * 1000;
+    const productBaseTotal = unitPrice * quantity;
 
-                    const unitCount = Math.ceil(totalWeightInGrams / perUnitGrams);
-                    deliveryCharge   = unitCount * perUnitCharge;
-                }
+    // compute deliveryCharge via your existing logic
+    let deliveryCharge = 0;
+    if (charge && charge.weight_in_grams) {
+      const perUnitGrams  = charge.weight_in_grams;
+      const perUnitCharge = (productBaseTotal >= charge.min_order)
+                          ? charge.delivery_charge
+                          : charge.default_delivery_charge;
+      const units         = Math.ceil(totalWeightGrams / perUnitGrams);
+      deliveryCharge      = units * perUnitCharge;
+    }
 
-                // update the row cells
-                $row.find('.delivery-charge-cell').text(`₹${deliveryCharge.toFixed(2)}`);
-                $row.find('.product-total-cell').text(`₹${(productTotal + deliveryCharge).toFixed(2)}`);
+    // update that row
+    $row.find('.delivery-charge-cell').text(`₹${deliveryCharge.toFixed(2)}`);
+    const rowTotal = productBaseTotal + deliveryCharge;
+    $row.find('.product-total-cell').text(`₹${rowTotal.toFixed(2)}`);
 
-                totalDelivery += deliveryCharge;
-                grandTotal   += productTotal + deliveryCharge;
+    // accumulate into both
+    totalDelivery += deliveryCharge;
+    grandTotal    += rowTotal;
+  });
 
-                // persist this deliveryCharge back to your DB
-                $.ajax({
-                    url: "{{ route('user.cart.update.delivery') }}",
-                    method: 'POST',
-                    dataType: 'json',
-                    data: {
-                        _token: $('meta[name="csrf-token"]').attr('content'),
-                        cart_id: cartId,
-                        delivery_charge: deliveryCharge
-                    },
-                    success(data) {
-                        if (data.success) {
-                            // optionally update the overall grand total in the footer
-                            $('#grand-total-amount').text(`₹${data.new_grand}`);
-                        }
-                    },
-                    error(xhr) {
-                        console.error('Delivery update failed:', xhr.responseText);
-                    }
-                });
-            });
+  // now update your footer cells **with the sum of ALL the rows**:
+  $('#total-delivery-charge').text(`₹${totalDelivery.toFixed(2)}`);
+  $('#grand-total-amount').text(`₹${grandTotal.toFixed(2)}`);
 
-            // update the summary row (before AJAX responses come back)
-            $('#total-delivery-charge').text(`₹${totalDelivery.toFixed(2)}`);
-            $('#grand-total-amount').text(`₹${grandTotal.toFixed(2)}`);
+  // also keep your hidden inputs in sync for the modal submission
+  $('#modal_delivery_charge').val(totalDelivery);
+  $('#modal_grand_total').val(grandTotal);
+}
 
-            // also keep your hidden fields in sync
-            $('#modal_delivery_charge').val(totalDelivery);
-            $('#modal_grand_total').val(grandTotal);
-        }
     });
 </script>
 
@@ -480,56 +462,62 @@ $(document).ready(function () {
 <script>
     $(function () {
         $('#placeOrderBtn').on('click', function () {
-            let isValid = true;
-            const $form = $(this).closest('form');
+    let isValid = true;
+    const $form = $(this).closest('form');
 
-            // Clear previous errors
-            $('.invalid-feedback').remove();
-            $('.is-invalid').removeClass('is-invalid');
+    // Clear previous errors
+    $('.invalid-feedback').remove();
+    $('.is-invalid').removeClass('is-invalid');
 
-            // Validate all required fields
-            $form.find('input[required], textarea[required], select.form-control').each(function () {
-                const $field = $(this);
-                const value = $field.val().trim();
+    // Validate all required fields
+    $form.find('input[required], textarea[required], select.form-control').each(function () {
+        const $field = $(this);
+        const value = $field.val().trim();
 
-                if (!value) {
-                    isValid = false;
-                    $field.addClass('is-invalid');
-                    $field.after('<div class="invalid-feedback">This field is required.</div>');
-                } else if ($field.attr('id') === 'phone') {
-                    const phoneRegex = /^\d{10}$/;
-                    if (!phoneRegex.test(value)) {
-                        isValid = false;
-                        $field.addClass('is-invalid');
-                        $field.after('<div class="invalid-feedback">Enter a valid 10-digit phone number.</div>');
-                    }
-                }
-            });
-
-            if (isValid) {
-                // Populate modal fields with form data
-                $('#modal_name').val($('#name').val());
-                $('#modal_email').val($('#email').val());
-                $('#modal_phone').val($('#phone').val());
-                $('#modal_address').val($('#address').val());
-                $('#modal_pincode').val($('#pincode').val());
-                $('#modal_country_id').val($('#country').val());
-                $('#modal_state_id').val($('#state').val());
-                $('#modal_city_id').val($('#city').val());
-
-                // VERY IMPORTANT: populate grand total and delivery charge too
-                const deliveryCharge = $('#delivery-charge-amount').text().replace(/[₹,]/g, '') || 0;
-                const grandTotal     = $('#grand-total-amount').text().replace(/[₹,]/g, '') || 0;
-
-                $('#modal_delivery_charge').val(deliveryCharge);
-                $('#modal_grand_total').val(grandTotal);
-
-                // Now show the Razorpay modal
-                const modal = new bootstrap.Modal(document.getElementById('orderPaymentModal'));
-                modal.show();
+        if (!value) {
+            isValid = false;
+            $field.addClass('is-invalid');
+            $field.after('<div class="invalid-feedback">This field is required.</div>');
+        } else if ($field.attr('id') === 'phone') {
+            const phoneRegex = /^\d{10}$/;
+            if (!phoneRegex.test(value)) {
+                isValid = false;
+                $field.addClass('is-invalid');
+                $field.after('<div class="invalid-feedback">Enter a valid 10-digit phone number.</div>');
             }
+        }
+    });
 
-        });
+    if (!isValid) return;
+
+    // Populate modal fields with form data
+    $('#modal_name').val($('#name').val());
+    $('#modal_email').val($('#email').val());
+    $('#modal_phone').val($('#phone').val());
+    $('#modal_address').val($('#address').val());
+    $('#modal_pincode').val($('#pincode').val());
+    $('#modal_country_id').val($('#country').val());
+    $('#modal_state_id').val($('#state').val());
+    $('#modal_city_id').val($('#city').val());
+
+    // ✅ Grab from the correct footer cell IDs
+    const deliveryCharge = $('#total-delivery-charge').text().replace(/[₹,]/g, '') || 0;
+    const grandTotal     = $('#grand-total-amount').text().replace(/[₹,]/g, '') || 0;
+
+    // Populate hidden inputs
+    $('#modal_delivery_charge').val(deliveryCharge);
+    $('#modal_grand_total').val(grandTotal);
+
+    // (Optional) sanity log
+    console.log('Submitting to server:', {
+      total_delivery_charge: deliveryCharge,
+      grand_total: grandTotal
+    });
+
+    // Show the payment modal
+    const modal = new bootstrap.Modal(document.getElementById('orderPaymentModal'));
+    modal.show();
+});
 
         // Live input filtering for phone
         $('#phone').on('input', function () {

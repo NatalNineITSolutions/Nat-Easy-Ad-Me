@@ -1004,86 +1004,181 @@ class DashboardController extends Controller
     //     return redirect()->route('user.products')->with('success', 'Order placed successfully!');
     // }
 
-    public function storeOrder(Request $request)
-    {
-        $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'product_quantity' => 'required|integer|min:1',
-            'product_total_price' => 'required|numeric',
-            'total_delivery_charge' => 'nullable|numeric',
-            'grand_total' => 'required|numeric',
-            'name' => 'required|string|max:191',
-            'email' => 'required|email',
-            'phone_number' => 'required|digits:10',
-            'address' => 'required|string',
-            'country_id' => 'required|integer',
-            'state_id' => 'required|integer',
-            'city_id' => 'required|integer',
-            'transaction_id' => 'nullable|string',
-        ]);
+    // public function storeOrder(Request $request)
+    // {
+    //     $request->validate([
+    //         'product_id' => 'required|exists:products,id',
+    //         'product_quantity' => 'required|integer|min:1',
+    //         'product_total_price' => 'required|numeric',
+    //         'total_delivery_charge' => 'nullable|numeric',
+    //         'grand_total' => 'required|numeric',
+    //         'name' => 'required|string|max:191',
+    //         'email' => 'required|email',
+    //         'phone_number' => 'required|digits:10',
+    //         'address' => 'required|string',
+    //         'country_id' => 'required|integer',
+    //         'state_id' => 'required|integer',
+    //         'city_id' => 'required|integer',
+    //         'transaction_id' => 'nullable|string',
+    //     ]);
 
-        $user = Auth::user();
-        $product = Product::findOrFail($request->product_id);
+    //     $user = Auth::user();
+    //     $product = Product::findOrFail($request->product_id);
         
-        // Calculate GST amount from the stored total price
-        $gstAmount = ($product->distributor_price * $product->gst) / 100;
-        $bvPoints = $product->bv_points * $request->product_quantity;
+    //     // Calculate GST amount from the stored total price
+    //     $gstAmount = ($product->distributor_price * $product->gst) / 100;
+    //     $bvPoints = $product->bv_points * $request->product_quantity;
 
-        // 1. Create the order
-        $order = OrderDetail::create([
-            'user_id' => $user->id,
-            'product_id' => $product->id,
-            'product_quantity' => $request->product_quantity,
-            'product_base_price' => $product->distributor_price,
-            'product_gst_amount' => $gstAmount,
-            'product_total_price' => $request->product_total_price,
-            'total_delivery_charge' => $request->total_delivery_charge ?? 0,
-            'grand_total' => $request->grand_total,
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone_number' => $request->phone_number,
-            'address' => $request->address,
-            'country_id' => $request->country_id,
-            'state_id' => $request->state_id,
-            'city_id' => $request->city_id,
-            'order_status' => 'pending',
-            'is_paid' => $request->is_paid ? 1 : 0,
-            'transaction_id' => $request->transaction_id,
-        ]);
+    //     // 1. Create the order
+    //     $order = OrderDetail::create([
+    //         'user_id' => $user->id,
+    //         'product_id' => $product->id,
+    //         'product_quantity' => $request->product_quantity,
+    //         'product_base_price' => $product->distributor_price,
+    //         'product_gst_amount' => $gstAmount,
+    //         'product_total_price' => $request->product_total_price,
+    //         'total_delivery_charge' => $request->total_delivery_charge ?? 0,
+    //         'grand_total' => $request->grand_total,
+    //         'name' => $request->name,
+    //         'email' => $request->email,
+    //         'phone_number' => $request->phone_number,
+    //         'address' => $request->address,
+    //         'country_id' => $request->country_id,
+    //         'state_id' => $request->state_id,
+    //         'city_id' => $request->city_id,
+    //         'order_status' => 'pending',
+    //         'is_paid' => $request->is_paid ? 1 : 0,
+    //         'transaction_id' => $request->transaction_id,
+    //     ]);
 
-        // 2. Add BV to user's self_purchased_bv
-        $user->self_purchased_bv += $bvPoints;
-        $user->save();
+    //     // 2. Add BV to user's self_purchased_bv
+    //     $user->self_purchased_bv += $bvPoints;
+    //     $user->save();
 
-        // 2b. Record in users_bvs with type 'Self'
-        $bvRecord = UsersBV::create([
-            'user_id'       => $user->id,
-            'membership_id' => $user->membership_id,
-            'bv_points'     => $bvPoints,
-            'upgrade_time'  => Carbon::now(),
-            'type'          => 'Self-purchased',
-            'position'      => $user->position,
-        ]);
+    //     // 2b. Record in users_bvs with type 'Self'
+    //     $bvRecord = UsersBV::create([
+    //         'user_id'       => $user->id,
+    //         'membership_id' => $user->membership_id,
+    //         'bv_points'     => $bvPoints,
+    //         'upgrade_time'  => Carbon::now(),
+    //         'type'          => 'Self-purchased',
+    //         'position'      => $user->position,
+    //     ]);
 
-        // 3. Distribute BV to sponsor (parent)
-        if ($user->sponsor_id) {
-            $sponsor = User::find($user->sponsor_id);
-            if ($sponsor) {
-                $bvService = new BVDistributionService();
-                $bvService->distributeBVPoints(
-                    $user,                   // the current user
-                    $bvPoints,              // total BV to distribute
-                    $user->membership_id,   // membership_id used by UsersBV
-                    $user->id               // original user to prevent loops
-                );
-            }
+    //     // 3. Distribute BV to sponsor (parent)
+    //     if ($user->sponsor_id) {
+    //         $sponsor = User::find($user->sponsor_id);
+    //         if ($sponsor) {
+    //             $bvService = new BVDistributionService();
+    //             $bvService->distributeBVPoints(
+    //                 $user,                   // the current user
+    //                 $bvPoints,              // total BV to distribute
+    //                 $user->membership_id,   // membership_id used by UsersBV
+    //                 $user->id               // original user to prevent loops
+    //             );
+    //         }
+    //     }
+
+    //     // Clear the cart after successful order
+    //     Cart::where('user_id', $user->id)->delete();
+
+    //     return redirect()->route('user.products')->with('success', 'Order placed successfully!');
+    // }
+
+    public function storeOrder(Request $request)
+{
+    // 1. Validate only the existing fields (we leave everything else as-is)
+    $request->validate([
+        'product_id'            => 'required|exists:products,id',
+        'product_quantity'      => 'required|integer|min:1',
+        'product_total_price'   => 'required|numeric',
+        'total_delivery_charge' => 'nullable|numeric',
+        'grand_total'           => 'required|numeric',
+        'name'                  => 'required|string|max:191',
+        'email'                 => 'required|email',
+        'phone_number'          => 'required|digits:10',
+        'address'               => 'required|string',
+        'country_id'            => 'required|integer',
+        'state_id'              => 'required|integer',
+        'city_id'               => 'required|integer',
+        'transaction_id'        => 'nullable|string',
+    ]);
+
+    $user = Auth::user();
+
+    // 2. Grab all items from the cart instead of just one product
+    $cartItems = Cart::where('user_id', $user->id)->get();
+
+    // 3. Build pipe‑separated strings for IDs, quantities and line‑totals
+    $productIds  = $cartItems->pluck('product_id')->implode('|');
+    $quantities  = $cartItems->pluck('quantity')->implode('|');
+    $lineTotals  = $cartItems->map(function($item){
+        $unitPrice = $item->product->distributor_price
+                   + ($item->product->distributor_price * $item->product->gst / 100);
+        return number_format($unitPrice * $item->quantity, 2, '.', '');
+    })->implode('|');
+
+    // 4. Compute total BV from all items
+    $totalBV = $cartItems->sum(function($item){
+        return $item->product->bv_points * $item->quantity;
+    });
+
+    // 5. Create the order record
+    $order = OrderDetail::create([
+        'user_id'               => $user->id,
+        'product_id'            => $productIds,
+        'product_quantity'      => $quantities,
+        'product_total_price'   => $lineTotals,
+        'total_delivery_charge' => $request->total_delivery_charge ?? 0,
+        'grand_total'           => $request->grand_total,
+        'name'                  => $request->name,
+        'email'                 => $request->email,
+        'phone_number'          => $request->phone_number,
+        'address'               => $request->address,
+        'country_id'            => $request->country_id,
+        'state_id'              => $request->state_id,
+        'city_id'               => $request->city_id,
+        'order_status'          => 'pending',
+        'is_paid'               => $request->is_paid ? 1 : 0,
+        'transaction_id'        => $request->transaction_id,
+    ]);
+
+    // 6. Add BV to user's self_purchased_bv
+    $user->self_purchased_bv += $totalBV;
+    $user->save();
+
+    // 7. Record in users_bvs
+    UsersBV::create([
+        'user_id'       => $user->id,
+        'membership_id' => $user->membership_id,
+        'bv_points'     => $totalBV,
+        'upgrade_time'  => Carbon::now(),
+        'type'          => 'Self-purchased',
+        'position'      => $user->position,
+    ]);
+
+    // 8. Distribute BV to sponsor
+    if ($user->sponsor_id) {
+        $sponsor = User::find($user->sponsor_id);
+        if ($sponsor) {
+            $bvService = new BVDistributionService();
+            $bvService->distributeBVPoints(
+                $user,
+                $totalBV,
+                $user->membership_id,
+                $user->id
+            );
         }
-
-        // Clear the cart after successful order
-        Cart::where('user_id', $user->id)->delete();
-
-        return redirect()->route('user.products')->with('success', 'Order placed successfully!');
     }
+
+    // 9. Clear the cart
+    Cart::where('user_id', $user->id)->delete();
+
+    // 10. Redirect as before
+    return redirect()
+        ->route('user.products')
+        ->with('success', 'Order placed successfully!');
+}
 
     public function orderHistory()
     {

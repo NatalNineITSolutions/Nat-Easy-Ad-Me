@@ -30,9 +30,33 @@
                         <tr>
                             <td>#{{ $order->id }}</td>
                             <td>{{ $order->name }}<br><small>{{ $order->email }}</small></td>
-                            <td>{{ $order->product->name ?? 'N/A' }}</td>
-                            <td>{{ $order->product_quantity }}</td>
-                            <td>₹{{ number_format($order->product_total_price, 2) }}</td>
+                            <td>
+                                @php $productIds = explode('|', $order->product_id); @endphp
+                                <ul class="list-unstyled mb-0">
+                                    @foreach ($productIds as $pid)
+                                        @php $product = \App\Models\Product::find($pid); @endphp
+                                        <li>{{ $product->name ?? 'N/A' }}</li>
+                                    @endforeach
+                                </ul>
+                            </td>
+
+                            <td>
+                                @php $quantities = explode('|', $order->product_quantity); @endphp
+                                <ul class="list-unstyled mb-0">
+                                    @foreach ($quantities as $qty)
+                                        <li>{{ $qty }}</li>
+                                    @endforeach
+                                </ul>
+                            </td>
+
+                            <td>
+                                @php $prices = explode('|', $order->product_total_price); @endphp
+                                <ul class="list-unstyled mb-0">
+                                    @foreach ($prices as $price)
+                                        <li>₹{{ number_format((float)$price, 2) }}</li>
+                                    @endforeach
+                                </ul>
+                            </td>
                             <td>₹{{ number_format($order->total_delivery_charge, 2) }}</td>
                             <td>₹{{ number_format($order->grand_total, 2) }}</td>
                             

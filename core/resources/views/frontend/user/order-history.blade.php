@@ -1,3 +1,4 @@
+{{-- resources/views/frontend/user/order-history.blade.php --}}
 @extends('frontend.layout.master')
 
 @section('site-title')
@@ -7,12 +8,27 @@
 @section('content')
     <div class="profile-setting setting-page section-padding2">
         <div class="container-1920 plr1">
+
+            {{-- 🔔 Flash success alert --}}
+            @if(session('success'))
+                <div class="row">
+                    <div class="col-12">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <div class="row">
                 <div class="col-12">
                     <div class="profile-setting-wraper">
+                        {{-- Background / cover image --}}
                         @include('frontend.user.layout.partials.user-profile-background-image')
 
                         <div class="down-body-wraper">
+                            {{-- Sidebar --}}
                             @include('frontend.user.layout.partials.sidebar')
 
                             <div class="main-body">
@@ -32,7 +48,7 @@
                                                             <thead>
                                                                 <tr>
                                                                     <th>#</th>
-                                                                    <th>Product</th>
+                                                                    <th>Product(s)</th>
                                                                     <th>Quantity</th>
                                                                     <th>Total Price</th>
                                                                     <th>Delivery</th>
@@ -43,15 +59,51 @@
                                                             </thead>
                                                             <tbody>
                                                                 @foreach($orders as $order)
+                                                                    @php
+                                                                        // split pipe‑delimited values
+                                                                        $ids       = explode('|', $order->product_id);
+                                                                        $qtys      = explode('|', $order->product_quantity);
+
+                                                                        $partsPrice    = explode('|', $order->product_total_price);
+                                                                        $productTotal  = (float) end($partsPrice);
+
+                                                                        $partsDel      = explode('|', $order->total_delivery_charge);
+                                                                        $deliveryTotal = (float) end($partsDel);
+
+                                                                        $partsGrand    = explode('|', $order->grand_total);
+                                                                        $grandTotal    = (float) end($partsGrand);
+                                                                    @endphp
                                                                     <tr>
                                                                         <td>{{ $loop->iteration }}</td>
-                                                                        <td>{{ $order->product?->name ?? '-' }}</td>
-                                                                        <td>{{ $order->product_quantity }}</td>
-                                                                        <td>₹{{ number_format($order->product_total_price, 2) }}</td>
-                                                                        <td>₹{{ number_format($order->total_delivery_charge, 2) }}</td>
-                                                                        <td>₹{{ number_format($order->grand_total, 2) }}</td>
+
+                                                                        {{-- Product names list --}}
                                                                         <td>
-                                                                            <span class="badge bg-info text-dark text-capitalize">{{ $order->order_status }}</span>
+                                                                            <ul class="list-unstyled mb-0">
+                                                                                @foreach($ids as $i => $pid)
+                                                                                    @php
+                                                                                        $prod = \App\Models\Product::find($pid);
+                                                                                    @endphp
+                                                                                    <li>{{ $prod->name ?? 'N/A' }}</li>
+                                                                                @endforeach
+                                                                            </ul>
+                                                                        </td>
+
+                                                                        {{-- Corresponding quantities --}}
+                                                                        <td>
+                                                                            <ul class="list-unstyled mb-0">
+                                                                                @foreach($qtys as $qty)
+                                                                                    <li>{{ $qty }}</li>
+                                                                                @endforeach
+                                                                            </ul>
+                                                                        </td>
+
+                                                                        <td>₹{{ number_format($productTotal, 2) }}</td>
+                                                                        <td>₹{{ number_format($deliveryTotal, 2) }}</td>
+                                                                        <td>₹{{ number_format($grandTotal, 2) }}</td>
+                                                                        <td>
+                                                                            <span class="badge bg-info text-dark text-capitalize">
+                                                                                {{ $order->order_status }}
+                                                                            </span>
                                                                         </td>
                                                                         <td>
                                                                             @if($order->is_paid)
@@ -71,17 +123,19 @@
                                                     </div>
                                                 @endif
 
-                                                {{-- Optional Pagination --}}
-                                                {{-- <div class="pagination-wrapper mt-3 d-flex justify-content-center">
+                                                {{-- Optional pagination --}}
+                                                {{-- 
+                                                <div class="pagination-wrapper mt-3 d-flex justify-content-center">
                                                     {{ $orders->links('pagination::bootstrap-4') }}
-                                                </div> --}}
+                                                </div>
+                                                --}}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div> <!-- /.main-body -->
-                        </div> <!-- /.down-body-wraper -->
-                    </div> <!-- /.profile-setting-wraper -->
+                            </div> {{-- /.main-body --}}
+                        </div> {{-- /.down-body-wraper --}}
+                    </div> {{-- /.profile-setting-wraper --}}
                 </div>
             </div>
         </div>

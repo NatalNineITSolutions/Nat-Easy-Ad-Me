@@ -50,7 +50,7 @@
                     class="lar la-heart icon"></i></a></li>
 
         <li class="single position-relative">
-            <a href="#" class="heart position-relative">
+            <a href="{{ route('user.product.buy') }}" class="heart position-relative">
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count" style="font-size: 10px;">
                     {{ $cart_count }}
                 </span>

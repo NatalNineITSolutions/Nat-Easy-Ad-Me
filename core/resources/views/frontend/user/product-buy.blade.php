@@ -150,38 +150,75 @@
 
                         <input type="hidden" name="quantity" value="{{ $quantity }}">
 
-                        <div class="row">
+                         <div class="row">
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Full Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="name" id="name" class="form-control" required>
-                                </div>
-                            </div>  
-
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="email" class="form-label">{{ __('Email') }}<span class="text-danger">*</span></label>
-                                    <input type="email" name="email" id="email" class="form-control" required>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        id="name"
+                                        class="form-control"
+                                        required
+                                        value="{{ old('name', $user->username ?? '') }}"
+                                    >
                                 </div>
                             </div>
 
                             <div class="col-md-4">
-                                <label for="phone" class="form-label">{{ __('Phone Number') }}<span class="text-danger">*</span></label>
-                                <input type="text" name="phone" id="phone" class="form-control" maxlength="10" pattern="\d{10}" required>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        id="email"
+                                        class="form-control"
+                                        required
+                                        value="{{ old('email', $user->email ?? '') }}"
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="phone" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                <input
+                                    type="text"
+                                    name="phone"
+                                    id="phone"
+                                    class="form-control"
+                                    maxlength="10"
+                                    pattern="\d{10}"
+                                    required
+                                    value="{{ old('phone', $user->phone ?? '') }}"
+                                >
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="mb-3 col-md-6">
-                                <label for="address" class="form-label">{{ __('Address') }}<span class="text-danger">*</span></label>
-                                <textarea name="address" id="address" rows="3" class="form-control" required></textarea>
+                                <label for="address" class="form-label">Address <span class="text-danger">*</span></label>
+                                <textarea
+                                    name="address"
+                                    id="address"
+                                    rows="3"
+                                    class="form-control"
+                                    required
+                                >{{ old('address', $identity->address ?? '') }}</textarea>
                             </div>
 
                             <div class="mb-3 col-md-6">
-                                <label for="pincode" class="form-label">{{ __('Pincode') }}<span class="text-danger">*</span></label>
-                                <input type="text" name="pincode" id="pincode" class="form-control" maxlength="6" pattern="\d{6}" required>
+                                <label for="pincode" class="form-label">Pincode <span class="text-danger">*</span></label>
+                                <input
+                                    type="text"
+                                    name="pincode"
+                                    id="pincode"
+                                    class="form-control"
+                                    maxlength="6"
+                                    pattern="\d{6}"
+                                    required
+                                    value="{{ old('pincode', $identity->zip_code  ?? '') }}"
+                                >
                             </div>
-
                         </div>
 
                         <div class="row mb-3">
@@ -234,7 +271,7 @@
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 {{-- State and city fetch --}}
-<script>
+{{-- <script>
     $(function () {
         $('#country, #state, #city').select2({ theme: 'bootstrap4' });
 
@@ -365,6 +402,147 @@
 }
 
     });
+</script> --}}
+
+<script>
+$(function () {
+    $('#country, #state, #city').select2({ theme: 'bootstrap4' });
+
+    const csrfToken        = $('meta[name="csrf-token"]').attr('content');
+    const $country         = $('#country');
+    const $state           = $('#state');
+    const $city            = $('#city');
+    const deliveryCharges  = @json($deliveryCharges);
+
+    // Fetch states normally…
+    $country.on('select2:select', function (e) {
+        const countryID = e.params.data.id;
+        $state.prop('disabled', true).html('<option>Loading…</option>').trigger('change.select2');
+        fetch("{{ route('user.get.states') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ country_id: countryID })
+        })
+        .then(r => r.json())
+        .then(states => {
+            $state.prop('disabled', false)
+                  .empty()
+                  .append(states.length
+                      ? '<option value="">Select State</option>'
+                      : '<option disabled>No states</option>');
+            states.forEach(st => $state.append(new Option(st.state, st.id)));
+            $state.trigger('change.select2');
+        })
+        .catch(() => {
+            $state.prop('disabled', false)
+                  .html('<option disabled>Failed to load states</option>')
+                  .trigger('change.select2');
+        });
+    });
+
+    // When a state is selected, fetch cities AND update delivery charges
+    $state.on('select2:select', function () {
+        const stateID = $state.val();
+        $city.prop('disabled', true).html('<option>Loading…</option>').trigger('change.select2');
+
+        fetch("{{ route('user.get.cities') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ state_id: stateID })
+        })
+        .then(r => r.json())
+        .then(cities => {
+            $city.prop('disabled', false)
+                 .empty()
+                 .append(cities.length
+                     ? '<option value="">Select City</option>'
+                     : '<option disabled>No cities</option>');
+            cities.forEach(ct => $city.append(new Option(ct.city, ct.id)));
+            $city.trigger('change.select2');
+
+            // Now recalc and persist delivery charges
+            calculateAndSaveDelivery(stateID);
+        })
+        .catch(() => {
+            $city.prop('disabled', false)
+                 .html('<option disabled>Failed to load cities</option>')
+                 .trigger('change.select2');
+        });
+    });
+
+    function calculateAndSaveDelivery(stateID) {
+        const zoneCharge = deliveryCharges.find(c => 
+            parseInt(c.zone?.state_id) === parseInt(stateID)
+        ) || {};
+
+        let footerTotalDelivery = 0;
+        let footerGrandTotal    = 0;
+
+        $('#order-summary-table tbody tr[data-cart-id]').each(function() {
+            const $row            = $(this);
+            const cartId          = $row.data('cart-id');
+            const weight          = parseFloat($row.data('weight'))   || 0;
+            const quantity        = parseInt($row.data('quantity'))   || 1;
+            const unitPrice       = parseFloat($row.data('price'))    || 0;
+            const productBaseTotal= unitPrice * quantity;
+            const totalWeightG    = weight * quantity * 1000;
+
+            // your existing per‑row formula
+            let deliveryCharge = 0;
+            if (zoneCharge.weight_in_grams) {
+                const perUnitCharge = (productBaseTotal >= zoneCharge.min_order)
+                                    ? zoneCharge.delivery_charge
+                                    : zoneCharge.default_delivery_charge;
+                const units         = Math.ceil(totalWeightG / zoneCharge.weight_in_grams);
+                deliveryCharge      = units * perUnitCharge;
+            }
+
+            // update the UI
+            $row.find('.delivery-charge-cell')
+                .text(`₹${deliveryCharge.toFixed(2)}`);
+            const rowTotal = productBaseTotal + deliveryCharge;
+            $row.find('.product-total-cell')
+                .text(`₹${rowTotal.toFixed(2)}`);
+
+            // persist to DB
+            $.ajax({
+    url: "{{ route('user.cart.update.delivery') }}",
+    method: "POST",
+    headers: { 'X-CSRF-TOKEN': csrfToken },
+    data: {
+        cart_id:         cartId,
+        delivery_charge: deliveryCharge
+    },
+    success() {
+        // ✅ No footer update here — let grand total be updated at the end of the loop
+        console.log(`Delivery charge saved for cart ${cartId}`);
+    },
+    error() {
+        console.error(`Could not save delivery for cart ${cartId}`);
+    }
+});
+
+
+            footerTotalDelivery += deliveryCharge;
+            footerGrandTotal    += rowTotal;
+        });
+
+        // refresh footer sums
+        $('#total-delivery-charge').text(`₹${footerTotalDelivery.toFixed(2)}`);
+        $('#grand-total-amount').text(`₹${footerGrandTotal.toFixed(2)}`);
+        // also update the hidden inputs for your modal
+        $('#modal_delivery_charge').val(footerTotalDelivery);
+        $('#modal_grand_total').val(footerGrandTotal);
+    }
+});
 </script>
 
 {{-- Update quantity --}}
@@ -553,9 +731,12 @@ $(document).ready(function () {
                 return;
             }
 
+            const fixedTotal    = parseFloat(grandTotal.toFixed(2));   // e.g. "268.80"
+            const amountInPaise = Math.round(fixedTotal * 100);
+
             const options = {
                 key: "rzp_test_1DP5mmOlF5G5ag", 
-                amount: Math.round(grandTotal * 100), // Razorpay expects amount in paise
+                amount: amountInPaise,
                 currency: "INR",
                 name: "EasyAdMe",
                 description: "Order Payment",

@@ -81,7 +81,7 @@
                 <p class="description">{{ $product->description ?? 'No description available for this product.' }}</p>
                 <div><strong>Category:</strong> {{ $product->category->category ?? 'Uncategorized' }}</div>
                 <p class="card-text text-muted">
-                    <small>BV Points: {{ $product->bv_points ?? 0 }}</small>
+                    <small>BV Points: <span id="bvPoints">{{ $product->bv_points ?? 0 }}</span></small>
                 </p>
 
                 @php
@@ -138,167 +138,172 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-    const decreaseBtn = document.getElementById("decreaseQty");
-    const increaseBtn = document.getElementById("increaseQty");
-    const quantityInput = document.getElementById("quantity");
-    const priceDisplay = document.getElementById("totalPrice");
-    const gstDisplay = document.getElementById("gstAmount");
-    const buyNowBtn = document.getElementById("buyNowBtn");
+        const decreaseBtn = document.getElementById("decreaseQty");
+        const increaseBtn = document.getElementById("increaseQty");
+        const quantityInput = document.getElementById("quantity");
+        const priceDisplay = document.getElementById("totalPrice");
+        const gstDisplay = document.getElementById("gstAmount");
+        const bvPointsEl = document.getElementById("bvPoints");
 
-    // Set base values from PHP using data attributes
-    const distributorPrice = parseFloat({{ $distributorPrice }});
-    const gstPercent = parseFloat({{ $gstPercent }});
+        // Set base values from PHP using data attributes
+        const distributorPrice = parseFloat({{ $distributorPrice }});
+        const gstPercent = parseFloat({{ $gstPercent }});
+        const perUnitBv = parseFloat({{ $product->bv_points ?? 0 }});
 
-    function updatePriceAndLink() {
-        const qty = parseInt(quantityInput.value);
-        const subtotal = distributorPrice * qty;
-        const gst = (subtotal * gstPercent) / 100;
-        const total = subtotal + gst;
+        function updatePriceAndGstAndBv() {
+            const qty = parseInt(quantityInput.value);
+            const subtotal = distributorPrice * qty;
+            const gst = (subtotal * gstPercent) / 100;
+            const total = subtotal + gst;
+            const totalBv = perUnitBv * qty;
 
-        // Update price display
-        gstDisplay.textContent = `GST ( ${gstPercent}% ): ₹${gst.toFixed(2)}`;
-        priceDisplay.textContent = `Total: ₹${total.toFixed(2)}`;
-        
-        // Update Buy Now link with current quantity
-        buyNowBtn.href = `{{ route('user.product.buy', $product->id) }}?quantity=${qty}`;
-    }
-
-    // Quantity button handlers
-    decreaseBtn.addEventListener("click", function () {
-        let value = parseInt(quantityInput.value);
-        if (value > 1) {
-            quantityInput.value = value - 1;
-            updatePriceAndLink();
+            // Update displays
+            gstDisplay.textContent = `GST ( ${gstPercent}% ): ₹${gst.toFixed(2)}`;
+            priceDisplay.textContent = `Total: ₹${total.toFixed(2)}`;
+            
+            // Update BV points display
+            if (bvPointsEl) {
+                bvPointsEl.textContent = totalBv.toFixed(0);
+            }
         }
-    });
 
-    increaseBtn.addEventListener("click", function () {
-        let value = parseInt(quantityInput.value);
-        quantityInput.value = value + 1;
-        updatePriceAndLink();
-    });
+        // Quantity button handlers
+        decreaseBtn.addEventListener("click", function () {
+            let value = parseInt(quantityInput.value);
+            if (value > 1) {
+                quantityInput.value = value - 1;
+                updatePriceAndGstAndBv();
+            }
+        });
 
-    // Initialize
-    updatePriceAndLink();
-});
+        increaseBtn.addEventListener("click", function () {
+            let value = parseInt(quantityInput.value);
+            quantityInput.value = value + 1;
+            updatePriceAndGstAndBv();
+        });
+
+        // Initialize
+        updatePriceAndGstAndBv();
+    });
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const addToCartUrl = "{{ route('user.add.to.cart') }}";
-        const checkCartUrl = "{{ route('user.check.cart') }}";
-        const buyNowRedirectUrl = "{{ route('user.product.buy') }}";
-        const quantityInput = document.getElementById("quantity");
+document.addEventListener("DOMContentLoaded", function () {
+  const addToCartUrl       = "{{ route('user.add.to.cart') }}";
+  const checkCartUrl       = "{{ route('user.check.cart') }}";
+  const buyNowRedirectUrl  = "{{ route('user.product.buy') }}";
+  const quantityInput      = document.getElementById("quantity");
+  const bvPointsEl         = document.getElementById("bvPoints");
+  const addToCartBtn       = document.querySelector(".add-to-cart-btn");
+  const buyNowBtn          = document.querySelector(".buy-now-btn");
 
-        const addToCartBtn = document.querySelector(".add-to-cart-btn");
-        const buyNowBtn = document.querySelector(".buy-now-btn");
+  function showSpinner(btn, label = 'Loading...') {
+    btn.dataset.originalText = btn.innerHTML;
+    btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> ${label}`;
+    btn.disabled = true;
+  }
 
-        function showSpinner(btn, label = 'Loading...') {
-            btn.dataset.originalText = btn.innerHTML;
-            btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> ${label}`;
-            btn.disabled = true;
+  function restoreButton(btn) {
+    if (btn.dataset.originalText) {
+      btn.innerHTML = btn.dataset.originalText;
+    }
+    btn.disabled = false;
+  }
+
+  // Add to Cart Handler (unchanged)
+  addToCartBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    const productId = this.dataset.productId;
+    const quantity  = parseInt(quantityInput.value) || 1;
+
+    showSpinner(this, 'Adding...');
+
+    fetch(addToCartUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+      },
+      body: JSON.stringify({ product_id: productId, quantity })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 'success') {
+        toastr.success(data.message);
+        if (data.cart_count !== undefined) {
+          const cartBadge = document.querySelector('.cart-count');
+          if (cartBadge) {
+            cartBadge.textContent = data.cart_count;
+            cartBadge.classList.add('pulse');
+            setTimeout(() => cartBadge.classList.remove('pulse'), 600);
+          }
         }
-
-        function restoreButton(btn) {
-            if (btn.dataset.originalText) {
-                btn.innerHTML = btn.dataset.originalText;
-            }
-            btn.disabled = false;
-        }
-
-        // Add to Cart Handler
-        addToCartBtn.addEventListener("click", function (e) {
-            e.preventDefault();
-            const productId = this.dataset.productId;
-            const quantity = parseInt(quantityInput.value) || 1;
-
-            showSpinner(this, 'Adding...');
-
-            fetch(addToCartUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                },
-                body: JSON.stringify({
-                    product_id: productId,
-                    quantity: quantity
-                })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    toastr.success(data.message);
-                    if (data.cart_count !== undefined) {
-                        const cartBadge = document.querySelector('.cart-count');
-                        if (cartBadge) {
-                            cartBadge.textContent = data.cart_count;
-                            cartBadge.classList.add('pulse');
-                            setTimeout(() => cartBadge.classList.remove('pulse'), 600);
-                        }
-                    }
-                } else if (data.status === 'info') {
-                    toastr.info(data.message);
-                } else {
-                    toastr.error(data.message || 'Failed to add product.');
-                }
-            })
-            .catch(() => {
-                toastr.error('Something went wrong!');
-            })
-            .finally(() => {
-                restoreButton(this);
-            });
-        });
-
-        // Buy Now Handler
-        buyNowBtn.addEventListener("click", function (e) {
-            e.preventDefault();
-            const productId = this.dataset.productId;
-            const quantity = parseInt(quantityInput.value) || 1;
-
-            showSpinner(this, 'Buying...');
-
-            fetch(`${checkCartUrl}?product_id=${productId}`, {
-                method: 'GET',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                }
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.in_cart) {
-                    window.location.href = `${buyNowRedirectUrl}?product_id=${productId}&quantity=${quantity}`;
-                } else {
-                    return fetch(addToCartUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                        },
-                        body: JSON.stringify({
-                            product_id: productId,
-                            quantity: quantity
-                        })
-                    })
-                    .then(res => res.json())
-                    .then(cartData => {
-                        if (cartData.status === 'success' || cartData.status === 'info') {
-                            toastr.success(cartData.message || 'Added to cart.');
-                            window.location.href = `${buyNowRedirectUrl}?product_id=${productId}&quantity=${quantity}`;
-                        } else {
-                            toastr.error(cartData.message || 'Failed to add to cart.');
-                        }
-                    });
-                }
-            })
-            .catch(() => {
-                toastr.error('Something went wrong during Buy Now!');
-            })
-            .finally(() => {
-                restoreButton(this);
-            });
-        });
+      } else if (data.status === 'info') {
+        toastr.info(data.message);
+      } else {
+        toastr.error(data.message || 'Failed to add product.');
+      }
+    })
+    .catch(() => {
+      toastr.error('Something went wrong!');
+    })
+    .finally(() => {
+      restoreButton(this);
     });
+  });
+
+  // Buy Now Handler (with BV included)
+  buyNowBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    const productId = this.dataset.productId;
+    const quantity  = parseInt(quantityInput.value) || 1;
+    const bvPoints  = parseInt(bvPointsEl.textContent, 10) || 0;
+
+    showSpinner(this, 'Buying...');
+
+    // first check if already in cart
+    fetch(`${checkCartUrl}?product_id=${productId}`, {
+      method: 'GET',
+      headers: {
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      // build the redirect URL, including BV
+      const redirectUrl = `${buyNowRedirectUrl}?product_id=${productId}&quantity=${quantity}&bv_points=${bvPoints}`;
+
+      if (data.in_cart) {
+        window.location.href = redirectUrl;
+      } else {
+        // otherwise add to cart, then redirect
+        return fetch(addToCartUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+          },
+          body: JSON.stringify({ product_id: productId, quantity })
+        })
+        .then(res => res.json())
+        .then(cartData => {
+          if (cartData.status === 'success' || cartData.status === 'info') {
+            toastr.success(cartData.message || 'Added to cart.');
+            window.location.href = redirectUrl;
+          } else {
+            toastr.error(cartData.message || 'Failed to add to cart.');
+          }
+        });
+      }
+    })
+    .catch(() => {
+      toastr.error('Something went wrong during Buy Now!');
+    })
+    .finally(() => {
+      restoreButton(this);
+    });
+  });
+});
 </script>

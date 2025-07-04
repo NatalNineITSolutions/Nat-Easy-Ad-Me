@@ -23,13 +23,17 @@
                             </a>
                             <div class="card-body d-flex flex-column">
                                 <a href="{{ route('user.product.details', $product->id) }}">
-                                    <h5 class="card-title">{{ $product->name }}</h5>
+                                    <h5 class="card-title">
+                                        {{ $product->name }}
+                                        @if($product->unit)
+                                            <small class="text-muted" style="font-size: 13px;">
+                                                ({{ (int) $product->unit_measurement }} {{ $product->unit->name }})
+                                            </small>
+                                        @endif
+                                    </h5>
                                 </a>
-                                <p class="card-text text-muted">
-                                    <small>Distributor Price: ₹{{ $product->distributor_price }}</small>
-                                </p>
                                 <p class="card-text text-muted mb-1">
-                                    <small>BV Points: {{ $product->bv_points ?? 0 }}</small>
+                                    <small>DP: ₹{{ $product->distributor_price }} | BV: {{ $product->bv_points ?? 0 }}</small>
                                 </p>
                                 <div class="d-flex gap-2 mt-auto">
                                     <a href="#" class="btn btn-sm btn-outline-secondary w-50 add-to-cart-btn"
@@ -54,120 +58,7 @@
     </div>
 @endsection
 
-{{-- @section('scripts')
-<!-- Toastr -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-<script>
-    $(function() {
-        const addToCartUrl = "{{ route('user.add.to.cart') }}";
-        const checkCartUrl = "{{ route('user.check.cart') }}";
-        const buyNowRedirectUrl = "{{ route('user.product.buy') }}";
-
-        // Add to Cart
-        $('.container-1920').off('click', '.add-to-cart-btn').on('click', '.add-to-cart-btn', function(e) {
-            e.preventDefault();
-            const $btn = $(this);
-            if ($btn.hasClass('processing')) return;
-
-            $btn.addClass('processing').prop('disabled', true);
-
-            const productId = $btn.data('product-id');
-            const quantity = $btn.data('quantity') || 1;
-
-            fetch(addToCartUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                },
-                body: JSON.stringify({
-                    product_id: productId,
-                    quantity: quantity
-                })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    toastr.success(data.message);
-
-                    if (data.cart_count !== undefined) {
-                        const $cartBadge = $('.cart-count');
-                        $cartBadge.text(data.cart_count).addClass('pulse');
-                        setTimeout(() => $cartBadge.removeClass('pulse'), 600);
-                    }
-                } else if (data.status === 'info') {
-                    toastr.info(data.message);
-                } else {
-                    toastr.error(data.message || 'Failed to add product.');
-                }
-            })
-            .catch(() => {
-                toastr.error('Something went wrong!');
-            })
-            .finally(() => {
-                $btn.removeClass('processing').prop('disabled', false);
-            });
-        });
-
-        // Buy Now
-        $('.container-1920').off('click', '.buy-now-btn').on('click', '.buy-now-btn', function(e) {
-            e.preventDefault();
-            const $btn = $(this);
-            if ($btn.hasClass('processing')) return;
-
-            $btn.addClass('processing').prop('disabled', true);
-
-            const productId = $btn.data('product-id');
-            const quantity = $btn.data('quantity') || 1;
-
-            fetch(checkCartUrl + '?product_id=' + productId, {
-                method: 'GET',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                }
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.in_cart) {
-                    window.location.href = buyNowRedirectUrl;
-                } else {
-                    return fetch(addToCartUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                        },
-                        body: JSON.stringify({
-                            product_id: productId,
-                            quantity: quantity
-                        })
-                    })
-                    .then(res => res.json())
-                    .then(cartData => {
-                        if (cartData.status === 'success' || cartData.status === 'info') {
-                            toastr.success(cartData.message || 'Added to cart.');
-                            window.location.href = buyNowRedirectUrl;
-                        } else {
-                            toastr.error(cartData.message || 'Failed to add to cart.');
-                        }
-                    });
-                }
-            })
-            .catch(() => {
-                toastr.error('Something went wrong during Buy Now!');
-            })
-            .finally(() => {
-                $btn.removeClass('processing').prop('disabled', false);
-            });
-        });
-    });
-</script>
-
-@endsection --}}
-
 @section('scripts')
-<!-- Toastr -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 <script>

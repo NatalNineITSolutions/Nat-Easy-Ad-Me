@@ -864,7 +864,7 @@ class DashboardController extends Controller
             return view('frontend.user.product-slider')->with('notVerified', true);
         }
 
-        $products = Product::latest()->paginate(10); 
+        $products = Product::with('unit')->latest()->paginate(10); 
         return view('frontend.user.product-slider', compact('products'));
     }
 

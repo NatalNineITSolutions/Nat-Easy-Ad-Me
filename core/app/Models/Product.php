@@ -19,6 +19,8 @@ class Product extends Model
         'weight',
         'gst',
         'category_id',
+        'unit_id',
+        'unit_measurement',
         'description',
         'image',
     ];
@@ -31,6 +33,11 @@ class Product extends Model
     public function imageFile()
     {
         return $this->belongsTo(MediaUpload::class, 'image');
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
     }
 
 

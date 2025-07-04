@@ -13,7 +13,8 @@ class DeliveryCharge extends Model
         'zone_id',
         'min_order',
         'delivery_charge',
-        'weight_in_grams',
+        'unit_id',
+        'unit_measurement',
         'default_delivery_charge',
         'setting_type',
     ];
@@ -22,6 +23,11 @@ class DeliveryCharge extends Model
     public function zone()
     {
         return $this->belongsTo(ShippingZone::class, 'zone_id');
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
     }
 
 }

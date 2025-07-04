@@ -130,16 +130,36 @@
                         required>
                 </div>
 
-                {{-- Weight --}}
+                {{-- Unit --}}
                 <div class="mb-3">
-                    <label class="form-label">{{ __('Weight (kg)') }}</label>
+                    <label class="form-label">{{ __('Unit') }}</label>
+                    <select name="unit_id" class="form-control @error('unit_id') is-invalid @enderror" required>
+                        <option value="">{{ __('Select a Unit') }}</option>
+                        @foreach($units as $unit)
+                            <option value="{{ $unit->id }}" {{ old('unit_id', $product->unit_id ?? '') == $unit->id ? 'selected' : '' }}>
+                                {{ $unit->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('unit_id')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                {{-- Unit Measurement --}}
+                <div class="mb-3">
+                    <label class="form-label">{{ __('Unit Measurement') }}</label>
                     <input
                         type="number"
                         step="0.01"
-                        name="weight"
+                        name="unit_measurement"
                         class="form-control"
-                        placeholder="{{ __('Enter weight') }}"
-                        value="{{ old('weight', $product->weight ?? '') }}">
+                        placeholder="{{ __('Enter unit measurement') }}"
+                        value="{{ old('unit_measurement', $product->unit_measurement ?? '') }}"
+                        required>
+                    @error('unit_measurement')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 {{-- GST --}}

@@ -23,6 +23,11 @@
       <input type="hidden" name="city_id"        id="modal_city_id">
       <input type="hidden" name="is_paid"        id="modal_is_paid" value="0">
 
+      <input type="hidden" id="modal_delivery_charge" name="delivery_charge" value="0">
+      <input type="hidden" id="modal_grand_total"    name="grand_total"      value="0">
+      <input type="hidden" id="modal_bv_points"      name="bv_points"        value="0">
+
+
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title">{{ __('Confirm Payment') }}</h4>

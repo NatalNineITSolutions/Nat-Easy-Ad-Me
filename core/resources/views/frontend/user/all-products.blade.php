@@ -4,65 +4,91 @@
     {{ __('All Products') }}
 @endsection
 
+<style>
+    .size-btn.selected {
+        background-color: #6c757d;
+        color: white;
+        border-color: #6c757d;
+    }
+</style>
+
 @section('content')
-    <div class="profile-setting setting-page section-padding2">
-        <div class="container-1920 plr1">
-            <h3 class="mb-4">{{ __('All Products') }}</h3>
-            <div class="row">
-                @forelse($products as $product)
-                    <div class="col-md-4 col-lg-3 mb-4">
-                        <div class="card h-100 border-0" style="border: 1px solid #e5e7eb;">
-                            @php
-                                $imgPath = $product->imageFile->path ?? 'no-image.png';
-                            @endphp
+<div class="profile-setting setting-page section-padding2">
+    <div class="container-1920 plr1">
+        <h3 class="mb-4">{{ __('All Products') }}</h3>
+        <div class="row">
+            @forelse($products as $product)
+                <div class="col-md-4 col-lg-3 mb-4">
+                    <div class="card h-100 border-0" style="border: 1px solid #e5e7eb;">
+                        @php
+                            $imgPath = $product->imageFile->path ?? 'no-image.png';
+                            $sizeIds = explode('|', $product->size_id);
+                            $sizePrices = explode('|', $product->size_price);
+                        @endphp
+                        <a href="{{ route('user.product.details', $product->id) }}">
+                            <img src="{{ asset('assets/uploads/media-uploader/' . $imgPath) }}"
+                                class="card-img-top"
+                                alt="{{ $product->name }}"
+                                style="height: 200px; object-fit: contain;">
+                        </a>
+                        <div class="card-body d-flex flex-column">
                             <a href="{{ route('user.product.details', $product->id) }}">
-                                <img src="{{ asset('assets/uploads/media-uploader/' . $imgPath) }}"
-                                     class="card-img-top"
-                                     alt="{{ $product->name }}"
-                                     style="height: 200px; object-fit: contain;">
+                                <h5 class="card-title">
+                                    {{ $product->name }}
+                                    @if($product->unit)
+                                        <small class="text-muted" style="font-size: 13px;">
+                                            ({{ (int) $product->unit_measurement }} {{ $product->unit->name }})
+                                        </small>
+                                    @endif
+                                </h5>
                             </a>
-                            <div class="card-body d-flex flex-column">
-                                <a href="{{ route('user.product.details', $product->id) }}">
-                                    <h5 class="card-title">
-                                        {{ $product->name }}
-                                        @if($product->unit)
-                                            <small class="text-muted" style="font-size: 13px;">
-                                                ({{ (int) $product->unit_measurement }} {{ $product->unit->name }})
-                                            </small>
+
+                            @if(!empty($sizeIds[0]))
+                                <div class="size-options d-flex flex-wrap gap-2 mb-2" data-base-price="{{ $product->distributor_price }}">
+                                    @foreach($sizeIds as $index => $sid)
+                                        @if(isset($sizes[$sid]))
+                                            <button type="button"
+                                                    class="btn btn-outline-dark btn-sm size-btn"
+                                                    data-size-id="{{ $sid }}"
+                                                    data-size-price="{{ $sizePrices[$index] ?? 0 }}">
+                                                {{ $sizes[$sid] }}
+                                            </button>
                                         @endif
-                                    </h5>
-                                </a>
-                                <p class="card-text text-muted mb-1">
-                                    <small>DP: ₹{{ $product->distributor_price }} | BV: {{ $product->bv_points ?? 0 }}</small>
-                                </p>
-                                <div class="d-flex gap-2 mt-auto">
-                                    <a href="#" class="btn btn-sm btn-outline-secondary w-50 add-to-cart-btn"
-                                       data-product-id="{{ $product->id }}"
-                                       data-quantity="1">Add to Cart</a>
-                                    <a href="#" class="btn btn-sm btn-primary w-50 buy-now-btn"
-                                        data-product-id="{{ $product->id }}"
-                                        data-quantity="1">Buy Now</a>
+                                    @endforeach
                                 </div>
+                            @endif
+
+                            <p class="card-text text-muted mb-1">
+                                <small>DP: ₹<span class="dp-price">{{ $product->distributor_price }}</span> | BV: {{ $product->bv_points ?? 0 }}</small>
+                            </p>
+                            <div class="d-flex gap-2 mt-auto">
+                                <a href="#" class="btn btn-sm btn-outline-secondary w-50 add-to-cart-btn"
+                                    data-product-id="{{ $product->id }}"
+                                    data-quantity="1">Add to Cart</a>
+                                <a href="#" class="btn btn-sm btn-primary w-50 buy-now-btn"
+                                    data-product-id="{{ $product->id }}"
+                                    data-quantity="1">Buy Now</a>
                             </div>
                         </div>
                     </div>
-                @empty
-                    <div class="col-12">
-                        <div class="alert alert-info text-center">
-                            {{ __('No products found.') }}
-                        </div>
+                </div>
+            @empty
+                <div class="col-12">
+                    <div class="alert alert-info text-center">
+                        {{ __('No products found.') }}
                     </div>
-                @endforelse
-            </div>
+                </div>
+            @endforelse
         </div>
     </div>
+</div>
 @endsection
 
 @section('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 <script>
-    $(function() {
+    $(function () {
         const addToCartUrl = "{{ route('user.add.to.cart') }}";
         const checkCartUrl = "{{ route('user.check.cart') }}";
         const buyNowRedirectUrl = "{{ route('user.product.buy') }}";
@@ -72,22 +98,43 @@
             $btn.html(`<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>${text}`);
         }
 
-        function restoreButton($btn) {
+        function restoreButton($btn, text = null) {
             const originalText = $btn.data('original-text');
-            if (originalText) $btn.html(originalText);
+            $btn.html(text || originalText);
         }
 
-        // Add to Cart
-        $('.container-1920').off('click', '.add-to-cart-btn').on('click', '.add-to-cart-btn', function(e) {
+        // ✅ Size selection logic
+        $(document).on('click', '.size-btn', function () {
+            const $btn = $(this);
+            const $group = $btn.closest('.size-options');
+            const basePrice = parseFloat($group.data('base-price')) || 0;
+            const extra = parseFloat($btn.data('size-price')) || 0;
+
+            $group.find('.size-btn').removeClass('selected');
+            $btn.addClass('selected');
+
+            const $dp = $group.closest('.card-body').find('.dp-price');
+            if ($dp.length) {
+                $dp.text((basePrice + extra).toFixed(2));
+            }
+        });
+
+        // ✅ Add to Cart
+        $(document).on('click', '.add-to-cart-btn', function (e) {
             e.preventDefault();
             const $btn = $(this);
             if ($btn.hasClass('processing')) return;
 
-            $btn.addClass('processing').prop('disabled', true);
-            showSpinner($btn, 'Adding...');
+            const $card = $btn.closest('.card');
+            const $selectedSize = $card.find('.size-btn.selected');
+            const sizeId = $selectedSize.length ? $selectedSize.data('size-id') : null;
+            const sizePrice = $selectedSize.length ? $selectedSize.data('size-price') : 0;
 
             const productId = $btn.data('product-id');
             const quantity = $btn.data('quantity') || 1;
+
+            $btn.addClass('processing').prop('disabled', true);
+            showSpinner($btn, 'Adding...');
 
             fetch(addToCartUrl, {
                 method: 'POST',
@@ -95,43 +142,57 @@
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                 },
-                body: JSON.stringify({ product_id: productId, quantity })
+                body: JSON.stringify({
+                    product_id: productId,
+                    quantity: quantity,
+                    size_id: sizeId,
+                    size_price: sizePrice
+                })
             })
             .then(res => res.json())
             .then(data => {
                 if (data.status === 'success') {
                     toastr.success(data.message);
-                    if (data.cart_count !== undefined) {
-                        const $cartBadge = $('.cart-count');
-                        $cartBadge.text(data.cart_count).addClass('pulse');
-                        setTimeout(() => $cartBadge.removeClass('pulse'), 600);
-                    }
+                    restoreButton($btn, 'Added');
                 } else if (data.status === 'info') {
                     toastr.info(data.message);
+                    restoreButton($btn, 'Already in Cart');
                 } else {
                     toastr.error(data.message || 'Failed to add product.');
+                    restoreButton($btn);
+                }
+
+                const $cartBadge = $('.cart-count');
+                if (data.cart_count !== undefined) {
+                    $cartBadge.text(data.cart_count).addClass('pulse');
+                    setTimeout(() => $cartBadge.removeClass('pulse'), 600);
                 }
             })
             .catch(() => {
                 toastr.error('Something went wrong!');
+                restoreButton($btn);
             })
             .finally(() => {
-                restoreButton($btn);
                 $btn.removeClass('processing').prop('disabled', false);
             });
         });
 
-        // Buy Now
-        $('.container-1920').off('click', '.buy-now-btn').on('click', '.buy-now-btn', function(e) {
+        // ✅ Buy Now
+        $(document).on('click', '.buy-now-btn', function (e) {
             e.preventDefault();
             const $btn = $(this);
             if ($btn.hasClass('processing')) return;
 
-            $btn.addClass('processing').prop('disabled', true);
-            showSpinner($btn, 'Buying...');
+            const $card = $btn.closest('.card');
+            const $selectedSize = $card.find('.size-btn.selected');
+            const sizeId = $selectedSize.length ? $selectedSize.data('size-id') : null;
+            const sizePrice = $selectedSize.length ? $selectedSize.data('size-price') : 0;
 
             const productId = $btn.data('product-id');
             const quantity = $btn.data('quantity') || 1;
+
+            $btn.addClass('processing').prop('disabled', true);
+            showSpinner($btn, 'Buying...');
 
             fetch(checkCartUrl + '?product_id=' + productId, {
                 method: 'GET',
@@ -150,7 +211,12 @@
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                         },
-                        body: JSON.stringify({ product_id: productId, quantity })
+                        body: JSON.stringify({
+                            product_id: productId,
+                            quantity: quantity,
+                            size_id: sizeId,
+                            size_price: sizePrice
+                        })
                     })
                     .then(res => res.json())
                     .then(cartData => {
@@ -167,7 +233,7 @@
                 toastr.error('Something went wrong during Buy Now!');
             })
             .finally(() => {
-                restoreButton($btn);
+                restoreButton($btn, 'Buy Now');
                 $btn.removeClass('processing').prop('disabled', false);
             });
         });

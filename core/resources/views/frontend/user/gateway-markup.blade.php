@@ -1,32 +1,24 @@
+<!-- Payment & Order Confirmation Modal -->
 <div class="modal fade" id="orderPaymentModal" tabindex="-1" aria-labelledby="orderPaymentModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <form action="{{ route('user.order.store') }}" method="POST">
       @csrf
 
-      {{-- DELIVERY & GRAND TOTAL --}}
+      {{-- --- AGGREGATE ORDER TOTALS --- --}}
       <input type="hidden" name="total_delivery_charge" id="modal_delivery_charge" value="0">
-      <input type="hidden" name="grand_total"            id="modal_grand_total"     value="0">
+      <input type="hidden" name="grand_total"             id="modal_grand_total"     value="0">
+      <input type="hidden" name="bv_points"        id="modal_bv_points"        value="0">
 
-      {{-- PRODUCT DETAILS --}}
-      <input type="hidden" name="product_id"          value="{{ $product->id }}">
-      <input type="hidden" name="product_quantity"    id="modal_product_quantity" value="{{ $quantity }}">
-      <input type="hidden" name="product_total_price" id="modal_product_price"    value="{{ $finalTotal }}">
-
-      {{-- TRANSACTION & SHIPPING INFO --}}
-      <input type="hidden" name="transaction_id" id="modal_transaction_id">
-      <input type="hidden" name="name"           id="modal_name">
-      <input type="hidden" name="email"          id="modal_email">
-      <input type="hidden" name="phone_number"   id="modal_phone">
-      <input type="hidden" name="address"        id="modal_address">
-      <input type="hidden" name="country_id"     id="modal_country_id">
-      <input type="hidden" name="state_id"       id="modal_state_id">
-      <input type="hidden" name="city_id"        id="modal_city_id">
-      <input type="hidden" name="is_paid"        id="modal_is_paid" value="0">
-
-      <input type="hidden" id="modal_delivery_charge" name="delivery_charge" value="0">
-      <input type="hidden" id="modal_grand_total"    name="grand_total"      value="0">
-      <input type="hidden" id="modal_bv_points"      name="bv_points"        value="0">
-
+      {{-- --- USER & SHIPPING INFO --- --}}
+      <input type="hidden" name="transaction_id" id="modal_transaction_id" value="">
+      <input type="hidden" name="name"           id="modal_name"          value="">
+      <input type="hidden" name="email"          id="modal_email"         value="">
+      <input type="hidden" name="phone_number"   id="modal_phone"         value="">
+      <input type="hidden" name="address"        id="modal_address"       value="">
+      <input type="hidden" name="country_id"     id="modal_country_id"    value="">
+      <input type="hidden" name="state_id"       id="modal_state_id"      value="">
+      <input type="hidden" name="city_id"        id="modal_city_id"       value="">
+      <input type="hidden" name="is_paid"        id="modal_is_paid"       value="0">
 
       <div class="modal-content">
         <div class="modal-header">
@@ -61,14 +53,8 @@
 
         <div class="modal-footer">
           <button 
-            type="button" 
-            class="btn btn-secondary" 
-            data-bs-dismiss="modal">
-            {{ __('Cancel') }}
-          </button>
-
-          <button 
-            type="submit" 
+           type="button" 
+            id="razorpayPayBtn"
             class="btn btn-primary">
             {{ __('Pay & Order Now') }}
           </button>

@@ -59,69 +59,76 @@
                                     <tr>
                                         <th>S.No</th>
                                         <th>Product Name</th>
-                                        <th>BV Points</th>
-                                        <th>Weight</th>
+                                        <th>BV</th>
+                                        <th>Size</th>
                                         <th>Price (1 qty)</th>
                                         <th>Quantity</th>
-                                        <th>Delivery Charge</th> <!-- Individual delivery charge column -->
                                         <th>Total Price</th>
+                                        <th>Delivery Charge</th>
+                                        <th>Total BV</th>
+                                        <th>Grand Total</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-center">
                                     @php
                                         $grandTotal = 0;
-                                        $totalDelivery = 0;
                                         $index = 1;
                                     @endphp
 
                                     @foreach($cartItems as $item)
                                         @php
-                                            $product = $item->product;
-                                            $quantity = $item->quantity ?? 1;
-                                            $price = $product->distributor_price ?? 0;
-                                            $gst = $product->gst ?? 0;
-                                            $weight = $product->weight ?? 0;
-                                            $bv = $product->bv_points ?? 0;
+                                            $product      = $item->product;
+                                            $quantity     = $item->quantity ?? 1;
+                                            $basePrice    = $item->price ?? 0;                // from cart table
+                                            $gstPercent   = $product->gst ?? 0;
+                                            $gstAmount    = ($basePrice * $gstPercent) / 100;
+                                            $priceWithGst = $basePrice + $gstAmount;
 
-                                            $gstAmount = ($price * $gst) / 100;
-                                            $totalPerItem = $price + $gstAmount;
-                                            $totalWeight = $weight * $quantity;
-                                            $finalTotal = $totalPerItem * $quantity;
-                                            
-                                            // Initialize delivery charge for each product
-                                            $deliveryCharge = 0;
-                                            $grandTotal += $finalTotal;
+                                            $totalPrice = $priceWithGst * $quantity;         // total price including GST
+                                            $totalBv    = ($product->bv_points ?? 0) * $quantity; 
+
+                                            $grandTotal += $totalPrice;
                                         @endphp
+
                                         <tr 
                                             data-product-id="{{ $product->id }}" 
                                             data-cart-id="{{ $item->id }}"         
-                                            data-weight="{{ $weight }}" 
                                             data-quantity="{{ $quantity }}" 
-                                            data-price="{{ $totalPerItem }}"
+                                            data-price="{{ $priceWithGst }}"
                                             data-bv="{{ $product->bv_points ?? 0 }}"
+                                            data-size="{{ strtolower($item->size->name ?? '') }}"
                                         >
                                             <td>{{ $index++ }}</td>
                                             <td>{{ $product->name }}</td>
-                                            <td>{{ $bv }}</td>
+                                            <td>{{ $product->bv_points ?? 0 }}</td>
+                                            <td>{{ $item->size->name ?? '—' }}</td>
                                             <td>
-                                                @if($weight > 0)
-                                                    {{ rtrim(rtrim(number_format($weight, 2, '.', ''), '0'), '.') }}kg × {{ $quantity }} =
-                                                    {{ rtrim(rtrim(number_format($totalWeight, 2, '.', ''), '0'), '.') }}kg
-                                                @else
-                                                    —
-                                                @endif
+                                                ₹{{ number_format($basePrice, 2) }}<br>
+                                                <small>+ ₹{{ number_format($gstAmount, 2) }} GST</small>
                                             </td>
-                                            <td>₹{{ number_format($totalPerItem, 2) }}</td>
                                             <td>
                                                 <div class="d-flex justify-content-center align-items-center">
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-circle me-1 update-qty-btn" data-action="decrease" data-id="{{ $item->id }}">−</button>
-                                                    <input type="text" class="form-control form-control-sm text-center px-1 qty-input" value="{{ $quantity }}" readonly style="width: 40px;" data-id="{{ $item->id }}">
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-circle ms-1 update-qty-btn" data-action="increase" data-id="{{ $item->id }}">+</button>
+                                                    <button type="button"
+                                                            class="btn btn-sm btn-outline-secondary rounded-circle me-1 update-qty-btn"
+                                                            data-action="decrease"
+                                                            data-id="{{ $item->id }}">−</button>
+                                                    <input type="text"
+                                                        class="form-control form-control-sm text-center px-1 qty-input"
+                                                        value="{{ $quantity }}"
+                                                        readonly
+                                                        style="width: 40px;"
+                                                        data-id="{{ $item->id }}">
+                                                    <button type="button"
+                                                            class="btn btn-sm btn-outline-secondary rounded-circle ms-1 update-qty-btn"
+                                                            data-action="increase"
+                                                            data-id="{{ $item->id }}">+</button>
                                                 </div>
                                             </td>
-                                            <td class="delivery-charge-cell">₹0.00</td> <!-- Will be updated via JavaScript -->
-                                            <td class="product-total-cell">₹{{ number_format($finalTotal, 2) }}</td>
+                                            <td class="product-total-cell">₹{{ number_format($totalPrice, 2) }}</td>
+                                            <td class="delivery-charge-cell">₹0.00</td>
+                                            <td class="bv-total-cell">{{ $totalBv }}</td>
+                                            <td class="row-grand-total-cell">₹{{ number_format($totalPrice, 2) }}</td>
                                             <td>
                                                 <button class="btn btn-sm btn-danger remove-cart-item" data-id="{{ $item->id }}">
                                                     <i class="fas fa-trash-alt"></i>
@@ -131,11 +138,20 @@
                                     @endforeach
 
                                     <tr class="fw-bold text-dark">
-                                        <td colspan="6" class="text-end">Subtotal:</td>
-                                        <td id="total-delivery-charge">₹0.00</td>
-                                        <td id="grand-total-amount">₹{{ number_format($grandTotal, 2) }}</td>
+                                        {{-- Span first 8 columns (S.No through Delivery Charge) --}}
+                                        <td colspan="8" class="text-end">Subtotal:</td>
+
+                                        {{-- Total BV (optional summary or blank) --}}
+                                        <td></td>
+
+                                        {{-- Grand Total (including delivery) --}}
+                                        <td id="footer-grand-total">₹{{ number_format($grandTotal, 2) }}</td>
+
+                                        {{-- Action column (leave blank) --}}
+                                        <td></td>
                                     </tr>
                                 </tbody>
+
                             </table>
                         </div>
                     </div>
@@ -281,8 +297,11 @@
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-{{-- State and city fetch --}}
+<script>
+  const csrfToken = $('meta[name="csrf-token"]').attr('content');
+</script>
 
+{{-- State and city fetch --}}
 <script>
     $(function () {
         $('#country, #state, #city').select2({ theme: 'bootstrap4' });
@@ -358,72 +377,81 @@
         });
 
         function calculateAndSaveDelivery(stateID) {
-            const zoneCharge = deliveryCharges.find(c =>
-                parseInt(c.zone?.state_id) === parseInt(stateID)
-            ) || {};
+            // Find the delivery rules for the selected state
+            const zoneCharge = deliveryCharges.find(c => +c.zone?.state_id === +stateID);
+
+            // Debug: log the zoneCharge object
+            console.log('zoneCharge for state', stateID, zoneCharge);
 
             let footerTotalDelivery = 0;
             let footerGrandTotal    = 0;
-            let footerTotalBv       = 0;    // ← initialize BV accumulator
+            let footerTotalBv       = 0;
 
+            // Loop through each cart row
             $('#order-summary-table tbody tr[data-cart-id]').each(function() {
-                const $row             = $(this);
-                const cartId           = $row.data('cart-id');
-                const weight           = parseFloat($row.data('weight'))    || 0;
-                const quantity         = parseInt($row.data('quantity'))    || 1;
-                const unitPrice        = parseFloat($row.data('price'))     || 0;
-                const productBaseTotal = unitPrice * quantity;
-                const totalWeightG     = weight * quantity * 1000;
-                const perUnitBv        = parseFloat($row.data('bv'))        || 0;
-                const rowBv            = perUnitBv * quantity;
+                const $row      = $(this);
+                const cartId    = +$row.data('cart-id');
+                const unitPrice = +$row.data('price');
+                const bvPerUnit = +$row.data('bv');
+                const quantity  = +$row.find('.qty-input').val();
 
-                // Accumulate BV
-                footerTotalBv += rowBv;
+                // Calculate base totals
+                const baseTotal = unitPrice * quantity;
+                const rowBv     = bvPerUnit * quantity;
+                footerTotalBv  += rowBv;
 
-                // delivery charge per‑row
-                let deliveryCharge = 0;
-                if (zoneCharge.weight_in_grams) {
-                    const perUnitCharge = (productBaseTotal >= zoneCharge.min_order)
-                                        ? zoneCharge.delivery_charge
-                                        : zoneCharge.default_delivery_charge;
-                    const units         = Math.ceil(totalWeightG / zoneCharge.weight_in_grams);
-                    deliveryCharge      = units * perUnitCharge;
+                // Extract size (e.g. "5kg") and parse numeric part
+                const sizeLabel = ($row.data('size') || '').toLowerCase();
+                let sizeFactor  = 1;
+                if (sizeLabel.includes('kg')) {
+                sizeFactor = parseFloat(sizeLabel.replace('kg', '').trim()) || 1;
                 }
 
-                // update this row’s UI
-                $row.find('.delivery-charge-cell')
-                    .text(`₹${deliveryCharge.toFixed(2)}`);
-                const rowTotal = productBaseTotal + deliveryCharge;
-                $row.find('.product-total-cell')
-                    .text(`₹${rowTotal.toFixed(2)}`);
+                // Compute delivery charge
+                let deliveryCharge = 0;
+                if (zoneCharge && zoneCharge.unit_measurement) {
+                // Number of 1KG units in the selected size
+                const units = Math.ceil(sizeFactor / zoneCharge.unit_measurement);
 
-                // persist to backend
-                $.ajax({
-                    url: "{{ route('user.cart.update.delivery') }}",
-                    method: "POST",
-                    headers: { 'X-CSRF-TOKEN': csrfToken },
-                    data: {
-                        cart_id:         cartId,
-                        delivery_charge: deliveryCharge
-                    }
+                // Choose discounted or default per‑kg rate based on min_order
+                const perKgRate = baseTotal >= zoneCharge.min_order
+                    ? zoneCharge.delivery_charge
+                    : zoneCharge.default_delivery_charge;
+
+                deliveryCharge = units * perKgRate;
+
+                console.log(
+                    `Size ${sizeFactor}KG → ${units} unit(s) × ₹${perKgRate} = ₹${deliveryCharge}`
+                );
+                }
+
+                // Update row cells
+                $row.find('.delivery-charge-cell').text(`₹${deliveryCharge.toFixed(2)}`);
+                $row.find('.product-total-cell').text(`₹${baseTotal.toFixed(2)}`);
+                $row.find('.row-grand-total-cell').text(`₹${(baseTotal + deliveryCharge).toFixed(2)}`);
+                $row.find('.bv-total-cell').text(rowBv);
+
+                // Persist the delivery charge & BV to backend
+                $.post("{{ route('user.cart.update.delivery') }}", {
+                _token:           csrfToken,
+                cart_id:          cartId,
+                delivery_charge:  deliveryCharge,
+                total_bv:         rowBv
                 });
 
-                // accumulate footer totals
+                // Accumulate footers
                 footerTotalDelivery += deliveryCharge;
-                footerGrandTotal    += rowTotal;
+                footerGrandTotal    += (baseTotal + deliveryCharge);
             });
 
-            // refresh footer sums
+            // Update footer summary
             $('#total-delivery-charge').text(`₹${footerTotalDelivery.toFixed(2)}`);
-            $('#grand-total-amount')  .text(`₹${footerGrandTotal   .toFixed(2)}`);
-
-            // BV into visible or hidden fields
-            $('#total-bv-points')     .text(footerTotalBv.toFixed(0));   // if you have a visible BV footer cell
-            $('#modal_bv_points')     .val(footerTotalBv.toFixed(0));   // hidden input for form
-
-            // keep the other hidden totals in sync
-            $('#modal_delivery_charge').val(footerTotalDelivery.toFixed(2));
-            $('#modal_grand_total')   .val(footerGrandTotal   .toFixed(2));
+            $('#grand-total-amount')  .text(`₹${footerGrandTotal.toFixed(2)}`);
+            $('#total-bv-points')     .text(footerTotalBv);
+            $('#modal_bv_points')     .val(footerTotalBv);
+            $('#modal_delivery_charge').val(footerTotalDelivery);
+            $('#modal_grand_total')   .val(footerGrandTotal);
+            $('#footer-grand-total')  .text(`₹${footerGrandTotal.toFixed(2)}`);
         }
 
     });
@@ -431,93 +459,98 @@
 
 {{-- Update quantity --}}
 <script>
-    $(document).ready(function () {
-        // Always unbind previous click events before binding new ones
-        $('.update-qty-btn').off('click').on('click', function () {
-            const $btn = $(this);
-            const itemId = $btn.data('id');
-            const action = $btn.data('action');
-            const csrfToken = $('meta[name="csrf-token"]').attr('content');
+$(document).ready(function () {
+  $('.update-qty-btn').off('click').on('click', function() {
+    const $btn = $(this);
+    const cartId   = $btn.data('id');
+    const action   = $btn.data('action');
+    const $row     = $btn.closest('tr');
+    const unitPrice= parseFloat($row.data('price')) || 0; // per‐unit incl GST
+    const bvPer    = parseInt($row.data('bv'))           || 0;
 
-            $.ajax({
-                url: "{{ route('user.cart.update.quantity') }}",
-                method: "POST",
-                data: {
-                    _token: csrfToken,
-                    id: itemId,
-                    action: action
-                },
-                success: function (response) {
-                    if (response.success) {
-                        // Update only the quantity field
-                        $('.qty-input[data-id="' + itemId + '"]').val(response.quantity);
+    $.post("{{ route('user.cart.update.quantity') }}", {
+      _token: csrfToken,
+      id: cartId,
+      action: action
+    })
+    .done(function(res) {
+      if (!res.success) {
+        return alert(res.message || 'Failed to update quantity');
+      }
+      // 1️⃣ update the input and row data‐quantity
+      const newQty = res.quantity;
+      $row.find('.qty-input').val(newQty);
+      $row.attr('data-quantity', newQty);
 
-                        // Soft reload: update weight, price, delivery, total dynamically
-                        location.reload(); // OR use your delivery calculation method
-                    } else {
-                        alert('Something went wrong.');
-                    }
-                },
-                error: function () {
-                    alert('Failed to update quantity.');
-                }
-            });
-        });
+      // 2️⃣ recalc product total and BV for this row
+      const newTotal = (unitPrice * newQty).toFixed(2);
+      $row.find('.product-total-cell').text('₹' + newTotal);
+
+      const newBvTotal = (bvPer * newQty);
+      $row.find('.bv-total-cell').text(newBvTotal);
+
+      // 3️⃣ re‐run full delivery+B V+grand total recalc
+      calculateAndSaveDelivery($('#state').val());
+    })
+    .fail(function() {
+      alert('Request failed.');
     });
+  });
+});
 </script>
 
 {{-- Delete function --}}
 <script>
-$(document).ready(function () {
-    // Use event delegation with .off() to prevent duplicate bindings
-    $(document).off('click', '.remove-cart-item').on('click', '.remove-cart-item', function (e) {
-        e.stopImmediatePropagation(); // Prevent other handlers from executing
-        
-        const itemId = $(this).data('id');
-        const csrfToken = $('meta[name="csrf-token"]').attr('content');
-        const $button = $(this);
+    $(document).ready(function () {
+        // Use event delegation with .off() to prevent duplicate bindings
+        $(document).off('click', '.remove-cart-item').on('click', '.remove-cart-item', function (e) {
+            e.stopImmediatePropagation(); // Prevent other handlers from executing
+            
+            const itemId = $(this).data('id');
+            const csrfToken = $('meta[name="csrf-token"]').attr('content');
+            const $button = $(this);
 
-        if (!confirm('Are you sure you want to remove this item from your cart?')) {
-            return false;
-        }
+            if (!confirm('Are you sure you want to remove this item from your cart?')) {
+                return false;
+            }
 
-        $button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>');
+            $button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>');
 
-        $.ajax({
-            url: "{{ route('user.cart.remove') }}",
-            type: "POST",
-            dataType: "json",
-            data: {
-                _token: csrfToken,
-                id: itemId
-            },
-            success: function (response) {
-                if (response.success) {
-                    $button.closest('tr').fadeOut(300, function() {
-                        $(this).remove();
-                        // Update serial numbers
-                        $('#order-summary-table tbody tr[data-product-id]').each(function(index) {
-                            $(this).find('td:first').text(index + 1);
+            $.ajax({
+                url: "{{ route('user.cart.remove') }}",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    _token: csrfToken,
+                    id: itemId
+                },
+                success: function (response) {
+                    if (response.success) {
+                        $button.closest('tr').fadeOut(300, function() {
+                            $(this).remove();
+                            // Update serial numbers
+                            $('#order-summary-table tbody tr[data-product-id]').each(function(index) {
+                                $(this).find('td:first').text(index + 1);
+                            });
+                            // Recalculate if needed
+                            const stateID = $('#state').val();
+                            if (stateID) calculateDeliveryCharges(stateID);
                         });
-                        // Recalculate if needed
-                        const stateID = $('#state').val();
-                        if (stateID) calculateDeliveryCharges(stateID);
-                    });
-                } else {
-                    alert(response.message || 'Failed to remove item.');
+                    } else {
+                        alert(response.message || 'Failed to remove item.');
+                        $button.prop('disabled', false).html('<i class="fas fa-trash-alt"></i>');
+                    }
+                },
+                error: function (xhr) {
+                    console.error(xhr.responseText);
+                    alert('Failed to remove item. Please try again.');
                     $button.prop('disabled', false).html('<i class="fas fa-trash-alt"></i>');
                 }
-            },
-            error: function (xhr) {
-                console.error(xhr.responseText);
-                alert('Failed to remove item. Please try again.');
-                $button.prop('disabled', false).html('<i class="fas fa-trash-alt"></i>');
-            }
+            });
+            
+            return false; // Prevent default action and bubbling
         });
-        
-        return false; // Prevent default action and bubbling
     });
-});
 </script>
 
 {{-- Form validation and modal opening --}}
@@ -553,8 +586,8 @@ $(document).ready(function () {
             if (!isValid) return;
 
             // ✅ Extract from DOM — do not re-calculate or redeclare
-            const deliveryCharge = $('#total-delivery-charge').text().replace(/[₹,]/g, '') || 0;
-            const grandTotal     = $('#grand-total-amount').text().replace(/[₹,]/g, '') || 0;
+            const deliveryCharge = parseFloat($('#modal_delivery_charge').val()) || 0;
+            const grandTotal     = parseFloat($('#modal_grand_total').val())     || 0;
             const bvPoints       = $('#modal_bv_points').val(); // already set during delivery calc
 
             // Populate modal fields with form data
@@ -599,24 +632,41 @@ $(document).ready(function () {
     });
 </script>
 
-<script>
+{{-- <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const payBtn = document.querySelector('#orderPaymentModal button[type="submit"]');
+        const payBtn = document.getElementById('razorpayPayBtn');
 
         payBtn.addEventListener('click', function (e) {
-            e.preventDefault();
 
             const form = this.closest('form');
 
-            const grandTotal = parseFloat(document.getElementById('modal_grand_total').value) || 0;
-            const userName = document.getElementById('modal_name').value;
-            const email = document.getElementById('modal_email').value;
-            const phone = document.getElementById('modal_phone').value;
+            const grandTotal   = parseFloat(document.getElementById('modal_grand_total').value) || 0;
+            const userName     = document.getElementById('modal_name').value.trim();
+            const email        = document.getElementById('modal_email').value.trim();
+            const phone        = document.getElementById('modal_phone').value.trim();
+            const address      = document.getElementById('modal_address').value.trim();
+            const countryId    = document.getElementById('modal_country_id').value;
+            const stateId      = document.getElementById('modal_state_id').value;
+            const cityId       = document.getElementById('modal_city_id').value;
 
-            if (!grandTotal || !userName || !email || !phone) {
-                alert('Missing order information.');
-                return;
-            }
+            console.log({
+                grandTotal,    userName,   email,
+                phone,         address,    countryId,
+                stateId,       cityId
+            });
+
+            // if (!grandTotal
+            // || !userName
+            // || !email
+            // || !phone
+            // || !address
+            // || !countryId
+            // || !stateId
+            // || !cityId
+            // ) {
+            // alert('Missing order information. Please fill out all fields.');
+            // return;
+            // }
 
             const fixedTotal    = parseFloat(grandTotal.toFixed(2));   // e.g. "268.80"
             const amountInPaise = Math.round(fixedTotal * 100);
@@ -624,6 +674,7 @@ $(document).ready(function () {
             const options = {
                 key: "rzp_test_1DP5mmOlF5G5ag", 
                 amount: amountInPaise,
+                order_id: document.querySelector('input[name="order_id"]').value,
                 currency: "INR",
                 name: "EasyAdMe",
                 description: "Order Payment",
@@ -647,6 +698,49 @@ $(document).ready(function () {
             razorpay.open();
         });
     });
+</script> --}}
+
+<script>
+    $(document).on('click', '#razorpayPayBtn', function () {
+  const form = $(this).closest('form')[0];
+
+  const grandTotal   = parseFloat($('#modal_grand_total').val()) || 0;
+  const userName     = $('#modal_name').val().trim();
+  const email        = $('#modal_email').val().trim();
+  const phone        = $('#modal_phone').val().trim();
+  const address      = $('#modal_address').val().trim();
+  const countryId    = $('#modal_country_id').val();
+  const stateId      = $('#modal_state_id').val();
+  const cityId       = $('#modal_city_id').val();
+
+  const fixedTotal    = parseFloat(grandTotal.toFixed(2));
+  const amountInPaise = Math.round(fixedTotal * 100);
+
+  const options = {
+    key: "rzp_test_1DP5mmOlF5G5ag", 
+    amount: amountInPaise,
+    currency: "INR",
+    name: "EasyAdMe",
+    description: "Order Payment",
+    handler: function (response) {
+      $('#modal_transaction_id').val(response.razorpay_payment_id);
+      $('#modal_is_paid').val(1);
+      form.submit();
+    },
+    prefill: {
+      name: userName,
+      email: email,
+      contact: phone
+    },
+    theme: {
+      color: "#0d6efd"
+    }
+  };
+
+  const razorpay = new Razorpay(options);
+  razorpay.open();
+});
+
 </script>
 
 @endsection

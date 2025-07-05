@@ -162,6 +162,83 @@
                     @enderror
                 </div>
 
+                @php
+                    $existingSizes = isset($product) && $product->size_id ? explode('|', $product->size_id) : [];
+                    $existingPrices = isset($product) && $product->size_price ? explode('|', $product->size_price) : [];
+                    $existingStocks = isset($product) && $product->size_stock ? explode('|', $product->size_stock) : [];
+                @endphp
+
+                {{-- Variant Section --}}
+                <div class="card mt-4 mb-3">
+                    <div class="card-header bg-light">
+                        <strong>{{ __('Variant (Size-based Pricing & Stock)') }}</strong>
+                    </div>
+                    <div class="card-body">
+                        <div id="variant-wrapper">
+                            {{-- initial variant – no trash here --}}
+                            {{-- <div class="variant-box mb-3 border rounded p-3 position-relative">
+                                <div class="row g-3 align-items-end">
+                                <div class="col-md-2">
+                                    <label class="form-label">{{ __('Item Size') }}</label>
+                                    <select name="size_id[]" class="form-control" required>
+                                        <option value="">{{ __('Select Size') }}</option>
+                                        @foreach($sizes as $size)
+                                            <option value="{{ $size->id }}">{{ $size->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">{{ __('Additional Price') }}</label>
+                                    <input type="number" step="0.01" name="size_price[]" class="form-control" placeholder="e.g. 50">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">{{ __('Stock Count') }}</label>
+                                    <input type="number" name="size_stock[]" class="form-control" placeholder="e.g. 25">
+                                </div>
+                                </div>
+                            </div> --}}
+                            @foreach($existingSizes as $index => $sizeId)
+                                <div class="variant-box mb-3 border rounded p-3 position-relative">
+                                    <div class="row g-3 align-items-end">
+                                        <div class="col-md-2">
+                                            <label class="form-label">{{ __('Item Size') }}</label>
+                                            <select name="size_id[]" class="form-control" required>
+                                                <option value="">{{ __('Select Size') }}</option>
+                                                @foreach($sizes as $size)
+                                                    <option value="{{ $size->id }}" {{ $size->id == $sizeId ? 'selected' : '' }}>
+                                                        {{ $size->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label">{{ __('Additional Price') }}</label>
+                                            <input type="number" step="0.01" name="size_price[]" class="form-control" placeholder="e.g. 50" value="{{ $existingPrices[$index] ?? '' }}">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label">{{ __('Stock Count') }}</label>
+                                            <input type="number" name="size_stock[]" class="form-control" placeholder="e.g. 25" value="{{ $existingStocks[$index] ?? '' }}">
+                                        </div>
+                                        @if($index > 0)
+                                        <div class="col-md-2 d-flex align-items-end">
+                                            <button type="button" class="btn btn-danger btn-sm remove-variant" style="height: 38px;">
+                                                <i class="las la-trash"></i>
+                                            </button>
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <div class="text-end mt-3">
+                            <button type="button" class="btn btn-secondary btn-sm" id="add-variant-btn">
+                                <i class="las la-plus"></i> {{ __('Add Variant') }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 {{-- GST --}}
                 <div class="mb-3">
                     <label class="form-label">{{ __('GST (%)') }}</label>
@@ -245,6 +322,69 @@
     <x-media.markup />
 @endsection
 
+<script>
+    const sizeOptions = @json($sizes->map(fn($s) => ['id' => $s->id, 'name' => $s->name]));
+
+    document.addEventListener('DOMContentLoaded', function () {
+        let variantIndex = 1;
+        const labels = {
+            size: "{{ __('Item Size') }}",
+            price: "{{ __('Additional Price') }}",
+            stock: "{{ __('Stock Count') }}"
+        };
+
+        const addBtn = document.getElementById('add-variant-btn');
+        const wrapper = document.getElementById('variant-wrapper');
+
+        function getSizeDropdown() {
+            let html = `<select name="size_id[]" class="form-control" required>
+                            <option value="">${labels.size}</option>`;
+            sizeOptions.forEach(option => {
+                html += `<option value="${option.id}">${option.name}</option>`;
+            });
+            html += `</select>`;
+            return html;
+        }
+
+        addBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const box = document.createElement('div');
+            box.className = 'variant-box mb-3 border rounded p-3 position-relative';
+            box.innerHTML = `
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-2">
+                        <label class="form-label">${labels.size}</label>
+                        ${getSizeDropdown()}
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">${labels.price}</label>
+                        <input type="number" step="0.01" name="size_price[]" class="form-control" placeholder="e.g. 50">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">${labels.stock}</label>
+                        <input type="number" name="size_stock[]" class="form-control" placeholder="e.g. 25">
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="button" class="btn btn-danger btn-sm remove-variant" style="height: 38px;">
+                            <i class="las la-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            wrapper.appendChild(box);
+            variantIndex++;
+        });
+
+        wrapper.addEventListener('click', function (e) {
+            const btn = e.target.closest('.remove-variant');
+            if (btn) {
+                e.preventDefault();
+                btn.closest('.variant-box').remove();
+            }
+        });
+    });
+</script>
+
 @section('script')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -254,11 +394,12 @@
     <x-media.js />
 
     <script>
-        // show validation errors via toastr
         @if($errors->any())
             @foreach($errors->all() as $error)
                 toastr.error("{{ $error }}");
             @endforeach
         @endif
     </script>
+
+    
 @endsection

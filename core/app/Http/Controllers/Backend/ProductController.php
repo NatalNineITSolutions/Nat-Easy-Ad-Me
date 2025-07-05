@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Unit;
+use App\Models\Size;
 
 class ProductController extends Controller
 {
@@ -22,11 +23,10 @@ class ProductController extends Controller
     public function addProduct()
     {
         $categories = ProductCategory::all();
-        $units = Unit::all(); // get all units
-
-        return view('backend.pages.products.add-product', compact('categories', 'units'));
+        $units = Unit::all(); 
+        $sizes = Size::all(); 
+        return view('backend.pages.products.add-product', compact('categories', 'units', 'sizes'));
     }
-
     
     public function storeProduct(Request $request)
     {
@@ -55,6 +55,9 @@ class ProductController extends Controller
         }
 
         $image = $request->filled('image') ? $request->input('image') : null;
+        $sizeNames  = $request->input('size_id', []);
+        $sizePrices = $request->input('size_price', []);
+        $sizeStocks = $request->input('size_stock', []);
 
         $product = Product::create([
             'name'               => $request->name,
@@ -68,6 +71,9 @@ class ProductController extends Controller
             'unit_measurement'   => $request->unit_measurement,
             'description'        => $request->description,
             'image'              => $image,
+            'size_id'     => implode('|', $sizeNames),
+            'size_price'  => implode('|', $sizePrices),
+            'size_stock'  => implode('|', $sizeStocks),
         ]);
 
         Log::info('Product Created:', $product->toArray());
@@ -79,8 +85,10 @@ class ProductController extends Controller
     {
         $product    = Product::findOrFail($id);
         $categories = ProductCategory::all();
-        $units      = Unit::all(); // ✅ Add this
-        return view('backend.pages.products.add-product', compact('product', 'categories', 'units'));
+        $units      = Unit::all();
+        $sizes      = Size::all(); // ✅ Add this line
+
+        return view('backend.pages.products.add-product', compact('product', 'categories', 'units', 'sizes'));
     }
 
     public function updateProduct(Request $request, $id)
@@ -99,6 +107,12 @@ class ProductController extends Controller
             'category_id'       => 'required|integer|exists:product_categories,id',
             'description'       => 'nullable|string',
             'image'             => 'nullable|string',
+            'size_id'      => 'array',
+            'size_id.*'    => 'nullable|exists:sizes,id',
+            'size_price'   => 'array',
+            'size_price.*' => 'nullable|numeric',
+            'size_stock'   => 'array',
+            'size_stock.*' => 'nullable|integer',
         ]);
 
         if ($validator->fails()) {
@@ -119,6 +133,9 @@ class ProductController extends Controller
             'unit_measurement'  => $request->unit_measurement,
             'description'       => $request->description,
             'image'             => $image,
+            'size_id'     => $request->filled('size_id') ? implode('|', $request->size_id) : null,
+            'size_price'  => $request->filled('size_price') ? implode('|', $request->size_price) : null,
+            'size_stock'  => $request->filled('size_stock') ? implode('|', $request->size_stock) : null,
         ]);
 
         return redirect()->route('admin.products.index')

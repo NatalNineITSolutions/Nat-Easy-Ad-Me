@@ -13,10 +13,12 @@ class Cart extends Model
         'user_id',
         'product_id',
         'weight',
+        'size_id', 
         'quantity',
         'delivery_charges',
         'price',
         'grand_total',
+        'total_bv',
     ];
 
 
@@ -28,6 +30,11 @@ class Cart extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function size()
+    {
+        return $this->belongsTo(Size::class);
     }
 
 }

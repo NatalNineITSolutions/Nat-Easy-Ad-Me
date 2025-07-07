@@ -108,6 +108,10 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
         Route::controller(DashboardController::class)->group(function () {
             Route::group(['prefix' => 'info'], function () {
                 Route::get('/order-history', 'orderHistory')->name('order.history');
+                Route::get('/view-order-details/{order}', 'viewOrderDetails')->name('order.view.details');
+                Route::get('/order/invoice/{order}', 'downloadInvoice')->name('order.invoice.download');
+                Route::get('/view-order-product-details/{order}/{index}', 'viewProductDetails')->name('order.view.details.product');
+                Route::get('/order/invoice/{order}/{index}', 'downloadProductInvoice')->name('order.invoice.download.product');
             });
         });
 

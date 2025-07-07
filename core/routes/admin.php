@@ -239,8 +239,20 @@ Route::middleware(['auth','setlang'])->group(function () {
 
             // Show All Orders (List)
             Route::get('/all', 'allOrders')->name('admin.orders.all')->permission('order-view');
+
+            // Update Status
             Route::put('/admin/orders/{id}/update-status', 'updateStatus')->name('admin.orders.update.status');
 
+            // View Order Details
+            Route::get('/view/{order}', 'viewOrderDetails')->name('admin.orders.view.details')->permission('order-view');
+
+            // Download Invoice
+            Route::get('/invoice/download/{order}', 'downloadInvoice')->name('admin.orders.invoice.download')->permission('order-view');
+
+            // Inside admin.orders route group
+            Route::put('/admin/orders/{order}/update-status/{index}', [OrderController::class, 'updateProductStatus'])->name('admin.orders.update.status.product')->permission('order-edit');
+
+            Route::get('/invoice/download/{order}/{index}', [OrderController::class, 'downloadProductInvoice'])->name('admin.orders.invoice.download.product')->permission('order-view');
         });
     });
 

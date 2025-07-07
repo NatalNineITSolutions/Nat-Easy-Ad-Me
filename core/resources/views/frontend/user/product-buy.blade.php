@@ -137,24 +137,31 @@
                                         </tr>
                                     @endforeach
 
-                                    <tr class="fw-bold text-dark">
-                                        {{-- Span first 8 columns (S.No through Delivery Charge) --}}
+                                    {{-- <tr class="fw-bold text-dark">
                                         <td colspan="8" class="text-end">Subtotal:</td>
-
-                                        {{-- Total BV (optional summary or blank) --}}
+                                        <td id="footer-total-bv">{{ array_sum(array_map(fn($item) => ($item->product->bv_points ?? 0) * ($item->quantity ?? 1), $cartItems->all())) }}</td>
+                                        <td id="footer-subtotal">₹{{ number_format($grandTotal, 2) }}</td>
                                         <td></td>
-
-                                        {{-- Grand Total (including delivery) --}}
-                                        <td id="footer-grand-total">₹{{ number_format($grandTotal, 2) }}</td>
-
-                                        {{-- Action column (leave blank) --}}
-                                        <td></td>
-                                    </tr>
+                                    </tr> --}}
                                 </tbody>
 
                             </table>
                         </div>
                     </div>
+                    <div class="mt-3 text-end">
+  <p class="mb-1">
+    <strong>{{ __('Subtotal:') }}</strong>
+    <span id="summary-subtotal">₹{{ number_format($grandTotal, 2) }}</span>
+  </p>
+  <p class="mb-1">
+    <strong>{{ __('Total BV:') }}</strong>
+    <span id="summary-total-bv">{{ $cartItems->sum(fn($item)=>($item->product->bv_points ?? 0) * ($item->quantity ?? 1)) }}</span>
+  </p>
+  <p class="mb-0 fs-5">
+    <strong>{{ __('Grand Total:') }}</strong>
+    <span id="summary-grand-total">₹{{ number_format($grandTotal, 2) }}</span>
+  </p>
+</div>
                 </div>
             </div>
 
@@ -245,7 +252,10 @@
                                 <select id="country" name="country" class="form-control">
                                     <option value="">Select Country</option>
                                     @foreach($countries as $country)
-                                        <option value="{{ $country->id }}">{{ $country->country }}</option>
+                                        <option value="{{ $country->id }}" 
+                                            {{ isset($identity) && $identity->country_id == $country->id ? 'selected' : '' }}>
+                                            {{ $country->country }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -253,7 +263,7 @@
                             <!-- State -->
                             <div class="col-md-4">
                                 <label class="form-label">State<span class="text-danger">*</span></label>
-                                <select id="state" name="state" class="form-control" disabled>
+                                <select id="state" name="state" class="form-control" {{ isset($identity) ? '' : 'disabled' }}>
                                     <option value="">Select State</option>
                                 </select>
                             </div>
@@ -261,7 +271,7 @@
                             <!-- City -->
                             <div class="col-md-4">
                                 <label class="form-label">City<span class="text-danger">*</span></label>
-                                <select id="city" name="city" class="form-control" disabled>
+                                <select id="city" name="city" class="form-control" {{ isset($identity) ? '' : 'disabled' }}>
                                     <option value="">Select City</option>
                                 </select>
                             </div>
@@ -299,6 +309,61 @@
 
 <script>
   const csrfToken = $('meta[name="csrf-token"]').attr('content');
+</script>
+
+<script>
+    $(document).ready(function () {
+        let selectedCountry = '{{ $identity->country_id ?? '' }}';
+        let selectedState   = '{{ $identity->state_id ?? '' }}';
+        let selectedCity    = '{{ $identity->city_id ?? '' }}';
+
+        if (selectedCountry) {
+            fetchStates(selectedCountry, selectedState);
+        }
+
+        if (selectedState) {
+            fetchCities(selectedState, selectedCity);
+        }
+
+        $('#country').on('change', function () {
+            let countryId = $(this).val();
+            $('#state').prop('disabled', false);
+            fetchStates(countryId, null);
+            $('#city').html('<option value="">Select City</option>').prop('disabled', true);
+        });
+
+        $('#state').on('change', function () {
+            let stateId = $(this).val();
+            $('#city').prop('disabled', false);
+            fetchCities(stateId, null);
+        });
+
+        function fetchStates(countryId, selected = null) {
+            $('#state').html('<option>Loading...</option>');
+            $.post("{{ route('au.state.all') }}", { country: countryId }, function (res) {
+                if (res.status === 'success') {
+                    let options = '<option value="">Select State</option>';
+                    res.states.forEach(state => {
+                        options += `<option value="${state.id}" ${selected == state.id ? 'selected' : ''}>${state.state}</option>`;
+                    });
+                    $('#state').html(options).prop('disabled', false);
+                }
+            });
+        }
+
+        function fetchCities(stateId, selected = null) {
+            $('#city').html('<option>Loading...</option>');
+            $.post("{{ route('au.city.all') }}", { state: stateId }, function (res) {
+                if (res.status === 'success') {
+                    let options = '<option value="">Select City</option>';
+                    res.cities.forEach(city => {
+                        options += `<option value="${city.id}" ${selected == city.id ? 'selected' : ''}>${city.city}</option>`;
+                    });
+                    $('#city').html(options).prop('disabled', false);
+                }
+            });
+        }
+    });
 </script>
 
 {{-- State and city fetch --}}
@@ -448,25 +513,72 @@
             $('#total-delivery-charge').text(`₹${footerTotalDelivery.toFixed(2)}`);
             $('#grand-total-amount')  .text(`₹${footerGrandTotal.toFixed(2)}`);
             $('#total-bv-points')     .text(footerTotalBv);
+            $('#summary-subtotal').text('₹' + (footerGrandTotal - footerTotalDelivery).toFixed(2));
+            $('#summary-total-bv').text(footerTotalBv);
+            $('#summary-grand-total').text('₹' + footerGrandTotal.toFixed(2));
             $('#modal_bv_points')     .val(footerTotalBv);
             $('#modal_delivery_charge').val(footerTotalDelivery);
             $('#modal_grand_total')   .val(footerGrandTotal);
             $('#footer-grand-total')  .text(`₹${footerGrandTotal.toFixed(2)}`);
         }
 
+        function recalcFooter() {
+  let subtotal = 0,
+      totalDel = 0,
+      totalBv  = 0;
+
+  $('#order-summary-table tbody tr[data-cart-id]').each(function() {
+    const $r     = $(this);
+    const price  = parseFloat($r.find('.product-total-cell').text().replace(/[^0-9.]/g, '')) || 0;
+    const del    = parseFloat($r.find('.delivery-charge-cell').text().replace(/[^0-9.]/g, ''))  || 0;
+    const bv     = parseInt($r.find('.bv-total-cell').text(), 10)                                  || 0;
+
+    subtotal += price;
+    totalDel += del;
+    totalBv  += bv;
+  });
+
+  const grandTotal = subtotal + totalDel;
+
+  // update table footer if you still have one
+  $('#footer-subtotal').text('₹' + subtotal.toFixed(2));
+  $('#footer-total-bv').text(totalBv);
+  $('#footer-grand-total').text('₹' + grandTotal.toFixed(2));
+
+  // ——— and update your summary spans ———
+  $('#summary-subtotal').text('₹' + subtotal.toFixed(2));
+  $('#summary-total-bv').text(totalBv);
+  $('#summary-grand-total').text('₹' + grandTotal.toFixed(2));
+}
+
+        $(document).ready(function(){
+        // now you can wire up country/state & qty buttons
+        $('#state').on('select2:select', e => calculateAndSaveDelivery(e.params.data.id));
+        $('.update-qty-btn').on('click', function(){
+            /* … after you update the single row … */
+            if ($('#state').val()) {
+            calculateAndSaveDelivery($('#state').val());
+            } else {
+            recalcFooter();
+            }
+        });
+        // run one initial recalc so your footer shows something on page‐load
+        recalcFooter();
+        });
+
     });
 </script>
 
 {{-- Update quantity --}}
-<script>
-$(document).ready(function () {
+{{-- <script>
+    $(document).ready(function () {
   $('.update-qty-btn').off('click').on('click', function() {
     const $btn = $(this);
     const cartId   = $btn.data('id');
     const action   = $btn.data('action');
     const $row     = $btn.closest('tr');
-    const unitPrice= parseFloat($row.data('price')) || 0; // per‐unit incl GST
-    const bvPer    = parseInt($row.data('bv'))           || 0;
+    const unitPrice= parseFloat($row.data('price')) || 0; // per-unit incl GST
+    const bvPer    = parseInt($row.data('bv')) || 0;
 
     $.post("{{ route('user.cart.update.quantity') }}", {
       _token: csrfToken,
@@ -477,24 +589,69 @@ $(document).ready(function () {
       if (!res.success) {
         return alert(res.message || 'Failed to update quantity');
       }
-      // 1️⃣ update the input and row data‐quantity
+      // 1. update the input and row data-quantity
       const newQty = res.quantity;
       $row.find('.qty-input').val(newQty);
       $row.attr('data-quantity', newQty);
 
-      // 2️⃣ recalc product total and BV for this row
+      // 2. recalc product total and BV for this row
       const newTotal = (unitPrice * newQty).toFixed(2);
       $row.find('.product-total-cell').text('₹' + newTotal);
 
       const newBvTotal = (bvPer * newQty);
       $row.find('.bv-total-cell').text(newBvTotal);
 
-      // 3️⃣ re‐run full delivery+B V+grand total recalc
-      calculateAndSaveDelivery($('#state').val());
+      // 3. Update the row's grand total (product total + delivery)
+      const deliveryCharge = parseFloat(
+        $row.find('.delivery-charge-cell').text().replace(/[^0-9.\-]/g,'')
+      ) || 0;
+      const rowGrandTotal = (parseFloat(newTotal) + deliveryCharge).toFixed(2);
+      $row.find('.row-grand-total-cell').text('₹' + rowGrandTotal);
+
+      // 4. Update the footer totals
+      recalcFooter();
     })
     .fail(function() {
       alert('Request failed.');
     });
+  });
+});
+</script> --}}
+<script>
+    $('.update-qty-btn').off('click').on('click', function() {
+  const $btn   = $(this);
+  const cartId = $btn.data('id');
+  const action = $btn.data('action');
+  const $row   = $btn.closest('tr');
+
+  $.post("{{ route('user.cart.update.quantity') }}", {
+    _token: csrfToken,
+    id:     cartId,
+    action: action
+  })
+  .done(function(res) {
+    if (!res.success) return alert(res.message || 'Failed to update quantity');
+
+    // Update that row’s UI
+    const newQty = res.quantity;
+    $row.find('.qty-input').val(newQty);
+    $row.attr('data-quantity', newQty);
+
+    const unitPrice = parseFloat($row.data('price')) || 0;
+    const bvPer     = parseInt($row.data('bv'))   || 0;
+    const newTotal  = (unitPrice * newQty).toFixed(2);
+    $row.find('.product-total-cell').text('₹' + newTotal);
+    $row.find('.bv-total-cell').text(bvPer * newQty);
+
+    // Delivery didn’t change here, so row‑grand = newTotal + existing delivery
+    const deliveryCharge = parseFloat(
+      $row.find('.delivery-charge-cell').text().replace(/[^0-9.]/g, '')
+    ) || 0;
+    $row.find('.row-grand-total-cell')
+        .text('₹' + (parseFloat(newTotal) + deliveryCharge).toFixed(2));
+
+    // **NOW** recalc the footer
+    recalcFooter();
   });
 });
 </script>
@@ -631,74 +788,6 @@ $(document).ready(function () {
         });
     });
 </script>
-
-{{-- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const payBtn = document.getElementById('razorpayPayBtn');
-
-        payBtn.addEventListener('click', function (e) {
-
-            const form = this.closest('form');
-
-            const grandTotal   = parseFloat(document.getElementById('modal_grand_total').value) || 0;
-            const userName     = document.getElementById('modal_name').value.trim();
-            const email        = document.getElementById('modal_email').value.trim();
-            const phone        = document.getElementById('modal_phone').value.trim();
-            const address      = document.getElementById('modal_address').value.trim();
-            const countryId    = document.getElementById('modal_country_id').value;
-            const stateId      = document.getElementById('modal_state_id').value;
-            const cityId       = document.getElementById('modal_city_id').value;
-
-            console.log({
-                grandTotal,    userName,   email,
-                phone,         address,    countryId,
-                stateId,       cityId
-            });
-
-            // if (!grandTotal
-            // || !userName
-            // || !email
-            // || !phone
-            // || !address
-            // || !countryId
-            // || !stateId
-            // || !cityId
-            // ) {
-            // alert('Missing order information. Please fill out all fields.');
-            // return;
-            // }
-
-            const fixedTotal    = parseFloat(grandTotal.toFixed(2));   // e.g. "268.80"
-            const amountInPaise = Math.round(fixedTotal * 100);
-
-            const options = {
-                key: "rzp_test_1DP5mmOlF5G5ag", 
-                amount: amountInPaise,
-                order_id: document.querySelector('input[name="order_id"]').value,
-                currency: "INR",
-                name: "EasyAdMe",
-                description: "Order Payment",
-                handler: function (response) {
-                    // On successful payment
-                    document.getElementById('modal_transaction_id').value = response.razorpay_payment_id;
-                    document.getElementById('modal_is_paid').value = 1;
-                    form.submit(); // Submit the form to backend (Laravel)
-                },
-                prefill: {
-                    name: userName,
-                    email: email,
-                    contact: phone
-                },
-                theme: {
-                    color: "#0d6efd"
-                }
-            };
-
-            const razorpay = new Razorpay(options);
-            razorpay.open();
-        });
-    });
-</script> --}}
 
 <script>
     $(document).on('click', '#razorpayPayBtn', function () {

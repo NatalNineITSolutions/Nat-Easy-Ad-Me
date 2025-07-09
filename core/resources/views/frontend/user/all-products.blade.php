@@ -88,155 +88,165 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 <script>
-    $(function () {
-        const addToCartUrl = "{{ route('user.add.to.cart') }}";
-        const checkCartUrl = "{{ route('user.check.cart') }}";
-        const buyNowRedirectUrl = "{{ route('user.product.buy') }}";
+  $(function () {
+    const addToCartUrl      = "{{ route('user.add.to.cart') }}";
+    const checkCartUrl      = "{{ route('user.check.cart') }}";
+    const buyNowRedirectUrl = "{{ route('user.product.buy') }}";
 
-        function showSpinner($btn, text = 'Loading...') {
-            $btn.data('original-text', $btn.html());
-            $btn.html(`<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>${text}`);
-        }
+    function showSpinner($btn, text = 'Loading...') {
+      $btn.data('original-text', $btn.html());
+      $btn.html(`<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>${text}`);
+    }
+    function restoreButton($btn, text = null) {
+      $btn.html(text || $btn.data('original-text'));
+    }
 
-        function restoreButton($btn, text = null) {
-            const originalText = $btn.data('original-text');
-            $btn.html(text || originalText);
-        }
+    // ───── Size selection ───────────────────────────────────────────────────────
+    $(document).on('click', '.size-btn', function () {
+      const $btn      = $(this);
+      const $group    = $btn.closest('.size-options');
+      const basePrice = parseFloat($group.data('base-price')) || 0;
+      const extra     = parseFloat($btn.data('size-price')) || 0;
 
-        // ✅ Size selection logic
-        $(document).on('click', '.size-btn', function () {
-            const $btn = $(this);
-            const $group = $btn.closest('.size-options');
-            const basePrice = parseFloat($group.data('base-price')) || 0;
-            const extra = parseFloat($btn.data('size-price')) || 0;
+      $group.find('.size-btn').removeClass('selected');
+      $btn.addClass('selected');
 
-            $group.find('.size-btn').removeClass('selected');
-            $btn.addClass('selected');
-
-            const $dp = $group.closest('.card-body').find('.dp-price');
-            if ($dp.length) {
-                $dp.text((basePrice + extra).toFixed(2));
-            }
-        });
-
-        // ✅ Add to Cart
-        $(document).on('click', '.add-to-cart-btn', function (e) {
-            e.preventDefault();
-            const $btn = $(this);
-            if ($btn.hasClass('processing')) return;
-
-            const $card = $btn.closest('.card');
-            const $selectedSize = $card.find('.size-btn.selected');
-            const sizeId = $selectedSize.length ? $selectedSize.data('size-id') : null;
-            const sizePrice = $selectedSize.length ? $selectedSize.data('size-price') : 0;
-
-            const productId = $btn.data('product-id');
-            const quantity = $btn.data('quantity') || 1;
-
-            $btn.addClass('processing').prop('disabled', true);
-            showSpinner($btn, 'Adding...');
-
-            fetch(addToCartUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                },
-                body: JSON.stringify({
-                    product_id: productId,
-                    quantity: quantity,
-                    size_id: sizeId,
-                    size_price: sizePrice
-                })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    toastr.success(data.message);
-                    restoreButton($btn, 'Added');
-                } else if (data.status === 'info') {
-                    toastr.info(data.message);
-                    restoreButton($btn, 'Already in Cart');
-                } else {
-                    toastr.error(data.message || 'Failed to add product.');
-                    restoreButton($btn);
-                }
-
-                const $cartBadge = $('.cart-count');
-                if (data.cart_count !== undefined) {
-                    $cartBadge.text(data.cart_count).addClass('pulse');
-                    setTimeout(() => $cartBadge.removeClass('pulse'), 600);
-                }
-            })
-            .catch(() => {
-                toastr.error('Something went wrong!');
-                restoreButton($btn);
-            })
-            .finally(() => {
-                $btn.removeClass('processing').prop('disabled', false);
-            });
-        });
-
-        // ✅ Buy Now
-        $(document).on('click', '.buy-now-btn', function (e) {
-            e.preventDefault();
-            const $btn = $(this);
-            if ($btn.hasClass('processing')) return;
-
-            const $card = $btn.closest('.card');
-            const $selectedSize = $card.find('.size-btn.selected');
-            const sizeId = $selectedSize.length ? $selectedSize.data('size-id') : null;
-            const sizePrice = $selectedSize.length ? $selectedSize.data('size-price') : 0;
-
-            const productId = $btn.data('product-id');
-            const quantity = $btn.data('quantity') || 1;
-
-            $btn.addClass('processing').prop('disabled', true);
-            showSpinner($btn, 'Buying...');
-
-            fetch(checkCartUrl + '?product_id=' + productId, {
-                method: 'GET',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                }
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.in_cart) {
-                    window.location.href = buyNowRedirectUrl;
-                } else {
-                    return fetch(addToCartUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                        },
-                        body: JSON.stringify({
-                            product_id: productId,
-                            quantity: quantity,
-                            size_id: sizeId,
-                            size_price: sizePrice
-                        })
-                    })
-                    .then(res => res.json())
-                    .then(cartData => {
-                        if (cartData.status === 'success' || cartData.status === 'info') {
-                            toastr.success(cartData.message || 'Added to cart.');
-                            window.location.href = buyNowRedirectUrl;
-                        } else {
-                            toastr.error(cartData.message || 'Failed to add to cart.');
-                        }
-                    });
-                }
-            })
-            .catch(() => {
-                toastr.error('Something went wrong during Buy Now!');
-            })
-            .finally(() => {
-                restoreButton($btn, 'Buy Now');
-                $btn.removeClass('processing').prop('disabled', false);
-            });
-        });
+      $group.closest('.card-body').find('.dp-price')
+            .text((basePrice + extra).toFixed(2));
     });
+
+    // ───── Add to Cart ─────────────────────────────────────────────────────────
+    $(document).on('click', '.add-to-cart-btn', function (e) {
+      e.preventDefault();
+      const $btn   = $(this);
+      if ($btn.hasClass('processing')) return;
+
+      const $card         = $btn.closest('.card');
+      const $sizeGroup    = $card.find('.size-options');
+      const $sizeButtons  = $sizeGroup.find('.size-btn');
+      const $selectedSize = $sizeGroup.find('.size-btn.selected');
+
+      // ⚠️ If sizes exist, user must pick one
+      if ($sizeButtons.length && !$selectedSize.length) {
+        toastr.warning('Please select a size before adding to cart.');
+        $sizeGroup.addClass('border border-danger rounded p-1');
+        return setTimeout(() => $sizeGroup.removeClass('border border-danger p-1'), 1500);
+      }
+
+      const payload = {
+        product_id : $btn.data('product-id'),
+        quantity   : $btn.data('quantity') || 1,
+        size_id    : $selectedSize.data('size-id')     || null,
+        size_price : $selectedSize.data('size-price')  || 0,
+      };
+
+      $btn.addClass('processing').prop('disabled', true);
+      showSpinner($btn, 'Adding...');
+
+      fetch(addToCartUrl, {
+        method : 'POST',
+        headers: {
+          'Content-Type' : 'application/json',
+          'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content'),
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.status === 'success') {
+          toastr.success(data.message);
+          restoreButton($btn, 'Added');
+        } else if (data.status === 'info') {
+          toastr.info(data.message);
+          restoreButton($btn, 'Already in Cart');
+        } else {
+          toastr.error(data.message || 'Failed to add product.');
+          restoreButton($btn);
+        }
+        if (data.cart_count !== undefined) {
+          $('.cart-count').text(data.cart_count).addClass('pulse');
+          setTimeout(() => $('.cart-count').removeClass('pulse'), 600);
+        }
+      })
+      .catch(() => {
+        toastr.error('Something went wrong!');
+        restoreButton($btn);
+      })
+      .finally(() => {
+        $btn.removeClass('processing').prop('disabled', false);
+      });
+    });
+
+    // ───── Buy Now ─────────────────────────────────────────────────────────────
+    $(document).on('click', '.buy-now-btn', function (e) {
+      e.preventDefault();
+      const $btn   = $(this);
+      if ($btn.hasClass('processing')) return;
+
+      const $card         = $btn.closest('.card');
+      const $sizeGroup    = $card.find('.size-options');
+      const $sizeButtons  = $sizeGroup.find('.size-btn');
+      const $selectedSize = $sizeGroup.find('.size-btn.selected');
+
+      // ⚠️ Enforce size selection if applicable
+      if ($sizeButtons.length && !$selectedSize.length) {
+        toastr.warning('Please select a size before buying.');
+        $sizeGroup.addClass('border border-danger rounded p-1');
+        return setTimeout(() => $sizeGroup.removeClass('border border-danger p-1'), 1500);
+      }
+
+      const productId = $btn.data('product-id');
+      const quantity  = $btn.data('quantity') || 1;
+      const payload   = {
+        product_id : productId,
+        quantity   : quantity,
+        size_id    : $selectedSize.data('size-id')    || null,
+        size_price : $selectedSize.data('size-price') || 0,
+      };
+
+      $btn.addClass('processing').prop('disabled', true);
+      showSpinner($btn, 'Buying...');
+
+      // 1) Check if already in cart
+      fetch(`${checkCartUrl}?product_id=${productId}`, {
+        method : 'GET',
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.in_cart) {
+          // go straight to buy
+          window.location.href = buyNowRedirectUrl;
+        } else {
+          // add then buy
+          return fetch(addToCartUrl, {
+            method : 'POST',
+            headers: {
+              'Content-Type' : 'application/json',
+              'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content'),
+            },
+            body: JSON.stringify(payload)
+          })
+          .then(r => r.json())
+          .then(cartData => {
+            if (cartData.status === 'success' || cartData.status === 'info') {
+              toastr.success(cartData.message || 'Added to cart.');
+              window.location.href = buyNowRedirectUrl;
+            } else {
+              toastr.error(cartData.message || 'Failed to add to cart.');
+            }
+          });
+        }
+      })
+      .catch(() => {
+        toastr.error('Something went wrong during Buy Now!');
+      })
+      .finally(() => {
+        restoreButton($btn, 'Buy Now');
+        $btn.removeClass('processing').prop('disabled', false);
+      });
+    });
+  });
 </script>
 @endsection
+

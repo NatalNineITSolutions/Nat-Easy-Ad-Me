@@ -177,7 +177,7 @@
             <div class="col-md-12 mt-3">
                 <div class="left">
                     <h3 class="mb-4">{{ __('Shipping Information') }}</h3>
-                    <form action="#" method="POST">
+                    <form action="{{route ('user.order.store')}}" method="POST">
                         @csrf
 
                         <input type="hidden" name="quantity" value="{{ $quantity }}">
@@ -691,7 +691,7 @@ function showToast(type, message) {
 </script>
 
 {{-- Form validation and modal opening --}}
-<script>
+{{-- <script>
     $(function () {
         $('#placeOrderBtn').on('click', function () {
             let isValid = true;
@@ -767,49 +767,127 @@ function showToast(type, message) {
             }
         });
     });
+</script> --}}
+<script>
+    $('#placeOrderBtn').on('click', function (e) {
+    e.preventDefault();
+    
+    // Basic form validation
+    let isValid = true;
+    $('input[required], select[required], textarea[required]').each(function() {
+        if (!$(this).val()) {
+            $(this).addClass('is-invalid');
+            isValid = false;
+        }
+    });
+    
+    if (!isValid) {
+        alert('Please fill all required fields');
+        return;
+    }
+
+    // Calculate totals from the order summary table
+    let grandTotal = 0;
+    let deliveryCharge = 0;
+    let bvPoints = 0;
+    
+    $('#order-summary-table tbody tr[data-cart-id]').each(function() {
+        const $row = $(this);
+        
+        // Parse row values safely
+        const rowTotalText = $row.find('.row-grand-total-cell').text().trim();
+        const deliveryText = $row.find('.delivery-charge-cell').text().trim();
+        const bvText = $row.find('.bv-total-cell').text().trim();
+        
+        // Remove currency symbol and commas, then parse
+        const rowTotal = parseFloat(rowTotalText.replace(/[^0-9.]/g, '')) || 0;
+        const rowDelivery = parseFloat(deliveryText.replace(/[^0-9.]/g, '')) || 0;
+        const rowBv = parseInt(bvText.replace(/[^0-9]/g, '')) || 0;
+        
+        grandTotal += rowTotal;
+        deliveryCharge += rowDelivery;
+        bvPoints += rowBv;
+    });
+
+    // Validate totals
+    if (grandTotal <= 0) {
+        alert('Invalid order total. Please check your cart items.');
+        return;
+    }
+
+    // Set the modal values
+    $('#modal_delivery_charge').val(deliveryCharge.toFixed(2));
+    $('#modal_grand_total').val(grandTotal.toFixed(2));
+    $('#modal_bv_points').val(bvPoints);
+    
+    // Debug the values
+    console.log('Order Summary Values:', {
+        deliveryCharge: deliveryCharge,
+        grandTotal: grandTotal,
+        bvPoints: bvPoints
+    });
+    
+    // Show modal
+    const modalEl = document.getElementById('orderPaymentModal');
+    if (modalEl) {
+        const modal = new bootstrap.Modal(modalEl);
+        modal.show();
+    } else {
+        console.error('Payment modal not found');
+        alert('Payment system error. Please try again.');
+    }
+});
 </script>
 
 <script>
-    $(document).on('click', '#razorpayPayBtn', function () {
-  const form = $(this).closest('form')[0];
+    $(document).on('click', '#razorpayPayBtn', function() {
+    // Get values directly from the hidden inputs
+    const grandTotal = parseFloat($('#modal_grand_total').val()) || 0;
+    const deliveryCharge = parseFloat($('#modal_delivery_charge').val()) || 0;
+    const bvPoints = $('#modal_bv_points').val() || 0;
+    
+    // Debug the values
+    console.log('Payment Values (Before Processing):', {
+        grandTotal,
+        deliveryCharge,
+        bvPoints
+    });
 
-  const grandTotal   = parseFloat($('#modal_grand_total').val()) || 0;
-  const userName     = $('#modal_name').val().trim();
-  const email        = $('#modal_email').val().trim();
-  const phone        = $('#modal_phone').val().trim();
-  const address      = $('#modal_address').val().trim();
-  const countryId    = $('#modal_country_id').val();
-  const stateId      = $('#modal_state_id').val();
-  const cityId       = $('#modal_city_id').val();
-
-  const fixedTotal    = parseFloat(grandTotal.toFixed(2));
-  const amountInPaise = Math.round(fixedTotal * 100);
-
-  const options = {
-    key: "rzp_test_1DP5mmOlF5G5ag", 
-    amount: amountInPaise,
-    currency: "INR",
-    name: "EasyAdMe",
-    description: "Order Payment",
-    handler: function (response) {
-      $('#modal_transaction_id').val(response.razorpay_payment_id);
-      $('#modal_is_paid').val(1);
-      form.submit();
-    },
-    prefill: {
-      name: userName,
-      email: email,
-      contact: phone
-    },
-    theme: {
-      color: "#0d6efd"
+    if (grandTotal <= 0) {
+        alert('Invalid payment amount');
+        return;
     }
-  };
 
-  const razorpay = new Razorpay(options);
-  razorpay.open();
+    const amountInPaise = Math.round(grandTotal * 100);
+    
+    const options = {
+        key: "rzp_test_1DP5mmOlF5G5ag",
+        amount: amountInPaise,
+        currency: "INR",
+        name: "EasyAdMe",
+        description: "Order Payment",
+        handler: function(response) {
+            $('#modal_transaction_id').val(response.razorpay_payment_id);
+            $('#modal_is_paid').val(1);
+            $('form').submit();
+        },
+        prefill: {
+            name: $('#modal_name').val(),
+            email: $('#modal_email').val(),
+            contact: $('#modal_phone').val()
+        },
+        notes: {
+            delivery_charge: deliveryCharge,
+            bv_points: bvPoints
+        },
+        theme: {
+            color: "#0d6efd"
+        }
+    };
+
+    const razorpay = new Razorpay(options);
+    razorpay.open();
 });
-
 </script>
 
 @endsection

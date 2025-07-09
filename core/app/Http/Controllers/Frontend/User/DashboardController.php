@@ -1041,6 +1041,8 @@ class DashboardController extends Controller
 
         Cart::where('user_id', $user->id)->delete();
 
+        dd('calling');
+
         return redirect()
             ->route('user.order.history')
             ->with('success', 'Order placed successfully!');

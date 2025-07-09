@@ -223,10 +223,21 @@
 
     addToCartBtn.onclick = function (e) {
         e.preventDefault();
+
+        const selectedSizeBtns = document.querySelectorAll(".size-btn");
+        const selectedSizeBtn  = document.querySelector(".size-btn.selected");
+
+        // ❗ Check if size exists but not selected
+        if (selectedSizeBtns.length && !selectedSizeBtn) {
+            toastr.warning('Please select a size before adding to cart.');
+            document.querySelector(".size-options")?.classList.add('border', 'border-danger', 'rounded', 'p-2');
+            setTimeout(() => document.querySelector(".size-options")?.classList.remove('border', 'border-danger', 'rounded', 'p-2'), 1500);
+            return;
+        }
+
         const productId = this.dataset.productId;
         const quantity  = parseInt(quantityInput.value) || 1;
-        const selectedSizeBtn = document.querySelector(".size-btn.selected");
-        const sizeId = selectedSizeBtn ? selectedSizeBtn.dataset.sizeId : null;
+        const sizeId    = selectedSizeBtn ? selectedSizeBtn.dataset.sizeId : null;
         const sizePrice = selectedSizeBtn ? selectedSizeBtn.dataset.sizePrice : 0;
 
         showSpinner(this, 'Adding...');
@@ -259,11 +270,22 @@
 
     buyNowBtn.onclick = function (e) {
         e.preventDefault();
+
+        const selectedSizeBtns = document.querySelectorAll(".size-btn");
+        const selectedSizeBtn  = document.querySelector(".size-btn.selected");
+
+        // ❗ Check if size exists but not selected
+        if (selectedSizeBtns.length && !selectedSizeBtn) {
+            toastr.warning('Please select a size before buying.');
+            document.querySelector(".size-options")?.classList.add('border', 'border-danger', 'rounded', 'p-2');
+            setTimeout(() => document.querySelector(".size-options")?.classList.remove('border', 'border-danger', 'rounded', 'p-2'), 1500);
+            return;
+        }
+
         const productId = this.dataset.productId;
         const quantity  = parseInt(quantityInput.value) || 1;
         const bvPoints  = parseInt(bvPointsEl.textContent, 10) || 0;
-        const selectedSizeBtn = document.querySelector(".size-btn.selected");
-        const sizeId = selectedSizeBtn ? selectedSizeBtn.dataset.sizeId : null;
+        const sizeId    = selectedSizeBtn ? selectedSizeBtn.dataset.sizeId : null;
         const sizePrice = selectedSizeBtn ? selectedSizeBtn.dataset.sizePrice : 0;
 
         showSpinner(this, 'Buying...');

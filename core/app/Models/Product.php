@@ -21,6 +21,7 @@ class Product extends Model
         'unit_id',
         'unit_measurement',
         'description',
+        'weight',
         'image',
         'size_id',
         'size_price',

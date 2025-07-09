@@ -37,41 +37,12 @@
                     @endforeach
                 </select>
             @endif
-
-            @if(isset($deliveryCharge))
-                {{-- Editing: show disabled dropdown for display + hidden real input --}}
-                <label class="form-label">{{ __('Unit') }}</label>
-                <select name="unit_id_disabled" class="form-control" disabled>
-                    <option value="">{{ __('Select a Unit') }}</option>
-                    @foreach($units as $unit)
-                        <option value="{{ $unit->id }}" {{ $deliveryCharge->unit_id == $unit->id ? 'selected' : '' }}>
-                            {{ $unit->name }}
-                        </option>
-                    @endforeach
-                </select>
-                <input type="hidden" name="unit_id" value="{{ $deliveryCharge->unit_id }}">
-            @else
-                {{-- Creating: normal, enabled dropdown --}}
-                <label class="form-label">{{ __('Unit') }}</label>
-                <select name="unit_id" class="form-control @error('unit_id') is-invalid @enderror" required>
-                    <option value="">{{ __('Select a Unit') }}</option>
-                    @foreach($units as $unit)
-                        <option value="{{ $unit->id }}" {{ old('unit_id') == $unit->id ? 'selected' : '' }}>
-                            {{ $unit->name }}
-                        </option>
-                    @endforeach
-                </select>
-            @endif
-
-            @error('zone_id')
-                <span class="text-danger">{{ $message }}</span>
-            @enderror
         </div>
 
         <div class="mb-3">
-            <label class="form-label">{{ __('Unit Measurement') }}</label>
-            <input type="text" name="unit_measurement" class="form-control" required
-                value="{{ old('unit_measurement', $deliveryCharge->unit_measurement ?? '') }}">
+            <label class="form-label">{{ __('Weight (in grams)') }}</label>
+            <input type="number" step="0.01" name="weight" class="form-control" value="{{ old('weight', $deliveryCharge->weight ?? '') }}" required>
+            <small class="text-muted">{{ __('Enter weight in grams (e.g., 100, 500, 1000)') }}</small>
         </div>
 
         <div class="mb-3">

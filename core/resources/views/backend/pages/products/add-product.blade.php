@@ -106,6 +106,17 @@
                         required>
                 </div>
 
+                <div class="mb-3">
+                    <label class="form-label">{{ __('Weight (in grams)') }}</label>
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="weight"
+                        class="form-control"
+                        placeholder="{{ __('Enter product weight in grams') }}"
+                        value="{{ old('weight', $product->weight ?? '') }}">
+                </div>
+
                 {{-- BV Points --}}
                 <div class="mb-3">
                     <label class="form-label">{{ __('BV Points') }}</label>
@@ -175,28 +186,6 @@
                     </div>
                     <div class="card-body">
                         <div id="variant-wrapper">
-                            {{-- initial variant – no trash here --}}
-                            {{-- <div class="variant-box mb-3 border rounded p-3 position-relative">
-                                <div class="row g-3 align-items-end">
-                                <div class="col-md-2">
-                                    <label class="form-label">{{ __('Item Size') }}</label>
-                                    <select name="size_id[]" class="form-control" required>
-                                        <option value="">{{ __('Select Size') }}</option>
-                                        @foreach($sizes as $size)
-                                            <option value="{{ $size->id }}">{{ $size->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label">{{ __('Additional Price') }}</label>
-                                    <input type="number" step="0.01" name="size_price[]" class="form-control" placeholder="e.g. 50">
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label">{{ __('Stock Count') }}</label>
-                                    <input type="number" name="size_stock[]" class="form-control" placeholder="e.g. 25">
-                                </div>
-                                </div>
-                            </div> --}}
                             @foreach($existingSizes as $index => $sizeId)
                                 <div class="variant-box mb-3 border rounded p-3 position-relative">
                                     <div class="row g-3 align-items-end">

@@ -918,7 +918,7 @@ class DashboardController extends Controller
         // 👇 include the selected size (from cart.size) and product details
         $cartItems = Cart::with([
             'product' => function ($query) {
-                $query->select('id', 'name', 'bv_points', 'gst');
+                $query->select('id', 'name', 'bv_points', 'gst', 'weight');
             },
             'product.imageFile',
             'size' // <- selected size from the cart

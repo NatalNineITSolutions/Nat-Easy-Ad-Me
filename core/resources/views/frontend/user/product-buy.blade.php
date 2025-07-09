@@ -60,6 +60,7 @@
                                         <th>S.No</th>
                                         <th>Product Name</th>
                                         <th>BV</th>
+                                        <th>Weight (g)</th>
                                         <th>Size</th>
                                         <th>Price (1 qty)</th>
                                         <th>Quantity</th>
@@ -102,6 +103,9 @@
                                             <td>{{ $index++ }}</td>
                                             <td>{{ $product->name }}</td>
                                             <td>{{ $product->bv_points ?? 0 }}</td>
+                                            <td>
+                                                {{ $product->weight !== null ? (int) $product->weight . ' g' : '—' }}
+                                            </td>
                                             <td>{{ $item->size->name ?? '—' }}</td>
                                             <td>
                                                 ₹{{ number_format($basePrice, 2) }}<br>
@@ -149,19 +153,23 @@
                         </div>
                     </div>
                     <div class="mt-3 text-end">
-  <p class="mb-1">
-    <strong>{{ __('Subtotal:') }}</strong>
-    <span id="summary-subtotal">₹{{ number_format($grandTotal, 2) }}</span>
-  </p>
-  <p class="mb-1">
-    <strong>{{ __('Total BV:') }}</strong>
-    <span id="summary-total-bv">{{ $cartItems->sum(fn($item)=>($item->product->bv_points ?? 0) * ($item->quantity ?? 1)) }}</span>
-  </p>
-  <p class="mb-0 fs-5">
-    <strong>{{ __('Grand Total:') }}</strong>
-    <span id="summary-grand-total">₹{{ number_format($grandTotal, 2) }}</span>
-  </p>
-</div>
+                        <p class="mb-1">
+                            <strong>{{ __('Subtotal:') }}</strong>
+                            <span id="summary-subtotal">₹{{ number_format($grandTotal, 2) }}</span>
+                        </p>
+                        <p class="mb-1">
+                            <strong>{{ __('Delivery Charge:') }}</strong>
+                            <span id="summary-delivery-charge">₹0.00</span>
+                        </p>
+                        <p class="mb-1">
+                            <strong>{{ __('Total BV:') }}</strong>
+                            <span id="summary-total-bv">{{ $cartItems->sum(fn($item)=>($item->product->bv_points ?? 0) * ($item->quantity ?? 1)) }}</span>
+                        </p>
+                        <p class="mb-0 fs-5">
+                            <strong>{{ __('Grand Total:') }}</strong>
+                            <span id="summary-grand-total">₹{{ number_format($grandTotal, 2) }}</span>
+                        </p>
+                    </div>
                 </div>
             </div>
 
@@ -312,348 +320,320 @@
 </script>
 
 <script>
-    $(document).ready(function () {
-        let selectedCountry = '{{ $identity->country_id ?? '' }}';
-        let selectedState   = '{{ $identity->state_id ?? '' }}';
-        let selectedCity    = '{{ $identity->city_id ?? '' }}';
+  // 2) Initial country/state/city population
+  $(document).ready(function () {
+    let selectedCountry = '{{ $identity->country_id ?? '' }}';
+    let selectedState   = '{{ $identity->state_id   ?? '' }}';
+    let selectedCity    = '{{ $identity->city_id    ?? '' }}';
 
-        if (selectedCountry) {
-            fetchStates(selectedCountry, selectedState);
-        }
+    if (selectedCountry) {
+      fetchStates(selectedCountry, selectedState);
+    }
+    if (selectedState) {
+      fetchCities(selectedState, selectedCity);
+    }
 
-        if (selectedState) {
-            fetchCities(selectedState, selectedCity);
-        }
-
-        $('#country').on('change', function () {
-            let countryId = $(this).val();
-            $('#state').prop('disabled', false);
-            fetchStates(countryId, null);
-            $('#city').html('<option value="">Select City</option>').prop('disabled', true);
-        });
-
-        $('#state').on('change', function () {
-            let stateId = $(this).val();
-            $('#city').prop('disabled', false);
-            fetchCities(stateId, null);
-        });
-
-        function fetchStates(countryId, selected = null) {
-            $('#state').html('<option>Loading...</option>');
-            $.post("{{ route('au.state.all') }}", { country: countryId }, function (res) {
-                if (res.status === 'success') {
-                    let options = '<option value="">Select State</option>';
-                    res.states.forEach(state => {
-                        options += `<option value="${state.id}" ${selected == state.id ? 'selected' : ''}>${state.state}</option>`;
-                    });
-                    $('#state').html(options).prop('disabled', false);
-                }
-            });
-        }
-
-        function fetchCities(stateId, selected = null) {
-            $('#city').html('<option>Loading...</option>');
-            $.post("{{ route('au.city.all') }}", { state: stateId }, function (res) {
-                if (res.status === 'success') {
-                    let options = '<option value="">Select City</option>';
-                    res.cities.forEach(city => {
-                        options += `<option value="${city.id}" ${selected == city.id ? 'selected' : ''}>${city.city}</option>`;
-                    });
-                    $('#city').html(options).prop('disabled', false);
-                }
-            });
-        }
+    $('#country').on('change', function () {
+      const countryId = $(this).val();
+      $('#state').prop('disabled', false);
+      fetchStates(countryId, null);
+      $('#city').html('<option value="">Select City</option>')
+                .prop('disabled', true);
     });
+
+    $('#state').on('change', function () {
+      const stateId = $(this).val();
+      $('#city').prop('disabled', false);
+      fetchCities(stateId, null);
+    });
+
+    function fetchStates(countryId, selected = null) {
+      $('#state').html('<option>Loading...</option>');
+      $.post("{{ route('au.state.all') }}",
+        { country: countryId },
+        function (res) {
+          if (res.status === 'success') {
+            let options = '<option value="">Select State</option>';
+            res.states.forEach(state => {
+              options += `<option value="${state.id}"
+                             ${selected == state.id ? 'selected' : ''}>
+                            ${state.state}
+                          </option>`;
+            });
+            $('#state').html(options).prop('disabled', false);
+          }
+        }
+      );
+    }
+
+    function fetchCities(stateId, selected = null) {
+      $('#city').html('<option>Loading...</option>');
+      $.post("{{ route('au.city.all') }}",
+        { state: stateId },
+        function (res) {
+          if (res.status === 'success') {
+            let options = '<option value="">Select City</option>';
+            res.cities.forEach(city => {
+              options += `<option value="${city.id}"
+                             ${selected == city.id ? 'selected' : ''}>
+                            ${city.city}
+                          </option>`;
+            });
+            $('#city').html(options).prop('disabled', false);
+          }
+        }
+      );
+    }
+  });
 </script>
 
-{{-- State and city fetch --}}
+
+{{-- State and city fetch + delivery charges --}}
 <script>
-    $(function () {
-        $('#country, #state, #city').select2({ theme: 'bootstrap4' });
+  $(function () {
+    $('#country, #state, #city').select2({ theme: 'bootstrap4' });
 
-        const csrfToken        = $('meta[name="csrf-token"]').attr('content');
-        const $country         = $('#country');
-        const $state           = $('#state');
-        const $city            = $('#city');
-        const deliveryCharges  = @json($deliveryCharges);
+    const $country        = $('#country');
+    const $state          = $('#state');
+    const $city           = $('#city');
+    const deliveryCharges = @json($deliveryCharges);
 
-        // Fetch states normally…
-        $country.on('select2:select', function (e) {
-            const countryID = e.params.data.id;
-            $state.prop('disabled', true).html('<option>Loading…</option>').trigger('change.select2');
-            fetch("{{ route('user.get.states') }}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({ country_id: countryID })
-            })
-            .then(r => r.json())
-            .then(states => {
-                $state.prop('disabled', false)
-                    .empty()
-                    .append(states.length
-                        ? '<option value="">Select State</option>'
-                        : '<option disabled>No states</option>');
-                states.forEach(st => $state.append(new Option(st.state, st.id)));
-                $state.trigger('change.select2');
-            })
-            .catch(() => {
-                $state.prop('disabled', false)
-                    .html('<option disabled>Failed to load states</option>')
-                    .trigger('change.select2');
-            });
-        });
+    // Fetch states via Select2
+    $country.on('select2:select', function (e) {
+      const countryID = e.params.data.id;
+      $state.prop('disabled', true)
+            .html('<option>Loading…</option>')
+            .trigger('change.select2');
+      fetch("{{ route('user.get.states') }}", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': csrfToken,
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ country_id: countryID })
+      })
+      .then(r => r.json())
+      .then(states => {
+        $state.prop('disabled', false)
+              .empty()
+              .append(states.length
+                      ? '<option value="">Select State</option>'
+                      : '<option disabled>No states</option>');
+        states.forEach(st =>
+          $state.append(new Option(st.state, st.id))
+        );
+        $state.trigger('change.select2');
+      });
 
-        // When a state is selected, fetch cities AND update delivery charges
-        $state.on('select2:select', function () {
-            const stateID = $state.val();
-            $city.prop('disabled', true).html('<option>Loading…</option>').trigger('change.select2');
+      // clear city
+      $city.html('<option value="">Select City</option>')
+           .prop('disabled', true)
+           .trigger('change.select2');
+    });
 
-            fetch("{{ route('user.get.cities') }}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({ state_id: stateID })
-            })
-            .then(r => r.json())
-            .then(cities => {
-                $city.prop('disabled', false)
-                    .empty()
-                    .append(cities.length
-                        ? '<option value="">Select City</option>'
-                        : '<option disabled>No cities</option>');
-                cities.forEach(ct => $city.append(new Option(ct.city, ct.id)));
-                $city.trigger('change.select2');
+    // When a state is selected → fetch cities & recalc
+    $state.on('select2:select change', function (e) {
+      const stateID = e.params?.data?.id || this.value;
 
-                // Now recalc and persist delivery charges
-                calculateAndSaveDelivery(stateID);
-            })
-            .catch(() => {
-                $city.prop('disabled', false)
-                    .html('<option disabled>Failed to load cities</option>')
-                    .trigger('change.select2');
-            });
-        });
+      // fetch cities
+      $city.prop('disabled', true)
+           .html('<option>Loading…</option>')
+           .trigger('change.select2');
+      fetch("{{ route('user.get.cities') }}", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': csrfToken,
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ state_id: stateID })
+      })
+      .then(r => r.json())
+      .then(cities => {
+        $city.prop('disabled', false)
+             .empty()
+             .append(cities.length
+                     ? '<option value="">Select City</option>'
+                     : '<option disabled>No cities</option>');
+        cities.forEach(ct =>
+          $city.append(new Option(ct.city, ct.id))
+        );
+        $city.trigger('change.select2');
+      });
 
-        function calculateAndSaveDelivery(stateID) {
-            // Find the delivery rules for the selected state
-            const zoneCharge = deliveryCharges.find(c => +c.zone?.state_id === +stateID);
+      // recalc delivery now that we have a state
+      calculateAndSaveDelivery(stateID);
+    });
 
-            // Debug: log the zoneCharge object
-            console.log('zoneCharge for state', stateID, zoneCharge);
+    function calculateAndSaveDelivery(stateID) {
+      const zone = deliveryCharges.find(c => +c.zone?.state_id === +stateID);
+      let totalDel = 0, totalBV = 0, grandTot = 0;
 
-            let footerTotalDelivery = 0;
-            let footerGrandTotal    = 0;
-            let footerTotalBv       = 0;
+      $('#order-summary-table tbody tr[data-cart-id]').each(function () {
+        const $row      = $(this);
+        const price     = +$row.data('price');
+        const bvPerUnit = +$row.data('bv');
+        const qty       = +$row.find('.qty-input').val();
+        const baseTot   = price * qty;
+        const bvTot     = bvPerUnit * qty;
+        totalBV       += bvTot;
 
-            // Loop through each cart row
-            $('#order-summary-table tbody tr[data-cart-id]').each(function() {
-                const $row      = $(this);
-                const cartId    = +$row.data('cart-id');
-                const unitPrice = +$row.data('price');
-                const bvPerUnit = +$row.data('bv');
-                const quantity  = +$row.find('.qty-input').val();
+        // parse "5kg" → 5
+        let sizeFactor = 1;
+        const sz       = ($row.data('size') || '').toLowerCase();
+        if (sz.includes('kg')) sizeFactor = parseFloat(sz) || 1;
 
-                // Calculate base totals
-                const baseTotal = unitPrice * quantity;
-                const rowBv     = bvPerUnit * quantity;
-                footerTotalBv  += rowBv;
-
-                // Extract size (e.g. "5kg") and parse numeric part
-                const sizeLabel = ($row.data('size') || '').toLowerCase();
-                let sizeFactor  = 1;
-                if (sizeLabel.includes('kg')) {
-                sizeFactor = parseFloat(sizeLabel.replace('kg', '').trim()) || 1;
-                }
-
-                // Compute delivery charge
-                let deliveryCharge = 0;
-                if (zoneCharge && zoneCharge.unit_measurement) {
-                // Number of 1KG units in the selected size
-                const units = Math.ceil(sizeFactor / zoneCharge.unit_measurement);
-
-                // Choose discounted or default per‑kg rate based on min_order
-                const perKgRate = baseTotal >= zoneCharge.min_order
-                    ? zoneCharge.delivery_charge
-                    : zoneCharge.default_delivery_charge;
-
-                deliveryCharge = units * perKgRate;
-
-                console.log(
-                    `Size ${sizeFactor}KG → ${units} unit(s) × ₹${perKgRate} = ₹${deliveryCharge}`
-                );
-                }
-
-                // Update row cells
-                $row.find('.delivery-charge-cell').text(`₹${deliveryCharge.toFixed(2)}`);
-                $row.find('.product-total-cell').text(`₹${baseTotal.toFixed(2)}`);
-                $row.find('.row-grand-total-cell').text(`₹${(baseTotal + deliveryCharge).toFixed(2)}`);
-                $row.find('.bv-total-cell').text(rowBv);
-
-                // Persist the delivery charge & BV to backend
-                $.post("{{ route('user.cart.update.delivery') }}", {
-                _token:           csrfToken,
-                cart_id:          cartId,
-                delivery_charge:  deliveryCharge,
-                total_bv:         rowBv
-                });
-
-                // Accumulate footers
-                footerTotalDelivery += deliveryCharge;
-                footerGrandTotal    += (baseTotal + deliveryCharge);
-            });
-
-            // Update footer summary
-            $('#total-delivery-charge').text(`₹${footerTotalDelivery.toFixed(2)}`);
-            $('#grand-total-amount')  .text(`₹${footerGrandTotal.toFixed(2)}`);
-            $('#total-bv-points')     .text(footerTotalBv);
-            $('#summary-subtotal').text('₹' + (footerGrandTotal - footerTotalDelivery).toFixed(2));
-            $('#summary-total-bv').text(footerTotalBv);
-            $('#summary-grand-total').text('₹' + footerGrandTotal.toFixed(2));
-            $('#modal_bv_points')     .val(footerTotalBv);
-            $('#modal_delivery_charge').val(footerTotalDelivery);
-            $('#modal_grand_total')   .val(footerGrandTotal);
-            $('#footer-grand-total')  .text(`₹${footerGrandTotal.toFixed(2)}`);
+        // compute deliveryCharge
+        let delCharge = 0;
+        if (zone && zone.weight) {
+          const unitWeight = parseFloat(zone.weight);
+          const minOrder   = parseFloat(zone.min_order);
+          const perKgRate  = baseTot >= minOrder
+                             ? parseFloat(zone.delivery_charge)
+                             : parseFloat(zone.default_delivery_charge);
+          const units      = Math.ceil(sizeFactor / unitWeight);
+          delCharge = units * perKgRate;
         }
 
-        function recalcFooter() {
-  let subtotal = 0,
-      totalDel = 0,
-      totalBv  = 0;
+        // write row
+        $row.find('.delivery-charge-cell').text(`₹${delCharge.toFixed(2)}`);
+        $row.find('.product-total-cell') .text(`₹${baseTot.toFixed(2)}`);
+        $row.find('.row-grand-total-cell')
+            .text(`₹${(baseTot + delCharge).toFixed(2)}`);
 
-  $('#order-summary-table tbody tr[data-cart-id]').each(function() {
-    const $r     = $(this);
-    const price  = parseFloat($r.find('.product-total-cell').text().replace(/[^0-9.]/g, '')) || 0;
-    const del    = parseFloat($r.find('.delivery-charge-cell').text().replace(/[^0-9.]/g, ''))  || 0;
-    const bv     = parseInt($r.find('.bv-total-cell').text(), 10)                                  || 0;
+        totalDel += delCharge;
+        grandTot  += (baseTot + delCharge);
 
-    subtotal += price;
-    totalDel += del;
-    totalBv  += bv;
-  });
-
-  const grandTotal = subtotal + totalDel;
-
-  // update table footer if you still have one
-  $('#footer-subtotal').text('₹' + subtotal.toFixed(2));
-  $('#footer-total-bv').text(totalBv);
-  $('#footer-grand-total').text('₹' + grandTotal.toFixed(2));
-
-  // ——— and update your summary spans ———
-  $('#summary-subtotal').text('₹' + subtotal.toFixed(2));
-  $('#summary-total-bv').text(totalBv);
-  $('#summary-grand-total').text('₹' + grandTotal.toFixed(2));
-}
-
-        $(document).ready(function(){
-        // now you can wire up country/state & qty buttons
-        $('#state').on('select2:select', e => calculateAndSaveDelivery(e.params.data.id));
-        $('.update-qty-btn').on('click', function(){
-            /* … after you update the single row … */
-            if ($('#state').val()) {
-            calculateAndSaveDelivery($('#state').val());
-            } else {
-            recalcFooter();
-            }
+        // persist
+        $.post("{{ route('user.cart.update.delivery') }}", {
+          _token:           csrfToken,
+          cart_id:          $row.data('cart-id'),
+          delivery_charge:  delCharge,
+          total_bv:         bvTot
         });
-        // run one initial recalc so your footer shows something on page‐load
-        recalcFooter();
-        });
+      });
 
+      // update footer
+      $('#total-delivery-charge').text(`₹${totalDel.toFixed(2)}`);
+      $('#summary-delivery-charge').text(`₹${totalDel.toFixed(2)}`);
+      $('#summary-subtotal')    .text(`₹${(grandTot - totalDel).toFixed(2)}`);
+      $('#summary-total-bv')    .text(totalBV);
+      $('#summary-grand-total') .text(`₹${grandTot.toFixed(2)}`);
+    }
+
+    // qty buttons trigger recalculation
+    $('.update-qty-btn').off('click').on('click', function () {
+      if ($state.val()) calculateAndSaveDelivery($state.val());
+      else recalcFooter();
     });
+
+    // initial recalc if pre‑selected
+    if ($state.val()) calculateAndSaveDelivery($state.val());
+  });
 </script>
 
 {{-- Update quantity --}}
-{{-- <script>
-    $(document).ready(function () {
-  $('.update-qty-btn').off('click').on('click', function() {
-    const $btn = $(this);
-    const cartId   = $btn.data('id');
-    const action   = $btn.data('action');
-    const $row     = $btn.closest('tr');
-    const unitPrice= parseFloat($row.data('price')) || 0; // per-unit incl GST
-    const bvPer    = parseInt($row.data('bv')) || 0;
-
-    $.post("{{ route('user.cart.update.quantity') }}", {
-      _token: csrfToken,
-      id: cartId,
-      action: action
-    })
-    .done(function(res) {
-      if (!res.success) {
-        return alert(res.message || 'Failed to update quantity');
-      }
-      // 1. update the input and row data-quantity
-      const newQty = res.quantity;
-      $row.find('.qty-input').val(newQty);
-      $row.attr('data-quantity', newQty);
-
-      // 2. recalc product total and BV for this row
-      const newTotal = (unitPrice * newQty).toFixed(2);
-      $row.find('.product-total-cell').text('₹' + newTotal);
-
-      const newBvTotal = (bvPer * newQty);
-      $row.find('.bv-total-cell').text(newBvTotal);
-
-      // 3. Update the row's grand total (product total + delivery)
-      const deliveryCharge = parseFloat(
-        $row.find('.delivery-charge-cell').text().replace(/[^0-9.\-]/g,'')
-      ) || 0;
-      const rowGrandTotal = (parseFloat(newTotal) + deliveryCharge).toFixed(2);
-      $row.find('.row-grand-total-cell').text('₹' + rowGrandTotal);
-
-      // 4. Update the footer totals
-      recalcFooter();
-    })
-    .fail(function() {
-      alert('Request failed.');
-    });
-  });
-});
-</script> --}}
 <script>
-    $('.update-qty-btn').off('click').on('click', function() {
-  const $btn   = $(this);
-  const cartId = $btn.data('id');
-  const action = $btn.data('action');
-  const $row   = $btn.closest('tr');
-
-  $.post("{{ route('user.cart.update.quantity') }}", {
-    _token: csrfToken,
-    id:     cartId,
-    action: action
-  })
-  .done(function(res) {
-    if (!res.success) return alert(res.message || 'Failed to update quantity');
-
-    // Update that row’s UI
-    const newQty = res.quantity;
-    $row.find('.qty-input').val(newQty);
-    $row.attr('data-quantity', newQty);
-
-    const unitPrice = parseFloat($row.data('price')) || 0;
-    const bvPer     = parseInt($row.data('bv'))   || 0;
-    const newTotal  = (unitPrice * newQty).toFixed(2);
-    $row.find('.product-total-cell').text('₹' + newTotal);
-    $row.find('.bv-total-cell').text(bvPer * newQty);
-
-    // Delivery didn’t change here, so row‑grand = newTotal + existing delivery
-    const deliveryCharge = parseFloat(
-      $row.find('.delivery-charge-cell').text().replace(/[^0-9.]/g, '')
-    ) || 0;
-    $row.find('.row-grand-total-cell')
-        .text('₹' + (parseFloat(newTotal) + deliveryCharge).toFixed(2));
-
-    // **NOW** recalc the footer
-    recalcFooter();
-  });
+    $(document).off('click', '.update-qty-btn').on('click', '.update-qty-btn', function () {
+    const $btn = $(this);
+    const cartId = $btn.data('id');
+    const action = $btn.data('action');
+    const $row = $btn.closest('tr');
+    
+    // Prevent multiple clicks
+    if ($btn.hasClass('processing')) return;
+    $btn.addClass('processing').html('<i class="fas fa-spinner fa-spin"></i>');
+    
+    // Get current quantity from input
+    const $qtyInput = $row.find('.qty-input');
+    let currentQty = parseInt($qtyInput.val()) || 1;
+    
+    // Calculate new quantity immediately (before AJAX)
+    if (action === 'increase') {
+        currentQty++;
+    } else if (action === 'decrease' && currentQty > 1) {
+        currentQty--;
+    }
+    
+    // Update UI immediately for better responsiveness
+    $qtyInput.val(currentQty);
+    updateRowTotals($row, currentQty);
+    updateFooterTotals();
+    
+    // Send request to server
+    $.ajax({
+        url: "{{ route('user.cart.update.quantity') }}",
+        method: "POST",
+        data: {
+            _token: csrfToken,
+            id: cartId,
+            action: action,
+            current_quantity: currentQty
+        },
+        success: function (res) {
+            if (!res.success) {
+                showToast('error', res.message || 'Update failed');
+                // Revert UI if server update failed
+                $qtyInput.val(res.original_quantity || currentQty);
+                updateRowTotals($row, res.original_quantity || currentQty);
+            }
+        },
+        error: function () {
+            showToast('error', 'Network error. Please try again.');
+        },
+        complete: function () {
+            $btn.removeClass('processing').html(action === 'increase' ? '+' : '−');
+        }
+    });
 });
+
+// Helper function to update row totals
+function updateRowTotals($row, quantity) {
+    const unitPrice = parseFloat($row.data('price')) || 0;
+    const bvPerUnit = parseInt($row.data('bv'), 10) || 0;
+    const delivery = parseFloat($row.find('.delivery-charge-cell').text().replace('₹', '')) || 0;
+    
+    const newTotal = unitPrice * quantity;
+    const newBvTotal = bvPerUnit * quantity;
+    const newGrandTotal = newTotal + delivery;
+    
+    $row.find('.product-total-cell').text('₹' + newTotal.toFixed(2));
+    $row.find('.bv-total-cell').text(newBvTotal);
+    $row.find('.row-grand-total-cell').text('₹' + newGrandTotal.toFixed(2));
+    
+    // Update data attribute
+    $row.attr('data-quantity', quantity);
+}
+
+// Update footer totals
+function updateFooterTotals() {
+    let subtotal = 0;
+    let totalBv = 0;
+    let grandTotal = 0;
+    let totalDelivery = 0;
+    
+    $('#order-summary-table tbody tr[data-cart-id]').each(function () {
+        const $row = $(this);
+        subtotal += parseFloat($row.find('.product-total-cell').text().replace('₹', '')) || 0;
+        totalBv += parseInt($row.find('.bv-total-cell').text()) || 0;
+        totalDelivery += parseFloat($row.find('.delivery-charge-cell').text().replace('₹', '')) || 0;
+        grandTotal += parseFloat($row.find('.row-grand-total-cell').text().replace('₹', '')) || 0;
+    });
+    
+    $('#summary-subtotal').text('₹' + subtotal.toFixed(2));
+    $('#summary-delivery-charge').text('₹' + totalDelivery.toFixed(2));
+    $('#summary-total-bv').text(totalBv);
+    $('#summary-grand-total').text('₹' + grandTotal.toFixed(2));
+}
+
+// Better notification system
+function showToast(type, message) {
+    // Replace with your preferred notification system
+    const toast = `<div class="alert alert-${type}">${message}</div>`;
+    $('.toast-container').append(toast);
+    setTimeout(() => $('.alert').remove(), 3000);
+}
 </script>
 
 {{-- Delete function --}}

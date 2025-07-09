@@ -44,6 +44,7 @@ class ProductController extends Controller
             'category_id'        => 'required|integer|exists:product_categories,id',
             'description'        => 'nullable|string',
             'image'              => 'nullable|string',
+            'weight'             => 'nullable|numeric|min:0',
         ]);
 
         if ($validator->fails()) {
@@ -59,6 +60,8 @@ class ProductController extends Controller
         $sizePrices = $request->input('size_price', []);
         $sizeStocks = $request->input('size_stock', []);
 
+        $hasSizes = !empty(array_filter($sizeNames)) || !empty(array_filter($sizePrices)) || !empty(array_filter($sizeStocks));
+
         $product = Product::create([
             'name'               => $request->name,
             'price'              => $request->price,
@@ -71,9 +74,10 @@ class ProductController extends Controller
             'unit_measurement'   => $request->unit_measurement,
             'description'        => $request->description,
             'image'              => $image,
-            'size_id'     => implode('|', $sizeNames),
-            'size_price'  => implode('|', $sizePrices),
-            'size_stock'  => implode('|', $sizeStocks),
+            'weight'             => $request->weight ?? null,
+            'size_id'            => $hasSizes ? implode('|', $sizeNames) : null,
+            'size_price'         => $hasSizes ? implode('|', $sizePrices) : null,
+            'size_stock'         => $hasSizes ? implode('|', $sizeStocks) : null,
         ]);
 
         Log::info('Product Created:', $product->toArray());
@@ -85,8 +89,8 @@ class ProductController extends Controller
     {
         $product    = Product::findOrFail($id);
         $categories = ProductCategory::all();
-        $units      = Unit::all();
-        $sizes      = Size::all(); // ✅ Add this line
+        $units      = Unit::all(); // optional: you can remove this if unit is no longer used
+        $sizes      = Size::all();
 
         return view('backend.pages.products.add-product', compact('product', 'categories', 'units', 'sizes'));
     }
@@ -107,12 +111,13 @@ class ProductController extends Controller
             'category_id'       => 'required|integer|exists:product_categories,id',
             'description'       => 'nullable|string',
             'image'             => 'nullable|string',
-            'size_id'      => 'array',
-            'size_id.*'    => 'nullable|exists:sizes,id',
-            'size_price'   => 'array',
-            'size_price.*' => 'nullable|numeric',
-            'size_stock'   => 'array',
-            'size_stock.*' => 'nullable|integer',
+            'weight'            => 'nullable|numeric|min:0',
+            'size_id'           => 'array',
+            'size_id.*'         => 'nullable|exists:sizes,id',
+            'size_price'        => 'array',
+            'size_price.*'      => 'nullable|numeric',
+            'size_stock'        => 'array',
+            'size_stock.*'      => 'nullable|integer',
         ]);
 
         if ($validator->fails()) {
@@ -121,25 +126,32 @@ class ProductController extends Controller
 
         $image = $request->filled('image') ? $request->input('image') : $product->image;
 
+        $sizeIds    = $request->input('size_id', []);
+        $sizePrices = $request->input('size_price', []);
+        $sizeStocks = $request->input('size_stock', []);
+
+        $hasSizes = !empty(array_filter($sizeIds)) || !empty(array_filter($sizePrices)) || !empty(array_filter($sizeStocks));
+
         $product->update([
-            'name'              => $request->name,
-            'price'             => $request->price,
-            'distributor_price' => $request->distributor_price,
-            'bv_points'         => $request->bv_points ?? 0,
-            'stock'             => $request->stock,
-            'gst'               => $request->gst ?? 0,
-            'category_id'       => $request->category_id,
-            'unit_id'           => $request->unit_id,
-            'unit_measurement'  => $request->unit_measurement,
-            'description'       => $request->description,
-            'image'             => $image,
-            'size_id'     => $request->filled('size_id') ? implode('|', $request->size_id) : null,
-            'size_price'  => $request->filled('size_price') ? implode('|', $request->size_price) : null,
-            'size_stock'  => $request->filled('size_stock') ? implode('|', $request->size_stock) : null,
+            'name'               => $request->name,
+            'price'              => $request->price,
+            'distributor_price'  => $request->distributor_price,
+            'bv_points'          => $request->bv_points ?? 0,
+            'stock'              => $request->stock,
+            'gst'                => $request->gst ?? 0,
+            'category_id'        => $request->category_id,
+            'unit_id'            => $request->unit_id,
+            'unit_measurement'   => $request->unit_measurement,
+            'description'        => $request->description,
+            'image'              => $image,
+            'weight'             => $request->weight ?? null,
+            'size_id'            => $hasSizes ? implode('|', $sizeIds) : null,
+            'size_price'         => $hasSizes ? implode('|', $sizePrices) : null,
+            'size_stock'         => $hasSizes ? implode('|', $sizeStocks) : null,
         ]);
 
         return redirect()->route('admin.products.index')
-                        ->with('message','Product updated successfully!');
+                        ->with('message', 'Product updated successfully!');
     }
 
     public function destroy(int $id): RedirectResponse

@@ -13,8 +13,7 @@ class DeliveryCharge extends Model
         'zone_id',
         'min_order',
         'delivery_charge',
-        'unit_id',
-        'unit_measurement',
+        'weight',
         'default_delivery_charge',
         'setting_type',
     ];

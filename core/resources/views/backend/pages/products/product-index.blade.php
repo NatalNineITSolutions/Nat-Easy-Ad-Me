@@ -34,6 +34,7 @@
             {{-- <th>Price</th> --}}
             <th>Distributor Price</th>
             <th>BV Points</th>
+            <th>Weight (g)</th>
             <th>Size and Price</th>
             {{-- <th>Unit</th>
             <th>Unit Measurement</th> --}}
@@ -41,7 +42,7 @@
         </tr>
       </thead>
       <tbody>
-        @foreach($products as $product)
+        @forelse($products as $product)
           @php
               $img = $product->imageFile->path ?? 'no-image.png';
               $sizeIds = explode('|', $product->size_id ?? '');
@@ -62,6 +63,7 @@
               {{-- <td>₹{{ number_format($product->price, 2) }}</td> --}}
               <td>₹{{ number_format($product->distributor_price, 2) }}</td>
               <td>{{ $product->bv_points ?? 0 }}</td>
+              <td>{{ $product->weight ? number_format($product->weight, 2) . ' g' : '—' }}</td>
               {{-- <td>{{ $product->unit->name ?? 'N/A' }}</td>
               <td>{{ $product->unit_measurement ?? '-' }}</td> --}}
               <td>
@@ -99,7 +101,11 @@
                   </form>
               </td>
           </tr>
-        @endforeach
+        @empty
+          <tr>
+              <td colspan="7" class="text-center text-muted">{{ __('No products available.') }}</td>
+          </tr>
+        @endforelse
       </tbody>
     </table>
 </div>

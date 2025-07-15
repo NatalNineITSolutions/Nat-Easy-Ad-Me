@@ -95,12 +95,13 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
                 Route::get('/product-buy', 'productBuyForm')->name('product.buy');
                 Route::post('/get-states', 'userGetStates')->name('get.states');
                 Route::post('/get-cities', 'userGetCities')->name('get.cities');
-                Route::post('/info/place-order', 'storeOrder')->name('order.store');
+                Route::post('/place-order', 'storeOrder')->name('order.store');
                 Route::post('/add-to-cart', 'addToCart')->name('add.to.cart');
                 Route::post('/update-cart-quantity', 'updateCartQuantity')->name('cart.update.quantity');
                 Route::post('/remove-cart-item', 'removeCartItem')->name('cart.remove');
                 Route::get('/check-cart', 'checkProductInCart')->name('check.cart');
                 Route::post('/update-delivery',    'updateDeliveryCharge')->name('cart.update.delivery');
+                Route::post('/get-delivery-charges', 'getChargesByState')->name('get.delivery.charges');
             });
         });
 

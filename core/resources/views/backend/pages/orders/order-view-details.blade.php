@@ -14,6 +14,11 @@
                     <p><strong>Name:</strong> {{ $order->name }}</p>
                     <p><strong>Email:</strong> {{ $order->email }}</p>
                     <p><strong>Phone:</strong> {{ $order->phone_number }}</p>
+                    @if($order->user?->sponsor)
+                        <p><strong>Sponsor:</strong> {{ $order->user->sponsor->first_name }} {{ $order->user->sponsor->last_name }}</p>
+                    @else
+                        <p><strong>Sponsor:</strong> —</p>
+                    @endif
                     <p><strong>Address:</strong><br>
                         {{ $order->address }}<br>
                         @php

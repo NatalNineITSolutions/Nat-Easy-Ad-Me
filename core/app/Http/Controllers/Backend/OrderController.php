@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\OrderDetail;
 use App\Models\Product;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\User;
 
 class OrderController extends Controller
 {
@@ -46,7 +47,7 @@ class OrderController extends Controller
 
     public function viewOrderDetails(OrderDetail $order)
     {
-        $order->load(['country', 'state', 'city']); // <- Important
+        $order->load(['country', 'state', 'city', 'user.sponsor']); // 👈 add user.sponsor
 
         $productIds = explode('|', $order->product_id);
         $quantities = explode('|', $order->product_quantity);
@@ -101,35 +102,37 @@ class OrderController extends Controller
     }
 
     public function downloadProductInvoice(OrderDetail $order, $index)
-{
-    $productIds = explode('|', $order->product_id);
-    $quantities = explode('|', $order->product_quantity);
-    $prices     = explode('|', $order->product_total_price);
-    $sizes      = explode('|', $order->size);
-    $statuses   = explode('|', $order->order_status);
+    {
+        // Load related data including sponsor
+        $order->load(['country', 'state', 'city', 'user.sponsor']);
 
-    $product = Product::find($productIds[$index] ?? null);
-    $quantity = $quantities[$index] ?? 0;
-    $price = $prices[$index] ?? 0;
-    $size = $sizes[$index] ?? '-';
-    $status = $statuses[$index] ?? 'pending';
+        $productIds = explode('|', $order->product_id);
+        $quantities = explode('|', $order->product_quantity);
+        $prices     = explode('|', $order->product_total_price);
+        $sizes      = explode('|', $order->size);
+        $statuses   = explode('|', $order->order_status);
 
-    $site_logo_id = get_static_option('site_logo');
-    $site_logo = get_attachment_image_by_id($site_logo_id, null, true);
-    $site_logo_url = $site_logo['img_url'] ?? null;
+        $product  = Product::find($productIds[$index] ?? null);
+        $quantity = $quantities[$index] ?? 0;
+        $price    = $prices[$index] ?? 0;
+        $size     = $sizes[$index] ?? '-';
+        $status   = $statuses[$index] ?? 'pending';
 
-    $pdf = Pdf::loadView('backend.pages.orders.invoice-single-product', compact(
-        'order',
-        'product',
-        'quantity',
-        'price',
-        'size',
-        'status',
-        'site_logo_url'
-    ));
+        $site_logo_id  = get_static_option('site_logo');
+        $site_logo     = get_attachment_image_by_id($site_logo_id, null, true);
+        $site_logo_url = $site_logo['img_url'] ?? null;
 
-    return $pdf->download('invoice-order-' . $order->id . '-product-' . ($index + 1) . '.pdf');
-}
+        $pdf = Pdf::loadView('backend.pages.orders.invoice-single-product', compact(
+            'order',
+            'product',
+            'quantity',
+            'price',
+            'size',
+            'status',
+            'site_logo_url'
+        ));
 
+        return $pdf->download('invoice-order-' . $order->id . '-product-' . ($index + 1) . '.pdf');
+    }
 
 }

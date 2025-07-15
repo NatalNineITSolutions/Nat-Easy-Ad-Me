@@ -70,20 +70,18 @@
                 @endcanany
 
                 {{-- Attribute Manage --}}
-                <li class="dashboard__bottom__list__item has-children">
+                <li class="dashboard__bottom__list__item has-children @if (request()->is('admin/attributes/*')) active open show @endif">
                     <a href="javascript:void(0)">
                         <i class="las la-cogs"></i> {{ __('Attribute Manage') }}
                     </a>
                     <ul class="submenu">
-                        <li class="dashboard__bottom__list__item @if (request()->is('admin/attributes/unit')) selected @endif">
+                        <li class="dashboard__bottom__list__item @if (request()->is('admin/attributes/unit*')) selected @endif">
                             <a href="{{ route('admin.attributes.unit.index') }}"> {{ __('Unit Manage') }} </a>
                         </li>
-                        <li class="dashboard__bottom__list__item @if (request()->is('admin/attributes/size')) active open show @endif">
-                            <a href="{{ route('admin.attributes.size.index') }}">
-                                {{ __('Size Manage') }}
-                            </a>
+                        <li class="dashboard__bottom__list__item @if (request()->is('admin/attributes/size*')) selected @endif">
+                            <a href="{{ route('admin.attributes.size.index') }}"> {{ __('Size Manage') }} </a>
                         </li>
-                        <li class="dashboard__bottom__list__item @if(request()->is('admin/attributes/delivery-option*')) active open show @endif">
+                        <li class="dashboard__bottom__list__item @if(request()->is('admin/attributes/delivery-option*')) selected @endif">
                             <a href="{{ route('admin.attributes.delivery.option.index') }}">
                                 {{ __('Delivery Option Manage') }}
                             </a>

@@ -174,65 +174,6 @@
         });
 
         // ✅ Add to Cart
-        // $(document).off('click', '.add-to-cart-btn').on('click', '.add-to-cart-btn', function (e) {
-        //     e.preventDefault();
-
-        //     const $btn = $(this);
-        //     if ($btn.hasClass('processing')) return;
-
-        //     const $card = $btn.closest('.card');
-        //     const $selectedSize = $card.find('.size-btn.selected');
-
-        //     const productId = $btn.data('product-id');
-        //     const quantity = $btn.data('quantity') || 1;
-        //     const sizePrice = $selectedSize.length ? $selectedSize.data('size-price') : 0;
-        //     const sizeId = $selectedSize.length ? $selectedSize.data('size-id') : null;
-
-        //     $btn.addClass('processing').prop('disabled', true);
-        //     showSpinner($btn, 'Adding...');
-
-        //     fetch(addToCartUrl, {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-        //         },
-        //         body: JSON.stringify({
-        //             product_id: productId,
-        //             quantity: quantity,
-        //             size_price: sizePrice,
-        //             size_id: sizeId
-        //         })
-        //     })
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         if (data.status === 'success') {
-        //             toastr.success(data.message);
-        //             restoreButton($btn, 'Added');
-        //         } else if (data.status === 'info') {
-        //             toastr.info(data.message);
-        //             restoreButton($btn, 'Already in Cart');
-        //         } else {
-        //             toastr.error(data.message || 'Failed to add product.');
-        //             restoreButton($btn);
-        //         }
-
-        //         const $cartBadge = $('.cart-count');
-        //         if (data.cart_count !== undefined) {
-        //             $cartBadge.text(data.cart_count).addClass('pulse');
-        //             setTimeout(() => $cartBadge.removeClass('pulse'), 600);
-        //         }
-        //     })
-        //     .catch(() => {
-        //         toastr.error('Something went wrong!');
-        //         restoreButton($btn);
-        //     })
-        //     .finally(() => {
-        //         $btn.removeClass('processing').prop('disabled', false);
-        //     });
-        // });
-
-        // ✅ Add to Cart
         $(document).off('click', '.add-to-cart-btn').on('click', '.add-to-cart-btn', function (e) {
             e.preventDefault();
 
@@ -301,68 +242,6 @@
                 $btn.removeClass('processing').prop('disabled', false);
             });
         });
-
-        // ✅ Buy Now
-        // $(document).off('click', '.buy-now-btn').on('click', '.buy-now-btn', function (e) {
-        //     e.preventDefault();
-
-        //     const $btn = $(this);
-        //     if ($btn.hasClass('processing')) return;
-
-        //     const $card = $btn.closest('.card');
-        //     const $selectedSize = $card.find('.size-btn.selected');
-
-        //     const productId = $btn.data('product-id');
-        //     const quantity = $btn.data('quantity') || 1;
-        //     const sizePrice = $selectedSize.length ? $selectedSize.data('size-price') : 0;
-        //     const sizeId = $selectedSize.length ? $selectedSize.data('size-id') : null;
-
-        //     $btn.addClass('processing').prop('disabled', true);
-        //     showSpinner($btn, 'Buying...');
-
-        //     fetch(checkCartUrl + '?product_id=' + productId, {
-        //         method: 'GET',
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-        //         }
-        //     })
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         if (data.in_cart) {
-        //             window.location.href = buyNowRedirectUrl;
-        //         } else {
-        //             return fetch(addToCartUrl, {
-        //                 method: 'POST',
-        //                 headers: {
-        //                     'Content-Type': 'application/json',
-        //                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-        //                 },
-        //                 body: JSON.stringify({
-        //                     product_id: productId,
-        //                     quantity: quantity,
-        //                     size_price: sizePrice,
-        //                     size_id: sizeId
-        //                 })
-        //             })
-        //             .then(res => res.json())
-        //             .then(cartData => {
-        //                 if (cartData.status === 'success' || cartData.status === 'info') {
-        //                     toastr.success(cartData.message || 'Added to cart.');
-        //                     window.location.href = buyNowRedirectUrl;
-        //                 } else {
-        //                     toastr.error(cartData.message || 'Failed to add to cart.');
-        //                 }
-        //             });
-        //         }
-        //     })
-        //     .catch(() => {
-        //         toastr.error('Something went wrong during Buy Now!');
-        //     })
-        //     .finally(() => {
-        //         restoreButton($btn, 'Buy Now');
-        //         $btn.removeClass('processing').prop('disabled', false);
-        //     });
-        // });
 
         // ✅ Buy Now
         $(document).off('click', '.buy-now-btn').on('click', '.buy-now-btn', function (e) {

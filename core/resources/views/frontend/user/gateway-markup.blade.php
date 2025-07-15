@@ -59,6 +59,7 @@
             {{ __('Pay & Order Now') }}
           </button>
         </div>
+        
       </div>
     </form>
   </div>

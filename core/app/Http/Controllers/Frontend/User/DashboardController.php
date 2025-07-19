@@ -1153,7 +1153,8 @@ class DashboardController extends Controller
                         $user,
                         $totalBV,
                         $user->membership_id,
-                        $user->id
+                        $user->id,
+                        'Referral from products'
                     );
                 }
             }
@@ -1555,6 +1556,7 @@ class DashboardController extends Controller
         }
 
         $product = Product::find($productIds[$index]);
+        $user = Auth::user(); // Get current user
 
         return view('frontend.user.order-view-details', [
             'order'     => $order,
@@ -1563,6 +1565,7 @@ class DashboardController extends Controller
             'price'     => $prices[$index] ?? 0,
             'size'      => $sizes[$index] ?? '—',
             'status'    => $statuses[$index] ?? 'pending',
+            'partner_id' => $user->partner_id ?? null, 
         ]);
     }
 
@@ -1579,14 +1582,16 @@ class DashboardController extends Controller
         }
 
         $product = Product::find($productIds[$index]);
+        $user = Auth::user(); // Get current user
 
         $pdf = Pdf::loadView('frontend.user.order-invoice-pdf', [
-            'order'    => $order,
-            'product'  => $product,
-            'quantity' => $quantities[$index] ?? 0,
-            'price'    => $prices[$index] ?? 0,
-            'size'     => $sizes[$index] ?? '—',
-            'status'   => $statuses[$index] ?? 'pending',
+            'order'      => $order,
+            'product'    => $product,
+            'quantity'   => $quantities[$index] ?? 0,
+            'price'      => $prices[$index] ?? 0,
+            'size'       => $sizes[$index] ?? '—',
+            'status'     => $statuses[$index] ?? 'pending',
+            'partner_id' => $user->partner_id ?? null, // pass partner_id to view
         ])->setOptions(['defaultFont' => 'DejaVu Sans']);
 
         return $pdf->download("invoice-order-{$order->id}-product-{$index}.pdf");

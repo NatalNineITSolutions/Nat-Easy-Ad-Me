@@ -62,6 +62,11 @@
     <div class="invoice-box">
         <div class="section-title">Customer Details</div>
         <table class="info-table">
+             @if($order->user?->partner_id)
+            <tr>
+                <td colspan="2"><strong>Partner ID:</strong> {{ $order->user->partner_id }}</td>
+            </tr>
+            @endif
             <tr>
                 <td><strong>Name:</strong> {{ $order->name }}</td>
                 <td><strong>Email:</strong> {{ $order->email }}</td>

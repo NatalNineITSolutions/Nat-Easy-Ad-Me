@@ -11,6 +11,11 @@
         <div class="card-body" style="font-size: 12px; margin: 10px 20px;">
             <div class="row mb-4">
                 <div class="col-md-6 ps-3">
+                    @if($order->user?->partner_id)
+                        <p><strong>Distributor ID:</strong> {{ $order->Distributor_id }}</p>
+                    @else
+                        <p><strong>Distributor ID:</strong> —</p>
+                    @endif
                     <p><strong>Name:</strong> {{ $order->name }}</p>
                     <p><strong>Email:</strong> {{ $order->email }}</p>
                     <p><strong>Phone:</strong> {{ $order->phone_number }}</p>

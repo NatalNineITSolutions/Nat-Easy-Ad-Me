@@ -10,6 +10,7 @@
 
             <div class="row mb-2">
                 <div class="col-md-6">
+                    <p><strong>Distributor ID:</strong> {{ $partner_id ?? 'N/A' }}</p>
                     <p><strong>Order ID:</strong> #{{ $order->id }}</p>
                     <p><strong>Name:</strong> {{ $order->name }}</p>
                     <p><strong>Email:</strong> {{ $order->email }}</p>

@@ -103,9 +103,9 @@ class ShippingController extends Controller
         $request->validate([
             'zone_id'                  => 'required|exists:shipping_zones,id',
             'weight'                   => 'required|numeric|min:0.01',
-            'delivery_charge'         => 'required|numeric|min:0',
+            'delivery_charge'         => 'nullable|numeric|min:0',
             'default_delivery_charge' => 'required|numeric|min:0',
-            'setting_type'            => 'required|in:na,min_order',
+            'setting_type'            => 'nullable|in:na,min_order',
             'min_order'               => 'nullable|numeric|min:0|required_if:setting_type,min_order',
         ]);
 

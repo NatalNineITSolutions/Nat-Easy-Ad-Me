@@ -53,7 +53,7 @@
 
         <div class="mb-3">
             <label class="form-label">{{ __('Setting') }}</label>
-            <select name="setting_type" id="setting_type" class="form-control" required>
+            <select name="setting_type" id="setting_type" class="form-control">
                 <option value="na" {{ (old('setting_type', $deliveryCharge->setting_type ?? '') === 'na') ? 'selected' : '' }}>{{ __('N/A') }}</option>
                 <option value="min_order" {{ (old('setting_type', $deliveryCharge->setting_type ?? '') === 'min_order') ? 'selected' : '' }}>{{ __('Minimum Order') }}</option>
             </select>

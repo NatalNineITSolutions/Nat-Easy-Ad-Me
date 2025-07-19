@@ -64,7 +64,7 @@
         <table class="info-table">
              @if($order->user?->partner_id)
             <tr>
-                <td colspan="2"><strong>Partner ID:</strong> {{ $order->user->partner_id }}</td>
+                <td colspan="2"><strong>Distributor ID:</strong> {{ $order->user->partner_id }}</td>
             </tr>
             @endif
             <tr>

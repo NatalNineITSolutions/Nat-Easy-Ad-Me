@@ -33,7 +33,7 @@
     <h3>Invoice for Order #{{ $order->id }}</h3>
     <img src="{{ public_path('assets/uploads/media-uploader/logo.jpg') }}" alt="Easyadme Logo" class="logo">
 
-    <p><strong>Partner ID:</strong> {{ $partner_id ?? 'N/A' }}</p>
+    <p><strong>Distributor ID:</strong> {{ $partner_id ?? 'N/A' }}</p>
     <p><strong>Name:</strong> {{ $order->name }}</p>
     <p><strong>Email:</strong> {{ $order->email }}</p>
     <p><strong>Phone:</strong> {{ $order->phone_number }}</p>

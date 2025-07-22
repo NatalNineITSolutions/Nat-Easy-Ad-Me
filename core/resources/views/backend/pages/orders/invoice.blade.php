@@ -1,27 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
     <title>Invoice - Order #{{ $order->id }}</title>
     <style>
         body {
             font-family: DejaVu Sans, sans-serif;
             font-size: 14px;
+            margin: 0;
+            padding: 20px;
         }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-        th { background: #f2f2f2; }
-        h3, h4 { margin: 15px 0 5px; }
-        p { margin: 5px 0; }
+
+        h3, h4 {
+            margin: 20px 0 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background: #f2f2f2;
+        }
+
+        .summary-table th {
+            width: 50%;
+        }
+
+        .logo {
+            height: 60px;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
-    <h3>Invoice for Order #{{ $order->id }}</h3>
 
     @if($site_logo_url)
-        <div style="margin-bottom: 20px;">
-            <img src="{{ $site_logo_url }}" alt="Logo" style="height: 60px;">
-        </div>
+        <img src="{{ $site_logo_url }}" alt="Site Logo" class="logo">
     @endif
+
+    <h3>Invoice for Order #{{ $order->id }}</h3>
 
     <p><strong>Name:</strong> {{ $order->name }}</p>
     <p><strong>Email:</strong> {{ $order->email }}</p>
@@ -37,10 +63,8 @@
         {{ implode(', ', $location) }}
     </p>
 
-    <p><strong>Status:</strong> {{ ucfirst($order->order_status) }}</p>
+    <p><strong>Status:</strong> {{ ucfirst($order->order_status ?? 'Pending') }}</p>
     <p><strong>Paid:</strong> {{ $order->is_paid ? 'Yes' : 'No' }}</p>
-
-    <hr>
 
     <h4>Order Items:</h4>
     <table>
@@ -59,7 +83,7 @@
                     <td>{{ $index + 1 }}</td>
                     <td>{{ $product->name ?? 'N/A' }}</td>
                     <td>{{ $sizes[$index] ?? '-' }}</td>
-                    <td>{{ $quantities[$index] ?? '-' }}</td>
+                    <td>{{ $quantities[$index] ?? '0' }}</td>
                     <td>₹{{ number_format($prices[$index] ?? 0, 2) }}</td>
                 </tr>
             @endforeach
@@ -67,7 +91,7 @@
     </table>
 
     <h4>Summary:</h4>
-    <table>
+    <table class="summary-table">
         <tr>
             <th>Total Product Price</th>
             <td>₹{{ number_format($productTotal, 2) }}</td>
@@ -81,5 +105,6 @@
             <td><strong>₹{{ number_format($grandTotal, 2) }}</strong></td>
         </tr>
     </table>
+
 </body>
 </html>

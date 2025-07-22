@@ -101,9 +101,8 @@
                                     </form>
                                 </td>
                                 <td>
-                                    <a href="{{ route('admin.orders.invoice.download.product', [$order->id, $index]) }}"
-                                    class="btn btn-sm btn-outline-secondary px-2 py-1" target="_blank">
-                                        <i class="fas fa-file-download me-1"></i>Invoice
+                                    <a href="{{ route('admin.orders.invoice.download', $order->id) }}" class="btn btn-sm btn-outline-success" title="Download Invoice" target="_blank">
+                                        <i class="fas fa-file-invoice"></i>
                                     </a>
                                 </td>
                             </tr>

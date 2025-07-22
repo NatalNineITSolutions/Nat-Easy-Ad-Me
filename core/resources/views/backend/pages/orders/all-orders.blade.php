@@ -10,17 +10,17 @@
         </div>
         <div class="card-body">
             <div class="table-wrap table-responsive">
-                <table class="table table-bordered">
+                <table class="table table-bordered align-middle">
                     <thead>
                         <tr>
                             <th>{{ __('Order ID') }}</th>
                             <th>{{ __('User') }}</th>
-                            <th>{{ __('Product') }}</th>
-                            <th>{{ __('Quantity') }}</th>
-                            <th>{{ __('Total Price') }}</th>
+                            <th>{{ __('Products') }}</th>
+                            <th>{{ __('Quantities') }}</th>
+                            <th>{{ __('Prices') }}</th>
                             <th>{{ __('Delivery Charge') }}</th>
                             <th>{{ __('Grand Total') }}</th>
-                            <th>{{ __('Status') }}</th>
+                            <th>{{ __('Statuses') }}</th>
                             <th>{{ __('Payment') }}</th>
                             <th>{{ __('Date') }}</th>
                             <th>{{ __('Action') }}</th>
@@ -36,24 +36,43 @@
                                 $totalProducts = count($productIds);
                             @endphp
 
-                            @for ($i = 0; $i < $totalProducts; $i++)
-                                @php
-                                    $product = \App\Models\Product::find($productIds[$i] ?? null);
-                                    $qty = $quantities[$i] ?? '-';
-                                    $price = $prices[$i] ?? '0.00';
-                                    $status = $statuses[$i] ?? 'pending';
-                                @endphp
-                                <tr>
-                                    <td>#{{ $order->id }}</td>
-                                    <td>{{ $order->name }}</td>
-                                    <td>{{ $product->name ?? 'N/A' }}</td>
-                                    <td>{{ $qty }}</td>
-                                    <td>₹{{ number_format((float) $price, 2) }}</td>
-                                    <td>₹{{ number_format($order->total_delivery_charge, 2) }}</td>
-                                    <td>₹{{ number_format($order->grand_total, 2) }}</td>
+                            <tr>
+                                <td>#{{ $order->id }}</td>
+                                <td>{{ $order->name }}</td>
 
-                                    <td>
-                                        <form action="{{ route('admin.orders.update.status.product', [$order->id, $i]) }}" method="POST">
+                                {{-- Products --}}
+                                <td>
+                                    @for ($i = 0; $i < $totalProducts; $i++)
+                                        @php $product = \App\Models\Product::find($productIds[$i] ?? null); @endphp
+                                        <div>{{ $product->name ?? 'N/A' }}</div>
+                                    @endfor
+                                </td>
+
+                                {{-- Quantities --}}
+                                <td>
+                                    @for ($i = 0; $i < $totalProducts; $i++)
+                                        <div>{{ $quantities[$i] ?? '-' }}</div>
+                                    @endfor
+                                </td>
+
+                                {{-- Prices --}}
+                                <td>
+                                    @for ($i = 0; $i < $totalProducts; $i++)
+                                        <div>₹{{ number_format((float) ($prices[$i] ?? 0), 2) }}</div>
+                                    @endfor
+                                </td>
+
+                                {{-- Delivery Charge --}}
+                                <td>₹{{ number_format($order->total_delivery_charge, 2) }}</td>
+
+                                {{-- Grand Total --}}
+                                <td>₹{{ number_format($order->grand_total, 2) }}</td>
+
+                                {{-- Status Dropdowns --}}
+                                <td>
+                                    @for ($i = 0; $i < $totalProducts; $i++)
+                                        @php $status = $statuses[$i] ?? 'pending'; @endphp
+                                        <form action="{{ route('admin.orders.update.status.product', [$order->id, $i]) }}" method="POST" class="mb-2">
                                             @csrf
                                             @method('PUT')
                                             <select name="order_status" class="form-select form-select-sm" onchange="this.form.submit()">
@@ -64,28 +83,34 @@
                                                 @endforeach
                                             </select>
                                         </form>
-                                    </td>
+                                    @endfor
+                                </td>
 
-                                    <td>
-                                        @if($order->is_paid)
-                                            <span class="badge bg-success">{{ __('Paid') }}</span>
-                                        @else
-                                            <span class="badge bg-warning text-dark">{{ __('Unpaid') }}</span>
-                                        @endif
-                                    </td>
+                                {{-- Payment --}}
+                                <td>
+                                    @if($order->is_paid)
+                                        <span class="badge bg-success">{{ __('Paid') }}</span>
+                                    @else
+                                        <span class="badge bg-warning text-dark">{{ __('Unpaid') }}</span>
+                                    @endif
+                                </td>
 
-                                    <td>{{ $order->created_at->format('d M Y') }}</td>
+                                {{-- Date --}}
+                                <td>{{ $order->created_at->format('d M Y') }}</td>
 
-                                    <td class="d-flex gap-2">
-                                        <a href="{{ route('admin.orders.view.details', $order->id) }}" class="btn btn-sm btn-outline-primary" title="View Full Order">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="{{ route('admin.orders.invoice.download.product', [$order->id, $i]) }}" class="btn btn-sm btn-outline-success" title="Invoice for Product" target="_blank">
-                                            <i class="fas fa-file-invoice"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endfor
+                                {{-- Action --}}
+                                <td class="d-flex flex-column gap-2">
+                                    <a href="{{ route('admin.orders.view.details', $order->id) }}" class="btn btn-sm btn-outline-primary" title="View Full Order">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ route('admin.orders.invoice.download', $order->id) }}" class="btn btn-sm btn-outline-success" title="Invoice" target="_blank">
+                                        <i class="fas fa-file-invoice"></i>
+                                    </a>
+                                    <a href="{{ route('admin.orders.shipping.download', $order->id) }}" class="btn btn-sm btn-outline-secondary" title="Shipping Bill" target="_blank">
+                                        <i class="fas fa-file-alt"></i>
+                                    </a>
+                                </td>
+                            </tr>
 
                         @empty
                             <tr>

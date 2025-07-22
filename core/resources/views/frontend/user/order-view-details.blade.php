@@ -19,12 +19,6 @@
                 <div class="col-md-6">
                     <p><strong>Address:</strong> {{ $order->address }}</p>
                     <p>
-                        <strong>Status:</strong>
-                        <span class="badge bg-{{ $status == 'pending' ? 'warning text-dark' : 'success' }}">
-                            {{ ucfirst($status) }}
-                        </span>
-                    </p>
-                    <p>
                         <strong>Payment:</strong>
                         <span class="badge bg-{{ $order->is_paid ? 'success' : 'danger' }}">
                             {{ $order->is_paid ? 'Paid' : 'Unpaid' }}
@@ -47,23 +41,33 @@
                         <th>Quantity</th>
                         <th>Price (₹)</th>
                         <th>Total (₹)</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>{{ $product->name ?? 'N/A' }}</td>
-                        <td>{{ $size }}</td>
-                        <td>{{ $quantity }}</td>
-                        <td>₹{{ number_format($product->distributor_price, 2) }}</td>
-                        <td>₹{{ number_format($price + ($order->total_delivery_charge ?? 0), 2) }}</td>
-                    </tr>
+                    @php $total = 0; @endphp
+                    @foreach ($products as $item)
+                        <tr>
+                            <td>{{ $item['product']->name ?? 'N/A' }}</td>
+                            <td>{{ $item['size'] }}</td>
+                            <td>{{ $item['quantity'] }}</td>
+                            <td>₹{{ number_format($item['product']->distributor_price, 2) }}</td>
+                            <td>₹{{ number_format($item['price'], 2) }}</td>
+                            <td>
+                                <span class="badge bg-{{ $item['status'] == 'pending' ? 'warning text-dark' : 'success' }}">
+                                    {{ ucfirst($item['status']) }}
+                                </span>
+                            </td>
+                        </tr>
+                        @php $total += $item['price']; @endphp
+                    @endforeach
                 </tbody>
             </table>
 
             <div class="text-end mt-4">
-                <p><strong>Product Price:</strong> ₹{{ number_format($price, 2) }}</p>
+                <p><strong>Product Price:</strong> ₹{{ number_format($total, 2) }}</p>
                 <p><strong>Delivery Charge:</strong> ₹{{ number_format($order->total_delivery_charge ?? 0, 2) }}</p>
-                <h5><strong>Grand Total:</strong> ₹{{ number_format($price + ($order->total_delivery_charge ?? 0), 2) }}</h5>
+                <h5><strong>Grand Total:</strong> ₹{{ number_format($total + ($order->total_delivery_charge ?? 0), 2) }}</h5>
             </div>
         </div>
     </div>

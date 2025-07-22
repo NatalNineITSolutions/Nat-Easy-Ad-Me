@@ -71,19 +71,19 @@ class OrderController extends Controller
     {
         $order = OrderDetail::with(['country', 'state', 'city'])->findOrFail($id);
 
-        $productIds = explode('|', $order->product_id);
-        $quantities = explode('|', $order->product_quantity);
-        $prices     = explode('|', $order->product_total_price);
-        $sizes      = explode('|', $order->size);
+        $productIds = explode('|', $order->product_id ?? '');
+        $quantities = explode('|', $order->product_quantity ?? '');
+        $prices     = explode('|', $order->product_total_price ?? '');
+        $sizes      = explode('|', $order->size ?? '');
 
-        $products = collect($productIds)->map(fn($id) => Product::find($id));
+        $products = collect($productIds)->map(fn($pid) => Product::find($pid));
 
         $productTotal = array_sum(array_map('floatval', $prices));
-        $deliveryTotal = floatval($order->total_delivery_charge);
-        $grandTotal = floatval($order->grand_total);
+        $deliveryTotal = floatval($order->total_delivery_charge ?? 0);
+        $grandTotal = floatval($order->grand_total ?? ($productTotal + $deliveryTotal));
 
         $site_logo_id = get_static_option('site_logo');
-        $site_logo = get_attachment_image_by_id($site_logo_id, null, true); // returns ['img_url' => ..., ...]
+        $site_logo = get_attachment_image_by_id($site_logo_id, null, true);
         $site_logo_url = $site_logo['img_url'] ?? null;
 
         $pdf = Pdf::loadView('backend.pages.orders.invoice', compact(
@@ -133,6 +133,15 @@ class OrderController extends Controller
         ));
 
         return $pdf->download('invoice-order-' . $order->id . '-product-' . ($index + 1) . '.pdf');
+    }
+
+    public function downloadShippingBill(OrderDetail $order)
+    {
+        $userName = $order->name;
+        $userAddress = $order->address . ', ' . $order->city . ', ' . $order->state . ', ' . $order->country . ' - ' . $order->zipcode;
+
+        $pdf = Pdf::loadView('backend.pages.orders.shipping-bill', compact('order', 'userName', 'userAddress'));
+        return $pdf->stream('shipping-bill-order-' . $order->id . '.pdf');
     }
 
 }

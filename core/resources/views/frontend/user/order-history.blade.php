@@ -54,49 +54,60 @@
                                                                     <th>Action</th> 
                                                                 </tr>
                                                             </thead>
-                                                            {{-- <tbody>
+                                                            <tbody>
                                                                 @foreach($orders as $order)
                                                                     @php
-                                                                        $ids       = explode('|', $order->product_id);
-                                                                        $qtys      = explode('|', $order->product_quantity);
+                                                                        $productIds = explode('|', $order->product_id);
+                                                                        $quantities = explode('|', $order->product_quantity);
+                                                                        $prices     = explode('|', $order->product_total_price);
+                                                                        $statuses   = explode('|', $order->order_status);
 
-                                                                        $partsPrice    = explode('|', $order->product_total_price);
-                                                                        $productTotal  = (float) end($partsPrice);
+                                                                        $productsDisplay = [];
+                                                                        $quantitiesDisplay = [];
+                                                                        $statusesDisplay = [];
 
-                                                                        $partsDel      = explode('|', $order->total_delivery_charge);
-                                                                        $deliveryTotal = (float) end($partsDel);
+                                                                        foreach ($productIds as $index => $pid) {
+                                                                            $product = \App\Models\Product::find($pid);
+                                                                            $name = $product->name ?? 'N/A';
+                                                                            $productsDisplay[] = $name;
+                                                                            $quantitiesDisplay[] = $quantities[$index] ?? 0;
+                                                                            $statusesDisplay[] = ucfirst($statuses[$index] ?? 'Pending');
+                                                                        }
 
-                                                                        $partsGrand    = explode('|', $order->grand_total);
-                                                                        $grandTotal    = (float) end($partsGrand);
+                                                                        $combinedPrice = array_sum($prices);
+                                                                        $grandTotal = $combinedPrice + ($order->total_delivery_charge ?? 0);
                                                                     @endphp
+
                                                                     <tr>
                                                                         <td>{{ $loop->iteration }}</td>
 
+                                                                        {{-- Products --}}
                                                                         <td>
-                                                                            <ul class="list-unstyled mb-0">
-                                                                                @foreach($ids as $i => $pid)
-                                                                                    @php
-                                                                                        $prod = \App\Models\Product::find($pid);
-                                                                                    @endphp
-                                                                                    <li>{{ $prod->name ?? 'N/A' }}</li>
-                                                                                @endforeach
-                                                                            </ul>
+                                                                            @foreach($productsDisplay as $pIndex => $pName)
+                                                                                <div>{{ $pIndex + 1 }}. {{ $pName }}</div>
+                                                                            @endforeach
                                                                         </td>
 
+                                                                        {{-- Quantities --}}
                                                                         <td>
-                                                                            <ul class="list-unstyled mb-0">
-                                                                                @foreach($qtys as $qty)
-                                                                                    <li>{{ $qty }}</li>
-                                                                                @endforeach
-                                                                            </ul>
+                                                                            @foreach($quantitiesDisplay as $qty)
+                                                                                <div>{{ $qty }}</div>
+                                                                            @endforeach
                                                                         </td>
 
+                                                                        {{-- Grand total (for whole order) --}}
                                                                         <td>₹{{ number_format($grandTotal, 2) }}</td>
+
+                                                                        {{-- Status per product --}}
                                                                         <td>
-                                                                            <span class="badge bg-info text-dark text-capitalize">
-                                                                                {{ $order->order_status }}
-                                                                            </span>
+                                                                            @foreach($statusesDisplay as $status)
+                                                                                <div>
+                                                                                    <span class="badge bg-info text-dark text-capitalize">{{ $status }}</span>
+                                                                                </div>
+                                                                            @endforeach
                                                                         </td>
+
+                                                                        {{-- Payment status --}}
                                                                         <td>
                                                                             @if($order->is_paid)
                                                                                 <span class="badge bg-success">Paid</span>
@@ -104,62 +115,19 @@
                                                                                 <span class="badge bg-warning text-dark">Unpaid</span>
                                                                             @endif
                                                                         </td>
+
+                                                                        {{-- Actions --}}
                                                                         <td class="text-nowrap">
-                                                                            <a href="{{ route('user.order.view.details', $order->id) }}" class="btn btn-sm btn-outline-primary me-1" title="View Details">
+                                                                            <a href="{{ route('user.order.view.details.product', [$order->id, 0]) }}" class="btn btn-sm btn-outline-primary me-1" title="View Details">
                                                                                 <i class="fas fa-eye"></i>
                                                                             </a>
-                                                                            <a href="{{ route('user.order.invoice.download', $order->id) }}" class="btn btn-sm btn-outline-secondary" title="Download Invoice" target="_blank">
+                                                                            <a href="{{ route('user.order.invoice.download.product', [$order->id, 0]) }}" class="btn btn-sm btn-outline-secondary" title="Download Invoice" target="_blank">
                                                                                 <i class="fas fa-file-download me-1"></i> Invoice
                                                                             </a>
                                                                         </td>
                                                                     </tr>
                                                                 @endforeach
-                                                            </tbody> --}}
-                                                            <tbody>
-    @foreach($orders as $order)
-        @php
-            $productIds = explode('|', $order->product_id);
-            $quantities = explode('|', $order->product_quantity);
-            $prices     = explode('|', $order->product_total_price);
-            $statuses   = explode('|', $order->order_status);
-        @endphp
-
-        @foreach($productIds as $index => $pid)
-            @php
-                $product = \App\Models\Product::find($pid);
-                $qty     = $quantities[$index] ?? 0;
-                $price   = $prices[$index] ?? 0;
-                $status  = $statuses[$index] ?? 'pending';
-                $grandTotal = $price + ($order->total_delivery_charge ?? 0);
-            @endphp
-
-            <tr>
-                <td>{{ $loop->parent->iteration }}.{{ $index + 1 }}</td>
-                <td>{{ $product->name ?? 'N/A' }}</td>
-                <td>{{ $qty }}</td>
-                <td>₹{{ number_format($grandTotal, 2) }}</td>
-                <td>
-                    <span class="badge bg-info text-dark text-capitalize">{{ $status }}</span>
-                </td>
-                <td>
-                    @if($order->is_paid)
-                        <span class="badge bg-success">Paid</span>
-                    @else
-                        <span class="badge bg-warning text-dark">Unpaid</span>
-                    @endif
-                </td>
-                <td class="text-nowrap">
-                    <a href="{{ route('user.order.view.details.product', [$order->id, $index]) }}" class="btn btn-sm btn-outline-primary me-1" title="View Details">
-                        <i class="fas fa-eye"></i>
-                    </a>
-                    <a href="{{ route('user.order.invoice.download.product', [$order->id, $index]) }}" class="btn btn-sm btn-outline-secondary" title="Download Invoice" target="_blank">
-                        <i class="fas fa-file-download me-1"></i> Invoice
-                    </a>
-                </td>
-            </tr>
-        @endforeach
-    @endforeach
-</tbody>
+                                                            </tbody>
                                                         </table>
                                                     </div>
                                                 @else

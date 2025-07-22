@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Invoice - Order #{{ $order->id }} - {{ $product->name }}</title>
+    <title>Invoice - Order #{{ $order->id }}</title>
     <style>
         body {
             font-family: DejaVu Sans, sans-serif;
@@ -31,14 +31,12 @@
 <body>
 
     <h3>Invoice for Order #{{ $order->id }}</h3>
-    <img src="{{ public_path('assets/uploads/media-uploader/logo.jpg') }}" alt="Easyadme Logo" class="logo">
 
     <p><strong>Distributor ID:</strong> {{ $partner_id ?? 'N/A' }}</p>
     <p><strong>Name:</strong> {{ $order->name }}</p>
     <p><strong>Email:</strong> {{ $order->email }}</p>
     <p><strong>Phone:</strong> {{ $order->phone_number }}</p>
     <p><strong>Address:</strong> {{ $order->address }}</p>
-    <p><strong>Status:</strong> {{ ucfirst($status) }}</p>
     <p><strong>Paid:</strong> {{ $order->is_paid ? 'Yes' : 'No' }}</p>
     <p><strong>Transaction ID:</strong> {{ $order->transaction_id ?? '—' }}</p>
     <hr>
@@ -55,13 +53,17 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>{{ $product->name ?? 'N/A' }}</td>
-                <td>{{ $size }}</td>
-                <td>{{ $quantity }}</td>
-                <td>₹{{ number_format($product->distributor_price, 2) }}</td>
-                <td>₹{{ number_format($price, 2) }}</td>
-            </tr>
+            @php $productTotal = 0; @endphp
+            @foreach($products as $item)
+                <tr>
+                    <td>{{ $item['name'] }}</td>
+                    <td>{{ $item['size'] }}</td>
+                    <td>{{ $item['quantity'] }}</td>
+                    <td>₹{{ number_format($item['unit_price'], 2) }}</td>
+                    <td>₹{{ number_format($item['price'], 2) }}</td>
+                </tr>
+                @php $productTotal += $item['price']; @endphp
+            @endforeach
         </tbody>
     </table>
 
@@ -69,7 +71,7 @@
     <table>
         <tr>
             <th>Product Total</th>
-            <td>₹{{ number_format($price, 2) }}</td>
+            <td>₹{{ number_format($productTotal, 2) }}</td>
         </tr>
         <tr>
             <th>Delivery Charge</th>
@@ -77,7 +79,7 @@
         </tr>
         <tr>
             <th>Grand Total</th>
-            <td><strong>₹{{ number_format($price + ($order->total_delivery_charge ?? 0), 2) }}</strong></td>
+            <td><strong>₹{{ number_format($productTotal + ($order->total_delivery_charge ?? 0), 2) }}</strong></td>
         </tr>
     </table>
 

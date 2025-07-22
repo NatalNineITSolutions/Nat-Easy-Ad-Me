@@ -1543,33 +1543,39 @@ class DashboardController extends Controller
         return $pdf->download("invoice-order-{$order->id}.pdf");
     }
 
-    public function viewProductDetails(OrderDetail $order, $index)
-    {
-        $productIds = explode('|', $order->product_id);
-        $quantities = explode('|', $order->product_quantity);
-        $prices     = explode('|', $order->product_total_price);
-        $sizes      = explode('|', $order->size);
-        $statuses   = explode('|', $order->order_status);
+    public function viewProductDetails(OrderDetail $order)
+{
+    $productIds = explode('|', $order->product_id);
+    $quantities = explode('|', $order->product_quantity);
+    $prices     = explode('|', $order->product_total_price);
+    $sizes      = explode('|', $order->size);
+    $statuses   = explode('|', $order->order_status);
 
-        if (!isset($productIds[$index])) {
-            abort(404);
+    $products = [];
+
+    foreach ($productIds as $i => $id) {
+        $product = Product::find($id);
+        if ($product) {
+            $products[] = [
+                'product'  => $product,
+                'quantity' => $quantities[$i] ?? 0,
+                'price'    => $prices[$i] ?? 0,
+                'size'     => $sizes[$i] ?? '—',
+                'status'   => $statuses[$i] ?? 'pending',
+            ];
         }
-
-        $product = Product::find($productIds[$index]);
-        $user = Auth::user(); // Get current user
-
-        return view('frontend.user.order-view-details', [
-            'order'     => $order,
-            'product'   => $product,
-            'quantity'  => $quantities[$index] ?? 0,
-            'price'     => $prices[$index] ?? 0,
-            'size'      => $sizes[$index] ?? '—',
-            'status'    => $statuses[$index] ?? 'pending',
-            'partner_id' => $user->partner_id ?? null, 
-        ]);
     }
 
-    public function downloadProductInvoice(OrderDetail $order, $index)
+    $user = Auth::user();
+
+    return view('frontend.user.order-view-details', [
+        'order'      => $order,
+        'products'   => $products,
+        'partner_id' => $user->partner_id ?? null,
+    ]);
+}
+
+    public function downloadProductInvoice(OrderDetail $order)
     {
         $productIds = explode('|', $order->product_id);
         $quantities = explode('|', $order->product_quantity);
@@ -1577,25 +1583,32 @@ class DashboardController extends Controller
         $sizes      = explode('|', $order->size);
         $statuses   = explode('|', $order->order_status);
 
-        if (!isset($productIds[$index])) {
-            abort(404);
+        $products = [];
+
+        foreach ($productIds as $index => $productId) {
+            $product = Product::find($productId);
+
+            $products[] = [
+                'name'     => $product->name ?? 'N/A',
+                'size'     => $sizes[$index] ?? '—',
+                'quantity' => $quantities[$index] ?? 0,
+                'unit_price' => $product->distributor_price ?? 0,
+                'price'    => $prices[$index] ?? 0,
+                'status'   => ucfirst($statuses[$index] ?? 'Pending'),
+            ];
         }
 
-        $product = Product::find($productIds[$index]);
-        $user = Auth::user(); // Get current user
+        $user = Auth::user();
 
         $pdf = Pdf::loadView('frontend.user.order-invoice-pdf', [
             'order'      => $order,
-            'product'    => $product,
-            'quantity'   => $quantities[$index] ?? 0,
-            'price'      => $prices[$index] ?? 0,
-            'size'       => $sizes[$index] ?? '—',
-            'status'     => $statuses[$index] ?? 'pending',
-            'partner_id' => $user->partner_id ?? null, // pass partner_id to view
+            'products'   => $products,
+            'partner_id' => $user->partner_id ?? null,
         ])->setOptions(['defaultFont' => 'DejaVu Sans']);
 
-        return $pdf->download("invoice-order-{$order->id}-product-{$index}.pdf");
+        return $pdf->download("invoice-order-{$order->id}.pdf");
     }
+
 
 
 }

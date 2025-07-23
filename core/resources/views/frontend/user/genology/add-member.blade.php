@@ -23,6 +23,26 @@
 @section('content')
     <div class="loginArea section-padding2">
         <div class="container">
+            <div class="mb-4">
+                <button id="toggleShareIcons" class="btn btn-light d-inline-flex align-items-center">
+                    <i class="las la-share-alt me-2"></i> {{ __('Share') }}
+                </button>
+
+                <div id="shareIcons" class="mt-3 d-none">
+                    <a href="#" id="whatsappShare" class="btn btn-success me-2" title="WhatsApp">
+                        <i class="lab la-whatsapp"></i>
+                    </a>
+                    <a href="#" id="facebookShare" class="btn btn-primary me-2" title="Facebook">
+                        <i class="lab la-facebook-f"></i>
+                    </a>
+                    <a href="#" id="instagramShare" class="btn btn-danger me-2" title="Instagram">
+                        <i class="lab la-instagram"></i>
+                    </a>
+                    <button id="copyLink" class="btn btn-secondary" title="Copy Link">
+                        <i class="las la-copy"></i>
+                    </button>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-xl-5 col-lg-5 p-0 order-lg-1 order-1 loginLeft-img">
                     <div class="loginLeft-img">
@@ -49,7 +69,8 @@
                             <div class="col-lg-6 col-md-12">
                                 <label class="infoTitle">{{ __('Sponsor Id') }}</label>
                                 <div class="input-group" style="height: 40px;">
-                                    <input type="text" class="form-control" value="{{ $rootUser->partner_id }}"
+                                    <input type="text" class="form-control" 
+                                        value="{{ $rootUser?->partner_id ?? $parentUser->partner_id }}"
                                         id="sponsor_id_display" placeholder="{{ __('Sponsor Id') }}"
                                         style="height: 40px; border-radius: 8px;" readonly>
                                 </div>
@@ -59,8 +80,8 @@
                                 <label class="infoTitle">{{ __('Sponsor Name') }}</label>
                                 <div class="input-form input-form2" style="padding-top: 5px;">
                                     <input type="text" class="ps-3 form-control" name="sponsor_name" id="sponsor_name"
-                                        value="{{ $rootUser->partner_name }}" placeholder="{{ __('Sponsor Name') }}"
-                                        readonly style="height: 40px;">
+                                    value="{{ $rootUser?->partner_name ?? $parentUser->partner_name }}"
+                                    placeholder="{{ __('Sponsor Name') }}" readonly style="height: 40px;">
                                 </div>
                             </div>
 
@@ -171,7 +192,7 @@
                             </div>
 
                             <input type="hidden" name="parent_id" value="{{ $parentUser->id }}">
-                            <input type="hidden" name="root_id" value="{{ $rootUser->id }}">
+                            <input type="hidden" name="root_id" value="{{ $rootUser?->id ?? $parentUser->id }}">
 
                             <div class="col-sm-12 mt-2">
                                 <div class="btn-wrapper text-center">
@@ -188,6 +209,35 @@
         </div>
     </div>
 @endsection
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggleBtn = document.getElementById('toggleShareIcons');
+        const shareIcons = document.getElementById('shareIcons');
+        const copyBtn = document.getElementById('copyLink');
+
+        const pageUrl = window.location.href;
+
+        // Toggle icon display
+        toggleBtn.addEventListener('click', function () {
+            shareIcons.classList.toggle('d-none');
+        });
+
+        // Share URLs
+        document.getElementById('whatsappShare').href = `https://wa.me/?text=${encodeURIComponent(pageUrl)}`;
+        document.getElementById('facebookShare').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`;
+        document.getElementById('instagramShare').href = 'https://www.instagram.com'; // Instagram doesn't support direct sharing
+
+        // Copy to clipboard
+        copyBtn.addEventListener('click', function () {
+            navigator.clipboard.writeText(pageUrl).then(() => {
+                toastr_success_js("{{ __('Link copied to clipboard!') }}");
+            }).catch(() => {
+                toastr_warning_js("{{ __('Failed to copy link.') }}");
+            });
+        });
+    });
+</script>
 
 @section('scripts')
     <x-frontend.js.phone-number-check />

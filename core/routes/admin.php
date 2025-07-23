@@ -386,6 +386,8 @@ Route::middleware(['auth','setlang'])->group(function () {
             Route::get('deactivated/users-all', 'user_deactivated_all')->name('admin.user.deactivated.all')->permission('user-deactivated-list');
             Route::get('paginate/deactivated-user', 'user_deactivated_pagination')->name('admin.user.paginate.deactivated');
             Route::get('search/deactivated-user', 'search_deactivated_user')->name('admin.user.search.deactivated');
+
+            Route::get('user-reports', 'user_reports')->name('admin.user.reports')->permission('user-reports');
         });
     });
 

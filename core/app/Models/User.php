@@ -288,6 +288,11 @@ class User extends Authenticatable
         return $this->hasOne(UserMembership::class);
     }
 
+    public function bvHistory()
+    {
+        return $this->hasMany(UsersBv::class, 'user_id', 'id');
+    }
+
     public function kycRecord()
     {
         return $this->hasOne(IdentityVerification::class);
@@ -306,6 +311,11 @@ class User extends Authenticatable
     public function cartItems()
     {
         return $this->hasMany(Cart::class);
+    }
+
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class, 'user_id');
     }
 
 

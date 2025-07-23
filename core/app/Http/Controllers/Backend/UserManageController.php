@@ -450,5 +450,18 @@ class UserManageController extends Controller
         return $all_users->total() >= 1 ? view('backend.pages.user.deactivates-user.search-result-for-deactivates-users', compact('all_users'))->render() : response()->json(['status'=>__('nothing')]);
     }
 
+    public function user_reports()
+    {
+        $users = User::with([
+            'membership.membership',
+            'bvHistory',
+            'orderDetails.product' // not 'orders'
+        ])
+        ->select('id', 'partner_id', 'username')
+        ->paginate(10);
+
+        return view('backend.pages.user.users.user-reports', compact('users'));
+    }
+
 
 }

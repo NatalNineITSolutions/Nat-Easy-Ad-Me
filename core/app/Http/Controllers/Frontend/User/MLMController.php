@@ -73,28 +73,30 @@ class MLMController extends Controller
     // }
 
     public function addNewMember(Request $request)
-{
-    $sponsorId = $request->query('sponsor');
-    $position = $request->query('position');
+    {
+        $sponsorId = $request->query('sponsor');
+        $position = $request->query('position');
 
-    if (!$sponsorId || !in_array($position, ['left', 'right'])) {
-        return redirect()->back()->withErrors(['error' => __('Invalid sponsor or position provided.')]);
+        // Validate the parameters
+        if (!$sponsorId || !in_array($position, ['left', 'right'])) {
+            return redirect()->back()->withErrors(['error' => __('Invalid sponsor or position provided.')]);
+        }
+
+        // Get sponsor (parent) user
+        $sponsor = User::find($sponsorId);
+        if (!$sponsor) {
+            return redirect()->back()->withErrors(['error' => __('Sponsor user not found.')]);
+        }
+
+        // Get root user only if authenticated
+        $rootUser = auth()->check() ? auth()->user() : null;
+
+        return view('frontend.user.genology.add-member', [
+            'parentUser' => $sponsor,      // Sponsor under whom the new member is being added
+            'rootUser' => $rootUser,       // Current user (if logged in)
+            'position' => $position
+        ]);
     }
-
-    $sponsor = User::find($sponsorId);
-    if (!$sponsor) {
-        return redirect()->back()->withErrors(['error' => __('Sponsor user not found.')]);
-    }
-
-    // Allow unauthenticated access
-    $rootUser = auth()->user() ?? $sponsor;
-
-    return view('frontend.user.genology.add-member', [
-        'parentUser' => $sponsor,
-        'rootUser' => $rootUser,
-        'position' => $position
-    ]);
-}
 
     public function registerNewMember(Request $request)
     {

@@ -11,6 +11,10 @@ use App\Http\Controllers\Frontend\User\ListingController;
 // client
 Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
 
+     Route::middleware(['globalVariable', 'maintains_mode', 'setlang'])->group(function () {
+        Route::get('/mlm/add-member', [MLMController::class, 'addNewMember'])->name('mlm.addNewMember');
+    });
+
     Route::group(['middleware' => ['auth', 'globalVariable', 'maintains_mode', 'setlang']], function () {
         Route::controller(UserController::class)->group(function () {
             Route::get('profile/logout', 'logout')->name('logout');
@@ -73,7 +77,7 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
             });
         });
 
-        Route::get('/mlm/add-member', [MLMController::class, 'addNewMember'])->name('mlm.addNewMember');
+        // Route::get('/mlm/add-member', [MLMController::class, 'addNewMember'])->name('mlm.addNewMember');
 
         // job seeker
         Route::controller(DashboardController::class)->group(function () {

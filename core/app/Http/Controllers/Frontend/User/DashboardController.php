@@ -904,64 +904,6 @@ class DashboardController extends Controller
         return view('frontend.user.all-products', compact('products', 'sizes'));
     }
     
-
-    // public function productBuyForm(Request $request)
-    // {
-    //     $user = auth()->user();
-    //     $productId = $request->query('product_id');
-    //     $quantity  = (int) $request->query('quantity', 0);
-
-    //     if ($productId && $quantity > 0) {
-    //         Cart::where('user_id', $user->id)
-    //             ->where('product_id', $productId)
-    //             ->update(['quantity' => $quantity]);
-    //     }
-
-    //     $identity = IdentityVerification::where('user_id', $user->id)->first();
-
-    //     // Fetch cart items
-    //     $cartItems = Cart::with([
-    //         'product' => function ($query) {
-    //             $query->select('id', 'name', 'bv_points', 'gst', 'weight');
-    //         },
-    //         'product.imageFile',
-    //         'size'
-    //     ])
-    //     ->where('user_id', $user->id)
-    //     ->get();
-
-    //     if ($cartItems->isEmpty()) {
-    //         return redirect()->back()->with('error', 'Your cart is empty.');
-    //     }
-
-    //     $countries = Country::all();
-    //     $states = collect();
-    //     $cities = collect();
-
-    //     // If identity exists, load corresponding states and cities
-    //     if ($identity) {
-    //         if ($identity->country_id) {
-    //             $states = State::where('country_id', $identity->country_id)->get();
-    //         }
-
-    //         if ($identity->state_id) {
-    //             $cities = City::where('state_id', $identity->state_id)->get();
-    //         }
-    //     }
-
-    //     $deliveryCharges = DeliveryCharge::with('zone')->get();
-
-    //     return view('frontend.user.product-buy', [
-    //         'cartItems'       => $cartItems,
-    //         'countries'       => $countries,
-    //         'states'          => $states,
-    //         'cities'          => $cities,
-    //         'deliveryCharges' => $deliveryCharges,
-    //         'user'            => $user,
-    //         'identity'        => $identity,
-    //     ]);
-    // }
-
     public function productBuyForm(Request $request)
     {
         $user = auth()->user();
@@ -1124,7 +1066,7 @@ class DashboardController extends Controller
                 'country_id'            => $request->country_id,
                 'state_id'              => $request->state_id,
                 'city_id'               => $request->city_id,
-                'order_status'          => $cartItems->map(fn($item) => 'pending')->implode('|'),
+                'order_status' => 'pending',
                 'is_paid'               => $request->is_paid ? 1 : 0,
                 'transaction_id'        => $request->transaction_id,
             ]);
@@ -1173,124 +1115,6 @@ class DashboardController extends Controller
             return back()->with('error', 'Something went wrong while placing the order.');
         }
     }
-
-
-    // public function storeOrder(Request $request)
-    // {
-    //     $request->validate([
-    //         'total_delivery_charge' => 'nullable|numeric',
-    //         'grand_total'           => 'required|numeric',
-    //         'name'                  => 'required|string|max:191',
-    //         'email'                 => 'required|email',
-    //         'phone_number'          => 'required|digits:10',
-    //         'address'               => 'required|string',
-    //         'country_id'            => 'required|integer',
-    //         'state_id'              => 'required|integer',
-    //         'city_id'               => 'required|integer',
-    //         'transaction_id'        => 'nullable|string',
-    //     ]);
-
-    //     $user = Auth::user();
-    //     $cartItems = Cart::with(['product', 'size'])->where('user_id', $user->id)->get();
-
-    //     $productIds = $cartItems->pluck('product_id')->implode('|');
-    //     $quantities = $cartItems->pluck('quantity')->implode('|');
-    //     $sizes = $cartItems->map(fn($item) => optional($item->size)->name ?? '—')->implode('|');
-    //     $lineTotals = $cartItems->map(function($item){
-    //         $unitPrice = $item->product->distributor_price + ($item->product->distributor_price * $item->product->gst / 100);
-    //         return number_format($unitPrice * $item->quantity, 2, '.', '');
-    //     })->implode('|');
-    //     $totalBV = $cartItems->sum(fn($item) => $item->product->bv_points * $item->quantity);
-
-    //     // ✅ Create Order First
-    //     $order = OrderDetail::create([
-    //         'user_id'               => $user->id,
-    //         'product_id'            => $productIds,
-    //         'product_quantity'      => $quantities,
-    //         'product_total_price'   => $lineTotals,
-    //         'size'                  => $sizes,
-    //         'total_bv'              => $totalBV,
-    //         'total_delivery_charge' => $request->total_delivery_charge ?? 0,
-    //         'grand_total'           => $request->grand_total,
-    //         'name'                  => $request->name,
-    //         'email'                 => $request->email,
-    //         'phone_number'          => $request->phone_number,
-    //         'address'               => $request->address,
-    //         'country_id'            => $request->country_id,
-    //         'state_id'              => $request->state_id,
-    //         'city_id'               => $request->city_id,
-    //         'order_status'          => $cartItems->map(fn($item) => 'pending')->implode('|'),
-    //         'is_paid'               => $request->is_paid ? 1 : 0,
-    //         'transaction_id'        => $request->transaction_id,
-    //     ]);
-
-    //     // ✅ Add BV to user
-    //     $user->self_purchased_bv += $totalBV;
-    //     $user->save();
-
-    //     UsersBV::create([
-    //         'user_id'       => $user->id,
-    //         'membership_id' => $user->membership_id,
-    //         'bv_points'     => $totalBV,
-    //         'upgrade_time'  => Carbon::now(),
-    //         'type'          => 'Self-purchased',
-    //         'position'      => $user->position,
-    //     ]);
-
-    //     // ✅ Sponsor BV
-    //     if ($user->sponsor_id) {
-    //         $sponsor = User::find($user->sponsor_id);
-    //         if ($sponsor) {
-    //             $bvService = new BVDistributionService();
-    //             $bvService->distributeBVPoints(
-    //                 $user,
-    //                 $totalBV,
-    //                 $user->membership_id,
-    //                 $user->id
-    //             );
-    //         }
-    //     }
-
-    //     // ✅ Clear Cart
-    //     Cart::where('user_id', $user->id)->delete();
-
-    //     // ✅ Payment Gateway Integration
-    //     if ($request->filled('selected_payment_gateway')) {
-    //         $payment_gateway = $request->selected_payment_gateway;
-    //         $credential_function = 'get_' . $payment_gateway . '_credential';
-
-    //         if (!method_exists((new PaymentGatewayCredential()), $credential_function)) {
-    //             $custom_data = [
-    //                 'request'       => $request->all(),
-    //                 'total'         => $request->grand_total,
-    //                 'payment_type'  => "deposit",
-    //                 'payment_for'   => "order",
-    //                 'success_url'   => route('user.order.history'),
-    //             ];
-
-    //             $charge_customer_class_namespace = getChargeCustomerMethodNameByPaymentGatewayNameSpace($payment_gateway);
-    //             $charge_customer_method_name = getChargeCustomerMethodNameByPaymentGatewayName($payment_gateway);
-
-    //             $custom_charge_customer_class_object = new $charge_customer_class_namespace;
-
-    //             if (
-    //                 class_exists($charge_customer_class_namespace) &&
-    //                 method_exists($custom_charge_customer_class_object, $charge_customer_method_name)
-    //             ) {
-    //                 return $custom_charge_customer_class_object->$charge_customer_method_name($custom_data);
-    //             } else {
-    //                 return back()->with(toastr_error('Incorrect Class or Method'));
-    //             }
-    //         } else {
-    //             return $this->payment_with_gateway($payment_gateway);
-    //         }
-    //     }
-
-    //     // ✅ Redirect if no gateway used
-    //     return redirect()
-    //         ->route('user.order.history')
-    //         ->with('success', 'Order placed successfully!');
-    // }
 
     public function orderHistory()
     {
@@ -1544,36 +1368,36 @@ class DashboardController extends Controller
     }
 
     public function viewProductDetails(OrderDetail $order)
-{
-    $productIds = explode('|', $order->product_id);
-    $quantities = explode('|', $order->product_quantity);
-    $prices     = explode('|', $order->product_total_price);
-    $sizes      = explode('|', $order->size);
-    $statuses   = explode('|', $order->order_status);
+    {
+        $productIds = explode('|', $order->product_id);
+        $quantities = explode('|', $order->product_quantity);
+        $prices     = explode('|', $order->product_total_price);
+        $sizes      = explode('|', $order->size);
+        $statuses   = explode('|', $order->order_status);
 
-    $products = [];
+        $products = [];
 
-    foreach ($productIds as $i => $id) {
-        $product = Product::find($id);
-        if ($product) {
-            $products[] = [
-                'product'  => $product,
-                'quantity' => $quantities[$i] ?? 0,
-                'price'    => $prices[$i] ?? 0,
-                'size'     => $sizes[$i] ?? '—',
-                'status'   => $statuses[$i] ?? 'pending',
-            ];
+        foreach ($productIds as $i => $id) {
+            $product = Product::find($id);
+            if ($product) {
+                $products[] = [
+                    'product'  => $product,
+                    'quantity' => $quantities[$i] ?? 0,
+                    'price'    => $prices[$i] ?? 0,
+                    'size'     => $sizes[$i] ?? '—',
+                    'status'   => $statuses[$i] ?? 'pending',
+                ];
+            }
         }
+
+        $user = Auth::user();
+
+        return view('frontend.user.order-view-details', [
+            'order'      => $order,
+            'products'   => $products,
+            'partner_id' => $user->partner_id ?? null,
+        ]);
     }
-
-    $user = Auth::user();
-
-    return view('frontend.user.order-view-details', [
-        'order'      => $order,
-        'products'   => $products,
-        'partner_id' => $user->partner_id ?? null,
-    ]);
-}
 
     public function downloadProductInvoice(OrderDetail $order)
     {
@@ -1584,29 +1408,56 @@ class DashboardController extends Controller
         $statuses   = explode('|', $order->order_status);
 
         $products = [];
+        $productTotal = 0;
+        $totalGstAmount = 0;
 
         foreach ($productIds as $index => $productId) {
             $product = Product::find($productId);
 
+            $unit_price = $product->distributor_price ?? 0;
+            $quantity = $quantities[$index] ?? 0;
+            $gst_percent = $product->gst ?? 0;
+
+            $subtotal = $unit_price * $quantity;
+            $gst_amount = ($subtotal * $gst_percent) / 100;
+
             $products[] = [
-                'name'     => $product->name ?? 'N/A',
-                'size'     => $sizes[$index] ?? '—',
-                'quantity' => $quantities[$index] ?? 0,
-                'unit_price' => $product->distributor_price ?? 0,
-                'price'    => $prices[$index] ?? 0,
-                'status'   => ucfirst($statuses[$index] ?? 'Pending'),
+                'name'        => $product->name ?? 'N/A',
+                'size'        => $sizes[$index] ?? '—',
+                'quantity'    => $quantity,
+                'unit_price'  => $unit_price,
+                'price'       => $subtotal + $gst_amount,
+                'status'      => ucfirst($statuses[$index] ?? 'Pending'),
+                'gst_percent' => $gst_percent,
+                'gst_amount'  => $gst_amount,
             ];
+
+            $productTotal += $subtotal + $gst_amount;
+            $totalGstAmount += $gst_amount;
         }
 
         $user = Auth::user();
 
         $pdf = Pdf::loadView('frontend.user.order-invoice-pdf', [
-            'order'      => $order,
-            'products'   => $products,
-            'partner_id' => $user->partner_id ?? null,
+            'order'           => $order,
+            'products'        => $products,
+            'partner_id'      => $user->partner_id ?? null,
+            'productTotal'    => $productTotal,
+            'totalGstAmount'  => $totalGstAmount,
         ])->setOptions(['defaultFont' => 'DejaVu Sans']);
 
         return $pdf->download("invoice-order-{$order->id}.pdf");
+    }
+
+    public function userReports()
+    {
+        $user = auth()->user()->load([
+            'membership.membership',
+            'bvHistory',
+            'orderDetails.product'
+        ]);
+
+        return view('frontend.user.reports', compact('user'));
     }
 
 

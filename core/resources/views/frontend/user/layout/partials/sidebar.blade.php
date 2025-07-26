@@ -84,6 +84,16 @@
         @endif
     @endif
 
+    <a href="{{ route('user.user.reports') }}" class="menu-item @if(request()->is('user/user-reports*')) active @endif">
+        <svg width="20" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="2" width="18" height="20" rx="2" ry="2" stroke="#64748B" stroke-width="2" fill="none" />
+            <path d="M8 10H16M8 14H13" stroke="#64748B" stroke-width="1.5" stroke-linecap="round" />
+            <line x1="6" y1="6" x2="18" y2="6" stroke="#64748B" stroke-width="1" />
+            <line x1="6" y1="19" x2="18" y2="19" stroke="#64748B" stroke-width="1" />
+        </svg>
+        <span class="ms-2">{{ __('User Reports') }}</span>
+    </a>
+
     @if(moduleExists('Wallet'))
         <a href="{{ route('user.wallet.history') }}"
             class="menu-item @if (request()->routeIs('user.wallet.history')) active @endif">

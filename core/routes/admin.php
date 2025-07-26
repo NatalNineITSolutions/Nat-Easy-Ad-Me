@@ -250,7 +250,7 @@ Route::middleware(['auth','setlang'])->group(function () {
             Route::get('/invoice/download/{order}', 'downloadInvoice')->name('admin.orders.invoice.download')->permission('order-view');
 
             // Inside admin.orders route group
-            Route::put('/admin/orders/{order}/update-status/{index}', [OrderController::class, 'updateProductStatus'])->name('admin.orders.update.status.product')->permission('order-edit');
+            Route::put('/admin/orders/{order}/update-status', [OrderController::class, 'updateProductStatus'])->name('admin.orders.update.status.product')->permission('order-edit');
 
             // Shipping Bill Download
             Route::get('/shipping-bill/download/{order}',  'downloadShippingBill')->name('admin.orders.shipping.download')->permission('order-view');

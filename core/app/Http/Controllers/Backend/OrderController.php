@@ -30,18 +30,17 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Order status updated successfully.');
     }
 
-    public function updateProductStatus(Request $request, OrderDetail $order, $index)
+    public function updateProductStatus(Request $request, OrderDetail $order)
     {
         $request->validate([
-            'order_status' => 'required|in:pending,packaging,shipped,delivered'
+            'order_status' => 'required|in:pending,packaging,shipped,delivered',
         ]);
 
-        $statuses = explode('|', $order->order_status);
-        $statuses[$index] = $request->order_status;
-        $order->order_status = implode('|', $statuses);
+        // ✅ Single status per order (not pipe-separated)
+        $order->order_status = $request->order_status;
         $order->save();
 
-        return back()->with('success', 'Product status updated successfully.');
+        return back()->with('success', 'Order status updated successfully.');
     }
 
 
@@ -67,39 +66,87 @@ class OrderController extends Controller
         ]);
     }
 
+    // public function downloadInvoice($id)
+    // {
+    //     $order = OrderDetail::with(['country', 'state', 'city'])->findOrFail($id);
+
+    //     $productIds = explode('|', $order->product_id ?? '');
+    //     $quantities = explode('|', $order->product_quantity ?? '');
+    //     $prices     = explode('|', $order->product_total_price ?? '');
+    //     $sizes      = explode('|', $order->size ?? '');
+
+    //     $products = collect($productIds)->map(fn($pid) => Product::find($pid));
+
+    //     $productTotal = array_sum(array_map('floatval', $prices));
+    //     $deliveryTotal = floatval($order->total_delivery_charge ?? 0);
+    //     $grandTotal = floatval($order->grand_total ?? ($productTotal + $deliveryTotal));
+
+    //     $site_logo_id = get_static_option('site_logo');
+    //     $site_logo = get_attachment_image_by_id($site_logo_id, null, true);
+    //     $site_logo_url = $site_logo['img_url'] ?? null;
+
+    //     $pdf = Pdf::loadView('backend.pages.orders.invoice', compact(
+    //         'order',
+    //         'products',
+    //         'quantities',
+    //         'prices',
+    //         'sizes',
+    //         'productTotal',
+    //         'deliveryTotal',
+    //         'grandTotal',
+    //         'site_logo_url'
+    //     ));
+
+    //     return $pdf->download('invoice-order-' . $order->id . '.pdf');
+    // }
+
     public function downloadInvoice($id)
-    {
-        $order = OrderDetail::with(['country', 'state', 'city'])->findOrFail($id);
+{
+    $order = OrderDetail::with(['country', 'state', 'city'])->findOrFail($id);
 
-        $productIds = explode('|', $order->product_id ?? '');
-        $quantities = explode('|', $order->product_quantity ?? '');
-        $prices     = explode('|', $order->product_total_price ?? '');
-        $sizes      = explode('|', $order->size ?? '');
+    $productIds = explode('|', $order->product_id ?? '');
+    $quantities = explode('|', $order->product_quantity ?? '');
+    $prices     = explode('|', $order->product_total_price ?? '');
+    $sizes      = explode('|', $order->size ?? '');
 
-        $products = collect($productIds)->map(fn($pid) => Product::find($pid));
+    $products = collect($productIds)->map(fn($pid) => Product::find($pid));
 
-        $productTotal = array_sum(array_map('floatval', $prices));
-        $deliveryTotal = floatval($order->total_delivery_charge ?? 0);
-        $grandTotal = floatval($order->grand_total ?? ($productTotal + $deliveryTotal));
+    $gstPercents = [];
+    $gstAmounts  = [];
 
-        $site_logo_id = get_static_option('site_logo');
-        $site_logo = get_attachment_image_by_id($site_logo_id, null, true);
-        $site_logo_url = $site_logo['img_url'] ?? null;
-
-        $pdf = Pdf::loadView('backend.pages.orders.invoice', compact(
-            'order',
-            'products',
-            'quantities',
-            'prices',
-            'sizes',
-            'productTotal',
-            'deliveryTotal',
-            'grandTotal',
-            'site_logo_url'
-        ));
-
-        return $pdf->download('invoice-order-' . $order->id . '.pdf');
+    foreach ($products as $index => $product) {
+        $price = floatval($prices[$index] ?? 0);
+        $gstPercent = floatval($product->gst ?? 0); // assumes `gst` field exists in products table
+        $gstPercents[$index] = $gstPercent;
+        $gstAmounts[$index] = ($price * $gstPercent) / 100;
     }
+
+    $productTotal = array_sum(array_map('floatval', $prices));
+    $totalGST     = array_sum($gstAmounts);
+    $deliveryTotal = floatval($order->total_delivery_charge ?? 0);
+    $grandTotal = floatval($order->grand_total ?? ($productTotal + $deliveryTotal + $totalGST));
+
+    $site_logo_id = get_static_option('site_logo');
+    $site_logo = get_attachment_image_by_id($site_logo_id, null, true);
+    $site_logo_url = $site_logo['img_url'] ?? null;
+
+    $pdf = Pdf::loadView('backend.pages.orders.invoice', compact(
+        'order',
+        'products',
+        'quantities',
+        'prices',
+        'sizes',
+        'gstPercents',
+        'gstAmounts',
+        'productTotal',
+        'totalGST',
+        'deliveryTotal',
+        'grandTotal',
+        'site_logo_url'
+    ));
+
+    return $pdf->download('invoice-order-' . $order->id . '.pdf');
+}
 
     public function downloadProductInvoice(OrderDetail $order, $index)
     {

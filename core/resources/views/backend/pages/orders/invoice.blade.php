@@ -75,6 +75,8 @@
                 <th>Size</th>
                 <th>Qty</th>
                 <th>Price (₹)</th>
+                <th>GST %</th>
+                <th>GST Amount (₹)</th>
             </tr>
         </thead>
         <tbody>
@@ -85,6 +87,8 @@
                     <td>{{ $sizes[$index] ?? '-' }}</td>
                     <td>{{ $quantities[$index] ?? '0' }}</td>
                     <td>₹{{ number_format($prices[$index] ?? 0, 2) }}</td>
+                    <td>{{ $gstPercents[$index] ?? 0 }}%</td>
+                    <td>₹{{ number_format($gstAmounts[$index] ?? 0, 2) }}</td>
                 </tr>
             @endforeach
         </tbody>
@@ -95,6 +99,10 @@
         <tr>
             <th>Total Product Price</th>
             <td>₹{{ number_format($productTotal, 2) }}</td>
+        </tr>
+        <tr>
+            <th>Total GST</th>
+            <td>₹{{ number_format($totalGST, 2) }}</td>
         </tr>
         <tr>
             <th>Delivery Charge</th>

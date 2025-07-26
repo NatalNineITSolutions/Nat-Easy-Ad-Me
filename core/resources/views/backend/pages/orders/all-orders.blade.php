@@ -68,22 +68,19 @@
                                 {{-- Grand Total --}}
                                 <td>₹{{ number_format($order->grand_total, 2) }}</td>
 
-                                {{-- Status Dropdowns --}}
+                                {{-- Status (one dropdown for the whole order) --}}
                                 <td>
-                                    @for ($i = 0; $i < $totalProducts; $i++)
-                                        @php $status = $statuses[$i] ?? 'pending'; @endphp
-                                        <form action="{{ route('admin.orders.update.status.product', [$order->id, $i]) }}" method="POST" class="mb-2">
-                                            @csrf
-                                            @method('PUT')
-                                            <select name="order_status" class="form-select form-select-sm" onchange="this.form.submit()">
-                                                @foreach(['pending', 'packaging', 'shipped', 'delivered'] as $option)
-                                                    <option value="{{ $option }}" {{ $status === $option ? 'selected' : '' }}>
-                                                        {{ ucfirst($option) }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </form>
-                                    @endfor
+                                    <form action="{{ route('admin.orders.update.status.product', $order->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <select name="order_status" class="form-select form-select-sm" onchange="this.form.submit()">
+                                            @foreach(['pending', 'packaging', 'shipped', 'delivered'] as $status)
+                                                <option value="{{ $status }}" {{ $order->order_status === $status ? 'selected' : '' }}>
+                                                    {{ ucfirst($status) }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </form>
                                 </td>
 
                                 {{-- Payment --}}

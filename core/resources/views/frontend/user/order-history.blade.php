@@ -60,7 +60,6 @@
                                                                         $productIds = explode('|', $order->product_id);
                                                                         $quantities = explode('|', $order->product_quantity);
                                                                         $prices     = explode('|', $order->product_total_price);
-                                                                        $statuses   = explode('|', $order->order_status);
 
                                                                         $productsDisplay = [];
                                                                         $quantitiesDisplay = [];
@@ -71,7 +70,6 @@
                                                                             $name = $product->name ?? 'N/A';
                                                                             $productsDisplay[] = $name;
                                                                             $quantitiesDisplay[] = $quantities[$index] ?? 0;
-                                                                            $statusesDisplay[] = ucfirst($statuses[$index] ?? 'Pending');
                                                                         }
 
                                                                         $combinedPrice = array_sum($prices);
@@ -100,11 +98,9 @@
 
                                                                         {{-- Status per product --}}
                                                                         <td>
-                                                                            @foreach($statusesDisplay as $status)
-                                                                                <div>
-                                                                                    <span class="badge bg-info text-dark text-capitalize">{{ $status }}</span>
-                                                                                </div>
-                                                                            @endforeach
+                                                                            <span class="badge bg-info text-dark text-capitalize">
+                                                                                {{ ucfirst($order->order_status) }}
+                                                                            </span>
                                                                         </td>
 
                                                                         {{-- Payment status --}}

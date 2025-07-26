@@ -120,6 +120,11 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
             });
         });
 
+        // User Reports
+        Route::controller(DashboardController::class)->group(function () {
+            Route::get('/user-reports', 'userReports')->name('user.reports');
+        });
+
 
         // Income 
         Route::controller(DashboardController::class)->group(function () {

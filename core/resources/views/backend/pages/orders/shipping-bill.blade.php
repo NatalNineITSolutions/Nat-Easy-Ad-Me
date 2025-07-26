@@ -79,7 +79,7 @@
 
         <!-- Priority -->
         <div class="section priority">
-            PRIORITY MAIL
+            SHIPPING LABEL
         </div>
 
         <!-- From Address -->

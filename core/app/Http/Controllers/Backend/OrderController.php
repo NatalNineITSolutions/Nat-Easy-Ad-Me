@@ -101,52 +101,52 @@ class OrderController extends Controller
     // }
 
     public function downloadInvoice($id)
-{
-    $order = OrderDetail::with(['country', 'state', 'city'])->findOrFail($id);
+    {
+        $order = OrderDetail::with(['country', 'state', 'city'])->findOrFail($id);
 
-    $productIds = explode('|', $order->product_id ?? '');
-    $quantities = explode('|', $order->product_quantity ?? '');
-    $prices     = explode('|', $order->product_total_price ?? '');
-    $sizes      = explode('|', $order->size ?? '');
+        $productIds = explode('|', $order->product_id ?? '');
+        $quantities = explode('|', $order->product_quantity ?? '');
+        $prices     = explode('|', $order->product_total_price ?? '');
+        $sizes      = explode('|', $order->size ?? '');
 
-    $products = collect($productIds)->map(fn($pid) => Product::find($pid));
+        $products = collect($productIds)->map(fn($pid) => Product::find($pid));
 
-    $gstPercents = [];
-    $gstAmounts  = [];
+        $gstPercents = [];
+        $gstAmounts  = [];
 
-    foreach ($products as $index => $product) {
-        $price = floatval($prices[$index] ?? 0);
-        $gstPercent = floatval($product->gst ?? 0); // assumes `gst` field exists in products table
-        $gstPercents[$index] = $gstPercent;
-        $gstAmounts[$index] = ($price * $gstPercent) / 100;
+        foreach ($products as $index => $product) {
+            $price = floatval($prices[$index] ?? 0);
+            $gstPercent = floatval($product->gst ?? 0); 
+            $gstPercents[$index] = $gstPercent;
+            $gstAmounts[$index] = ($price * $gstPercent) / (100 + $gstPercent);  
+        }
+
+        $productTotal = array_sum(array_map('floatval', $prices));
+        $totalGST     = array_sum($gstAmounts);
+        $deliveryTotal = floatval($order->total_delivery_charge ?? 0);
+        $grandTotal = floatval($order->grand_total ?? ($productTotal + $deliveryTotal + $totalGST));
+
+        $site_logo_id = get_static_option('site_logo');
+        $site_logo = get_attachment_image_by_id($site_logo_id, null, true);
+        $site_logo_url = $site_logo['img_url'] ?? null;
+
+        $pdf = Pdf::loadView('backend.pages.orders.invoice', compact(
+            'order',
+            'products',
+            'quantities',
+            'prices',
+            'sizes',
+            'gstPercents',
+            'gstAmounts',
+            'productTotal',
+            'totalGST',
+            'deliveryTotal',
+            'grandTotal',
+            'site_logo_url'
+        ));
+
+        return $pdf->download('invoice-order-' . $order->id . '.pdf');
     }
-
-    $productTotal = array_sum(array_map('floatval', $prices));
-    $totalGST     = array_sum($gstAmounts);
-    $deliveryTotal = floatval($order->total_delivery_charge ?? 0);
-    $grandTotal = floatval($order->grand_total ?? ($productTotal + $deliveryTotal + $totalGST));
-
-    $site_logo_id = get_static_option('site_logo');
-    $site_logo = get_attachment_image_by_id($site_logo_id, null, true);
-    $site_logo_url = $site_logo['img_url'] ?? null;
-
-    $pdf = Pdf::loadView('backend.pages.orders.invoice', compact(
-        'order',
-        'products',
-        'quantities',
-        'prices',
-        'sizes',
-        'gstPercents',
-        'gstAmounts',
-        'productTotal',
-        'totalGST',
-        'deliveryTotal',
-        'grandTotal',
-        'site_logo_url'
-    ));
-
-    return $pdf->download('invoice-order-' . $order->id . '.pdf');
-}
 
     public function downloadProductInvoice(OrderDetail $order, $index)
     {
@@ -184,10 +184,16 @@ class OrderController extends Controller
 
     public function downloadShippingBill(OrderDetail $order)
     {
-        $userName = $order->name;
-        $userAddress = $order->address . ', ' . $order->city . ', ' . $order->state . ', ' . $order->country . ' - ' . $order->zipcode;
+        $user = $order->user; // Assuming 'user' relationship exists
+        $identity = $user->identityVerification; // Assuming 'identityVerification' relationship exists
 
-        $pdf = Pdf::loadView('backend.pages.orders.shipping-bill', compact('order', 'userName', 'userAddress'));
+        $userName = $user->first_name . ' ' . $user->last_name;
+        $userAddress = $order->address . ', ' . $order->city . ', ' . $order->state . ', ' . $order->country;
+
+        $phone = $user->phone ?? 'N/A';
+        $zipCode = $identity->zip_code ?? $order->zipcode; // fallback to order zipcode if not found
+
+        $pdf = Pdf::loadView('backend.pages.orders.shipping-bill', compact('order', 'userName', 'userAddress', 'phone', 'zipCode'));
         return $pdf->stream('shipping-bill-order-' . $order->id . '.pdf');
     }
 

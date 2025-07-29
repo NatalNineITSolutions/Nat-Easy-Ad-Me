@@ -318,5 +318,10 @@ class User extends Authenticatable
         return $this->hasMany(OrderDetail::class, 'user_id');
     }
 
+    public function identityVerification()
+    {
+        return $this->hasOne(IdentityVerification::class);
+    }
+
 
 }

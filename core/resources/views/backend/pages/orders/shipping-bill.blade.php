@@ -96,7 +96,8 @@
         <div class="section">
             <div class="address-block">
                 <strong>Ship To:</strong><br>
-                {{ $order->name }}<br>
+                Name: {{ $userName }}<br>
+                Phone: {{ $phone }}<br>
                 {{ $order->address }}<br>
                 @php
                     $location = [];
@@ -104,7 +105,8 @@
                     if (!empty($order->state?->state)) $location[] = $order->state->state;
                     if (!empty($order->country?->country)) $location[] = $order->country->country;
                 @endphp
-                {{ implode(', ', $location) }}
+                {{ implode(', ', $location) }}<br> 
+                {{ $zipCode }}
             </div>
         </div>
     </div>

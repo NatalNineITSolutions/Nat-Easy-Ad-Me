@@ -86,9 +86,7 @@
         <div class="section">
             <div class="address-block">
                 <strong>From:</strong><br>
-                Easyadme<br>
-                123 Admin Office Street<br>
-                Hyderabad, India
+                {!! nl2br(e($fromAddress)) !!}
             </div>
         </div>
 

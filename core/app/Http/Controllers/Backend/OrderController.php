@@ -187,13 +187,15 @@ class OrderController extends Controller
         $user = $order->user; // Assuming 'user' relationship exists
         $identity = $user->identityVerification; // Assuming 'identityVerification' relationship exists
 
+        $fromAddress = get_static_option('business_address');
+
         $userName = $user->first_name . ' ' . $user->last_name;
         $userAddress = $order->address . ', ' . $order->city . ', ' . $order->state . ', ' . $order->country;
 
         $phone = $user->phone ?? 'N/A';
         $zipCode = $identity->zip_code ?? $order->zipcode; // fallback to order zipcode if not found
 
-        $pdf = Pdf::loadView('backend.pages.orders.shipping-bill', compact('order', 'userName', 'userAddress', 'phone', 'zipCode'));
+        $pdf = Pdf::loadView('backend.pages.orders.shipping-bill', compact('order', 'userName', 'userAddress', 'phone', 'zipCode', 'fromAddress'));
         return $pdf->stream('shipping-bill-order-' . $order->id . '.pdf');
     }
 

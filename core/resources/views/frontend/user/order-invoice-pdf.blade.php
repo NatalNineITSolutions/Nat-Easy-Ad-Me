@@ -3,29 +3,11 @@
 <head>
     <title>Invoice - Order #{{ $order->id }}</title>
     <style>
-        body {
-            font-family: DejaVu Sans, sans-serif;
-            color: #333;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        h3, h4 {
-            margin-bottom: 10px;
-        }
-        .logo {
-            height: 60px;
-            margin-bottom: 20px;
-        }
+        body { font-family: DejaVu Sans, sans-serif; color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; }
+        th { background-color: #f2f2f2; }
+        h3, h4 { margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -77,15 +59,19 @@
     </tr>
     <tr>
         <th>Total GST</th>
-        <td>₹{{ number_format($totalGstAmount, 2) }}</td>
+        <td>₹{{ number_format($totalGstAmount ?? 0, 2) }}</td>
     </tr>
     <tr>
-        <th>Delivery Charge</th>
-        <td>₹{{ number_format($order->total_delivery_charge ?? 0, 2) }}</td>
+        <th>Total Delivery Charge</th>
+        <td>₹{{ number_format($order->total_delivery_charge, 2) }}</td>
+    </tr>
+    <tr>
+        <th>Total BV</th>
+        <td>{{ number_format($order->total_bv, 2) }}</td>
     </tr>
     <tr>
         <th>Grand Total</th>
-        <td><strong>₹{{ number_format($productTotal + ($order->total_delivery_charge ?? 0), 2) }}</strong></td>
+        <td><strong>₹{{ number_format($order->grand_total, 2) }}</strong></td>
     </tr>
 </table>
 

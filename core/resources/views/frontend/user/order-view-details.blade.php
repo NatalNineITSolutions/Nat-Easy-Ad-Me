@@ -33,41 +33,37 @@
     <div class="card shadow-sm border-0">
         <div class="card-body">
             <h4 class="mb-3 text-primary">Product Details</h4>
-            <table class="table table-bordered align-middle">
-                <thead class="table-light">
+            <table class="table">
+                <thead>
                     <tr>
                         <th>Product</th>
                         <th>Size</th>
                         <th>Quantity</th>
-                        <th>Price (₹)</th>
-                        <th>Total (₹)</th>
+                        <th>Unit Price</th>
                         <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @php $total = 0; @endphp
                     @foreach ($products as $item)
                         <tr>
                             <td>{{ $item['product']->name ?? 'N/A' }}</td>
                             <td>{{ $item['size'] }}</td>
                             <td>{{ $item['quantity'] }}</td>
-                            <td>₹{{ number_format($item['product']->distributor_price, 2) }}</td>
-                            <td>₹{{ number_format($item['price'], 2) }}</td>
+                            <td>₹{{ number_format($item['unitPrice'], 2) }}</td>
                             <td>
-                                <span class="badge bg-{{ $item['status'] == 'pending' ? 'warning text-dark' : 'success' }}">
+                                <span class="badge bg-{{ $item['status'] === 'pending' ? 'warning text-dark' : 'success' }}">
                                     {{ ucfirst($item['status']) }}
                                 </span>
                             </td>
                         </tr>
-                        @php $total += $item['price']; @endphp
                     @endforeach
                 </tbody>
             </table>
 
             <div class="text-end mt-4">
-                <p><strong>Product Price:</strong> ₹{{ number_format($total, 2) }}</p>
-                <p><strong>Delivery Charge:</strong> ₹{{ number_format($order->total_delivery_charge ?? 0, 2) }}</p>
-                <h5><strong>Grand Total:</strong> ₹{{ number_format($total + ($order->total_delivery_charge ?? 0), 2) }}</h5>
+                <p><strong>Total BV:</strong> ₹{{ number_format($totalBV, 2) }}</p>
+                <p><strong>Delivery Charge:</strong> ₹{{ number_format($deliveryCharge, 2) }}</p>
+                <h5><strong>Grand Total:</strong> ₹{{ number_format($grandTotal, 2) }}</h5>
             </div>
         </div>
     </div>

@@ -57,23 +57,29 @@
                                                             <tbody>
                                                                 @foreach($orders as $order)
                                                                     @php
-                                                                        $productIds = explode('|', $order->product_id);
-                                                                        $quantities = explode('|', $order->product_quantity);
-                                                                        $prices     = explode('|', $order->product_total_price);
+                                                                        $productIds = explode('|', $order->product_id ?? '');
+                                                                        $quantities = explode('|', $order->product_quantity ?? '');
+                                                                        $prices     = explode('|', $order->product_total_price ?? '');
 
                                                                         $productsDisplay = [];
                                                                         $quantitiesDisplay = [];
-                                                                        $statusesDisplay = [];
+                                                                        $orderTotal = 0;
 
                                                                         foreach ($productIds as $index => $pid) {
                                                                             $product = \App\Models\Product::find($pid);
                                                                             $name = $product->name ?? 'N/A';
+
+                                                                            $qty = isset($quantities[$index]) ? (int)$quantities[$index] : 0;
+                                                                            $totalPriceForThatItem = isset($prices[$index]) && is_numeric($prices[$index]) ? (float)$prices[$index] : 0;
+
                                                                             $productsDisplay[] = $name;
-                                                                            $quantitiesDisplay[] = $quantities[$index] ?? 0;
+                                                                            $quantitiesDisplay[] = $qty;
+
+                                                                            $orderTotal += $totalPriceForThatItem; // ✅ no * qty
                                                                         }
 
-                                                                        $combinedPrice = array_sum($prices);
-                                                                        $grandTotal = $combinedPrice + ($order->total_delivery_charge ?? 0);
+                                                                        $deliveryCharge = is_numeric($order->total_delivery_charge) ? (float)$order->total_delivery_charge : 0;
+                                                                        $grandTotal = $orderTotal + $deliveryCharge;
                                                                     @endphp
 
                                                                     <tr>
@@ -94,7 +100,7 @@
                                                                         </td>
 
                                                                         {{-- Grand total (for whole order) --}}
-                                                                        <td>₹{{ number_format($grandTotal, 2) }}</td>
+                                                                        <td>₹{{ number_format((float) $order->grand_total, 2) }}</td>
 
                                                                         {{-- Status per product --}}
                                                                         <td>

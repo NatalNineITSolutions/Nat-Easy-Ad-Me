@@ -1337,32 +1337,47 @@ class DashboardController extends Controller
 
     public function downloadInvoice(OrderDetail $order)
     {
-        $productIds = explode('|', $order->product_id);
-        $quantities = explode('|', $order->product_quantity);
-        $prices     = explode('|', $order->product_total_price);
-        $sizes      = explode('|', $order->size);
+        $productIds   = explode('|', $order->product_id);
+        $quantities   = explode('|', $order->product_quantity);
+        $prices       = explode('|', $order->product_total_price);
+        $sizes        = explode('|', $order->size);
+        $gstPercents  = explode('|', $order->product_gst_percent);
+        $gstAmounts   = explode('|', $order->product_gst_amount);
 
         $products = collect($productIds)->map(function ($id) {
             return Product::find($id);
         });
 
-        $productPrices = explode('|', $order->product_total_price);
-        $deliveryPrices = explode('|', $order->total_delivery_charge);
-        $grandTotals = explode('|', $order->grand_total);
+        $productData = collect();
+
+        foreach ($products as $index => $product) {
+            if ($product) {
+                $productData->push([
+                    'name'        => $product->name,
+                    'size'        => $sizes[$index] ?? 'N/A',
+                    'quantity'    => $quantities[$index] ?? 1,
+                    'unit_price'  => isset($prices[$index], $quantities[$index]) && $quantities[$index] != 0
+                                        ? $prices[$index] / $quantities[$index]
+                                        : 0,
+                    'gst_percent' => $gstPercents[$index] ?? 0,
+                    'gst_amount'  => $gstAmounts[$index] ?? 0,
+                    'price'       => $prices[$index] ?? 0,
+                ]);
+            }
+        }
 
         $invoiceData = [
-            'order'       => $order,
-            'products'    => $products,
-            'quantities'  => $quantities,
-            'prices'      => $prices,
-            'sizes'       => $sizes,
-            'productTotal' => end($productPrices),
-            'deliveryTotal' => end($deliveryPrices),
-            'grandTotal'   => end($grandTotals),
+            'order'          => $order,
+            'products'       => $productData,
+            'productTotal'   => array_sum($prices),
+            'grandTotal'     => (float) $order->grand_total,
+            'deliveryCharge' => (float) $order->total_delivery_charge,
+            'totalBV'        => (float) $order->total_bv,
+            'totalGstAmount' => array_sum($gstAmounts),
         ];
 
         $pdf = Pdf::loadView('frontend.user.order-invoice-pdf', $invoiceData)
-              ->setOptions(['defaultFont' => 'DejaVu Sans']);
+                ->setOptions(['defaultFont' => 'DejaVu Sans']);
 
         return $pdf->download("invoice-order-{$order->id}.pdf");
     }
@@ -1371,7 +1386,7 @@ class DashboardController extends Controller
     {
         $productIds = explode('|', $order->product_id);
         $quantities = explode('|', $order->product_quantity);
-        $prices     = explode('|', $order->product_total_price);
+        $unitPrices = explode('|', $order->product_total_price); 
         $sizes      = explode('|', $order->size);
         $statuses   = explode('|', $order->order_status);
 
@@ -1379,23 +1394,25 @@ class DashboardController extends Controller
 
         foreach ($productIds as $i => $id) {
             $product = Product::find($id);
+
             if ($product) {
                 $products[] = [
-                    'product'  => $product,
-                    'quantity' => $quantities[$i] ?? 0,
-                    'price'    => $prices[$i] ?? 0,
-                    'size'     => $sizes[$i] ?? '—',
-                    'status'   => $statuses[$i] ?? 'pending',
+                    'product'   => $product,
+                    'quantity'  => (int)($quantities[$i] ?? 1),
+                    'unitPrice' => (float)($unitPrices[$i] ?? 0),
+                    'size'      => $sizes[$i] ?? '—',
+                    'status'    => $statuses[$i] ?? 'pending',
                 ];
             }
         }
 
-        $user = Auth::user();
-
         return view('frontend.user.order-view-details', [
-            'order'      => $order,
-            'products'   => $products,
-            'partner_id' => $user->partner_id ?? null,
+            'order'          => $order,
+            'products'       => $products,
+            'deliveryCharge' => (float) $order->delivery_charge,
+            'grandTotal'     => (float) $order->grand_total,  // no calculation
+            'totalBV'        => (float) $order->total_bv ?? 0,
+            'partner_id'     => Auth::user()->partner_id ?? null,
         ]);
     }
 
@@ -1459,7 +1476,5 @@ class DashboardController extends Controller
 
         return view('frontend.user.reports', compact('user'));
     }
-
-
 
 }

@@ -27,6 +27,7 @@ use App\Models\Backend\ChildCategory;
 
 require_once __DIR__ . '/admin.php';
 require_once __DIR__ . '/user.php';
+require_once __DIR__ . '/branches.php';
 
 Route::get('/razorpay-checkout', function () {
     return view('razorpay-checkout');
@@ -182,3 +183,5 @@ Route::group(['middleware' => ['globalVariable', 'maintains_mode', 'setlang']], 
     Route::get('/get-subcategories', [ListingController::class, 'getSubCategories'])->name('get.subcategories');
     Route::get('/get-childcategories', [ListingController::class, 'getChildCategories'])->name('get.childcategories');
 });
+
+

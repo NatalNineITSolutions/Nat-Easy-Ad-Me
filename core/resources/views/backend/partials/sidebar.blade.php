@@ -25,6 +25,21 @@
                     </li>
                 @endcan
 
+                @can('admin-dashboard')
+                    <li class="dashboard__bottom__list__item @if(request()->is('admin/branches')) active @endif">
+                        <a href="{{route('admin.branches')}}"><i class="las la-code-branch"></i>
+                            <span class="icon_title">{{ __('Branches') }}</span>
+                        </a>
+                    </li>
+                @endcan
+
+                @can('admin-dashboard')
+                    <li class="dashboard__bottom__list__item @if(request()->is('admin/vendors')) active @endif">
+                        <a href="{{route('admin.vendors')}}"><i class="las la-store"></i>
+                            <span class="icon_title">{{ __('Vendors') }}</span>
+                        </a>
+                    </li>
+                @endcan
 
                 <!--Admin listing manage -->
                 @canany(['user-listing-list', 'guest-listing-list', 'admin-listing-list', 'report-reason-list', 'listing-report-list'])

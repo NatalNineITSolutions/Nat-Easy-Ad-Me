@@ -9,9 +9,10 @@ use App\Http\Controllers\Frontend\User\AccountSettingController;
 use App\Http\Controllers\Frontend\User\ListingController;
 
 // client
+
 Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
 
-     Route::middleware(['globalVariable', 'maintains_mode', 'setlang'])->group(function () {
+    Route::middleware(['globalVariable', 'maintains_mode', 'setlang'])->group(function () {
         Route::get('/mlm/add-member', [MLMController::class, 'addNewMember'])->name('mlm.addNewMember');
     });
 
@@ -69,7 +70,7 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
             });
         });
 
-        
+
         // Referral
         Route::controller(DashboardController::class)->group(function () {
             Route::prefix('referral')->group(function () {
@@ -104,7 +105,7 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
                 Route::post('/update-cart-quantity', 'updateCartQuantity')->name('cart.update.quantity');
                 Route::post('/remove-cart-item', 'removeCartItem')->name('cart.remove');
                 Route::get('/check-cart', 'checkProductInCart')->name('check.cart');
-                Route::post('/update-delivery',    'updateDeliveryCharge')->name('cart.update.delivery');
+                Route::post('/update-delivery', 'updateDeliveryCharge')->name('cart.update.delivery');
                 Route::post('/get-delivery-charges', 'getChargesByState')->name('get.delivery.charges');
             });
         });

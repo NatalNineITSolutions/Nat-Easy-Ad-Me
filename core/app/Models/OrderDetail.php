@@ -29,6 +29,8 @@ class OrderDetail extends Model
         'order_status',
         'is_paid',
         'transaction_id',
+        'size',              
+        'total_bv',  
     ];
 
     // Relationships (optional)
@@ -40,15 +42,19 @@ class OrderDetail extends Model
         return $this->belongsTo(Product::class);
     }
 
-    public function country() {
-        return $this->belongsTo(Country::class);
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_id', 'id');
     }
 
-    public function state() {
-        return $this->belongsTo(State::class);
+    public function state()
+    {
+        return $this->belongsTo(State::class, 'state_id', 'id');
     }
 
-    public function city() {
-        return $this->belongsTo(City::class);
+    public function city()
+    {
+        return $this->belongsTo(City::class, 'city_id', 'id');
     }
+
 }

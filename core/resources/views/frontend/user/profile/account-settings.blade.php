@@ -337,7 +337,10 @@
                                             <select name="country_id" id="country_id" class="select2_activation">
                                                 <option value="">{{ __('Select Country') }}</option>
                                                 @foreach($all_countries = \Modules\CountryManage\app\Models\Country::all_countries() as $country)
-                                                    <option value="{{ $country->id }}" @if(!empty($user_verify_info) && $country->id == $user_verify_info->country_id) selected @endif>{{ $country->country }}</option>
+                                                    <option value="{{ $country->id }}" 
+                                                        @if(!empty($user_verify_info) && $country->id == $user_verify_info->country_id) selected @endif>
+                                                        {{ $country->country }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                             <span class="country_info"></span>
@@ -345,26 +348,22 @@
 
                                         <div class="single-input">
                                             <label class="label-title">{{ __('Select Your State') }}  <span class="text-danger">*</span></label>
-                                            <select name="state_id" id="state_id" class="select2_activation">
+                                            <select name="state_id" id="state_id" class="select2_activation get_country_state">
                                                 <option value="">{{ __('Select State') }}</option>
-                                                @foreach($all_states = \Modules\CountryManage\app\Models\State::all_states() as $state)
-                                                    <option value="{{ $state->id }}" @if(!empty($user_verify_info) && $state->id == $user_verify_info->state_id) selected @endif>{{ $state->state }}</option>
-                                                @endforeach
                                             </select>
                                             <span class="country_info"></span>
                                         </div>
+
                                         <div class="single-input">
                                             <label class="label-title">{{ __('Select Your City') }}  <span class="text-danger">*</span></label>
-                                            <select name="city_id" id="city_id" class="select2_activation">
+                                            <select name="city_id" id="city_id" class="select2_activation get_state_city">
                                                 <option value="">{{ __('Select City') }}</option>
-                                                @foreach($all_cities = \Modules\CountryManage\app\Models\City::all_cities() as $city)
-                                                    <option value="{{ $city->id }}" @if(!empty($user_verify_info) && $city->id == $user_verify_info->city_id) selected @endif>{{ $city->city }}</option>
-                                                @endforeach
                                             </select>
                                             <span class="country_info"></span>
                                         </div>
                                     </div>
                                </div>
+
                                 <div class="col-12 mt-3">
                                     <div class="input-form">
                                         <label class="d-block" for="national-id-number">{{ __('Pin Code') }} <span class="text-danger">*</span> </label>
@@ -579,6 +578,17 @@
 @section('scripts')
   @include('frontend.user.profile.account-settings-js')
    <x-media.js :type="'web'"/>
+
+    <script>
+        $('#identifyVerifyModal').on('shown.bs.modal', function () {
+    $('.select2_activation').select2({
+        dropdownParent: $('#identifyVerifyModal'),
+        width: '100%'
+    });
+});
+
+    </script>
+
     <script>
         (function($){
             "use strict";
@@ -685,7 +695,7 @@
         })(jQuery);
     </script>
 
-    <script>
+     <script>
     $(document).ready(function() {
         // Change the label when a radio button is selected
         $('input[name="id_type"]').change(function() {
@@ -715,7 +725,7 @@
             $('input[name="id_type"][value="' + initialType + '"]').prop('checked', true).trigger('change');
         }
     });
-    </script>
+    </script> 
 
 @endsection
 

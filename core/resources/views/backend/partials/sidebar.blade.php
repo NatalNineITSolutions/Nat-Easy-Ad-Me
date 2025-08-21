@@ -69,6 +69,26 @@
                     </li>
                 @endcanany
 
+                {{-- Attribute Manage --}}
+                <li class="dashboard__bottom__list__item has-children @if (request()->is('admin/attributes/*')) active open show @endif">
+                    <a href="javascript:void(0)">
+                        <i class="las la-cogs"></i> {{ __('Attribute Manage') }}
+                    </a>
+                    <ul class="submenu">
+                        <li class="dashboard__bottom__list__item @if (request()->is('admin/attributes/unit*')) selected @endif">
+                            <a href="{{ route('admin.attributes.unit.index') }}"> {{ __('Unit Manage') }} </a>
+                        </li>
+                        <li class="dashboard__bottom__list__item @if (request()->is('admin/attributes/size*')) selected @endif">
+                            <a href="{{ route('admin.attributes.size.index') }}"> {{ __('Size Manage') }} </a>
+                        </li>
+                        <li class="dashboard__bottom__list__item @if(request()->is('admin/attributes/delivery-option*')) selected @endif">
+                            <a href="{{ route('admin.attributes.delivery.option.index') }}">
+                                {{ __('Delivery Option Manage') }}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
                 {{-- Product Manage --}}
                 <li class="dashboard__bottom__list__item has-children @if (request()->is('admin/products*')) active open show @endif">
                     <a href="javascript:void(0)"> <i class="las la-th-list"></i> {{ __('Product Manage') }} </a>
@@ -185,40 +205,45 @@
                 @endif
 
 
+                {{-- User Manage --}}
+                @canany(['user-list', 'user-deactivated-list', 'user-verify-status', 'user-add'])
+                    <li  class="dashboard__bottom__list__item has-children @if (request()->is('admin/user*')) active open show @endif">
+                        <a href="javascript:void(0)"> <i class="las la-user-circle"></i> {{ __('User Manage') }} </a>
+                        <ul class="submenu">
+                            @can('user-list')
+                                <li class="dashboard__bottom__list__item @if (request()->routeIs(['admin.user.all'])) selected @endif">
+                                    <a href="{{ route('admin.user.all') }}"> {{ __('All Users') }} </a>
+                                </li>
+                            @endcan
+                            @can('user-deactivated-list')
+                                <li class="dashboard__bottom__list__item @if (request()->routeIs(['admin.user.deactivated.all'])) selected @endif">
+                                    <a href="{{ route('admin.user.deactivated.all') }}"> {{ __('Deactivated Users') }} </a>
+                                </li>
+                            <li class="dashboard__bottom__list__item @if (request()->routeIs(['admin.user.restore'])) selected @endif">
+                                    <a href="{{ route('admin.user.restore') }}"> {{ __('Trash List') }} </a>
+                                </li>
+                            @endcan
+                            @can('user-verify-status')
+                                <li class="dashboard__bottom__list__item @if (request()->routeIs(['admin.user.verification.request'])) selected @endif">
+                                    <a href="{{ route('admin.user.verification.request') }}">
+                                        {{ __('Identity Verify Requests') }} </a>
+                                </li>
+                            @endcan
+                            @can('user-add')
+                            <li class="dashboard__bottom__list__item @if (request()->routeIs(['admin.user.add'])) selected @endif">
+                                <a href="{{ route('admin.user.add') }}">
+                                    {{ __('Add New User') }} </a>
+                            </li>
+                            @endcan
 
-
-               @canany(['user-list', 'user-deactivated-list', 'user-verify-status', 'user-add'])
-                <li  class="dashboard__bottom__list__item has-children @if (request()->is('admin/user*')) active open show @endif">
-                    <a href="javascript:void(0)"> <i class="las la-user-circle"></i> {{ __('User Manage') }} </a>
-                    <ul class="submenu">
-                        @can('user-list')
-                            <li class="dashboard__bottom__list__item @if (request()->routeIs(['admin.user.all'])) selected @endif">
-                                <a href="{{ route('admin.user.all') }}"> {{ __('All Users') }} </a>
+                            <li class="dashboard__bottom__list__item @if (request()->routeIs(['admin.user.reports'])) selected @endif">
+                                <a href="{{ route('admin.user.reports') }}">
+                                    {{ __('User Reports') }}
+                                </a>
                             </li>
-                        @endcan
-                        @can('user-deactivated-list')
-                            <li class="dashboard__bottom__list__item @if (request()->routeIs(['admin.user.deactivated.all'])) selected @endif">
-                                <a href="{{ route('admin.user.deactivated.all') }}"> {{ __('Deactivated Users') }} </a>
-                            </li>
-                           <li class="dashboard__bottom__list__item @if (request()->routeIs(['admin.user.restore'])) selected @endif">
-                                <a href="{{ route('admin.user.restore') }}"> {{ __('Trash List') }} </a>
-                            </li>
-                        @endcan
-                        @can('user-verify-status')
-                            <li class="dashboard__bottom__list__item @if (request()->routeIs(['admin.user.verification.request'])) selected @endif">
-                                <a href="{{ route('admin.user.verification.request') }}">
-                                    {{ __('Identity Verify Requests') }} </a>
-                            </li>
-                        @endcan
-                        @can('user-add')
-                        <li class="dashboard__bottom__list__item @if (request()->routeIs(['admin.user.add'])) selected @endif">
-                            <a href="{{ route('admin.user.add') }}">
-                                {{ __('Add New User') }} </a>
-                        </li>
-                        @endcan
-                    </ul>
-                </li>
-               @endcanany
+                        </ul>
+                    </li>
+                @endcanany
 
 
                @canany(['category-list', 'category-add'])

@@ -11,6 +11,10 @@ use App\Http\Controllers\Frontend\User\ListingController;
 // client
 Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
 
+     Route::middleware(['globalVariable', 'maintains_mode', 'setlang'])->group(function () {
+        Route::get('/mlm/add-member', [MLMController::class, 'addNewMember'])->name('mlm.addNewMember');
+    });
+
     Route::group(['middleware' => ['auth', 'globalVariable', 'maintains_mode', 'setlang']], function () {
         Route::controller(UserController::class)->group(function () {
             Route::get('profile/logout', 'logout')->name('logout');
@@ -73,7 +77,7 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
             });
         });
 
-        Route::get('/mlm/add-member', [MLMController::class, 'addNewMember'])->name('mlm.addNewMember');
+        // Route::get('/mlm/add-member', [MLMController::class, 'addNewMember'])->name('mlm.addNewMember');
 
         // job seeker
         Route::controller(DashboardController::class)->group(function () {
@@ -92,11 +96,16 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
                 Route::get('/products', 'productSlider')->name('products');
                 Route::get('/product-details/{id}', 'productDetails')->name('product.details');
                 Route::get('/all-products', 'allProducts')->name('all.products');
-                Route::get('/product-buy/{id}', 'productBuyForm')->name('product.buy');
+                Route::get('/product-buy', 'productBuyForm')->name('product.buy');
                 Route::post('/get-states', 'userGetStates')->name('get.states');
                 Route::post('/get-cities', 'userGetCities')->name('get.cities');
-
-                Route::post('/info/place-order', 'storeOrder')->name('order.store');
+                Route::post('/place-order', 'storeOrder')->name('order.store');
+                Route::post('/add-to-cart', 'addToCart')->name('add.to.cart');
+                Route::post('/update-cart-quantity', 'updateCartQuantity')->name('cart.update.quantity');
+                Route::post('/remove-cart-item', 'removeCartItem')->name('cart.remove');
+                Route::get('/check-cart', 'checkProductInCart')->name('check.cart');
+                Route::post('/update-delivery',    'updateDeliveryCharge')->name('cart.update.delivery');
+                Route::post('/get-delivery-charges', 'getChargesByState')->name('get.delivery.charges');
             });
         });
 
@@ -104,7 +113,16 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
         Route::controller(DashboardController::class)->group(function () {
             Route::group(['prefix' => 'info'], function () {
                 Route::get('/order-history', 'orderHistory')->name('order.history');
+                Route::get('/view-order-details/{order}', 'viewOrderDetails')->name('order.view.details');
+                Route::get('/order/invoice/{order}', 'downloadInvoice')->name('order.invoice.download');
+                Route::get('/view-order-product-details/{order}/{index}', 'viewProductDetails')->name('order.view.details.product');
+                Route::get('/order/invoice/{order}/{index}', 'downloadProductInvoice')->name('order.invoice.download.product');
             });
+        });
+
+        // User Reports
+        Route::controller(DashboardController::class)->group(function () {
+            Route::get('/user-reports', 'userReports')->name('user.reports');
         });
 
 

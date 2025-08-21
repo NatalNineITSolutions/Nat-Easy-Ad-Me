@@ -29,6 +29,7 @@ use App\Http\Controllers\Backend\PageSettingsController;
 use App\Http\Controllers\Backend\MapSettings;
 use App\Http\Controllers\Backend\ShippingController;
 use App\Http\Controllers\Backend\OrderController;
+use App\Http\Controllers\Backend\AttributeController;
 
 
 Route::middleware(['auth','setlang'])->group(function () {
@@ -142,6 +143,37 @@ Route::middleware(['auth','setlang'])->group(function () {
         });
     });
 
+    // Attribute Manage
+    Route::group(['prefix' => 'attributes'], function () {
+        Route::controller(AttributeController::class)->group(function () {
+
+            // Unit
+            Route::get('/unit', 'index')->name('admin.attributes.unit.index')->permission('unit-view');
+            Route::get('/add-unit', 'create')->name('admin.attributes.unit.create')->permission('unit-create');
+            Route::post('/unit', 'store')->name('admin.attributes.unit.store')->permission('unit-create');
+            Route::get('/unit/{id}/edit', 'edit')->name('admin.attributes.unit.edit')->permission('unit-edit');
+            Route::put('/unit/{id}', 'update')->name('admin.attributes.unit.update')->permission('unit-edit');
+            Route::delete('/unit/{id}', 'destroy')->name('admin.attributes.unit.destroy')->permission('unit-delete');
+
+            // Size
+            Route::get('/size', 'sizeIndex')->name('admin.attributes.size.index')->permission('size-view');
+            Route::get('/add-size', 'addSize')->name('admin.attributes.size.create')->permission('size-create');
+            Route::post('/add-size', 'storeSize')->name('admin.attributes.size.store')->permission('size-create');
+            Route::get('/edit-size/{id}', 'editSize')->name('admin.attributes.size.edit')->permission('size-edit');
+            Route::put('/update-size/{id}', 'updateSize')->name('admin.attributes.size.update')->permission('size-edit');
+            Route::delete('/delete-size/{id}', 'deleteSize')->name('admin.attributes.size.destroy')->permission('size-delete');
+
+            // Delivery Option
+            Route::get('/delivery-option', 'deliveryOptionIndex')->name('admin.attributes.delivery.option.index')->permission('delivery-option-view');
+            Route::get('/add-delivery-option', 'addDeliveryOption')->name('admin.attributes.delivery.option.create')->permission('delivery-option-create');
+            Route::post('/add-delivery-option', 'storeDeliveryOption')->name('admin.attributes.delivery.option.store')->permission('delivery-option-create');
+            Route::get('/edit-delivery-option/{id}', 'editDeliveryOption')->name('admin.attributes.delivery.option.edit')->permission('delivery-option-edit');
+            Route::put('/update-delivery-option/{id}', 'updateDeliveryOption')->name('admin.attributes.delivery.option.update')->permission('delivery-option-edit');
+            Route::delete('/delivery-option/{id}', 'destroyDeliveryOption')->name('admin.attributes.delivery.option.destroy')->permission('delivery-option-delete');
+        });
+    });
+
+
     // Product Manage
     Route::group(['prefix' => 'products'], function () {
         Route::controller(\App\Http\Controllers\Backend\ProductController::class)->group(function () {
@@ -196,18 +228,32 @@ Route::middleware(['auth','setlang'])->group(function () {
 
             Route::put('/update-delivery-charge/{id}', 'updateDeliveryCharge')->name('admin.shipping.update.delivery.charge')->permission('shipping-edit');
 
-            // Delete delivery charge
             Route::delete('/delete-delivery-charge/{id}', 'deleteDeliveryCharge')->name('admin.shipping.delete.delivery.charge')->permission('shipping-delete');
 
         });
     });
 
+    // Order Manage
     Route::group(['prefix' => 'orders'], function () {
         Route::controller(OrderController::class)->group(function () {
 
             // Show All Orders (List)
             Route::get('/all', 'allOrders')->name('admin.orders.all')->permission('order-view');
+
+            // Update Status
             Route::put('/admin/orders/{id}/update-status', 'updateStatus')->name('admin.orders.update.status');
+
+            // View Order Details
+            Route::get('/view/{order}', 'viewOrderDetails')->name('admin.orders.view.details')->permission('order-view');
+
+            // Download Invoice
+            Route::get('/invoice/download/{order}', 'downloadInvoice')->name('admin.orders.invoice.download')->permission('order-view');
+
+            // Inside admin.orders route group
+            Route::put('/admin/orders/{order}/update-status', [OrderController::class, 'updateProductStatus'])->name('admin.orders.update.status.product')->permission('order-edit');
+
+            // Shipping Bill Download
+            Route::get('/shipping-bill/download/{order}',  'downloadShippingBill')->name('admin.orders.shipping.download')->permission('order-view');
 
         });
     });
@@ -340,6 +386,8 @@ Route::middleware(['auth','setlang'])->group(function () {
             Route::get('deactivated/users-all', 'user_deactivated_all')->name('admin.user.deactivated.all')->permission('user-deactivated-list');
             Route::get('paginate/deactivated-user', 'user_deactivated_pagination')->name('admin.user.paginate.deactivated');
             Route::get('search/deactivated-user', 'search_deactivated_user')->name('admin.user.search.deactivated');
+
+            Route::get('user-reports', 'user_reports')->name('admin.user.reports')->permission('user-reports');
         });
     });
 

@@ -23,15 +23,21 @@ class FrontendController extends Controller
                 ->where('is_published', 1)
                 ->inRandomOrder()
                 ->first();
+
+            // Get user's cart count if logged in
+            $cart_count = auth()->check() ? auth()->user()->cart_count : 0;
+
         } catch (\Exception $exception) {
             $page_details = null;
             $random_ad = null;
+            $cart_count = 0;
         }
 
         return view('frontend.pages.frontend-home', [
             'page_details' => $page_details,
             'random_ad' => $random_ad,
-            'is_home' => true // Add flag to identify home page
+            'cart_count' => $cart_count,
+            'is_home' => true
         ]);
     }
 

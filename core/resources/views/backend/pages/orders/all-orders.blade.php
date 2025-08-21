@@ -10,65 +10,109 @@
         </div>
         <div class="card-body">
             <div class="table-wrap table-responsive">
-                <table class="table table-bordered">
+                <table class="table table-bordered align-middle">
                     <thead>
                         <tr>
                             <th>{{ __('Order ID') }}</th>
                             <th>{{ __('User') }}</th>
-                            <th>{{ __('Product') }}</th>
-                            <th>{{ __('Quantity') }}</th>
-                            <th>{{ __('Total Price') }}</th>
+                            <th>{{ __('Products') }}</th>
+                            <th>{{ __('Quantities') }}</th>
+                            <th>{{ __('Prices') }}</th>
                             <th>{{ __('Delivery Charge') }}</th>
                             <th>{{ __('Grand Total') }}</th>
-                            <th>{{ __('Status') }}</th>
+                            <th>{{ __('Statuses') }}</th>
                             <th>{{ __('Payment') }}</th>
                             <th>{{ __('Date') }}</th>
+                            <th>{{ __('Action') }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($orders as $order)
-                        <tr>
-                            <td>#{{ $order->id }}</td>
-                            <td>{{ $order->name }}<br><small>{{ $order->email }}</small></td>
-                            <td>{{ $order->product->name ?? 'N/A' }}</td>
-                            <td>{{ $order->product_quantity }}</td>
-                            <td>₹{{ number_format($order->product_total_price, 2) }}</td>
-                            <td>₹{{ number_format($order->total_delivery_charge, 2) }}</td>
-                            <td>₹{{ number_format($order->grand_total, 2) }}</td>
-                            
                             @php
-                                $statuses = ['pending', 'packaging', 'shipped', 'delivered'];
-                                $currentIndex = array_search($order->order_status, $statuses);
-                                $availableStatuses = array_slice($statuses, $currentIndex); // show current and forward
+                                $productIds = explode('|', $order->product_id);
+                                $quantities = explode('|', $order->product_quantity);
+                                $prices = explode('|', $order->product_total_price);
+                                $statuses = explode('|', $order->order_status);
+                                $totalProducts = count($productIds);
                             @endphp
 
-                            <td>
-                                <form action="{{ route('admin.orders.update.status', $order->id) }}" method="POST">
-                                    @csrf
-                                    @method('PUT')
-                                    <select name="order_status" class="form-select form-select-sm" onchange="this.form.submit()">
-                                        @foreach($availableStatuses as $status)
-                                            <option value="{{ $status }}" {{ $order->order_status === $status ? 'selected' : '' }}>
-                                                {{ ucfirst($status) }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </form>
-                            </td>
+                            <tr>
+                                <td>#{{ $order->id }}</td>
+                                <td>{{ $order->name }}</td>
 
-                            <td>
-                                @if($order->is_paid)
-                                    <span class="badge bg-success">{{ __('Paid') }}</span>
-                                @else
-                                    <span class="badge bg-warning text-dark">{{ __('Unpaid') }}</span>
-                                @endif
-                            </td>
-                            <td>{{ $order->created_at->format('d M Y') }}</td>
-                        </tr>
+                                {{-- Products --}}
+                                <td>
+                                    @for ($i = 0; $i < $totalProducts; $i++)
+                                        @php $product = \App\Models\Product::find($productIds[$i] ?? null); @endphp
+                                        <div>{{ $product->name ?? 'N/A' }}</div>
+                                    @endfor
+                                </td>
+
+                                {{-- Quantities --}}
+                                <td>
+                                    @for ($i = 0; $i < $totalProducts; $i++)
+                                        <div>{{ $quantities[$i] ?? '-' }}</div>
+                                    @endfor
+                                </td>
+
+                                {{-- Prices --}}
+                                <td>
+                                    @for ($i = 0; $i < $totalProducts; $i++)
+                                        <div>₹{{ number_format((float) ($prices[$i] ?? 0), 2) }}</div>
+                                    @endfor
+                                </td>
+
+                                {{-- Delivery Charge --}}
+                                <td>₹{{ number_format($order->total_delivery_charge, 2) }}</td>
+
+                                {{-- Grand Total --}}
+                                <td>₹{{ number_format($order->grand_total, 2) }}</td>
+
+                                {{-- Status (one dropdown for the whole order) --}}
+                                <td>
+                                    <form action="{{ route('admin.orders.update.status.product', $order->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <select name="order_status" class="form-select form-select-sm" onchange="this.form.submit()">
+                                            @foreach(['pending', 'packaging', 'shipped', 'delivered'] as $status)
+                                                <option value="{{ $status }}" {{ $order->order_status === $status ? 'selected' : '' }}>
+                                                    {{ ucfirst($status) }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </form>
+                                </td>
+
+                                {{-- Payment --}}
+                                <td>
+                                    @if($order->is_paid)
+                                        <span class="badge bg-success">{{ __('Paid') }}</span>
+                                    @else
+                                        <span class="badge bg-warning text-dark">{{ __('Unpaid') }}</span>
+                                    @endif
+                                </td>
+
+                                {{-- Date --}}
+                                <td>{{ $order->created_at->format('d M Y') }}</td>
+
+                                {{-- Action --}}
+                                <td class="d-flex flex-column gap-2">
+                                    <a href="{{ route('admin.orders.view.details', $order->id) }}" class="btn btn-sm btn-outline-primary" title="View Full Order">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ route('admin.orders.invoice.download', $order->id) }}" class="btn btn-sm btn-outline-success" title="Invoice" target="_blank">
+                                        <i class="fas fa-file-invoice"></i>
+                                    </a>
+                                    <a href="{{ route('admin.orders.shipping.download', $order->id) }}" class="btn btn-sm btn-outline-secondary" title="Shipping Bill" target="_blank">
+                                        <i class="fas fa-file-alt"></i>
+                                    </a>
+                                </td>
+                            </tr>
+
                         @empty
-                        <tr>
-                            <td colspan="10" class="text-center text-muted">{{ __('No orders found.') }}</td>
-                        </tr>
+                            <tr>
+                                <td colspan="11" class="text-center text-muted">{{ __('No orders found.') }}</td>
+                            </tr>
                         @endforelse
                     </tbody>
                 </table>

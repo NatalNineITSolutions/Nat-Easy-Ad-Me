@@ -1,3 +1,5 @@
+
+
 <script>
     (function($){
         "use strict";
@@ -53,6 +55,10 @@
             // change country and get state
             $(document).on('change','#country_id', function() {
                 let country = $(this).val();
+                
+                // Show loading while fetching
+                $(".get_country_state").html("<option value=''>Loading...</option>");
+
                 $.ajax({
                     method: 'post',
                     url: "{{ route('au.state.all') }}",
@@ -64,8 +70,7 @@
                             let all_options = "<option value=''>{{__('Select State')}}</option>";
                             let all_state = res.states;
                             $.each(all_state, function(index, value) {
-                                all_options += "<option value='" + value.id +
-                                    "'>" + value.state + "</option>";
+                                all_options += "<option value='" + value.id + "'>" + value.state + "</option>";
                             });
                             $(".get_country_state").html(all_options);
                             $(".state_info").html('');
@@ -74,12 +79,16 @@
                             }
                         }
                     }
-                })
-            })
+                });
+            });
 
             // change state and get city
             $('#state_id').on('change', function() {
                 let state = $(this).val();
+
+                // Show loading while fetching
+                $(".get_state_city").html("<option value=''>Loading...</option>");
+
                 $.ajax({
                     method: 'post',
                     url: "{{ route('au.city.all') }}",
@@ -91,8 +100,7 @@
                             let all_options = "<option value=''>{{__('Select City')}}</option>";
                             let all_city = res.cities;
                             $.each(all_city, function(index, value) {
-                                all_options += "<option value='" + value.id +
-                                    "'>" + value.city + "</option>";
+                                all_options += "<option value='" + value.id + "'>" + value.city + "</option>";
                             });
                             $(".get_state_city").html(all_options);
 

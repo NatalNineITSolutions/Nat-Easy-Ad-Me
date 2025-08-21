@@ -1,3 +1,9 @@
+<style>
+    .condition {
+        font-weight: 600;
+    }
+</style>
+
 @if($listings->count() >0)
     @foreach($listings as $listing)
         <div class="singleFeatureCard">
@@ -9,6 +15,12 @@
             </div>
             <div class="featurebody">
                 <h4> <a href="{{ route('frontend.listing.details', $listing->slug) }}" class="featureTittle head4 twoLine">{{ $listing->title }}</a> </h4>
+
+                @if(!empty($listing->condition))
+                    <div class="mb-2 condition">
+                        {{ __('Condition:') }} <span class="text-bold"> {{ $listing->condition }} </span>
+                    </div>
+                @endif
 
                 <x-listings.listing-location :listing="$listing"/>
 

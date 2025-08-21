@@ -37,15 +37,12 @@
                     @endforeach
                 </select>
             @endif
-
-            @error('zone_id')
-                <span class="text-danger">{{ $message }}</span>
-            @enderror
         </div>
 
         <div class="mb-3">
-            <label class="form-label">{{ __('Weight (grams)') }}</label>
-            <input type="number" step="0.01" name="weight_in_grams" class="form-control" value="{{ old('weight_in_grams', $deliveryCharge->weight_in_grams ?? '') }}" required>
+            <label class="form-label">{{ __('Weight (in grams)') }}</label>
+            <input type="number" step="0.01" name="weight" class="form-control" value="{{ old('weight', $deliveryCharge->weight ?? '') }}" required>
+            <small class="text-muted">{{ __('Enter weight in grams (e.g., 100, 500, 1000)') }}</small>
         </div>
 
         <div class="mb-3">
@@ -56,7 +53,7 @@
 
         <div class="mb-3">
             <label class="form-label">{{ __('Setting') }}</label>
-            <select name="setting_type" id="setting_type" class="form-control" required>
+            <select name="setting_type" id="setting_type" class="form-control">
                 <option value="na" {{ (old('setting_type', $deliveryCharge->setting_type ?? '') === 'na') ? 'selected' : '' }}>{{ __('N/A') }}</option>
                 <option value="min_order" {{ (old('setting_type', $deliveryCharge->setting_type ?? '') === 'min_order') ? 'selected' : '' }}>{{ __('Minimum Order') }}</option>
             </select>
@@ -77,9 +74,9 @@
             </small>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3 {{ $selectedSetting == 'min_order' ? '' : 'd-none' }}" id="deliveryChargeField">
             <label class="form-label">{{ __('Delivery Cost') }}</label>
-            <input type="number" step="0.01" name="delivery_charge" class="form-control" value="{{ old('delivery_charge', $deliveryCharge->delivery_charge ?? '') }}" required>
+            <input type="number" step="0.01" name="delivery_charge" class="form-control" value="{{ old('delivery_charge', $deliveryCharge->delivery_charge ?? '') }}">
         </div>
 
         <button type="submit" class="btn btn-primary">{{ isset($deliveryCharge) ? __('Update') : __('Save') }}</button>
@@ -91,19 +88,19 @@
     document.addEventListener('DOMContentLoaded', function () {
         const settingSelect = document.getElementById('setting_type');
         const minOrderField = document.getElementById('minOrderField');
+        const deliveryChargeField = document.getElementById('deliveryChargeField');
 
-        function toggleMinOrderField() {
+        function toggleConditionalFields() {
             if (settingSelect.value === 'min_order') {
                 minOrderField.classList.remove('d-none');
+                deliveryChargeField.classList.remove('d-none');
             } else {
                 minOrderField.classList.add('d-none');
+                deliveryChargeField.classList.add('d-none');
             }
         }
 
-        // Initialize on page load
-        toggleMinOrderField();
-
-        // Add event listener for changes
-        settingSelect.addEventListener('change', toggleMinOrderField);
+        toggleConditionalFields(); // run on load
+        settingSelect.addEventListener('change', toggleConditionalFields); // run on change
     });
 </script>

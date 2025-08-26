@@ -108,6 +108,7 @@
                         <thead>
                             <tr>
                                 <th>{{ __('ID') }}</th>
+                                <th>{{ __('Vendor ID') }}</th>
                                 <th>{{ __('Primary Contact') }}</th>
                                 <th>{{ __('Company') }}</th>
                                 <th>{{ __('Email') }}</th>
@@ -121,6 +122,7 @@
                             @forelse($vendors as $vendor)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
+                                    <td>{{$vendor->vendor_id}}</td>
                                     <td>{{ $vendor->primary_contact_name }}</td>
                                     <td>{{ $vendor->company_name }}</td>
                                     <td>{{ $vendor->email }}</td>

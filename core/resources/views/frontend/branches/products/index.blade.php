@@ -4,8 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Products - Branch Dashboard</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" />
+
+    <x-branch.css />
+
     <style>
         :root {
             --primary-color: #4A6CF7;
@@ -386,6 +392,17 @@
                 display: block;
             }
         }
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Hide arrows for Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
     </style>
 </head>
 <body>
@@ -399,275 +416,265 @@
     <!-- Main Content -->
     <main class="branch-main-content">
         <h1 class="mb-4">Upload Product</h1>
+
+        @if(session('message'))
+            <div class="alert alert-success mb-4">
+                {{ session('message') }}
+            </div>
+        @endif
+
+        @if($errors->has('error'))
+            <div class="alert alert-danger mb-4">
+                {{ $errors->first('error') }}
+            </div>
+        @endif
         
         <!-- Product Upload Form -->
         <div class="upload-container">
             <h2 class="section-title">Product Information</h2>
             
-            <form id="productUploadForm">
+            <form id="productUploadForm" action="{{ route('branch.products.store') }}" method="POST">
+                @csrf
                 <div class="form-grid">
+
+                    <!-- Vendor -->
+                    <div class="form-group">
+                        <label for="vendor" class="form-label">Vendor</label>
+                        <select name="vendor_id" id="vendor_id" class="form-select" required>
+                            <option value="">Select a Vendor</option>
+                            @foreach($vendors as $vendor)
+                                <option value="{{ $vendor->id }}">
+                                    {{ $vendor->company_name }} ({{ $vendor->primary_contact_name }}) - {{ $vendor->vendor_id }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Product Name -->
                     <div class="form-group">
                         <label for="productName" class="form-label">Product Name</label>
-                        <input type="text" id="productName" class="form-input" placeholder="Enter product name" required>
+                        <input type="text" id="productName" name="name" class="form-input" placeholder="Enter product name" required>
                     </div>
-                    
+
+                    <!-- Weight -->
                     <div class="form-group">
-                        <label for="productSku" class="form-label">SKU</label>
-                        <input type="text" id="productSku" class="form-input" placeholder="Product SKU" required>
+                        <label for="weight" class="form-label">Weight (grams)</label>
+                        <input type="number" step="0.01" id="weight" name="weight" class="form-input" placeholder="Enter product weight in grams">
                     </div>
-                    
+
+                    <!-- Stock -->
                     <div class="form-group">
-                        <label for="productCategory" class="form-label">Category</label>
-                        <select id="productCategory" class="form-select" required>
-                            <option value="">Select Category</option>
-                            <option value="electronics">Electronics</option>
-                            <option value="clothing">Clothing</option>
-                            <option value="home">Home & Kitchen</option>
-                            <option value="beauty">Beauty</option>
-                            <option value="sports">Sports & Outdoors</option>
+                        <label for="stock" class="form-label">Stock</label>
+                        <input type="number" id="stock" name="stock" class="form-input" placeholder="Available stock" min="0" required>
+                    </div>
+
+                    <!-- Unit -->
+                    <div class="form-group">
+                        <label for="unit" class="form-label">Unit</label>
+                        <select name="unit_id" id="unit_id" class="form-select" required>
+                            <option value="">Select a Unit</option>
+                            @foreach($units as $unit)
+                                <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                            @endforeach
                         </select>
                     </div>
-                    
+
+                    <!-- Unit Measurement -->
                     <div class="form-group">
-                        <label for="productPrice" class="form-label">Price ($)</label>
-                        <input type="number" id="productPrice" class="form-input" placeholder="0.00" step="0.01" min="0" required>
+                        <label for="unitMeasurement" class="form-label">Unit Measurement</label>
+                        <input type="number" step="0.01" id="unitMeasurement" name="unit_measurement" class="form-input" placeholder="Enter unit measurement" min="0" required>
                     </div>
-                    
+
+                    <!-- GST -->
                     <div class="form-group">
-                        <label for="productStock" class="form-label">Stock Quantity</label>
-                        <input type="number" id="productStock" class="form-input" placeholder="0" min="0" required>
+                        <label for="gst" class="form-label">GST (%)</label>
+                        <input type="number" step="0.01" id="gst" name="gst" class="form-input" placeholder="Enter GST percent" min="0">
                     </div>
-                    
+
+                    <!-- Category -->
                     <div class="form-group">
-                        <label for="productStatus" class="form-label">Status</label>
-                        <select id="productStatus" class="form-select" required>
-                            <option value="active">Active</option>
-                            <option value="draft">Draft</option>
-                            <option value="outofstock">Out of Stock</option>
+                        <label for="category" class="form-label">Category</label>
+                        <select name="category_id" id="category_id" class="form-select" required>
+                            <option value="">Select a Category</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->category }}</option>
+                            @endforeach
                         </select>
                     </div>
-                    
+
+                    <!-- Description -->
                     <div class="form-group full-width">
-                        <label for="productDescription" class="form-label">Description</label>
-                        <textarea id="productDescription" class="form-textarea" placeholder="Enter product description"></textarea>
+                        <label for="description" class="form-label">Description</label>
+                        <textarea id="description" name="description" class="form-textarea" placeholder="Enter product description"></textarea>
                     </div>
-                    
-                    <!-- Image Upload Section -->
+
+                    <!-- Variants -->
                     <div class="form-group full-width">
-                        <label class="form-label">Product Images</label>
-                        <div class="image-upload-container" id="dropZone">
-                            <div class="upload-icon">
-                                <i class="fas fa-cloud-upload-alt"></i>
-                            </div>
-                            <p class="upload-text">Drag & drop images here or click to browse</p>
-                            <p class="upload-hint">Supported formats: JPG, PNG, GIF. Max file size: 5MB</p>
-                            <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
-                        </div>
+                        <label class="form-label">Product Variants (Size-based)</label>
                         
-                        <div class="image-preview-container" id="imagePreviewContainer">
-                            <!-- Image previews will be added here -->
-                        </div>
-                    </div>
-                    
-                    <!-- Product Variants -->
-                    <div class="form-group full-width">
-                        <label class="form-label">Product Variants</label>
-                        <div class="variants-container">
-                            <div class="variant-item">
-                                <div style="flex: 1;">
-                                    <label class="form-label">Color</label>
-                                    <input type="text" class="form-input" placeholder="Color variant">
-                                </div>
+                        <div class="variants-container" id="variantWrapper">
+                            <div class="variant-item" style="display: flex; gap: 10px; align-items: flex-end; margin-bottom: 10px;">
                                 <div style="flex: 1;">
                                     <label class="form-label">Size</label>
-                                    <input type="text" class="form-input" placeholder="Size variant">
+                                    <select name="variants[size][]" class="form-input">
+                                        <option value="">Select Size</option>
+                                        @foreach($sizes as $size)
+                                            <option value="{{ $size->id }}">{{ $size->name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div style="flex: 1;">
                                     <label class="form-label">Additional Price</label>
-                                    <input type="number" class="form-input" placeholder="0.00" step="0.01" min="0">
+                                    <input type="number" step="0.01" name="variants[price][]" class="form-input" placeholder="0.00">
                                 </div>
-                                <button type="button" class="remove-variant">
+                                <div style="flex: 1;">
+                                    <label class="form-label">Stock</label>
+                                    <input type="number" name="variants[stock][]" class="form-input" placeholder="0">
+                                </div>
+                                <button type="button" class="remove-variant" style="background: red; color: #fff; border: none; padding: 6px 10px; border-radius: 5px; cursor: pointer;">
                                     <i class="fas fa-times"></i>
                                 </button>
                             </div>
                         </div>
+
                         <button type="button" class="btn btn-outline" id="addVariant">
                             <i class="fas fa-plus"></i> Add Variant
                         </button>
                     </div>
+                    
+                    <div class="upload-img text-center mt-3">
+                        <div class="media-upload-btn-wrapper">
+                            <div class="img-wrap new_image_add_listing">
+                                <img
+                                    src="{{ asset('assets/common/img/listing_single_image.jpg') }}"
+                                    class="w-100"
+                                    style="max-height: 200px; object-fit: contain;">
+                            </div>
+                            <input
+                                type="hidden"
+                                name="image"
+                                value="">
+                            <button
+                                type="button"
+                                class="btn btn-info media_upload_form_btn"
+                                data-bs-toggle="modal"
+                                data-bs-target="#branch_media_upload_modal">
+                                Click to browse & Upload Featured Image
+                            </button>
+                            <small>{{ __('image format: jpg,jpeg,png,gif,webp') }}</small><br>
+                            <small>{{ __('recommended size 810x450') }}</small>
+                        </div>
+                    </div>
+
                 </div>
-                
+
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary">
-                        <i class="fas fa-times"></i> Cancel
-                    </button>
-                    <button type="button" class="btn btn-outline">
-                        <i class="fas fa-save"></i> Save Draft
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-upload"></i> Upload Product
-                    </button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-upload"></i> Upload Product</button>
                 </div>
             </form>
+
         </div>
     </main>
+
+    <x-branch.markup />
+
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
+
+<x-branch.js  />
+
+
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Toggle sidebar on mobile
-        document.getElementById('sidebarToggle').addEventListener('click', function() {
-            document.getElementById('branchSidebar').classList.toggle('open');
-        });
-        
-        // Close sidebar when clicking outside on mobile
-        document.addEventListener('click', function(e) {
-            if (window.innerWidth < 1024) {
-                if (!e.target.closest('#branchSidebar') && !e.target.closest('#sidebarToggle')) {
-                    document.getElementById('branchSidebar').classList.remove('open');
-                }
-            }
-        });
-        
-        // Image upload functionality
-        const dropZone = document.getElementById('dropZone');
-        const fileInput = document.getElementById('fileInput');
-        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
-        
-        // Open file dialog when clicking on drop zone
-        dropZone.addEventListener('click', () => {
-            fileInput.click();
-        });
-        
-        // Handle file selection
-        fileInput.addEventListener('change', handleFiles);
-        
-        // Drag and drop functionality
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, preventDefaults, false);
-        });
-        
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-        
-        ['dragenter', 'dragover'].forEach(eventName => {
-            dropZone.addEventListener(eventName, highlight, false);
-        });
-        
-        ['dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, unhighlight, false);
-        });
-        
-        function highlight() {
-            dropZone.classList.add('dragover');
-        }
-        
-        function unhighlight() {
-            dropZone.classList.remove('dragover');
-        }
-        
-        dropZone.addEventListener('drop', handleDrop, false);
-        
-        function handleDrop(e) {
-            const dt = e.dataTransfer;
-            const files = dt.files;
-            handleFiles({ target: { files } });
-        }
-        
-        function handleFiles(e) {
-            const files = e.target.files || e.dataTransfer.files;
-            
-            if (files.length > 0) {
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
-                    
-                    // Check if file is an image
-                    if (!file.type.match('image.*')) {
-                        alert('Please upload only image files.');
-                        continue;
-                    }
-                    
-                    // Check file size (5MB max)
-                    if (file.size > 5 * 1024 * 1024) {
-                        alert('File size exceeds 5MB. Please choose a smaller file.');
-                        continue;
-                    }
-                    
-                    const reader = new FileReader();
-                    
-                    reader.onload = function(e) {
-                        const imagePreview = document.createElement('div');
-                        imagePreview.className = 'image-preview';
-                        
-                        const img = document.createElement('img');
-                        img.src = e.target.result;
-                        
-                        const removeBtn = document.createElement('div');
-                        removeBtn.className = 'remove-image';
-                        removeBtn.innerHTML = '<i class="fas fa-times"></i>';
-                        removeBtn.addEventListener('click', function() {
-                            imagePreview.remove();
-                        });
-                        
-                        imagePreview.appendChild(img);
-                        imagePreview.appendChild(removeBtn);
-                        imagePreviewContainer.appendChild(imagePreview);
-                    }
-                    
-                    reader.readAsDataURL(file);
-                }
-            }
-        }
-        
-        // Add variant functionality
-        const addVariantBtn = document.getElementById('addVariant');
-        const variantsContainer = document.querySelector('.variants-container');
-        
-        addVariantBtn.addEventListener('click', function() {
-            const variantItem = document.createElement('div');
-            variantItem.className = 'variant-item';
-            variantItem.innerHTML = `
-                <div style="flex: 1;">
-                    <label class="form-label">Color</label>
-                    <input type="text" class="form-input" placeholder="Color variant">
-                </div>
+    document.addEventListener("DOMContentLoaded", function () {
+        const wrapper = document.getElementById("variantWrapper");
+        const addBtn = document.getElementById("addVariant");
+
+        // Get the size options from server-rendered select (first dropdown)
+        const sizeOptions = document.querySelector("select[name='variants[size][]']").innerHTML;
+
+        // Function to create new variant row
+        function createVariantRow() {
+            const div = document.createElement("div");
+            div.classList.add("variant-item");
+            div.style.display = "flex";
+            div.style.gap = "10px";
+            div.style.alignItems = "flex-end";
+            div.style.marginBottom = "10px";
+
+            div.innerHTML = `
                 <div style="flex: 1;">
                     <label class="form-label">Size</label>
-                    <input type="text" class="form-input" placeholder="Size variant">
+                    <select name="variants[size][]" class="form-input">
+                        ${sizeOptions}
+                    </select>
                 </div>
                 <div style="flex: 1;">
                     <label class="form-label">Additional Price</label>
-                    <input type="number" class="form-input" placeholder="0.00" step="0.01" min="0">
+                    <input type="number" step="0.01" name="variants[price][]" class="form-input" placeholder="0.00">
                 </div>
-                <button type="button" class="remove-variant">
+                <div style="flex: 1;">
+                    <label class="form-label">Stock</label>
+                    <input type="number" name="variants[stock][]" class="form-input" placeholder="0">
+                </div>
+                <button type="button" class="remove-variant" style="background: red; color: #fff; border: none; padding: 6px 10px; border-radius: 5px; cursor: pointer;">
                     <i class="fas fa-times"></i>
                 </button>
             `;
-            
-            variantItem.querySelector('.remove-variant').addEventListener('click', function() {
-                variantItem.remove();
+
+            // Attach remove functionality
+            div.querySelector(".remove-variant").addEventListener("click", function () {
+                div.remove();
             });
-            
-            variantsContainer.appendChild(variantItem);
+
+            return div;
+        }
+
+        // Add new variant
+        addBtn.addEventListener("click", function () {
+            wrapper.appendChild(createVariantRow());
         });
-        
-        // Remove variant event listeners
-        document.querySelectorAll('.remove-variant').forEach(button => {
-            button.addEventListener('click', function() {
-                this.closest('.variant-item').remove();
+
+        // Enable remove for the first (default) row
+        document.querySelectorAll(".remove-variant").forEach(btn => {
+            btn.addEventListener("click", function () {
+                btn.closest(".variant-item").remove();
             });
-        });
-        
-        // Form submission
-        document.getElementById('productUploadForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            // Here you would normally handle the form submission to your backend
-            alert('Product uploaded successfully!');
-            // Reset form or redirect as needed
         });
     });
 </script>
+
+<script>
+    // Extra safeguard to prevent typing negative values
+    document.querySelectorAll("input[type=number]").forEach(input => {
+        input.addEventListener("input", function () {
+            if (this.value < 0) this.value = 0;
+        });
+    });
+</script>
+
+<script>
+    Dropzone.autoDiscover = false; // <--- ADD THIS LINE
+    document.addEventListener("DOMContentLoaded", function () {
+        const modal = document.getElementById("branch_media_upload_modal");
+
+        modal.addEventListener("shown.bs.modal", function () {
+            if (!modal.dropzoneInitialized) {
+                new Dropzone("#branchPlaceholderForm", {
+                    paramName: "file",
+                    maxFilesize: 10, // MB
+                    acceptedFiles: "image/*",
+                    addRemoveLinks: true,
+                    dictDefaultMessage: "Drop files here to upload Support Formats (jpg, png, jpeg, gif)",
+                });
+                modal.dropzoneInitialized = true;
+            }
+        });
+    });
+</script>
+
+
 </body>
 </html>

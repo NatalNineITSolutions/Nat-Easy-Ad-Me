@@ -11,6 +11,8 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
+        'vendor_id',
+        'branch_id',
         'name',
         'price',
         'distributor_price',
@@ -26,7 +28,9 @@ class Product extends Model
         'size_id',
         'size_price',
         'size_stock',
+        'is_active',
     ];
+
 
     public function category()
     {

@@ -273,6 +273,7 @@
             const routes = {
                 admin: @json(route('admin.upload.media.file.all')),
                 web: @json(route('web.upload.media.file.all')),
+                branch: @json(route('branch.upload.media.file.all')),
                 // add more if needed
             };
 

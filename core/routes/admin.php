@@ -700,6 +700,7 @@ Route::post('/media-upload', [MediaUploadController::class, 'uploadMediaFile'])-
 Route::post('/media-upload/alt', [MediaUploadController::class, 'altChangeUploadMediaFile'])->name('admin.upload.media.file.alt.change');
 // media upload routes for restrict user in demo mode
 Route::post('/media-upload/loadmore', [MediaUploadController::class, 'getImageForLoadmore'])->name('admin.upload.media.file.loadmore');
+
 Route::get('/test-email', function() {
     $user = User::first();
     $payout = UserPayoutDetail::first();

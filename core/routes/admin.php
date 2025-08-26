@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Backend\AdvertisementController;
+use App\Http\Controllers\Backend\VendorController;
 use App\Models\User;
 use App\Models\UserPayoutDetail;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +31,7 @@ use App\Http\Controllers\Backend\MapSettings;
 use App\Http\Controllers\Backend\ShippingController;
 use App\Http\Controllers\Backend\OrderController;
 use App\Http\Controllers\Backend\AttributeController;
+use App\Http\Controllers\Backend\BranchesController;
 
 
 Route::middleware(['auth','setlang'])->group(function () {
@@ -292,6 +294,17 @@ Route::middleware(['auth','setlang'])->group(function () {
         });
     });
 
+    // Branches Manage
+    Route::get('/branches', [BranchesController::class, 'index'])->name('admin.branches');
+    Route::post('/branches/store', [BranchesController::class, 'store'])->name('admin.branches.store')->permission('branch-add');
+    Route::post('/branches/update/{id}', [BranchesController::class, 'update'])->name('admin.branches.update')->permission('branch-edit');
+    Route::post('/branches/delete/{id}', [BranchesController::class, 'destroy'])->name('admin.branches.delete')->permission('branch-delete');
+
+    // Vendors Manage
+    Route::get('/vendors', [VendorController::class, 'index'])->name('admin.vendors');
+    Route::post('/vendors/store', [VendorController::class, 'store'])->name('admin.vendors.store')->permission('vendor-add');
+    Route::post('/vendors/update/{id}', [VendorController::class, 'update'])->name('admin.vendors.update')->permission('vendor-edit');
+    Route::post('/vendors/delete/{id}', [VendorController::class, 'destroy'])->name('admin.vendors.delete')->permission('vendor-delete');
 
     // Listing manage
     Route::group(['prefix' => 'listings'], function () {

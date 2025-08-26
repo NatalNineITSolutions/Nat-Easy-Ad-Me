@@ -55,6 +55,11 @@ return [
             'provider' => 'users',
             'hash' => false,
         ],
+
+        'branch' => [ 
+            'driver' => 'session',
+            'provider' => 'branches', 
+        ],
     ],
 
     /*
@@ -80,12 +85,17 @@ return [
             'model' => App\Models\User::class,
         ],
         'matrimony_kyc' => [ // This must match the provider name used in 'matrimony' guard
-        'driver' => 'eloquent',
-        'model' => App\Models\MatrimonyKyc::class, // Make sure this model exists
-    ],
+            'driver' => 'eloquent',
+            'model' => App\Models\MatrimonyKyc::class, // Make sure this model exists
+        ],
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\Backend\Admin::class,
+        ],
+
+        'branches' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Branch::class,
         ],
 
     ],

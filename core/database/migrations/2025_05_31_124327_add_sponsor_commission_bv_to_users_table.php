@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('sponsor_commission_bv')->default(0)->after('referral_commission');
+            $table->integer('sponsor_commission_bv')->default(0)->after('profile_completed');
         });
     }
 

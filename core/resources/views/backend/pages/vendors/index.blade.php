@@ -109,12 +109,12 @@
                             <tr>
                                 <th>{{ __('ID') }}</th>
                                 <th>{{ __('Vendor ID') }}</th>
+                                <th>{{ __('Branches') }}</th>
                                 <th>{{ __('Primary Contact') }}</th>
                                 <th>{{ __('Company') }}</th>
                                 <th>{{ __('Email') }}</th>
                                 <th>{{ __('Phone') }}</th>
                                 <th>{{ __('Opening Balance') }}</th>
-                                <th>{{ __('Currency') }}</th>
                                 <th>{{ __('Actions') }}</th>
                             </tr>
                         </thead>
@@ -123,12 +123,20 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{$vendor->vendor_id}}</td>
+                                    <td>
+                                        @php
+                                            $branchIds = json_decode($vendor->branch_id, true) ?? [];
+
+                                            $branchNames = \App\Models\Branch::whereIn('id', $branchIds)->pluck('name')->toArray();
+                                        @endphp
+
+                                        {{ implode(', ', $branchNames) }}
+                                    </td>
                                     <td>{{ $vendor->primary_contact_name }}</td>
                                     <td>{{ $vendor->company_name }}</td>
                                     <td>{{ $vendor->email }}</td>
                                     <td>{{ $vendor->phone }}</td>
                                     <td>{{ number_format($vendor->opening_balance, 2) }}</td>
-                                    <td>{{ $vendor->currency }}</td>
                                     <td>
                                         <div class="action-buttons">
                                             <button type="button" class="btn btn-primary btn-sm edit-vendor"
@@ -178,14 +186,14 @@
     <!-- Add Vendor Modal -->
     <div class="modal fade" id="addVendorModal" tabindex="-1" aria-labelledby="addVendorModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content">
+            <div class="modal-content" style="max-height: 90vh;">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addVendorModalLabel">{{ __('Add New Vendor') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="{{route('admin.vendors.store')}}" method="POST" id="vendorForm">
                     @csrf
-                    <div class="modal-body">
+                    <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
                         <x-validation.error />
                         <div class="row">
                             <!-- Row 1 -->
@@ -249,6 +257,24 @@
                                         <!-- Add more currencies as needed -->
                                     </select>
                                 </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form__input__single mb-3">
+                                    <label for="branchDropdown" class="form__input__single__label">{{ __('Select Branches') }}</label>
+                                    <select id="branchDropdown" class="form-control">
+                                        <option value="">-- Select Branch --</option>
+                                        @foreach($branches as $branch)
+                                            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <!-- Badges will show here -->
+                                <div id="selectedBranches" class="d-flex flex-wrap gap-2"></div>
+
+                                <!-- Hidden inputs go here -->
+                                <div id="branchHiddenInputs"></div>
                             </div>
 
                             <!-- Addresses -->
@@ -385,6 +411,50 @@
 @endsection
 
 @section('scripts')
+
+    <script>
+        let selectedBranches = [];
+
+        document.getElementById('branchDropdown').addEventListener('change', function () {
+            let selectedId = this.value;
+            let selectedName = this.options[this.selectedIndex].text;
+
+            if (selectedId && !selectedBranches.find(b => b.id == selectedId)) {
+                selectedBranches.push({ id: selectedId, name: selectedName });
+                renderBranches();
+            }
+
+            this.value = ''; // reset dropdown
+        });
+
+        function renderBranches() {
+            let container = document.getElementById('selectedBranches');
+            container.innerHTML = '';
+            let hiddenContainer = document.getElementById('branchHiddenInputs');
+            hiddenContainer.innerHTML = '';
+
+            selectedBranches.forEach((branch, index) => {
+                let badge = document.createElement('span');
+                badge.className = 'badge bg-primary m-1';
+                badge.innerHTML = branch.name + 
+                    ' <button type="button" class="btn-close btn-close-white btn-sm ms-2" onclick="removeBranch(' + index + ')"></button>';
+                container.appendChild(badge);
+
+                // create hidden input for form submit
+                let hidden = document.createElement('input');
+                hidden.type = 'hidden';
+                hidden.name = 'branch_id[]';
+                hidden.value = branch.id;
+                hiddenContainer.appendChild(hidden);
+            });
+        }
+
+        function removeBranch(index) {
+            selectedBranches.splice(index, 1);
+            renderBranches();
+        }
+    </script>
+
     <script src="{{asset('assets/backend/js/bootstrap-tagsinput.js')}}"></script>
     <x-summernote.js />
     <x-media.js />

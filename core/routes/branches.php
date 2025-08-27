@@ -17,8 +17,6 @@ Route::controller(BranchController::class)->group(function () {
     Route::get('productupload', 'productUpload')->name('upload.products');
     // Store Product
     Route::post('products/store', 'store')->name('branch.products.store');
-
-    
 });
 
 Route::prefix('branch')->name('branch.')->controller(BranchController::class)->group(function () {

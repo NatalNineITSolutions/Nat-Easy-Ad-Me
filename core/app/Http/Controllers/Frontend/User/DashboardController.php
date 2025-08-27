@@ -863,15 +863,15 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
-        // Check if user is verified
         if ($user->verified_status != 1) {
             return view('frontend.user.product-slider')->with('notVerified', true);
         }
 
-        // Fetch products with unit relationship
-        $products = Product::with('unit')->latest()->paginate(10);
+        $products = Product::with('unit')
+                            ->where('is_active', 1)
+                            ->latest()
+                            ->paginate(10);
 
-        // Fetch size names as [id => name]
         $sizes = DB::table('sizes')->pluck('name', 'id');
 
         return view('frontend.user.product-slider', compact('products', 'sizes'));
@@ -895,8 +895,10 @@ class DashboardController extends Controller
                 ->with('warning', 'Please verify your identity to access all products.');
         }
 
-        // Get all products
-        $products = Product::with(['imageFile', 'unit'])->get();
+        // Get only active products
+        $products = Product::with(['imageFile', 'unit'])
+                        ->where('is_active', 1)
+                        ->get();
 
         // Fetch all sizes (id => name) for mapping size_id in blade
         $sizes = Size::pluck('name', 'id')->toArray();

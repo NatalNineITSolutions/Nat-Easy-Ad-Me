@@ -14,11 +14,23 @@ use App\Models\Size;
 
 class ProductController extends Controller
 {
-    public function index()
+
+
+    public function index(Request $request)
     {
-        $products = Product::with(['category', 'imageFile', 'unit'])->get();
+        $query = Product::with(['category', 'imageFile', 'branch']);
+
+        if ($request->filter === 'admin') {
+            $query->whereNull('branch_id');
+        } elseif ($request->filter === 'branch') {
+            $query->whereNotNull('branch_id');
+        }
+
+        $products = $query->get();
+
         return view('backend.pages.products.product-index', compact('products'));
     }
+
 
     public function addProduct()
     {
@@ -78,6 +90,7 @@ class ProductController extends Controller
             'size_id'            => $hasSizes ? implode('|', $sizeNames) : null,
             'size_price'         => $hasSizes ? implode('|', $sizePrices) : null,
             'size_stock'         => $hasSizes ? implode('|', $sizeStocks) : null,
+            'is_active'          => 1,
         ]);
 
         Log::info('Product Created:', $product->toArray());
@@ -132,6 +145,9 @@ class ProductController extends Controller
 
         $hasSizes = !empty(array_filter($sizeIds)) || !empty(array_filter($sizePrices)) || !empty(array_filter($sizeStocks));
 
+        // Determine if product should be active
+        $isActive = ($request->price > 0 && $request->distributor_price > 0 && ($request->bv_points ?? 0) > 0) ? 1 : 0;
+
         $product->update([
             'name'               => $request->name,
             'price'              => $request->price,
@@ -148,6 +164,7 @@ class ProductController extends Controller
             'size_id'            => $hasSizes ? implode('|', $sizeIds) : null,
             'size_price'         => $hasSizes ? implode('|', $sizePrices) : null,
             'size_stock'         => $hasSizes ? implode('|', $sizeStocks) : null,
+            'is_active'          => $isActive, // <-- Set based on price/distributor/bv
         ]);
 
         return redirect()->route('admin.products.index')

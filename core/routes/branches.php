@@ -8,15 +8,21 @@ Route::controller(BranchController::class)->group(function () {
     Route::match(['get', 'post'], 'branch-logout', 'branchlogout')->name('branchlogout');
 });
 
-Route::controller(BranchController::class)->group(function () {
-    Route::group(['prefix' => 'branchdashboard'], function () {
-        Route::get('info', 'branchdashboard')->name('branchdashboard');
-    });
+Route::prefix('branch')->controller(BranchController::class)->group(function () {
+    Route::get('info', 'branchdashboard')->name('branch.dashboard');
 
-    Route::get('products', 'allProducts')->name('products.all');
-    Route::get('productupload', 'productUpload')->name('upload.products');
-    // Store Product
+    Route::get('products', 'allProducts')->name('branch.products.all');
+    
+    // Create / Store
+    Route::get('productupload', 'productUpload')->name('branch.upload.products');
     Route::post('products/store', 'store')->name('branch.products.store');
+
+    // Edit / Update
+    Route::get('products/edit/{id}', 'edit')->name('branch.products.edit');
+    Route::put('products/update/{id}', 'update')->name('branch.products.update');
+
+    // Delete
+    Route::delete('products/delete/{id}', 'destroy')->name('branch.products.delete');
 });
 
 Route::prefix('branch')->name('branch.')->controller(BranchController::class)->group(function () {

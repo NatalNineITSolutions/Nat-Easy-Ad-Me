@@ -31,6 +31,10 @@ class Product extends Model
         'is_active',
     ];
 
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
 
     public function category()
     {

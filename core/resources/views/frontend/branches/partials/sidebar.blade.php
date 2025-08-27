@@ -43,19 +43,14 @@
 
 <aside class="branch-sidebar" id="branchSidebar">
     <nav class="sidebar-menu">
-        <a href="/branchdashboard/info" class="menu-item">
+        <a href="{{ route('branch.dashboard') }}" class="menu-item">
             <i class="fas fa-tachometer-alt"></i>
             <span>Dashboard</span>
         </a>
 
-        <a href="{{ route('products.all') }}" class="menu-item">
+        <a href="{{ route('branch.products.all') }}" class="menu-item">
             <i class="fas fa-boxes"></i>
             <span>All Products</span>
-        </a>
-        
-        <a href="/productupload" class="menu-item">
-            <i class="fas fa-list"></i>
-            <span>Upload Products</span>
         </a>
     </nav>
 </aside>

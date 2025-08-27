@@ -433,8 +433,13 @@
         <div class="upload-container">
             <h2 class="section-title">Product Information</h2>
             
-            <form id="productUploadForm" action="{{ route('branch.products.store') }}" method="POST">
+            <form id="productUploadForm"
+                action="{{ $product ? route('branch.products.update', $product->id) : route('branch.products.store') }}"
+                method="POST">
                 @csrf
+                @if($product)
+                    @method('PUT')
+                @endif
                 <div class="form-grid">
 
                     <!-- Vendor -->
@@ -443,7 +448,7 @@
                         <select name="vendor_id" id="vendor_id" class="form-select" required>
                             <option value="">Select a Vendor</option>
                             @foreach($vendors as $vendor)
-                                <option value="{{ $vendor->id }}">
+                                <option value="{{ $vendor->id }}" {{ (old('vendor_id', $product->vendor_id ?? '') == $vendor->id) ? 'selected' : '' }}>
                                     {{ $vendor->company_name }} ({{ $vendor->primary_contact_name }}) - {{ $vendor->vendor_id }}
                                 </option>
                             @endforeach
@@ -453,19 +458,23 @@
                     <!-- Product Name -->
                     <div class="form-group">
                         <label for="productName" class="form-label">Product Name</label>
-                        <input type="text" id="productName" name="name" class="form-input" placeholder="Enter product name" required>
+                        <input type="text" id="productName" name="name" class="form-input"
+                            placeholder="Enter product name" required
+                            value="{{ old('name', $product->name ?? '') }}">
                     </div>
 
                     <!-- Weight -->
                     <div class="form-group">
                         <label for="weight" class="form-label">Weight (grams)</label>
-                        <input type="number" step="0.01" id="weight" name="weight" class="form-input" placeholder="Enter product weight in grams">
+                        <input type="number" step="0.01" id="weight" name="weight" class="form-input"
+                            value="{{ old('weight', $product->weight ?? '') }}" placeholder="Enter product weight in grams">
                     </div>
 
                     <!-- Stock -->
                     <div class="form-group">
                         <label for="stock" class="form-label">Stock</label>
-                        <input type="number" id="stock" name="stock" class="form-input" placeholder="Available stock" min="0" required>
+                        <input type="number" id="stock" name="stock" class="form-input"
+                            value="{{ old('stock', $product->stock ?? '') }}" placeholder="Available stock" min="0" required>
                     </div>
 
                     <!-- Unit -->
@@ -474,7 +483,9 @@
                         <select name="unit_id" id="unit_id" class="form-select" required>
                             <option value="">Select a Unit</option>
                             @foreach($units as $unit)
-                                <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                                <option value="{{ $unit->id }}" {{ (old('unit_id', $product->unit_id ?? '') == $unit->id) ? 'selected' : '' }}>
+                                    {{ $unit->name }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -482,13 +493,15 @@
                     <!-- Unit Measurement -->
                     <div class="form-group">
                         <label for="unitMeasurement" class="form-label">Unit Measurement</label>
-                        <input type="number" step="0.01" id="unitMeasurement" name="unit_measurement" class="form-input" placeholder="Enter unit measurement" min="0" required>
+                        <input type="number" step="0.01" id="unitMeasurement" name="unit_measurement" class="form-input"
+                            value="{{ old('unit_measurement', $product->unit_measurement ?? '') }}" min="0" required>
                     </div>
 
                     <!-- GST -->
                     <div class="form-group">
                         <label for="gst" class="form-label">GST (%)</label>
-                        <input type="number" step="0.01" id="gst" name="gst" class="form-input" placeholder="Enter GST percent" min="0">
+                        <input type="number" step="0.01" id="gst" name="gst" class="form-input"
+                            value="{{ old('gst', $product->gst ?? '') }}" min="0">
                     </div>
 
                     <!-- Category -->
@@ -497,7 +510,9 @@
                         <select name="category_id" id="category_id" class="form-select" required>
                             <option value="">Select a Category</option>
                             @foreach($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->category }}</option>
+                                <option value="{{ $category->id }}" {{ (old('category_id', $product->category_id ?? '') == $category->id) ? 'selected' : '' }}>
+                                    {{ $category->category }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -505,7 +520,7 @@
                     <!-- Description -->
                     <div class="form-group full-width">
                         <label for="description" class="form-label">Description</label>
-                        <textarea id="description" name="description" class="form-textarea" placeholder="Enter product description"></textarea>
+                        <textarea id="description" name="description" class="form-textarea" placeholder="Enter product description">{{ old('description', $product->description ?? '') }}</textarea>
                     </div>
 
                     <!-- Variants -->
@@ -545,15 +560,11 @@
                     <div class="upload-img text-center mt-3">
                         <div class="media-upload-btn-wrapper">
                             <div class="img-wrap new_image_add_listing">
-                                <img
-                                    src="{{ asset('assets/common/img/listing_single_image.jpg') }}"
-                                    class="w-100"
-                                    style="max-height: 200px; object-fit: contain;">
+                                <img src="{{ $product && $product->imageFile ? asset('assets/uploads/media-uploader/'.$product->imageFile->path) : asset('assets/common/img/listing_single_image.jpg') }}"
+                                    class="w-100" style="max-height: 200px; object-fit: contain;">
                             </div>
-                            <input
-                                type="hidden"
-                                name="image"
-                                value="">
+                            <!-- CORRECTED: use image ID instead of path -->
+                            <input type="hidden" name="image" value="{{ old('image', $product->image ?? '') }}">
                             <button
                                 type="button"
                                 class="btn btn-info media_upload_form_btn"

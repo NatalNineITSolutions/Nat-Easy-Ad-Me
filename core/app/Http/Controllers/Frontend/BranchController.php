@@ -21,10 +21,10 @@ use Intervention\Image\Facades\Image;
 class BranchController extends Controller
 {
 
-    public function __construct()
-    {
-        $this->middleware('auth:branch');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth:branch');
+    // }
 
     /**
      * Handle branch login (GET and POST requests)
@@ -49,7 +49,7 @@ class BranchController extends Controller
             $request->session()->regenerate();
 
             // Redirect to branch dashboard or home page
-            return redirect()->intended(route('branchdashboard'));
+            return redirect()->intended(route('branch.dashboard'));
         }
 
         // If authentication fails
@@ -64,8 +64,10 @@ class BranchController extends Controller
 
     public function allProducts()
     {
-        $branchId = auth()->id();
-        $products = Product::where('branch_id', $branchId)->get();
+        $branchId = auth()->guard('branch')->id();
+        $products = Product::where('branch_id', $branchId)
+            ->with(['category', 'imageFile']) // eager load to prevent N+1 queries
+            ->get();
 
         return view('frontend.branches.products.all-products', compact('products'));
     }
@@ -77,15 +79,18 @@ class BranchController extends Controller
         return view('frontend.branches.dashboard.dashboard', compact('branch'));
     }
 
-    public function productUpload(Request $request)
+    public function productUpload(Request $request, $id = null)
     {
-        $vendors = Vendor::all(); 
+        $branchId = auth('branch')->id();
+        $vendors = Vendor::whereRaw('JSON_CONTAINS(branch_id, ?)', [json_encode((string)$branchId)])->get();
         $categories = ProductCategory::all();
         $units = Unit::all();
         $sizes = Size::all();
+        $product = $id ? Product::findOrFail($id) : null; // fetch product if editing
 
-        return view('frontend.branches.products.index', compact('vendors', 'categories', 'units', 'sizes'));
+        return view('frontend.branches.products.index', compact('vendors', 'categories', 'units', 'sizes', 'product'));
     }
+
 
     public function store(Request $request)
     {
@@ -161,6 +166,103 @@ class BranchController extends Controller
 
             return redirect()->back()->withErrors(['error' => 'Failed to save product. Check logs.']);
         }
+    }
+
+
+    public function edit($id)
+    {
+        $branchId = auth('branch')->id();
+        $product = Product::where('id', $id)->where('branch_id', $branchId)->firstOrFail();
+
+        $vendors = Vendor::whereRaw('JSON_CONTAINS(branch_id, ?)', [json_encode((string)$branchId)])->get();
+        $categories = ProductCategory::all();
+        $units = Unit::all();
+        $sizes = Size::all();
+
+        return view('frontend.branches.products.index', compact('vendors', 'categories', 'units', 'sizes', 'product'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $branch = auth('branch')->user();
+        $product = Product::where('id', $id)->where('branch_id', $branch->id)->firstOrFail();
+
+        $request->validate([
+            'vendor_id'            => 'required|exists:vendors,id',
+            'name'                 => 'required|string|max:255',
+            'weight'               => 'nullable|numeric|min:0',
+            'stock'                => 'required|integer|min:0',
+            'unit_id'              => 'required|exists:units,id',
+            'unit_measurement'     => 'required|numeric|min:0',
+            'gst'                  => 'nullable|numeric|min:0',
+            'category_id'          => 'required|exists:product_categories,id',
+            'description'          => 'nullable|string',
+            'image'                => 'nullable|integer|exists:media_uploads,id',
+            'variants.size.*'      => 'nullable|exists:sizes,id',
+            'variants.price.*'     => 'nullable|numeric|min:0',
+            'variants.stock.*'     => 'nullable|integer|min:0',
+        ]);
+
+        $sizes  = $request->input('variants.size', []);
+        $prices = $request->input('variants.price', []);
+        $stocks = $request->input('variants.stock', []);
+        $hasVariants = !empty(array_filter($sizes)) || !empty(array_filter($prices)) || !empty(array_filter($stocks));
+
+        try {
+            DB::beginTransaction();
+
+            $product->update([
+                'vendor_id'        => $request->input('vendor_id'),
+                'name'             => $request->input('name'),
+                'weight'           => $request->input('weight') ?? null,
+                'stock'            => $request->input('stock'),
+                'unit_id'          => $request->input('unit_id'),
+                'unit_measurement' => $request->input('unit_measurement'),
+                'gst'              => $request->input('gst') ?? 0,
+                'category_id'      => $request->input('category_id'),
+                'description'      => $request->input('description') ?? null,
+                'image'            => $request->input('image') ?? null,
+                'size_id'          => $hasVariants ? implode('|', $sizes) : null,
+                'size_price'       => $hasVariants ? implode('|', $prices) : null,
+                'size_stock'       => $hasVariants ? implode('|', $stocks) : null,
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('branch.products.all')->with('message', 'Product updated successfully!');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error('Product update failed: ' . $e->getMessage(), [
+                'branch_id' => $branch->id,
+                'trace' => $e->getTraceAsString(),
+                'request' => $request->all()
+            ]);
+
+            return redirect()->back()->withErrors(['error' => 'Failed to update product. Check logs.']);
+        }
+    }
+
+    public function destroy($id)
+    {
+        // Find the produc
+        $product = Product::find($id);
+
+        if (!$product) {
+            return redirect()->back()->with('error', 'Product not found.');
+        }
+
+        if ($product->imageFile) {
+            $imagePath = public_path('assets/uploads/media-uploader/' . $product->imageFile->path);
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+            $product->imageFile()->delete();
+        }
+
+        // Delete the product
+        $product->delete();
+
+        return redirect()->route('branch.products.all')->with('message', 'Product deleted successfully.');
     }
 
     /**

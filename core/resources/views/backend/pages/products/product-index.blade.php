@@ -6,6 +6,19 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <style>
     .icons { display: flex; align-items: center; gap: 10px; }
+
+    .branch {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .filter-btns {
+        margin-bottom: 15px;
+    }
+
+    .filter-btns a {
+        margin-right: 10px;
+    }
 </style>
 @endsection
 
@@ -16,6 +29,16 @@
         <a href="{{ route('admin.products.add') }}" class="btn btn-primary">
             Add Product
         </a>
+    </div>
+
+    {{-- Filter Buttons --}}
+    <div class="col-12 filter-btns">
+        <a href="{{ route('admin.products.index') }}" 
+           class="btn btn-outline-primary {{ request('filter') == null ? 'active' : '' }}">All Products</a>
+        <a href="{{ route('admin.products.index', ['filter' => 'admin']) }}" 
+           class="btn btn-outline-primary {{ request('filter') == 'admin' ? 'active' : '' }}">Admin Products</a>
+        <a href="{{ route('admin.products.index', ['filter' => 'branch']) }}" 
+           class="btn btn-outline-primary {{ request('filter') == 'branch' ? 'active' : '' }}">Branch Products</a>
     </div>
 
      {{-- Success Message --}}
@@ -31,13 +54,11 @@
             <th>S.No</th>
             <th>Product Name</th>
             <th>Category</th>
-            {{-- <th>Price</th> --}}
             <th>Distributor Price</th>
             <th>BV Points</th>
             <th>Weight (g)</th>
             <th>Size and Price</th>
-            {{-- <th>Unit</th>
-            <th>Unit Measurement</th> --}}
+            <th>Status</th>
             <th>Action</th>
         </tr>
       </thead>
@@ -54,18 +75,22 @@
           @endphp
           <tr id="product-row-{{ $product->id }}">
               <td>{{ $loop->iteration }}</td>
-              <td class="d-flex align-items-center gap-3">
-                  <img src="{{ asset('assets/uploads/media-uploader/'.$img) }}"
-                      style="width:50px;height:50px;object-fit:cover;border-radius:4px;">
-                  {{ $product->name }}
+              <td>
+                <div class="d-flex align-items-center gap-3">
+                    <img src="{{ asset('assets/uploads/media-uploader/'.$product->imageFile->path ?? 'assets/common/img/default.jpg') }}"
+                        style="width:50px;height:50px;object-fit:cover;border-radius:4px;">
+                    <div class="d-flex flex-column">
+                        <span>{{ $product->name }}</span>
+                        @if($product->branch)
+                            <p class="branch">Branch: {{ $product->branch->name }}</p>
+                        @endif
+                    </div>
+                </div>
               </td>
               <td>{{ $product->category->category ?? 'N/A' }}</td>
-              {{-- <td>₹{{ number_format($product->price, 2) }}</td> --}}
               <td>₹{{ number_format($product->distributor_price, 2) }}</td>
               <td>{{ $product->bv_points ?? 0 }}</td>
               <td>{{ $product->weight ? number_format($product->weight, 2) . ' g' : '—' }}</td>
-              {{-- <td>{{ $product->unit->name ?? 'N/A' }}</td>
-              <td>{{ $product->unit_measurement ?? '-' }}</td> --}}
               <td>
                   @if(!empty($sizeIds) && !empty($sizePrices))
                       @foreach($sizeIds as $index => $sizeId)
@@ -79,6 +104,13 @@
                   @else
                       <div>—</div>
                   @endif
+              </td>
+              <td>
+                @if($product->is_active)
+                    <span class="badge bg-success">Active</span>
+                @else
+                    <span class="badge bg-secondary">Inactive</span>
+                @endif
               </td>
               <td class="icons">
                   <a href="{{ route('admin.products.edit', $product->id) }}"
@@ -103,7 +135,7 @@
           </tr>
         @empty
           <tr>
-              <td colspan="7" class="text-center text-muted">{{ __('No products available.') }}</td>
+              <td colspan="9" class="text-center text-muted">{{ __('No products available.') }}</td>
           </tr>
         @endforelse
       </tbody>

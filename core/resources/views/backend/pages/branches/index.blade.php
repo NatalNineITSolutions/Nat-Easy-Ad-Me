@@ -2,6 +2,7 @@
 @section('site-title')
     {{__('Branches Management')}}
 @endsection
+
 @section('style')
     <link rel="stylesheet" href="{{asset('assets/backend/css/bootstrap-tagsinput.css')}}">
     <x-summernote.css />
@@ -74,6 +75,7 @@
         }
     </style>
 @endsection
+
 @section('content')
     <div class="row g-4 mt-0">
         <div class="col-12 mt-0">

@@ -33,6 +33,13 @@
                     </li>
                 @endcan
 
+                <li class="dashboard__bottom__list__item @if(request()->is('admin/level-commission')) active @endif">
+                    <a href="{{ route('admin.level.commission') }}">
+                        <i class="las la-percentage"></i>
+                        <span class="icon_title">{{ __('Commission') }}</span>
+                    </a>
+                </li>
+
                 @can('admin-dashboard')
                     <li class="dashboard__bottom__list__item @if(request()->is('admin/vendors')) active @endif">
                         <a href="{{route('admin.vendors')}}"><i class="las la-store"></i>

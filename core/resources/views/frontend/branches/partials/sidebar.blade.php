@@ -43,14 +43,22 @@
 
 <aside class="branch-sidebar" id="branchSidebar">
     <nav class="sidebar-menu">
-        <a href="{{ route('branch.dashboard') }}" class="menu-item">
+        <a href="{{ route('branch.dashboard') }}"
+           class="menu-item {{ request()->routeIs('branch.dashboard') ? 'active' : '' }}">
             <i class="fas fa-tachometer-alt"></i>
             <span>Dashboard</span>
         </a>
 
-        <a href="{{ route('branch.products.all') }}" class="menu-item">
+        <a href="{{ route('branch.products.all') }}"
+           class="menu-item {{ request()->routeIs('branch.products.*') ? 'active' : '' }}">
             <i class="fas fa-boxes"></i>
             <span>All Products</span>
+        </a>
+
+        <a href="{{ route('branch.orders.history') }}"
+           class="menu-item {{ request()->routeIs('branch.orders.*') ? 'active' : '' }}">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Order History</span>
         </a>
     </nav>
 </aside>

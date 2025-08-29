@@ -74,7 +74,7 @@
                                     class="btn btn-sm btn-primary w-50 buy-now-btn"
                                     data-product-id="{{ $product->id }}"
                                     data-quantity="1">
-                                    Buy Nows
+                                    Buy Now
                                   </a>
                               @else
                                   <span class="text-danger fw-bold w-100 text-center">Out of Stock</span>

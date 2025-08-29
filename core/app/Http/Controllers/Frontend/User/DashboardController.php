@@ -1013,7 +1013,6 @@ class DashboardController extends Controller
 
     public function storeOrder(Request $request)
     {
-        Log::info('🟡 storeOrder initiated', $request->all());
 
         try {
             $request->validate([

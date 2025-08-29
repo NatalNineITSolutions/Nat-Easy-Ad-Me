@@ -5,66 +5,66 @@
 @endsection
 
 @section('style')
-<style>
-    .size-btn.selected {
-        background-color: #6c757d;
-        color: white;
-        border-color: #6c757d;
-    }
+    <style>
+        .size-btn.selected {
+            background-color: #6c757d;
+            color: white;
+            border-color: #6c757d;
+        }
 
-    .product-detail-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
-        gap: 40px;
-        padding: 60px 0;
-    }
+        .product-detail-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            padding: 60px 0;
+        }
 
-    .product-detail-image {
-        max-width: 400px;
-        width: 100%;
-    }
+        .product-detail-image {
+            max-width: 400px;
+            width: 100%;
+        }
 
-    .product-detail-image img {
-        width: 100%;
-        height: auto;
-        object-fit: cover;
-        border-radius: 8px;
-        border: 1px solid #e5e7eb;
-    }
+        .product-detail-image img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
 
-    .product-detail-info {
-        max-width: 500px;
-        width: 100%;
-    }
+        .product-detail-info {
+            max-width: 500px;
+            width: 100%;
+        }
 
-    .product-detail-info h2 {
-        font-size: 28px;
-        font-weight: bold;
-    }
+        .product-detail-info h2 {
+            font-size: 28px;
+            font-weight: bold;
+        }
 
-    .product-detail-info .price {
-        font-size: 25px;
-        font-weight: 600;
-        color: #EF4444;
-        margin-bottom: 15px;
-    }
+        .product-detail-info .price {
+            font-size: 25px;
+            font-weight: 600;
+            color: #EF4444;
+            margin-bottom: 15px;
+        }
 
-    .product-detail-info .meta {
-        margin-bottom: 15px;
-        color: #6B7280;
-    }
+        .product-detail-info .meta {
+            margin-bottom: 15px;
+            color: #6B7280;
+        }
 
-    .product-detail-info p.description {
-        color: #4B5563;
-    }
+        .product-detail-info p.description {
+            color: #4B5563;
+        }
 
-    .gst {
-        font-size: 11px;
-        font-weight: 400;
-    }
-</style>
+        .gst {
+            font-size: 11px;
+            font-weight: 400;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -137,12 +137,21 @@
             </div>
 
             <div class="mb-4 d-flex gap-3">
-                <a href="#" class="btn btn-outline-secondary px-4 py-2 w-50 add-to-cart-btn" data-product-id="{{ $product->id }}">
+                @if($product->stock > 0)
+                    <a href="#" 
+                    class="btn btn-outline-secondary px-4 py-2 w-50 add-to-cart-btn" 
+                    data-product-id="{{ $product->id }}">
                     Add to Cart
-                </a>
-                <a href="#" class="btn btn-danger px-4 py-2 w-50 buy-now-btn" data-product-id="{{ $product->id }}">
+                    </a>
+
+                    <a href="#" 
+                    class="btn btn-danger px-4 py-2 w-50 buy-now-btn" 
+                    data-product-id="{{ $product->id }}">
                     Buy Now
-                </a>
+                    </a>
+                @else
+                    <span class="text-danger fw-bold w-100 text-center">Out of Stock</span>
+                @endif
             </div>
         </div>
     </div>

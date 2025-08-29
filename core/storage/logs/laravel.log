@@ -1630,3 +1630,19 @@
 #57 C:\\laragon\\www\\Nat-Easy-Ad-Me\\index.php(54): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #58 {main}
 "} 
+[2025-08-29 10:35:53] production.INFO: LeftBV: 0  
+[2025-08-29 10:35:53] production.INFO: RightBV:0  
+[2025-08-29 11:00:16] production.INFO: 🟡 storeOrder initiated {"_token":"VurEDsPNYbftZs4LsNXHvwAyI89GT74mym0z5F72","total_delivery_charge":"20.00","grand_total":"335.00","bv_points":"10","transaction_id":"pay_RB2FZwtwrW1em4","name":"ben_turner","email":"ben.turner@example.com","phone_number":"9000000001","address":"54, Thiru nagar","country_id":"7","state_id":"80","city_id":"43","is_paid":"1","selected_payment_gateway":"razorpay","trasaction_id":null,"trasaction_attachment":null} 
+[2025-08-29 11:00:16] production.INFO: 📉 Stock reduced {"product_id":33,"old_stock":56,"ordered_qty":1,"new_stock":55} 
+[2025-08-29 11:00:16] production.INFO: ✅ Order created successfully {"order_id":70} 
+[2025-08-29 11:00:16] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":10,"position":"left"} 
+[2025-08-29 11:00:16] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":4771,"left_bv":1338,"right_bv":900} 
+[2025-08-29 11:07:35] production.INFO: 🟡 storeOrder initiated {"_token":"VurEDsPNYbftZs4LsNXHvwAyI89GT74mym0z5F72","total_delivery_charge":"20.00","grand_total":"650.00","bv_points":"20","transaction_id":"pay_RB2NJ7zxMI13Zt","name":"ben_turner","email":"ben.turner@example.com","phone_number":"9000000001","address":"54, Thiru nagar","country_id":"7","state_id":"80","city_id":"43","is_paid":"1","selected_payment_gateway":"razorpay","trasaction_id":null,"trasaction_attachment":null} 
+[2025-08-29 11:07:36] production.INFO: 📉 Stock reduced {"product_id":33,"old_stock":55,"ordered_qty":2,"new_stock":53} 
+[2025-08-29 11:07:36] production.INFO: ✅ Order created successfully {"order_id":71} 
+[2025-08-29 11:07:36] production.INFO: Distributed BV referral to parent {"parent_id":1,"bv_points":20,"position":"left"} 
+[2025-08-29 11:07:36] production.INFO: Incremented flush BV totals {"user_id":1,"bv_id":4773,"left_bv":1358,"right_bv":900} 
+[2025-08-29 11:18:26] production.INFO: LeftBV: 0  
+[2025-08-29 11:18:26] production.INFO: RightBV:0  
+[2025-08-29 11:18:26] production.INFO: LeftBV: 0  
+[2025-08-29 11:18:26] production.INFO: RightBV:0  

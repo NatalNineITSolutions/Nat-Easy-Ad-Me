@@ -92,6 +92,7 @@
                         <th>Image</th>
                         <th>Name</th>
                         <th>Category</th>
+                        <th>Stock</th>
                         <th>Status</th>
                         <th class="text-center">Actions</th>
                     </tr>
@@ -114,6 +115,15 @@
 
                             <!-- Category -->
                             <td>{{ $product->category->category ?? 'N/A' }}</td>
+
+                            <!-- Stock -->
+                            <td>
+                                @if($product->stock > 0)
+                                    <span class="badge bg-primary">{{ $product->stock }}</span>
+                                @else
+                                    <span class="badge bg-danger">Out of Stock</span>
+                                @endif
+                            </td>
 
                             <!-- Status -->
                             <td>

@@ -868,9 +868,9 @@ class DashboardController extends Controller
         }
 
         $products = Product::with('unit')
-                            ->where('is_active', 1)
-                            ->latest()
-                            ->paginate(10);
+            ->where('is_active', 1)
+            ->latest()
+            ->paginate(10);
 
         $sizes = DB::table('sizes')->pluck('name', 'id');
 
@@ -895,12 +895,10 @@ class DashboardController extends Controller
                 ->with('warning', 'Please verify your identity to access all products.');
         }
 
-        // Get only active products
         $products = Product::with(['imageFile', 'unit'])
                         ->where('is_active', 1)
                         ->get();
 
-        // Fetch all sizes (id => name) for mapping size_id in blade
         $sizes = Size::pluck('name', 'id')->toArray();
 
         return view('frontend.user.all-products', compact('products', 'sizes'));
@@ -1072,6 +1070,23 @@ class DashboardController extends Controller
                 'is_paid'               => $request->is_paid ? 1 : 0,
                 'transaction_id'        => $request->transaction_id,
             ]);
+
+            foreach ($cartItems as $item) {
+                $product = $item->product;
+
+                if ($product) {
+                    $oldStock = $product->stock;
+                    $product->stock = max(0, $oldStock - $item->quantity); 
+                    $product->save();
+
+                    Log::info('📉 Stock reduced', [
+                        'product_id' => $product->id,
+                        'old_stock'  => $oldStock,
+                        'ordered_qty'=> $item->quantity,
+                        'new_stock'  => $product->stock
+                    ]);
+                }
+            }
 
             Log::info('✅ Order created successfully', ['order_id' => $order->id]);
 

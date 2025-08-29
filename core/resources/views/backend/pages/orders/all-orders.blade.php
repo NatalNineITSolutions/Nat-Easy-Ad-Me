@@ -18,6 +18,7 @@
                             <th>{{ __('Products') }}</th>
                             <th>{{ __('Quantities') }}</th>
                             <th>{{ __('Prices') }}</th>
+                            <th>{{ __('Stock') }}</th>
                             <th>{{ __('Delivery Charge') }}</th>
                             <th>{{ __('Grand Total') }}</th>
                             <th>{{ __('Statuses') }}</th>
@@ -59,6 +60,19 @@
                                 <td>
                                     @for ($i = 0; $i < $totalProducts; $i++)
                                         <div>₹{{ number_format((float) ($prices[$i] ?? 0), 2) }}</div>
+                                    @endfor
+                                </td>
+
+                                <td>
+                                    @for ($i = 0; $i < $totalProducts; $i++)
+                                        @php $product = \App\Models\Product::find($productIds[$i] ?? null); @endphp
+                                        <div>
+                                            @if($product && $product->stock > 0)
+                                                <span class="badge bg-primary">{{ $product->stock }}</span>
+                                            @else
+                                                <span class="badge bg-danger">Out of Stock</span>
+                                            @endif
+                                        </div>
                                     @endfor
                                 </td>
 

@@ -62,12 +62,23 @@
                                 <small>DP: ₹<span class="dp-price">{{ $product->distributor_price }}</span> | BV: {{ $product->bv_points ?? 0 }}</small>
                             </p>
                             <div class="d-flex gap-2 mt-auto">
-                                <a href="#" class="btn btn-sm btn-outline-secondary w-50 add-to-cart-btn"
+                              @if($product->stock > 0)
+                                  <a href="#" 
+                                    class="btn btn-sm btn-outline-secondary w-50 add-to-cart-btn"
                                     data-product-id="{{ $product->id }}"
-                                    data-quantity="1">Add to Cart</a>
-                                <a href="#" class="btn btn-sm btn-primary w-50 buy-now-btn"
+                                    data-quantity="1">
+                                    Add to Cart
+                                  </a>
+
+                                  <a href="#" 
+                                    class="btn btn-sm btn-primary w-50 buy-now-btn"
                                     data-product-id="{{ $product->id }}"
-                                    data-quantity="1">Buy Now</a>
+                                    data-quantity="1">
+                                    Buy Now
+                                  </a>
+                              @else
+                                  <span class="text-danger fw-bold w-100 text-center">Out of Stock</span>
+                              @endif
                             </div>
                         </div>
                     </div>

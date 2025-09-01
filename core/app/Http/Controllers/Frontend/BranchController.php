@@ -17,6 +17,8 @@ use App\Actions\Media\MediaHelper;
 use App\Models\Backend\MediaUpload;
 use App\Helpers\FlashMsg;
 use Intervention\Image\Facades\Image;
+use App\Models\OrderDetail;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class BranchController extends Controller
 {
@@ -66,10 +68,58 @@ class BranchController extends Controller
     {
         $branchId = auth()->guard('branch')->id();
         $products = Product::where('branch_id', $branchId)
-            ->with(['category', 'imageFile']) // eager load to prevent N+1 queries
+            ->with(['category', 'imageFile']) 
             ->get();
 
         return view('frontend.branches.products.all-products', compact('products'));
+    }
+
+    public function orderHistory()
+    {
+        $branchId = auth()->guard('branch')->id();
+
+        $orders = \DB::table('order_details')
+            ->join('products', 'order_details.product_id', '=', 'products.id')
+            ->join('users', 'order_details.user_id', '=', 'users.id') // join users table
+            ->where('products.branch_id', $branchId)
+            ->select(
+                'order_details.*',
+                'products.name as product_name',
+                'products.branch_id',
+                'users.first_name',
+                'users.last_name',
+                'users.email',
+                'order_details.created_at as order_date'
+            )
+            ->orderBy('order_details.created_at', 'desc')
+            ->get();
+
+        return view('frontend.branches.products.order-history', compact('orders'));
+    }
+    
+    public function downloadInvoice($id)
+    {
+        // Fetch order details by ID
+        $order = OrderDetail::with(['city', 'state', 'country'])->findOrFail($id);
+
+        // Load Blade view into PDF
+        $pdf = Pdf::loadView('frontend.branches.products.order-invoice', compact('order'));
+
+        // Download file with dynamic name
+        return $pdf->download('invoice-order-' . $order->id . '.pdf');
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:pending,packaging,shipped,delivered',
+        ]);
+
+        DB::table('order_details')
+            ->where('id', $id)
+            ->update(['order_status' => $request->status]);
+
+        return back()->with('success', 'Order status updated successfully.');
     }
 
     public function branchDashboard()

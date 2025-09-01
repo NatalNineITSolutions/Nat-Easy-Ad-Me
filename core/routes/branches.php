@@ -12,17 +12,14 @@ Route::prefix('branch')->controller(BranchController::class)->group(function () 
     Route::get('info', 'branchdashboard')->name('branch.dashboard');
 
     Route::get('products', 'allProducts')->name('branch.products.all');
-    
-    // Create / Store
     Route::get('productupload', 'productUpload')->name('branch.upload.products');
     Route::post('products/store', 'store')->name('branch.products.store');
-
-    // Edit / Update
     Route::get('products/edit/{id}', 'edit')->name('branch.products.edit');
     Route::put('products/update/{id}', 'update')->name('branch.products.update');
-
-    // Delete
     Route::delete('products/delete/{id}', 'destroy')->name('branch.products.delete');
+    Route::get('orders', 'orderHistory')->name('branch.orders.history');
+    Route::get('products/{id}/invoice', 'downloadInvoice')->name('branch.products.invoice');
+    Route::put('branch/orders/{id}/update-status', 'updateStatus')->name('branch.orders.update.status');
 });
 
 Route::prefix('branch')->name('branch.')->controller(BranchController::class)->group(function () {

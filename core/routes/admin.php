@@ -32,6 +32,7 @@ use App\Http\Controllers\Backend\ShippingController;
 use App\Http\Controllers\Backend\OrderController;
 use App\Http\Controllers\Backend\AttributeController;
 use App\Http\Controllers\Backend\BranchesController;
+use App\Http\Controllers\Backend\LevelCommissionController;
 
 
 Route::middleware(['auth','setlang'])->group(function () {
@@ -175,7 +176,6 @@ Route::middleware(['auth','setlang'])->group(function () {
         });
     });
 
-
     // Product Manage
     Route::group(['prefix' => 'products'], function () {
         Route::controller(\App\Http\Controllers\Backend\ProductController::class)->group(function () {
@@ -272,7 +272,6 @@ Route::middleware(['auth','setlang'])->group(function () {
     Route::get('/password-change', [AdminProfileController::class, 'adminPassword'])->name('admin.profile.password.change');
     Route::post('/password-change', [AdminProfileController::class, 'adminPasswordChange']);
 
-
     //account suspend active
     Route::group(['prefix' => 'account'], function () {
         Route::controller(\App\Http\Controllers\Backend\SuspendActiveController::class)->group(function () {
@@ -280,7 +279,6 @@ Route::middleware(['auth','setlang'])->group(function () {
             Route::post('unsuspend/{id}', 'unsuspend')->name('admin.account.unsuspend');
         });
     });
-
 
     // Payout Manage
     Route::group(['prefix' => 'payout'], function () {
@@ -299,6 +297,13 @@ Route::middleware(['auth','setlang'])->group(function () {
     Route::post('/branches/store', [BranchesController::class, 'store'])->name('admin.branches.store')->permission('branch-add');
     Route::post('/branches/update/{id}', [BranchesController::class, 'update'])->name('admin.branches.update')->permission('branch-edit');
     Route::post('/branches/delete/{id}', [BranchesController::class, 'destroy'])->name('admin.branches.delete')->permission('branch-delete');
+
+    // Level Based Commission
+    Route::get('/level-commission', [LevelCommissionController::class, 'index'])->name('admin.level.commission');
+    Route::post('/level-commission/store', [LevelCommissionController::class, 'store'])->name('admin.level.commission.store');
+    Route::get('/level-commission/{id}/edit', [LevelCommissionController::class, 'edit'])->name('admin.level.commission.edit');
+    Route::post('/level-commission/{id}/update', [LevelCommissionController::class, 'update'])->name('admin.level.commission.update');
+    Route::delete('/level-commission/{id}', [LevelCommissionController::class, 'destroy'])->name('admin.level.commission.delete');
 
     // Vendors Manage
     Route::get('/vendors', [VendorController::class, 'index'])->name('admin.vendors');

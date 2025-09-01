@@ -17,18 +17,32 @@ class OrderController extends Controller
         return view('backend.pages.orders.all-orders', compact('orders'));
     }
 
-    public function updateStatus(Request $request, $id)
-    {
-        $request->validate([
-            'order_status' => 'required|in:pending,packaging,shipped,delivered'
-        ]);
+    // public function updateStatus(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'order_status' => 'required|in:pending,packaging,shipped,delivered'
+    //     ]);
 
-        $order = OrderDetail::findOrFail($id);
-        $order->order_status = $request->order_status;
-        $order->save();
+    //     $order = OrderDetail::findOrFail($id);
+    //     $order->order_status = $request->order_status;
+    //     $order->save();
 
-        return redirect()->back()->with('success', 'Order status updated successfully.');
-    }
+    //     return redirect()->back()->with('success', 'Order status updated successfully.');
+    // }
+
+    // In your OrderDetailController or appropriate controller
+public function updateStatus(Request $request, $id)
+{
+    $request->validate([
+        'order_status' => 'required|in:pending,packaging,shipped,delivered',
+    ]);
+
+    $orderDetail = OrderDetail::findOrFail($id);
+    $orderDetail->order_status = $request->order_status;
+    $orderDetail->save();
+
+    return back()->with('success', 'Order status updated successfully.');
+}
 
     public function updateProductStatus(Request $request, OrderDetail $order)
     {

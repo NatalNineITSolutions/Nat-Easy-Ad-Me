@@ -679,6 +679,10 @@ Route::middleware(['auth','setlang'])->group(function () {
         Route::get('/database-upgrade', [GeneralSettingsController::class, 'databaseUpgrade'])->name('admin.general.database.upgrade')->permission('database-upgrade-setting');
         Route::post('/database-upgrade', [GeneralSettingsController::class, 'databaseUpgradePost']);
 
+        //branch commission
+        Route::get('/branch-commission', [GeneralSettingsController::class, 'branchCommission'])->name('admin.general.branch.commission')->permission('branch-commission-settings');
+        Route::post('/branch-commission', [GeneralSettingsController::class, 'updateBranchCommission']);
+
         Route::post('/license-setting-verify', [GeneralSettingsController::class, 'licenseKeyGenerate'])->name('admin.general.license.key.generate')->permission('license-key-generate');
         Route::get('/update-check', [GeneralSettingsController::class, 'updateVersionCheck'])->name('admin.general.update.version.check')->permission('update-version-check');
         Route::post('/download-update/{productId}/{tenant}', [GeneralSettingsController::class, 'updateDownloadLatestVersion'])->name('admin.general.update.download.settings');

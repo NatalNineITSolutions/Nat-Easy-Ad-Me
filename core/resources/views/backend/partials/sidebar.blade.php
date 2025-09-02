@@ -34,11 +34,11 @@
                 @endcan
 
                 <li class="dashboard__bottom__list__item @if(request()->is('admin/level-commission')) active @endif">
-                    <a href="{{ route('admin.level.commission') }}">
-                        <i class="las la-percentage"></i>
-                        <span class="icon_title">{{ __('Commission') }}</span>
-                    </a>
+                    <a href="{{ route('admin.level.commission') }}"> <i class="las la-percentage"></i> 
+                        <span class="icon_title">{{ __('Commission') }}</span> 
+                    </a> 
                 </li>
+
 
                 @can('admin-dashboard')
                     <li class="dashboard__bottom__list__item @if(request()->is('admin/vendors')) active @endif">
@@ -582,6 +582,10 @@
                         <li class="dashboard__bottom__list__item @if(request()->is('admin/general-settings/database-upgrade')) selected @endif">
                             <a href="{{ route('admin.general.database.upgrade') }}">{{ __('Database Upgrade') }}</a>
                         </li>
+                     @endcan
+                     @can('admin-dashboard')
+                        <li class="dashboard__bottom__list__item @if(request()->is('admin/branches')) selected @endif">
+                            <a href="{{ route('admin.general.branch.commission') }}">{{ __('Branch Commission') }}</a></li>
                      @endcan
                     </ul>
                 </li>

@@ -30,3 +30,6 @@ Route::prefix('branch')->name('branch.')->controller(BranchController::class)->g
     Route::get('media-upload/page', 'allUploadMediaImagesForPage')->name('upload.media.images.page')->middleware('permission:media-upload');
     Route::post('media-upload/delete', 'deleteUploadMediaFile')->name('upload.media.file.delete')->middleware('permission:media-upload-delete');
 });
+
+   // Commission page
+    Route::get('/commission', [BranchController::class, 'commission'])->name('branch.commission');

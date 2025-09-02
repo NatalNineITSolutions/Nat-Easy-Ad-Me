@@ -418,4 +418,11 @@ class BranchController extends Controller
     {
         return response()->json(MediaHelper::load_more_images($request));
     }
+
+    public function commission()
+    {
+        // later we can fetch commission-related data here
+        return view('frontend.branches.commission.index');
+    }
+    
 }

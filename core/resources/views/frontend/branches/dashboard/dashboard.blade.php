@@ -411,6 +411,15 @@
                 </div>
             </div>
 
+            <div class="card shadow-sm border-0 rounded-3 mb-4">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <h2 class="fw-bold text-primary">
+                        ₹ {{ number_format($dailyCommission ?? 0, 2) }}
+                    </h2>        
+                    <i class="fa-solid fa-sack-dollar fa-3x text-success"></i>
+                </div>
+            </div>
+
         </main>
     </div>
 

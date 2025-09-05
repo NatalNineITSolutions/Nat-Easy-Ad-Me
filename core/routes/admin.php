@@ -294,6 +294,7 @@ Route::middleware(['auth','setlang'])->group(function () {
 
     // Branches Manage
     Route::get('/branches', [BranchesController::class, 'index'])->name('admin.branches');
+    Route::get('/branches/{id}/commission', [BranchesController::class, 'commissionDetails'])->name('branch.commission.details');
     Route::post('/branches/store', [BranchesController::class, 'store'])->name('admin.branches.store')->permission('branch-add');
     Route::post('/branches/update/{id}', [BranchesController::class, 'update'])->name('admin.branches.update')->permission('branch-edit');
     Route::post('/branches/delete/{id}', [BranchesController::class, 'destroy'])->name('admin.branches.delete')->permission('branch-delete');

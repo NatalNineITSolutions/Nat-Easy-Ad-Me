@@ -1,79 +1,82 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Branch Commission</title>
+@extends('backend.admin-master')
+@section('site-title')
+    {{__('Branches Commission')}}
+@endsection
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <x-branch.css />
+@section('style')
+    <link rel="stylesheet" href="{{asset('assets/backend/css/bootstrap-tagsinput.css')}}">
+    <x-summernote.css />
+    <x-media.css />
     <style>
-        body {
-            background-color: #F1F5F9;
-            font-family: 'Inter', sans-serif;
+        .debug-panel {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #dc3545;
         }
-
-        .branch-main-content {
-            margin-left: 280px;
-            padding: 2rem;
-            margin-top: 10px;
-        }
-
-        .table-container {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        }
-
-        .table thead {
-            background: #f8fafc;
+        .debug-title {
+            color: #dc3545;
             font-weight: 600;
-            color: #1e293b;
+            margin-bottom: 15px;
         }
-
-        .table td, .table th {
-            vertical-align: middle;
+        .debug-content {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 14px;
+            max-height: 200px;
+            overflow-y: auto;
         }
-
-        .badge {
-            font-size: 0.85rem;
-            padding: 0.5em 0.75em;
-            border-radius: 8px;
+        .modal-content {
+            border-radius: 10px;
+            border: none;
         }
-
-        .badge-success {
-            background-color: #10B981;
-            color: white;
+        .modal-header {
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            border-radius: 10px 10px 0 0;
+            padding: 15px 20px;
         }
-
-        .badge-danger {
-            background-color: #EF4444;
-            color: white;
+        .modal-title {
+            font-weight: 600;
+            color: #2c3e50;
         }
-
+        .modal-body {
+            padding: 20px;
+        }
+        .modal-footer {
+            border-top: 1px solid #e9ecef;
+            border-radius: 0 0 10px 10px;
+            padding: 15px 20px;
+        }
+        .btn-close:focus {
+            box-shadow: none;
+        }
+        .form__input__single {
+            margin-bottom: 15px;
+        }
+        .form-control:focus {
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+            border-color: #4299e1;
+        }
+        .alert-debug {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
         .action-buttons {
             display: flex;
-            gap: 0.5rem;
+            gap: 5px;
         }
-
-        .btn-sm {
-            padding: 0.35rem 0.65rem;
-            font-size: 0.85rem;
+        .action-buttons form {
+            display: inline;
         }
     </style>
-</head>
-<body>
-<div class="branch-dashboard">
-    <!-- Header -->
-    @include('frontend.branches.partials.header')
+@endsection
 
-    <!-- Sidebar -->
-    @include('frontend.branches.partials.sidebar')
-
+@section('content')
     <main class="branch-main-content">
 
         <!-- Total Commission Box -->
@@ -92,7 +95,7 @@
         <!-- Filter Section -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="mb-0">Commission History</h4>
-            <form method="GET" action="{{ route('branch.commission') }}" class="d-flex gap-2">
+            <form method="GET" action="{{ route('branch.commission.details', ['id' => $branchId]) }}" class="d-flex gap-2">
                 <select name="filter" class="form-select" onchange="this.form.submit()">
                     <option value="daily" {{ request('filter') == 'daily' ? 'selected' : '' }}>Daily Commission</option>
                     <option value="monthly" {{ request('filter') == 'monthly' ? 'selected' : '' }}>Monthly Commission</option>
@@ -141,9 +144,19 @@
         </div>
 
     </main>
-</div>
+@endsection
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<x-branch.js />
-</body>
-</html>
+@section('script')
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.delete-form').forEach(form => {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (confirm('Are you sure you want to delete this product?')) {
+          form.submit();
+        }
+      });
+    });
+  });
+</script>
+@endsection

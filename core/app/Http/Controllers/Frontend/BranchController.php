@@ -18,6 +18,7 @@ use App\Models\Backend\MediaUpload;
 use App\Helpers\FlashMsg;
 use Intervention\Image\Facades\Image;
 use App\Models\OrderDetail;
+use App\Models\BranchCommission;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class BranchController extends Controller
@@ -421,8 +422,35 @@ class BranchController extends Controller
 
     public function commission()
     {
-        // later we can fetch commission-related data here
-        return view('frontend.branches.commission.index');
+        $branchId = auth('branch')->id();
+        $filter = request('filter', 'all');
+
+        $query = BranchCommission::with('order')
+            ->where('branch_id', $branchId);
+
+        if ($filter === 'daily') {
+            $query->whereDate('created_at', now()->toDateString());
+        } elseif ($filter === 'monthly') {
+                $query->whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year);
+            }
+
+        $commissions = $query->latest()->get();
+        $totalCommission = $commissions->sum('commission_amount');
+
+        return view('frontend.branches.commission.index', compact('commissions', 'totalCommission'));
     }
+
+    public function dashboard()
+{
+    $branchId = auth('branch')->id();
+
+    // ✅ Daily commission
+    $dailyCommission = BranchCommission::where('branch_id', $branchId)
+        ->whereDate('created_at', now()->toDateString())
+        ->sum('commission_amount');
+
+    return view('frontend.branches.dashboard', compact('dailyCommission'));
+}
     
 }

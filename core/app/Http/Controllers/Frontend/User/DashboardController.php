@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Product;
 use App\Models\DeliveryCharge;
 use App\Models\OrderDetail;
+use App\Models\BranchCommission;
 use App\Services\BVDistributionService;
 use App\Models\Cart;
 use App\Models\Size;
@@ -1041,21 +1042,24 @@ class DashboardController extends Controller
             $sizes = $cartItems->map(fn($item) => optional($item->size)->name ?? '—')->implode('|');
 
             $lineTotals = $cartItems->map(function ($item) {
-                $unitPrice = $item->product->distributor_price + 
-                            ($item->product->distributor_price * $item->product->gst / 100);
-                return number_format($unitPrice * $item->quantity, 2, '.', '');
+            $unitPrice = $item->product->distributor_price +
+                        ($item->product->distributor_price * $item->product->gst / 100);
+            return number_format($unitPrice * $item->quantity, 2, '.', '');
             })->implode('|');
 
             $totalBV = $cartItems->sum(fn($item) => $item->product->bv_points * $item->quantity);
 
-            // ✅ Create order
+        
+            $commissionPercent = (float) get_static_option('Branch') ?? 0;
+
+        
             $order = OrderDetail::create([
                 'user_id'               => $user->id,
                 'product_id'            => $productIds,
                 'product_quantity'      => $quantities,
                 'product_total_price'   => $lineTotals,
-                'size'                  => $sizes,             
-                'total_bv'              => $totalBV,           
+                'size'                  => $sizes,
+                'total_bv'              => $totalBV,
                 'total_delivery_charge' => $request->total_delivery_charge ?? 0,
                 'grand_total'           => $request->grand_total,
                 'name'                  => $request->name,
@@ -1065,31 +1069,48 @@ class DashboardController extends Controller
                 'country_id'            => $request->country_id,
                 'state_id'              => $request->state_id,
                 'city_id'               => $request->city_id,
-                'order_status' => 'pending',
+                'order_status'          => 'pending',
                 'is_paid'               => $request->is_paid ? 1 : 0,
                 'transaction_id'        => $request->transaction_id,
             ]);
 
+        
             foreach ($cartItems as $item) {
                 $product = $item->product;
 
                 if ($product) {
                     $oldStock = $product->stock;
-                    $product->stock = max(0, $oldStock - $item->quantity); 
+                    $product->stock = max(0, $oldStock - $item->quantity);
                     $product->save();
 
-                    Log::info('📉 Stock reduced', [
-                        'product_id' => $product->id,
-                        'old_stock'  => $oldStock,
-                        'ordered_qty'=> $item->quantity,
-                        'new_stock'  => $product->stock
+                
+                    $bv = ($product->bv_points ?? 0) * $item->quantity;
+                    $commissionAmount = $bv * ($commissionPercent / 100);
+
+                
+                    if ($product->branch_id) { 
+                        BranchCommission::create([
+                            'branch_id'         => $product->branch_id,
+                            'order_id'          => $order->id,
+                            'total_bv'          => $bv,
+                            'commission_percent'=> $commissionPercent,
+                            'commission_amount' => $commissionAmount,
+                            'status'            => 'earned',
+                        ]);
+                    }
+
+                    Log::info('Stock reduced + Commission recorded', [
+                        'product_id'        => $product->id,
+                        'ordered_qty'       => $item->quantity,
+                        'old_stock'         => $oldStock,
+                        'new_stock'         => $product->stock,
+                        'commission_amount' => $commissionAmount,
+                        'branch_id'         => $product->branch_id,
                     ]);
                 }
             }
 
-            Log::info('✅ Order created successfully', ['order_id' => $order->id]);
 
-            // Update user BV
             $user->self_purchased_bv += $totalBV;
             $user->save();
 
@@ -1102,7 +1123,7 @@ class DashboardController extends Controller
                 'position'      => $user->position,
             ]);
 
-            // Distribute BV to sponsor
+        // Distribute BV to sponsor (your existing code)
             if ($user->sponsor_id) {
                 $sponsor = User::find($user->sponsor_id);
                 if ($sponsor) {
@@ -1112,12 +1133,11 @@ class DashboardController extends Controller
                         $totalBV,
                         $user->membership_id,
                         $user->id,
-                        'Referral from products'
+                       'Referral from products'
                     );
                 }
             }
 
-            // Clear cart
             Cart::where('user_id', $user->id)->delete();
 
             return redirect()

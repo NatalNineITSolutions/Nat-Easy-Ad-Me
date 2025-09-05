@@ -38,95 +38,110 @@ class AdminDashboardController extends Controller
     }
 
     public function adminDashboard()
-    {
-        // membership module
-        $module_check = false;
-        if (moduleExists('Membership')){
-          if (membershipModuleExistsAndEnable('Membership')){
-              $module_check = true;
-             $total_user_membership = UserMembership::count();
-              $total_membership_earning = MembershipHistory::where('payment_status', 'complete')
-                  ->where('payment_gateway', '!=', 'Trial')
-                  ->where('price', '!=', '0')
-                  ->sum('price');
-          }
+{
+
+    $module_check = false;
+    if (moduleExists('Membership')){
+        if (membershipModuleExistsAndEnable('Membership')){
+            $module_check = true;
+            $total_user_membership = UserMembership::count();
+            $total_membership_earning = MembershipHistory::where('payment_status', 'complete')
+                ->where('payment_gateway', '!=', 'Trial')
+                ->where('price', '!=', '0')
+                ->sum('price');
         }
-
-        $wallet_module_check = false;
-        if (moduleExists('Wallet')){
-          if (membershipModuleExistsAndEnable('Wallet')){
-              $wallet_module_check = true;
-             $total_user_wallet = Wallet::count();
-          }
-        }
-
-        $dashboardData = [
-            ['title' => __('Total Admins'),  'route' => 'admin.all','value' => Admin::count()],
-            ['title' => __('Total Users'), 'route' => 'admin.user.all', 'value' => User::count()],
-            ['title' => __('Total Listings'), 'value' => Listing::count()],
-            ['title' => __('Total Guest Listings'),  'route' => 'admin.guest.all.listings','value' => Listing::guestListings()->count()],
-            ['title' => __('Total User Listings'),  'route' => 'admin.user.all.listings','value' => Listing::userListings()->count()],
-            ['title' => __('Total Admin Listings'),  'route' => 'admin.all.listings','value' => Listing::adminListings()->count()],
-            ['title' => __('Total Blogs'), 'route' => 'admin.all.blog', 'value' => Blog::count()],
-            ['title' => __('Total Brand'), 'route' => 'admin.brand.all', 'value' => Brand::count()],
-            ['title' => __('Total Categories'), 'route' => 'admin.category', 'value' => Category::count()],
-            ['title' => __('Total Subcategories'),  'route' => 'admin.subcategory','value' => SubCategory::count()],
-            ['title' => __('Total Child Categories'), 'route' => 'admin.child.category', 'value' => ChildCategory::count()],
-            ['title' => __('Total Countries'),  'route' => 'admin.country.all','value' => Country::count()],
-            ['title' => __('Total States'),  'route' => 'admin.state.all','value' => State::count()],
-            ['title' => __('Total Cities'),  'route' => 'admin.city.all','value' => City::count()],
-            ['title' => __('Total Tags'),  'route' => 'admin.blog.tags','value' => Tag::count()],
-            ['title' => __('Total 	Tickets'),  'route' => 'admin.ticket','value' => Ticket::count()],
-            ['title' => __('Total 	Newsletter'), 'route' => 'admin.newsletter.index', 'value' => NewsLetter::count()],
-            ['title' => __('Total 	Advertisements'), 'route' => 'admin.advertisement', 'value' => Advertisement::count()],
-            ['title' => __('Total 	Languages'), 'route' => 'admin.languages', 'value' => Language::count()],
-            ['title' => __('Total 	Media Images'), 'route' => 'admin.upload.media.images.page', 'value' => MediaUpload::count()],
-            ['title' => __('Total 	Notice'), 'route' => 'admin.all.notice', 'value' => Notice::count()],
-        ];
-
-        // Conditionally add the User Membership data if the module is enabled
-        if ($module_check === true) {
-            $dashboardData[] = ['title' => __('Total Member'), 'route' => 'admin.user.membership.all', 'value' => $total_user_membership];
-            $dashboardData[] = ['title' => __('Total Membership Earnings'), 'value' => float_amount_with_currency_symbol($total_membership_earning)];
-        }
-
-        if ($wallet_module_check === true) {
-            $dashboardData[] = ['title' => __('Total Wallet User'), 'route' => 'admin.wallet.lists', 'value' => $total_user_wallet];
-        }
-
-        $total_user = User::count();
-        $total_listings = Listing::count();
-        $recent_users = User::latest()->take(5)->get();
-        $recent_listings = Listing::latest()->take(5)->get();
-
-        $page = 1; // Current page number
-        $pageSize = 900; // Number of records per page
-        $offset = ($page - 1) * $pageSize;
-
-        $visitors = Visitor::select('city', 'country_code', 'latitude', 'longitude', 'country', DB::raw('count(*) as total'))
-            ->whereNotNull('country')
-            ->groupBy('city', 'country_code', 'latitude', 'longitude', 'country')
-            ->offset($offset)
-            ->limit($pageSize)
-            ->get();
-
-
-        $countryCodes = Visitor::select('country_code')
-            ->whereNotNull('country')
-            ->offset($offset)
-            ->limit($pageSize)
-            ->get();
-
-        return view('backend.pages.dashboard.dashboard', compact(
-            'dashboardData',
-            'total_user',
-            'recent_users',
-            'recent_listings',
-            'total_listings',
-            'visitors',
-            'countryCodes'
-        ));
     }
+
+    $wallet_module_check = false;
+    if (moduleExists('Wallet')){
+        if (membershipModuleExistsAndEnable('Wallet')){
+            $wallet_module_check = true;
+            $total_user_wallet = Wallet::count();
+        }
+    }
+
+    $dashboardData = [
+        ['title' => __('Total Admins'),  'route' => 'admin.all','value' => Admin::count()],
+        ['title' => __('Total Users'), 'route' => 'admin.user.all', 'value' => User::count()],
+        ['title' => __('Total Listings'), 'value' => Listing::count()],
+        ['title' => __('Total Guest Listings'),  'route' => 'admin.guest.all.listings','value' => Listing::guestListings()->count()],
+        ['title' => __('Total User Listings'),  'route' => 'admin.user.all.listings','value' => Listing::userListings()->count()],
+        ['title' => __('Total Admin Listings'),  'route' => 'admin.all.listings','value' => Listing::adminListings()->count()],
+        ['title' => __('Total Blogs'), 'route' => 'admin.all.blog', 'value' => Blog::count()],
+        ['title' => __('Total Brand'), 'route' => 'admin.brand.all', 'value' => Brand::count()],
+        ['title' => __('Total Categories'), 'route' => 'admin.category', 'value' => Category::count()],
+        ['title' => __('Total Subcategories'),  'route' => 'admin.subcategory','value' => SubCategory::count()],
+        ['title' => __('Total Child Categories'), 'route' => 'admin.child.category', 'value' => ChildCategory::count()],
+        ['title' => __('Total Countries'),  'route' => 'admin.country.all','value' => Country::count()],
+        ['title' => __('Total States'),  'route' => 'admin.state.all','value' => State::count()],
+        ['title' => __('Total Cities'),  'route' => 'admin.city.all','value' => City::count()],
+        ['title' => __('Total Tags'),  'route' => 'admin.blog.tags','value' => Tag::count()],
+        ['title' => __('Total   Tickets'),  'route' => 'admin.ticket','value' => Ticket::count()],
+        ['title' => __('Total   Newsletter'), 'route' => 'admin.newsletter.index', 'value' => NewsLetter::count()],
+        ['title' => __('Total   Advertisements'), 'route' => 'admin.advertisement', 'value' => Advertisement::count()],
+        ['title' => __('Total   Languages'), 'route' => 'admin.languages', 'value' => Language::count()],
+        ['title' => __('Total   Media Images'), 'route' => 'admin.upload.media.images.page', 'value' => MediaUpload::count()],
+        ['title' => __('Total   Notice'), 'route' => 'admin.all.notice', 'value' => Notice::count()],
+    ];
+
+    
+    if ($module_check === true) {
+        $dashboardData[] = ['title' => __('Total Member'), 'route' => 'admin.user.membership.all', 'value' => $total_user_membership];
+        $dashboardData[] = ['title' => __('Total Membership Earnings'), 'value' => float_amount_with_currency_symbol($total_membership_earning)];
+    }
+
+    if ($wallet_module_check === true) {
+        $dashboardData[] = ['title' => __('Total Wallet User'), 'route' => 'admin.wallet.lists', 'value' => $total_user_wallet];
+    }
+
+    
+    $totalCommission = \App\Models\BranchCommission::sum('commission_amount');
+    $commissionPercent = \App\Models\BranchCommission::avg('commission_percent');
+
+    $dashboardData[] = [
+        'title' => __('Total Commissions'),
+        'value' => number_format($totalCommission, 2),
+        'route' => 'branch.commission.details' 
+    ];
+
+    $dashboardData[] = [
+        'title' => __('Average Commission Rate'),
+        'value' => is_numeric($commissionPercent) ? number_format($commissionPercent, 2) . '%' : 'N/A'
+    ];
+
+    $total_user = User::count();
+    $total_listings = Listing::count();
+    $recent_users = User::latest()->take(5)->get();
+    $recent_listings = Listing::latest()->take(5)->get();
+
+    $page = 1; 
+    $pageSize = 900; 
+    $offset = ($page - 1) * $pageSize;
+
+    $visitors = Visitor::select('city', 'country_code', 'latitude', 'longitude', 'country', DB::raw('count(*) as total'))
+        ->whereNotNull('country')
+        ->groupBy('city', 'country_code', 'latitude', 'longitude', 'country')
+        ->offset($offset)
+        ->limit($pageSize)
+        ->get();
+
+    $countryCodes = Visitor::select('country_code')
+        ->whereNotNull('country')
+        ->offset($offset)
+        ->limit($pageSize)
+        ->get();
+
+    return view('backend.pages.dashboard.dashboard', compact(
+        'dashboardData',
+        'total_user',
+        'recent_users',
+        'recent_listings',
+        'total_listings',
+        'visitors',
+        'countryCodes'
+    ));
+}
+
 
     public function getUserData(Request $request) {
         $interval = $request->input('interval');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Branch;
+use App\Models\BranchCommission;
 use Illuminate\Support\Facades\Hash;
 
 class BranchesController extends Controller
@@ -116,6 +117,27 @@ class BranchesController extends Controller
                 ]);
         }
     }
+
+    public function commissionDetails($id)
+{
+    $branchId = $id;
+    $filter = request('filter', 'all');
+
+    $query = BranchCommission::with('order')
+        ->where('branch_id', $branchId);
+
+    if ($filter === 'daily') {
+        $query->whereDate('created_at', now()->toDateString());
+    } elseif ($filter === 'monthly') {
+        $query->whereMonth('created_at', now()->month)
+              ->whereYear('created_at', now()->year);
+    }
+
+    $commissions = $query->latest()->get();
+    $totalCommission = $commissions->sum('commission_amount');
+
+    return view('backend.pages.branches.commission', compact('commissions', 'totalCommission', 'branchId'));
+}
 }
     
 

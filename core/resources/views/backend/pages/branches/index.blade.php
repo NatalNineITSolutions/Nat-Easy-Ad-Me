@@ -143,6 +143,10 @@
                                                     {{ __('Delete') }}
                                                 </button>
                                             </form>
+                                            <a href="{{ route('branch.commission.details', $branch->id) }}"
+                                                class="btn btn-info btn-sm">
+                                                {{ __('View Details') }}
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>

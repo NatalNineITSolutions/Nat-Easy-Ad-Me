@@ -442,15 +442,15 @@ class BranchController extends Controller
     }
 
     public function dashboard()
-{
-    $branchId = auth('branch')->id();
+    {
+        $branchId = auth('branch')->id();
 
-    // ✅ Daily commission
-    $dailyCommission = BranchCommission::where('branch_id', $branchId)
-        ->whereDate('created_at', now()->toDateString())
-        ->sum('commission_amount');
+    
+        $dailyCommission = BranchCommission::where('branch_id', $branchId)
+            ->whereDate('created_at', now()->toDateString())
+            ->sum('commission_amount');
 
-    return view('frontend.branches.dashboard', compact('dailyCommission'));
-}
+        return view('frontend.branches.dashboard', compact('dailyCommission'));
+    }
     
 }

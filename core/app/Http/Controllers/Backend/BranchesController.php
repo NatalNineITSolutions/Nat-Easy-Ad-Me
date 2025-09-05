@@ -119,25 +119,25 @@ class BranchesController extends Controller
     }
 
     public function commissionDetails($id)
-{
-    $branchId = $id;
-    $filter = request('filter', 'all');
+    {
+        $branchId = $id;
+        $filter = request('filter', 'all');
 
-    $query = BranchCommission::with('order')
-        ->where('branch_id', $branchId);
+        $query = BranchCommission::with('order')
+            ->where('branch_id', $branchId);
 
-    if ($filter === 'daily') {
-        $query->whereDate('created_at', now()->toDateString());
-    } elseif ($filter === 'monthly') {
-        $query->whereMonth('created_at', now()->month)
-              ->whereYear('created_at', now()->year);
+        if ($filter === 'daily') {
+            $query->whereDate('created_at', now()->toDateString());
+        } elseif ($filter === 'monthly') {
+            $query->whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year);
+            }
+
+        $commissions = $query->latest()->get();
+        $totalCommission = $commissions->sum('commission_amount');
+
+        return view('backend.pages.branches.commission', compact('commissions', 'totalCommission', 'branchId'));
     }
-
-    $commissions = $query->latest()->get();
-    $totalCommission = $commissions->sum('commission_amount');
-
-    return view('backend.pages.branches.commission', compact('commissions', 'totalCommission', 'branchId'));
-}
 }
     
 

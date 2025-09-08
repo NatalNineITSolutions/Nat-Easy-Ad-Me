@@ -299,6 +299,13 @@ Route::middleware(['auth','setlang'])->group(function () {
     Route::post('/branches/update/{id}', [BranchesController::class, 'update'])->name('admin.branches.update')->permission('branch-edit');
     Route::post('/branches/delete/{id}', [BranchesController::class, 'destroy'])->name('admin.branches.delete')->permission('branch-delete');
 
+    // Branch Payout
+    Route::get('/branch-payout', [BranchesController::class, 'payout'])->name('admin.branch.payout');
+    Route::post('/branch-payout/generate', [BranchesController::class, 'generatePayout'])
+    ->name('admin.branch.payout.generate');
+    Route::get('/branch-payout-history', [BranchesController::class, 'branchPayoutHistory'])->name('admin.branch.payout.history');
+
+
     // Level Based Commission
     Route::get('/level-commission', [LevelCommissionController::class, 'index'])->name('admin.level.commission');
     Route::post('/level-commission/store', [LevelCommissionController::class, 'store'])->name('admin.level.commission.store');

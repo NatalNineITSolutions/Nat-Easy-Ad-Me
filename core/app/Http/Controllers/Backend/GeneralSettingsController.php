@@ -590,21 +590,19 @@ class GeneralSettingsController extends Controller
         return view('backend.general-settings.branch-commission');
     }
 
-   public function updateBranchCommission(Request $request)
+    public function updateBranchCommission(Request $request)
     {
         $request->validate([
-        'branch_commission' => 'required|numeric|min:0',
+            'branch_commission' => 'required|numeric|min:0',
         ]);
 
-        DB::table('static_options')->insert([
-            'option_name' => 'Branch',
-            'option_value' => $request->branch_commission
-        ]);
+        // use the helper just like site identity update
+        update_static_option('Branch', $request->branch_commission);
 
-        return back()->with([
+        return redirect()->back()->with([
             'msg' => __('Branch commission settings updated successfully'),
             'type' => 'success'
         ]);
-}
+    }
 
 }

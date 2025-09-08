@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\Branch;
 use App\Models\BranchCommission;
 use Illuminate\Support\Facades\Hash;
+use App\Models\BranchPayout;
+use App\Models\BranchPayoutHistory;
+use Illuminate\Support\Facades\DB;
 
 class BranchesController extends Controller
 {
@@ -138,6 +141,58 @@ class BranchesController extends Controller
 
         return view('backend.pages.branches.commission', compact('commissions', 'totalCommission', 'branchId'));
     }
+
+    public function payout()
+    {
+        $payouts = BranchCommission::with('branch')->paginate(10); 
+
+        return view('backend.pages.branches.payout', compact('payouts'));
+    }
+
+    public function generatePayout()
+    {
+        DB::transaction(function () {
+            $commissions = BranchCommission::with('branch')->get();
+
+            foreach ($commissions->groupBy('branch_id') as $branchId => $branchCommissions) {
+                $totalAmount = $branchCommissions->sum('commission_amount');
+
+                // Save into branch_payouts (current payout record)
+                $payout = BranchPayout::create([
+                    'branch_id'         => $branchId,
+                    'total_commission'  => $totalAmount,
+                    'status'            => 1, // 0 = pending/unpaid
+                ]);
+
+                // Save into history table
+                BranchPayoutHistory::create([
+                    'branch_payout_id'  => $payout->id,
+                    'branch_id'         => $branchId,
+                    'total_commission'  => $totalAmount,
+                    'status'            => 1, // pending/unpaid
+                ]);
+
+            }
+
+            // Clear branch_commissions so fresh start
+            BranchCommission::query()->delete();
+        });
+
+        return redirect()->route('admin.branch.payout')
+            ->with('success', 'Payout generated successfully! Commissions reset.');
+    }
+
+    public function branchPayoutHistory()
+    {
+        $histories = BranchPayoutHistory::with('branch', 'payout') // use existing relationships
+                        ->orderBy('created_at', 'desc')
+                        ->paginate(20);
+
+        return view('backend.pages.branches.payout-history', compact('histories'));
+    }
+
+    
+
 }
     
 

@@ -25,13 +25,30 @@
                     </li>
                 @endcan
 
-                @can('admin-dashboard')
-                    <li class="dashboard__bottom__list__item @if(request()->is('admin/branches')) active @endif">
-                        <a href="{{route('admin.branches')}}"><i class="las la-code-branch"></i>
-                            <span class="icon_title">{{ __('Branches') }}</span>
-                        </a>
-                    </li>
-                @endcan
+                {{-- Branch Manage --}}
+                <li class="dashboard__bottom__list__item has-children 
+                    @if (request()->is('admin/branches*')) active open show @endif">
+                    <a href="javascript:void(0)">
+                        <i class="las la-cogs"></i> {{ __('Branch Manage') }}
+                    </a>
+                    <ul class="submenu">
+                        <li class="dashboard__bottom__list__item @if(request()->is('admin/branches')) selected @endif">
+                            <a href="{{ route('admin.branches') }}">
+                                <span class="icon_title">{{ __('Branches') }}</span>
+                            </a>
+                        </li>
+                        <li class="dashboard__bottom__list__item @if(request()->is('admin/branch-payout')) selected @endif">
+                            <a href="{{ route('admin.branch.payout') }}">
+                                <span class="icon_title">{{ __('Branch Payout') }}</span>
+                            </a>
+                        </li>
+                        <li class="dashboard__bottom__list__item @if(request()->is('admin/branch-payout-history')) selected @endif">
+                            <a href="{{ route('admin.branch.payout.history') }}">
+                                <span class="icon_title">{{ __('Branch Payout History') }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
                 <li class="dashboard__bottom__list__item @if(request()->is('admin/level-commission')) active @endif">
                     <a href="{{ route('admin.level.commission') }}"> <i class="las la-percentage"></i> 

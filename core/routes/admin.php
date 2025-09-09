@@ -304,6 +304,9 @@ Route::middleware(['auth','setlang'])->group(function () {
     Route::post('/branch-payout/generate', [BranchesController::class, 'generatePayout'])
     ->name('admin.branch.payout.generate');
     Route::get('/branch-payout-history', [BranchesController::class, 'branchPayoutHistory'])->name('admin.branch.payout.history');
+    Route::get('/branch-payout-history/{id}', [BranchesController::class, 'viewBranchPayoutHistory'])->name('admin.branch.payout.history.view');
+    Route::get('/branch-payout-history/{history}/download', [BranchesController::class, 'downloadPayoutStatement'])->name('admin.branch.payout.history.download');
+
 
 
     // Level Based Commission

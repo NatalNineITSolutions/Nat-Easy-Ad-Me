@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\BranchPayout;
 use App\Models\BranchPayoutHistory;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class BranchesController extends Controller
 {
@@ -184,14 +185,50 @@ class BranchesController extends Controller
 
     public function branchPayoutHistory()
     {
-        $histories = BranchPayoutHistory::with('branch', 'payout') // use existing relationships
-                        ->orderBy('created_at', 'desc')
-                        ->paginate(20);
+        $branches = BranchPayoutHistory::with('branch')
+            ->select('branch_id', DB::raw('MAX(status) as status'))
+            ->groupBy('branch_id')
+            ->paginate(20);
 
-        return view('backend.pages.branches.payout-history', compact('histories'));
+        return view('backend.pages.branches.payout-history', compact('branches'));
     }
 
-    
+    public function viewBranchPayoutHistory($id)
+    {
+        $branch = Branch::findOrFail($id);
+
+        $histories = BranchPayoutHistory::where('branch_id', $id)
+            ->with('branch', 'payout')
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+
+        return view('backend.pages.branches.single-payout-history', compact('branch', 'histories'));
+    }
+
+    public function downloadPayoutStatement($id)
+    {
+        $history = BranchPayoutHistory::with('branch')->findOrFail($id);
+
+        $previous = BranchPayoutHistory::where('branch_id', $history->branch_id)
+            ->where('id', '<', $history->id)
+            ->orderBy('id', 'desc')
+            ->first();
+
+        $fromDate = $previous ? $previous->created_at->format('d M Y') : 'Beginning';
+        $toDate   = $history->created_at->format('d M Y');
+
+        $data = [
+            'branch'   => $history->branch->name ?? 'N/A',
+            'fromDate' => $fromDate,
+            'toDate'   => $toDate,
+            'amount'   => $history->total_commission,
+        ];
+
+        $pdf = PDF::loadView('backend.pages.branches.payout-statement', $data);
+
+        return $pdf->download("Payout_Statement_{$history->id}.pdf");
+    }
+
 
 }
     

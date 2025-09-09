@@ -66,5 +66,12 @@
             <i class="fas fa-percent"></i>
             <span>{{ __('Commission') }}</span>
         </a>
+
+        <a href="{{ route('branch.payout.history') }}"
+            class="menu-item {{ request()->routeIs('branch.payout.history') ? 'active' : '' }}">
+            <i class="fas fa-money-bill-wave"></i>
+            <span>{{ __('Payout History') }}</span>
+        </a>
+
     </nav>
 </aside>

@@ -12,29 +12,28 @@
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>{{ __('ID') }}</th>
                         <th>{{ __('Branch') }}</th>
-                        <th>{{ __('Payout ID') }}</th>
-                        <th>{{ __('Commission Amount') }}</th>
                         <th>{{ __('Status') }}</th>
-                        <th>{{ __('Created At') }}</th>
+                        <th>{{ __('Action') }}</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($histories as $history)
+                    @foreach($branches as $branchHistory)
                         <tr>
-                            <td>{{ $history->id }}</td>
-                            <td>{{ $history->branch->name ?? 'N/A' }}</td>
-                            <td>{{ $history->payout->id ?? 'N/A' }}</td>
-                            <td>{{ $history->total_commission }}</td>
+                            <td>{{ $branchHistory->branch->name ?? 'N/A' }}</td>
                             <td>
-                                @if($history->status == 1)
+                                @if($branchHistory->status == 1)
                                     <span class="badge bg-success">{{ __('Paid') }}</span>
                                 @else
                                     <span class="badge bg-danger">{{ __('Unpaid') }}</span>
                                 @endif
                             </td>
-                            <td>{{ $history->created_at->format('d M Y H:i') }}</td>
+                            <td>
+                                <a href="{{ route('admin.branch.payout.history.view', $branchHistory->branch->id) }}" 
+                                class="btn btn-info btn-sm">
+                                    {{ __('View History') }}
+                                </a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -42,7 +41,7 @@
 
             {{-- Pagination --}}
             <div class="mt-3">
-                {{ $histories->links() }}
+                {{ $branches->links() }}
             </div>
         </div>
     </div>

@@ -128,7 +128,6 @@
         .branch-main-content {
             margin-left: 280px;
             padding: 2rem;
-            margin-top: 10px;
         }
 
         .dashboard-cards {
@@ -370,6 +369,29 @@
         .trend-down {
             color: #EF4444;
         }
+
+        /* Dashboard Card */
+        .stat-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-content {
+            flex-grow: 1;
+            margin-left: 1rem;
+        }
+
+        .stat-link {
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+            text-decoration: none;
+        }
+
+        .stat-link:hover {
+            color: var(--primary-color);
+        }
     </style>
 </head>
 
@@ -384,101 +406,62 @@
         <!-- Main Content -->
         <main class="branch-main-content">
 
-            <h1 class="mb-4">Branch Dashboard</h1>
-
             <div class="dashboard">
                 <div class="dashboard-welcome">
                     <h1>Welcome, {{ auth('branch')->user()->name }}!</h1>
                     <p>Here you can manage products, view reports, and handle branch operations.</p>
                 </div>
-            </div>
 
-            <!-- Stats Cards -->
-            <div class="dashboard-cards">
-                <!-- Total Revenue Card -->
-                <div class="stat-card revenue-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-dollar-sign"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3>$42,580</h3>
-                        <p>Total Revenue</p>
-                        <div class="revenue-trend trend-up">
-                            <i class="fas fa-arrow-up"></i>
-                            <span>12.5% increase from last month</span>
+                <div class="dashboard-cards">
+                    <!-- Card 1: Products -->
+                    <div class="stat-card">
+                        <div class="stat-icon bg-purple">
+                            <i class="fas fa-box"></i>
                         </div>
+                        <div class="stat-content">
+                            <h3>{{ $productCount }}</h3>
+                            <p>Total Products</p>
+                        </div>
+                        <a href="{{ route('branch.products.all') }}" class="stat-link">
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    <!-- Card 2: Orders -->
+                    <div class="stat-card">
+                        <div class="stat-icon bg-green">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>{{ $orderCount }}</h3>
+                            <p>Total Orders</p>
+                        </div>
+                        <a href="{{ route('branch.orders.history') }}" class="stat-link">
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    <!-- Card 3: Revenue -->
+                    <div class="stat-card">
+                        <div class="stat-icon bg-orange">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>₹{{ number_format($totalRevenue, 2) }}</h3>
+                            <p>Total Revenue</p>
+                        </div>
+                        <a href="{{ route('branch.payout.history') }}" class="stat-link">
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
+
             </div>
 
-            <div class="card shadow-sm border-0 rounded-3 mb-4">
-                <div class="card-body d-flex justify-content-between align-items-center">
-                    <h2 class="fw-bold text-primary">
-                        ₹ {{ number_format($dailyCommission ?? 0, 2) }}
-                    </h2>        
-                    <i class="fa-solid fa-sack-dollar fa-3x text-success"></i>
-                </div>
-            </div>
-
+           
         </main>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Toggle sidebar on mobile
-            document.getElementById('sidebarToggle').addEventListener('click', function () {
-                document.getElementById('branchSidebar').classList.toggle('open');
-            });
-
-            // Close sidebar when clicking outside on mobile
-            document.addEventListener('click', function (e) {
-                if (window.innerWidth < 1024) {
-                    if (!e.target.closest('#branchSidebar') && !e.target.closest('#sidebarToggle')) {
-                        document.getElementById('branchSidebar').classList.remove('open');
-                    }
-                }
-            });
-
-            // Performance chart
-            const ctx = document.getElementById('performanceChart').getContext('2d');
-            const performanceChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                    datasets: [{
-                        label: 'Revenue ($)',
-                        data: [12000, 19000, 15000, 25000, 22000, 30000, 28000, 35000, 30000, 38000, 40000, 42580],
-                        borderColor: '#4A6CF7',
-                        backgroundColor: 'rgba(74, 108, 247, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                drawBorder: false
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        }
-                    }
-                }
-            });
-        });
-    </script>
 </body>
 
 </html>

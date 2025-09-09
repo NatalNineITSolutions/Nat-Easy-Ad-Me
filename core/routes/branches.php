@@ -18,6 +18,8 @@ Route::prefix('branch')->controller(BranchController::class)->group(function () 
     Route::put('products/update/{id}', 'update')->name('branch.products.update');
     Route::delete('products/delete/{id}', 'destroy')->name('branch.products.delete');
     Route::get('orders', 'orderHistory')->name('branch.orders.history');
+    Route::get('branch/payout-history', 'myPayoutHistory')->name('branch.payout.history');
+    Route::get('branch/payout-history/download/{id}', [BranchController::class, 'downloadPayoutStatement'])->name('branch.payout.history.download');
     Route::get('products/{id}/invoice', 'downloadInvoice')->name('branch.products.invoice');
     Route::put('branch/orders/{id}/update-status', 'updateStatus')->name('branch.orders.update.status');
 });

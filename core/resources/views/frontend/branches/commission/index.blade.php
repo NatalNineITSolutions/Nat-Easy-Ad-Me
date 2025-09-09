@@ -91,7 +91,7 @@
 
         <!-- Filter Section -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="mb-0">Commission History</h4>
+            <h4 class="mb-0">New Commision</h4>
             <form method="GET" action="{{ route('branch.commission') }}" class="d-flex gap-2">
                 <select name="filter" class="form-select" onchange="this.form.submit()">
                     <option value="daily" {{ request('filter') == 'daily' ? 'selected' : '' }}>Daily Commission</option>

@@ -106,13 +106,13 @@ class MLMController extends Controller
             $validationRules = [
                 'first_name' => 'required|max:191',
                 'last_name' => 'required|max:191',
-                'email' => 'required|email|unique:users|max:191',
-                'username' => 'required|unique:users|max:191',
-                'phone' => 'required|max:191',
+                'email' => 'nullable|email|unique:users,email|max:191',
+                'username' => 'required|unique:users,username|max:191',
+                'phone' => 'nullable|max:191|unique:users,phone',
                 'password' => 'required|min:6|max:191',
                 'confirm_password' => 'required|same:password',
-                'parent_id' => 'required|exists:users,id',  // Immediate parent (the node clicked)
-                'root_id' => 'required|exists:users,id',    // Root user of the tree
+                'parent_id' => 'required|exists:users,id',
+                'root_id' => 'required|exists:users,id',
                 'position' => 'required|in:left,right',
                 'gender' => 'required|in:male,female',
                 'dob' => 'required|date|before:today',
@@ -127,12 +127,12 @@ class MLMController extends Controller
             try {
                 $email_verify_token = sprintf("%d", random_int(123456, 999999));
 
-                $phone_number = Str::replace(['-', '(', ')', ' '], '', $request->phone);
-                $country_code = '+' . ltrim($request->country_code, '+');
-                $full_phone_number = $country_code . ' - ' . $phone_number;
-
-                if (!empty($full_phone_number) && User::where('phone', $full_phone_number)->exists()) {
-                    return redirect()->back()->withErrors(['phone' => __('Phone number is already taken')]);
+                // ✅ Phone handling (only if provided)
+                $full_phone_number = null;
+                if (!empty($request->phone)) {
+                    $phone_number = Str::replace(['-', '(', ')', ' '], '', $request->phone);
+                    $country_code = '+' . ltrim($request->country_code, '+');
+                    $full_phone_number = $country_code . ' - ' . $phone_number;
                 }
 
                 // Generate unique partner ID
@@ -147,7 +147,7 @@ class MLMController extends Controller
                 $user = new User([
                     'first_name' => $request->first_name,
                     'last_name' => $request->last_name,
-                    'email' => $request->email,
+                    'email' => $request->email ?? null,
                     'username' => $request->username,
                     'phone' => $full_phone_number,
                     'password' => Hash::make($request->password),
@@ -155,8 +155,8 @@ class MLMController extends Controller
                     'email_verify_token' => $email_verify_token,
                     'partner_id' => $partnerId,
                     'partner_name' => $partnerName,
-                    'sponsor_id' => $request->root_id,      // The root user who owns this tree
-                    'parent_id' => $request->parent_id,     // The immediate parent (node clicked)
+                    'sponsor_id' => $request->root_id,
+                    'parent_id' => $request->parent_id,
                     'gender' => $request->gender,
                     'dob' => $request->dob,
                     'position' => $request->position,
@@ -189,7 +189,10 @@ class MLMController extends Controller
                     ]);
                 }
 
-                dispatch(new SendRegisterUserEmailJob($user, $request->password));
+                // ✅ Only send email if provided
+                if (!empty($user->email)) {
+                    dispatch(new SendRegisterUserEmailJob($user, $request->password));
+                }
 
                 return redirect()->route('user.genology')->with('success', __('New member registered successfully!'));
             } catch (\Exception $e) {

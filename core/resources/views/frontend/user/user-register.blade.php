@@ -15,6 +15,7 @@
         .select2-container .select2-selection--single {
             padding: 15px 16px;
         }
+
     </style>
 @endsection
 @section('content')

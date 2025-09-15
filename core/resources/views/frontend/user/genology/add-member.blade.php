@@ -17,6 +17,10 @@
         .select2-container .select2-selection--single {
             padding: 15px 16px;
         }
+
+        .iti__selected-flag{
+            padding: 13px;
+        }
     </style>
 @endsection
 

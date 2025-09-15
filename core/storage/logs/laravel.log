@@ -55,3 +55,22 @@
 "} 
 [2025-09-15 15:45:44] production.INFO: LeftBV: 0  
 [2025-09-15 15:45:44] production.INFO: RightBV:0  
+[2025-09-15 16:28:21] production.INFO: LeftBV: 1610  
+[2025-09-15 16:28:21] production.INFO: RightBV:900  
+[2025-09-15 16:29:08] production.INFO: Node BV/Pair calc {"user_id":1,"leftBV":1610,"rightBV":900,"sealedL":1610,"sealedR":900,"leftBP":1.0,"rightBP":1.0,"possible_pairs":1.0} 
+[2025-09-15 16:29:08] production.INFO: Node BV/Pair calc {"user_id":2,"leftBV":1010,"rightBV":0,"sealedL":1010,"sealedR":0,"leftBP":1.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-15 16:29:09] production.INFO: Node BV/Pair calc {"user_id":4,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-15 16:29:09] production.INFO: Node BV/Pair calc {"user_id":8,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-15 16:29:09] production.INFO: Node BV/Pair calc {"user_id":16,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-15 16:29:09] production.INFO: Node BV/Pair calc {"user_id":17,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-15 16:29:09] production.INFO: Node BV/Pair calc {"user_id":9,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-15 16:29:09] production.INFO: Node BV/Pair calc {"user_id":5,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-15 16:29:09] production.INFO: Node BV/Pair calc {"user_id":10,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-15 16:29:09] production.INFO: Node BV/Pair calc {"user_id":11,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-15 16:29:09] production.INFO: Node BV/Pair calc {"user_id":3,"leftBV":0,"rightBV":900,"sealedL":0,"sealedR":900,"leftBP":0.0,"rightBP":1.0,"possible_pairs":0.0} 
+[2025-09-15 16:29:09] production.INFO: Node BV/Pair calc {"user_id":6,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-15 16:29:09] production.INFO: Node BV/Pair calc {"user_id":12,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-15 16:29:09] production.INFO: Node BV/Pair calc {"user_id":13,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-15 16:29:09] production.INFO: Node BV/Pair calc {"user_id":7,"leftBV":0,"rightBV":900,"sealedL":0,"sealedR":900,"leftBP":0.0,"rightBP":1.0,"possible_pairs":0.0} 
+[2025-09-15 16:29:09] production.INFO: Node BV/Pair calc {"user_id":14,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-15 16:29:09] production.INFO: Node BV/Pair calc {"user_id":15,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 

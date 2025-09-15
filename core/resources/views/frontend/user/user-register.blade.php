@@ -16,6 +16,9 @@
             padding: 15px 16px;
         }
 
+        .iti__selected-flag{
+            padding: 13px;
+        }
     </style>
 @endsection
 @section('content')
@@ -107,7 +110,7 @@
                             <div class="col-lg-6 col-md-12">
                                 <label class="infoTitle">{{ __('Phone Number') }}</label>
                                 <div class="input-form input-form2">
-                                    <input type="hidden" id="country-code" name="country_code">
+                                    <input type="hidden" id="country-code" name="country_code" class="countryCode">
                                     <input type="tel" name="phone" value="{{old('phone')}}" id="phone"
                                         placeholder="{{__('Type Phone')}}">
                                     <span id="phone_availability"></span>

@@ -18,7 +18,7 @@
                         @csrf
                         <div class="row">
                           <div class="col-12">
-                              <label class="infoTitle">{{ __('First Name') }}</label>
+                              <label class="infoTitle">{{ __('Enter your otp') }}</label>
                               <div class="input-form input-form2">
                                   <input type="text" name="email_verify_token" placeholder="{{ __('Enter code') }}">
                               </div>

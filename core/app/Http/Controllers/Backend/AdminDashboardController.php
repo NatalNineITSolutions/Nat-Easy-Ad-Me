@@ -39,25 +39,25 @@ class AdminDashboardController extends Controller
 
     public function adminDashboard()
     {
-        // membership module
+
         $module_check = false;
         if (moduleExists('Membership')){
-          if (membershipModuleExistsAndEnable('Membership')){
-              $module_check = true;
-             $total_user_membership = UserMembership::count();
-              $total_membership_earning = MembershipHistory::where('payment_status', 'complete')
-                  ->where('payment_gateway', '!=', 'Trial')
-                  ->where('price', '!=', '0')
-                  ->sum('price');
-          }
-        }
+            if (membershipModuleExistsAndEnable('Membership')){
+                $module_check = true;
+                $total_user_membership = UserMembership::count();
+                $total_membership_earning = MembershipHistory::where('payment_status', 'complete')
+                    ->where('payment_gateway', '!=', 'Trial')
+                    ->where('price', '!=', '0')
+                    ->sum('price');
+                }
+            }
 
         $wallet_module_check = false;
         if (moduleExists('Wallet')){
-          if (membershipModuleExistsAndEnable('Wallet')){
-              $wallet_module_check = true;
-             $total_user_wallet = Wallet::count();
-          }
+            if (membershipModuleExistsAndEnable('Wallet')){
+                $wallet_module_check = true;
+                $total_user_wallet = Wallet::count();
+            }
         }
 
         $dashboardData = [
@@ -76,15 +76,15 @@ class AdminDashboardController extends Controller
             ['title' => __('Total States'),  'route' => 'admin.state.all','value' => State::count()],
             ['title' => __('Total Cities'),  'route' => 'admin.city.all','value' => City::count()],
             ['title' => __('Total Tags'),  'route' => 'admin.blog.tags','value' => Tag::count()],
-            ['title' => __('Total 	Tickets'),  'route' => 'admin.ticket','value' => Ticket::count()],
-            ['title' => __('Total 	Newsletter'), 'route' => 'admin.newsletter.index', 'value' => NewsLetter::count()],
-            ['title' => __('Total 	Advertisements'), 'route' => 'admin.advertisement', 'value' => Advertisement::count()],
-            ['title' => __('Total 	Languages'), 'route' => 'admin.languages', 'value' => Language::count()],
-            ['title' => __('Total 	Media Images'), 'route' => 'admin.upload.media.images.page', 'value' => MediaUpload::count()],
-            ['title' => __('Total 	Notice'), 'route' => 'admin.all.notice', 'value' => Notice::count()],
+            ['title' => __('Total   Tickets'),  'route' => 'admin.ticket','value' => Ticket::count()],
+            ['title' => __('Total   Newsletter'), 'route' => 'admin.newsletter.index', 'value' => NewsLetter::count()],
+            ['title' => __('Total   Advertisements'), 'route' => 'admin.advertisement', 'value' => Advertisement::count()],
+            ['title' => __('Total   Languages'), 'route' => 'admin.languages', 'value' => Language::count()],
+            ['title' => __('Total   Media Images'), 'route' => 'admin.upload.media.images.page', 'value' => MediaUpload::count()],
+            ['title' => __('Total   Notice'), 'route' => 'admin.all.notice', 'value' => Notice::count()],
         ];
 
-        // Conditionally add the User Membership data if the module is enabled
+    
         if ($module_check === true) {
             $dashboardData[] = ['title' => __('Total Member'), 'route' => 'admin.user.membership.all', 'value' => $total_user_membership];
             $dashboardData[] = ['title' => __('Total Membership Earnings'), 'value' => float_amount_with_currency_symbol($total_membership_earning)];
@@ -94,13 +94,28 @@ class AdminDashboardController extends Controller
             $dashboardData[] = ['title' => __('Total Wallet User'), 'route' => 'admin.wallet.lists', 'value' => $total_user_wallet];
         }
 
+    
+        $totalCommission = \App\Models\BranchCommission::sum('commission_amount');
+        $commissionPercent = \App\Models\BranchCommission::avg('commission_percent');
+
+        $dashboardData[] = [
+            'title' => __('Total Commissions'),
+            'value' => number_format($totalCommission, 2),
+            'route' => 'branch.commission.details' 
+        ];
+
+        $dashboardData[] = [
+            'title' => __('Average Commission Rate'),
+            'value' => is_numeric($commissionPercent) ? number_format($commissionPercent, 2) . '%' : 'N/A'
+        ];
+
         $total_user = User::count();
         $total_listings = Listing::count();
         $recent_users = User::latest()->take(5)->get();
         $recent_listings = Listing::latest()->take(5)->get();
 
-        $page = 1; // Current page number
-        $pageSize = 900; // Number of records per page
+        $page = 1; 
+        $pageSize = 900; 
         $offset = ($page - 1) * $pageSize;
 
         $visitors = Visitor::select('city', 'country_code', 'latitude', 'longitude', 'country', DB::raw('count(*) as total'))
@@ -109,7 +124,6 @@ class AdminDashboardController extends Controller
             ->offset($offset)
             ->limit($pageSize)
             ->get();
-
 
         $countryCodes = Visitor::select('country_code')
             ->whereNotNull('country')
@@ -127,6 +141,7 @@ class AdminDashboardController extends Controller
             'countryCodes'
         ));
     }
+
 
     public function getUserData(Request $request) {
         $interval = $request->input('interval');

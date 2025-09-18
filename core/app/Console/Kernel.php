@@ -13,7 +13,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('bv:flush')->dailyAt(get_static_option('bv_flush_time'));
-        $schedule->command('listings:unpublish-expired')->daily(); // correct
+        $schedule->command('listings:unpublish-expired')->daily();
+
+        $schedule->command('branch:payout')->cron('0 0 */28 * *');
     }
 
     /**

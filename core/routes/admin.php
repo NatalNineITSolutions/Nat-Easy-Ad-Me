@@ -294,9 +294,20 @@ Route::middleware(['auth','setlang'])->group(function () {
 
     // Branches Manage
     Route::get('/branches', [BranchesController::class, 'index'])->name('admin.branches');
+    Route::get('/branches/{id}/commission', [BranchesController::class, 'commissionDetails'])->name('branch.commission.details');
     Route::post('/branches/store', [BranchesController::class, 'store'])->name('admin.branches.store')->permission('branch-add');
     Route::post('/branches/update/{id}', [BranchesController::class, 'update'])->name('admin.branches.update')->permission('branch-edit');
     Route::post('/branches/delete/{id}', [BranchesController::class, 'destroy'])->name('admin.branches.delete')->permission('branch-delete');
+
+    // Branch Payout
+    Route::get('/branch-payout', [BranchesController::class, 'payout'])->name('admin.branch.payout');
+    Route::post('/branch-payout/generate', [BranchesController::class, 'generatePayout'])
+    ->name('admin.branch.payout.generate');
+    Route::get('/branch-payout-history', [BranchesController::class, 'branchPayoutHistory'])->name('admin.branch.payout.history');
+    Route::get('/branch-payout-history/{id}', [BranchesController::class, 'viewBranchPayoutHistory'])->name('admin.branch.payout.history.view');
+    Route::get('/branch-payout-history/{history}/download', [BranchesController::class, 'downloadPayoutStatement'])->name('admin.branch.payout.history.download');
+
+
 
     // Level Based Commission
     Route::get('/level-commission', [LevelCommissionController::class, 'index'])->name('admin.level.commission');
@@ -678,6 +689,10 @@ Route::middleware(['auth','setlang'])->group(function () {
         //database upgrade
         Route::get('/database-upgrade', [GeneralSettingsController::class, 'databaseUpgrade'])->name('admin.general.database.upgrade')->permission('database-upgrade-setting');
         Route::post('/database-upgrade', [GeneralSettingsController::class, 'databaseUpgradePost']);
+
+        //branch commission
+        Route::get('/branch-commission', [GeneralSettingsController::class, 'branchCommission'])->name('admin.general.branch.commission')->permission('branch-commission-settings');
+        Route::post('/branch-commission', [GeneralSettingsController::class, 'updateBranchCommission']);
 
         Route::post('/license-setting-verify', [GeneralSettingsController::class, 'licenseKeyGenerate'])->name('admin.general.license.key.generate')->permission('license-key-generate');
         Route::get('/update-check', [GeneralSettingsController::class, 'updateVersionCheck'])->name('admin.general.update.version.check')->permission('update-version-check');

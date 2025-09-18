@@ -5,7 +5,12 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Branch;
+use App\Models\BranchCommission;
 use Illuminate\Support\Facades\Hash;
+use App\Models\BranchPayout;
+use App\Models\BranchPayoutHistory;
+use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class BranchesController extends Controller
 {
@@ -116,6 +121,115 @@ class BranchesController extends Controller
                 ]);
         }
     }
+
+    public function commissionDetails($id)
+    {
+        $branchId = $id;
+        $filter = request('filter', 'all');
+
+        $query = BranchCommission::with('order')
+            ->where('branch_id', $branchId);
+
+        if ($filter === 'daily') {
+            $query->whereDate('created_at', now()->toDateString());
+        } elseif ($filter === 'monthly') {
+            $query->whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year);
+            }
+
+        $commissions = $query->latest()->get();
+        $totalCommission = $commissions->sum('commission_amount');
+
+        return view('backend.pages.branches.commission', compact('commissions', 'totalCommission', 'branchId'));
+    }
+
+    public function payout()
+    {
+        $payouts = BranchCommission::with('branch')->paginate(10); 
+
+        return view('backend.pages.branches.payout', compact('payouts'));
+    }
+
+    public function generatePayout()
+    {
+        DB::transaction(function () {
+            $commissions = BranchCommission::with('branch')->get();
+
+            foreach ($commissions->groupBy('branch_id') as $branchId => $branchCommissions) {
+                $totalAmount = $branchCommissions->sum('commission_amount');
+
+                // Save into branch_payouts (current payout record)
+                $payout = BranchPayout::create([
+                    'branch_id'         => $branchId,
+                    'total_commission'  => $totalAmount,
+                    'status'            => 1, // 0 = pending/unpaid
+                ]);
+
+                // Save into history table
+                BranchPayoutHistory::create([
+                    'branch_payout_id'  => $payout->id,
+                    'branch_id'         => $branchId,
+                    'total_commission'  => $totalAmount,
+                    'status'            => 1, // pending/unpaid
+                ]);
+
+            }
+
+            // Clear branch_commissions so fresh start
+            BranchCommission::query()->delete();
+        });
+
+        return redirect()->route('admin.branch.payout')
+            ->with('success', 'Payout generated successfully! Commissions reset.');
+    }
+
+    public function branchPayoutHistory()
+    {
+        $branches = BranchPayoutHistory::with('branch')
+            ->select('branch_id', DB::raw('MAX(status) as status'))
+            ->groupBy('branch_id')
+            ->paginate(20);
+
+        return view('backend.pages.branches.payout-history', compact('branches'));
+    }
+
+    public function viewBranchPayoutHistory($id)
+    {
+        $branch = Branch::findOrFail($id);
+
+        $histories = BranchPayoutHistory::where('branch_id', $id)
+            ->with('branch', 'payout')
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+
+        return view('backend.pages.branches.single-payout-history', compact('branch', 'histories'));
+    }
+
+    public function downloadPayoutStatement($id)
+    {
+        $history = BranchPayoutHistory::with('branch')->findOrFail($id);
+
+        $previous = BranchPayoutHistory::where('branch_id', $history->branch_id)
+            ->where('id', '<', $history->id)
+            ->orderBy('id', 'desc')
+            ->first();
+
+        $fromDate = $previous ? $previous->created_at->format('d M Y') : 'Beginning';
+        $toDate   = $history->created_at->format('d M Y');
+
+        $data = [
+            'branch'   => $history->branch->name ?? 'N/A',
+            'fromDate' => $fromDate,
+            'toDate'   => $toDate,
+            'amount'   => $history->total_commission,
+        ];
+
+        $pdf = PDF::loadView('backend.pages.branches.payout-statement', $data);
+
+        return $pdf->download("Payout_Statement_{$history->id}.pdf");
+    }
+
+
 }
     
 

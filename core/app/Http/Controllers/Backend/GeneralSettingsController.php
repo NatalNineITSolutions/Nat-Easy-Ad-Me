@@ -585,5 +585,24 @@ class GeneralSettingsController extends Controller
         return back()->with(FlashMsg::item_new('Database Upgraded Successfully'));
     }
 
+    public function branchCommission()
+    {
+        return view('backend.general-settings.branch-commission');
+    }
+
+    public function updateBranchCommission(Request $request)
+    {
+        $request->validate([
+            'branch_commission' => 'required|numeric|min:0',
+        ]);
+
+        // use the helper just like site identity update
+        update_static_option('Branch', $request->branch_commission);
+
+        return redirect()->back()->with([
+            'msg' => __('Branch commission settings updated successfully'),
+            'type' => 'success'
+        ]);
+    }
 
 }

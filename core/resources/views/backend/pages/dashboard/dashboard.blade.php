@@ -28,23 +28,22 @@
                         </div>
                         <div class="dashboard_promo">
                             <div class="row g-4 mt-2">
-                                @foreach($dashboardData as $item)
-                                    <div class="col-xxl-2 col-xl-3 col-sm-6">
-                                        <div class="dashboard_promo__single style_02 bg__white radius-10 padding-20">
-                                            <span class="dashboard_promo__single__subtitle d-flex justify-content-between align-items-center">
-                                                <span>
-                                                {{ $item['title'] ?? '' }}
-                                                 </span>
-                                                @if(isset($item['route']))
-                                                    <a href="{{ route($item['route']) }}">
-                                                        <i class="las la-arrow-right fs-3 font-weight-600"></i>
-                                                    </a>
-                                                @endif
-                                            </span>
-                                            <h4 class="dashboard_promo__single__price mt-2">{{ $item['value'] ?? 0 }}</h4>
-                                        </div>
+                                @foreach($dashboardData as $card)
+                                <div class="col-xxl-2 col-xl-3 col-sm-6">
+                                    <div class="dashboard_promo__single style_02 bg__white radius-10 padding-20">
+                                        <span class="dashboard_promo__single__subtitle d-flex justify-content-between align-items-center">
+                                        <span>{{ $card['title'] ?? '' }}</span>
+                                            @if(isset($card['route']))
+                                                <a href="{{ route($card['route'], ['id' => 1]) }}">
+                                                    <i class="las la-arrow-right fs-3 font-weight-600"></i>
+                                                </a>
+                                            @endif
+                                        </span>
+                                        <h4 class="dashboard_promo__single__price mt-2">{{ $card['value'] ?? 0 }}</h4>
                                     </div>
+                                </div>
                                 @endforeach
+
                             </div>
                         </div>
 

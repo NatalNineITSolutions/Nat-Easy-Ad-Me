@@ -18,7 +18,9 @@ use App\Models\Backend\MediaUpload;
 use App\Helpers\FlashMsg;
 use Intervention\Image\Facades\Image;
 use App\Models\OrderDetail;
+use App\Models\BranchCommission;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\BranchPayoutHistory;
 
 class BranchController extends Controller
 {
@@ -126,7 +128,18 @@ class BranchController extends Controller
     {
         $branch = auth('branch')->user();
 
-        return view('frontend.branches.dashboard.dashboard', compact('branch'));
+        // Total products uploaded
+        $productCount = Product::where('branch_id', $branch->id)->count();
+
+        // Total orders for this branch's products
+        $orderCount = OrderDetail::whereHas('product', function ($query) use ($branch) {
+            $query->where('branch_id', $branch->id);
+        })->count();
+
+        // Total commission received from payout histories
+        $totalRevenue = BranchPayoutHistory::where('branch_id', $branch->id)->sum('total_commission');
+
+        return view('frontend.branches.dashboard.dashboard', compact('branch', 'productCount', 'orderCount', 'totalRevenue'));
     }
 
     public function productUpload(Request $request, $id = null)
@@ -418,4 +431,82 @@ class BranchController extends Controller
     {
         return response()->json(MediaHelper::load_more_images($request));
     }
+
+    public function commission()
+    {
+        $branchId = auth('branch')->id();
+        $filter = request('filter', 'all');
+
+        $query = BranchCommission::with('order')
+            ->where('branch_id', $branchId);
+
+        if ($filter === 'daily') {
+            $query->whereDate('created_at', now()->toDateString());
+        } elseif ($filter === 'monthly') {
+                $query->whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year);
+            }
+
+        $commissions = $query->latest()->get();
+        $totalCommission = $commissions->sum('commission_amount');
+
+        return view('frontend.branches.commission.index', compact('commissions', 'totalCommission'));
+    }
+
+    public function dashboard()
+    {
+        $branchId = auth('branch')->id();
+
+    
+        $dailyCommission = BranchCommission::where('branch_id', $branchId)
+            ->whereDate('created_at', now()->toDateString())
+            ->sum('commission_amount');
+
+        return view('frontend.branches.dashboard', compact('dailyCommission'));
+    }
+
+    public function myPayoutHistory()
+    {
+        $branch = auth('branch')->user() ?? auth()->user();
+
+        if (!$branch) {
+            abort(403, 'Unauthorized');
+        }
+
+        $histories = BranchPayoutHistory::where('branch_id', $branch->id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+
+        return view('frontend.branches.payout-history', compact('histories', 'branch'));
+    }
+
+    public function downloadPayoutStatement($id)
+    {
+        $branch = auth('branch')->user() ?? auth()->user();
+        if (!$branch) {
+            abort(403, 'Unauthorized');
+        }
+
+        $payout = BranchPayoutHistory::where('id', $id)
+            ->where('branch_id', $branch->id)
+            ->firstOrFail();
+
+        // Get previous payout
+        $previousPayout = BranchPayoutHistory::where('branch_id', $branch->id)
+                            ->where('created_at', '<', $payout->created_at)
+                            ->orderBy('created_at', 'desc')
+                            ->first();
+
+        $fromDate = $previousPayout 
+                    ? $previousPayout->created_at->addDay()->format('d M') 
+                    : $payout->created_at->format('d M');
+
+        $toDate = $payout->created_at->format('d M');
+
+        return Pdf::loadView('frontend.branches.payout-pdf', compact('payout', 'branch', 'fromDate', 'toDate'))
+                ->download('payout_'.$payout->id.'.pdf');
+    }
+
+
+    
 }

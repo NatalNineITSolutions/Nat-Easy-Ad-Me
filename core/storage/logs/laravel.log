@@ -1,0 +1,8 @@
+[2025-09-15 17:46:32] production.INFO: User registration request received. {"request_data":{"_token":"5j1HQzrxmN92PLKRpPiBzcO82L67SAGo417H0dIV","partner_id":"VG76Y3W5F1","partner_name":"EASYADME","partner_data":"1","first_name":"Vikashini","last_name":"J","username":"Vikashinij","email":"vikashinij194@gmail.com","country_code":"91","phone":"9182999191","full_number":null,"dob":"1998-01-28","gender":"female","password":"12121212","confirm_password":"12121212","terms_conditions":"1"}} 
+[2025-09-15 17:46:52] production.INFO: User registration request received. {"request_data":{"_token":"5j1HQzrxmN92PLKRpPiBzcO82L67SAGo417H0dIV","partner_id":"VG76Y3W5F1","partner_name":null,"first_name":"Vikashini","last_name":"J","username":"Vikashinij","email":"vikashinij1904@gmail.com","country_code":null,"phone":"9182999191","full_number":null,"dob":"1998-01-28","gender":"female","password":"12121212","confirm_password":"12121212","terms_conditions":"1"}} 
+[2025-09-15 17:46:52] production.INFO: Admin partner used for registration {"admin_partner_id":"VG76Y3W5F1","admin_id":1} 
+[2025-09-15 17:46:53] production.INFO: User created successfully. {"user_id":39} 
+[2025-09-15 17:46:57] production.INFO: SMSGateway Middleware Check {"smsModuleExists":true,"smsPluginActive":true,"otpLoginStatus":null} 
+[2025-09-15 17:46:57] production.INFO: LeftBV: 0  
+[2025-09-15 17:46:57] production.INFO: RightBV:0  
+[2025-09-15 17:52:22] production.INFO: Node BV/Pair calc {"user_id":39,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 

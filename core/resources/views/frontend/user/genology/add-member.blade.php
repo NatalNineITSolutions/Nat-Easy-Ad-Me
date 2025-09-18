@@ -17,6 +17,10 @@
         .select2-container .select2-selection--single {
             padding: 15px 16px;
         }
+
+        .iti__selected-flag{
+            padding: 13px;
+        }
     </style>
 @endsection
 
@@ -112,8 +116,7 @@
                             <div class="col-lg-6 col-md-12">
                                 <label class="infoTitle">{{ __('Email') }}</label>
                                 <div class="input-form input-form2">
-                                    <input type="email" name="email" id="email" placeholder="{{ __('Type Email') }}"
-                                        required>
+                                    <input type="email" name="email" id="email" placeholder="{{ __('Type Email') }}">
                                     <div class="icon">
                                         <i class="lar la-envelope icon"></i>
                                     </div>
@@ -286,7 +289,7 @@
                     let confirm_password = $('#confirm_password').val();
                     let password_validation_text = $('#check_password_match').text();
 
-                    if (first_name == '' || last_name == '' || username == '' || email == '' || phone == '' || password == '' || confirm_password == '') {
+                    if (first_name == '' || last_name == '' || username == '' || password == '' || confirm_password == '') {
                         toastr_warning_js("{{ __('Please fill all fields') }}");
                         return false;
                     } else if (password.length < 6) {

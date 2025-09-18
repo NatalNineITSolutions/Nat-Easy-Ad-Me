@@ -176,6 +176,15 @@ class DashboardController extends Controller
             $referredById = $admin?->partner_id ?: '';
         }
 
+        if ($user->parent) {
+            $placementBy = $user->parent->partner_name ?? $user->parent->fullname ?? 'Unknown';
+            $placementById = $user->parent->partner_id ?? '';
+        } else {
+            $admin = Admin::first();
+            $placementBy = $admin?->partner_name ?: 'Admin';
+            $placementById = $admin?->partner_id ?: '';
+        }
+
         return view('frontend.user.dashboard.dashboard', [
             'user' => $user,
             'check_active_distributor' => ($user->self_purchased_bv ?? 0) >= $bpConversionRate,
@@ -221,6 +230,8 @@ class DashboardController extends Controller
             'totalReferralCommission' => $totalReferralCommission,
             'existingIncome' => $existingIncome,
             'newlyAddedIncome' => $newlyAddedIncome,
+            'placementBy' => $placementBy,
+            'placementById' => $placementById,
         ]);
     }
 
@@ -897,19 +908,19 @@ class DashboardController extends Controller
         }
 
         $products = Product::with(['imageFile', 'unit'])
-                        ->where('is_active', 1)
-                        ->get();
+            ->where('is_active', 1)
+            ->get();
 
         $sizes = Size::pluck('name', 'id')->toArray();
 
         return view('frontend.user.all-products', compact('products', 'sizes'));
     }
-    
+
     public function productBuyForm(Request $request)
     {
         $user = auth()->user();
         $productId = $request->query('product_id');
-        $quantity  = (int) $request->query('quantity', 0);
+        $quantity = (int) $request->query('quantity', 0);
 
         if ($productId && $quantity > 0) {
             Cart::where('user_id', $user->id)
@@ -926,8 +937,8 @@ class DashboardController extends Controller
             'product.imageFile',
             'size'
         ])
-        ->where('user_id', $user->id)
-        ->get();
+            ->where('user_id', $user->id)
+            ->get();
 
         if ($cartItems->isEmpty()) {
             return redirect()->back()->with('error', 'Your cart is empty.');
@@ -985,17 +996,17 @@ class DashboardController extends Controller
         }
 
         return view('frontend.user.product-buy', [
-            'cartItems'       => $cartItems,
-            'countries'       => $countries,
-            'states'          => $states,
-            'cities'          => $cities,
+            'cartItems' => $cartItems,
+            'countries' => $countries,
+            'states' => $states,
+            'cities' => $cities,
             'deliveryCharges' => DeliveryCharge::with('zone')->get(), // for JS use
-            'user'            => $user,
-            'identity'        => $identity,
+            'user' => $user,
+            'identity' => $identity,
             'deliveryChargeAmount' => $deliveryChargeAmount,
-            'totalWeight'     => $totalWeight,
-            'subtotal'        => $subtotal,
-            'shippingZones'        => $shippingZones,
+            'totalWeight' => $totalWeight,
+            'subtotal' => $subtotal,
+            'shippingZones' => $shippingZones,
         ]);
     }
 
@@ -1018,15 +1029,15 @@ class DashboardController extends Controller
         try {
             $request->validate([
                 'total_delivery_charge' => 'nullable|numeric',
-                'grand_total'           => 'required|numeric',
-                'name'                  => 'required|string|max:191',
-                'email'                 => 'required|email',
-                'phone_number'          => 'required|digits:10',
-                'address'               => 'required|string',
-                'country_id'            => 'required|integer',
-                'state_id'              => 'required|integer',
-                'city_id'               => 'required|integer',
-                'transaction_id'        => 'nullable|string',
+                'grand_total' => 'required|numeric',
+                'name' => 'required|string|max:191',
+                'email' => 'required|email',
+                'phone_number' => 'required|digits:10',
+                'address' => 'required|string',
+                'country_id' => 'required|integer',
+                'state_id' => 'required|integer',
+                'city_id' => 'required|integer',
+                'transaction_id' => 'nullable|string',
             ]);
 
             $user = Auth::user();
@@ -1042,39 +1053,39 @@ class DashboardController extends Controller
             $sizes = $cartItems->map(fn($item) => optional($item->size)->name ?? '—')->implode('|');
 
             $lineTotals = $cartItems->map(function ($item) {
-            $unitPrice = $item->product->distributor_price +
-                        ($item->product->distributor_price * $item->product->gst / 100);
-            return number_format($unitPrice * $item->quantity, 2, '.', '');
+                $unitPrice = $item->product->distributor_price +
+                    ($item->product->distributor_price * $item->product->gst / 100);
+                return number_format($unitPrice * $item->quantity, 2, '.', '');
             })->implode('|');
 
             $totalBV = $cartItems->sum(fn($item) => $item->product->bv_points * $item->quantity);
 
-        
+
             $commissionPercent = (float) get_static_option('Branch') ?? 0;
 
-        
+
             $order = OrderDetail::create([
-                'user_id'               => $user->id,
-                'product_id'            => $productIds,
-                'product_quantity'      => $quantities,
-                'product_total_price'   => $lineTotals,
-                'size'                  => $sizes,
-                'total_bv'              => $totalBV,
+                'user_id' => $user->id,
+                'product_id' => $productIds,
+                'product_quantity' => $quantities,
+                'product_total_price' => $lineTotals,
+                'size' => $sizes,
+                'total_bv' => $totalBV,
                 'total_delivery_charge' => $request->total_delivery_charge ?? 0,
-                'grand_total'           => $request->grand_total,
-                'name'                  => $request->name,
-                'email'                 => $request->email,
-                'phone_number'          => $request->phone_number,
-                'address'               => $request->address,
-                'country_id'            => $request->country_id,
-                'state_id'              => $request->state_id,
-                'city_id'               => $request->city_id,
-                'order_status'          => 'pending',
-                'is_paid'               => $request->is_paid ? 1 : 0,
-                'transaction_id'        => $request->transaction_id,
+                'grand_total' => $request->grand_total,
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone_number' => $request->phone_number,
+                'address' => $request->address,
+                'country_id' => $request->country_id,
+                'state_id' => $request->state_id,
+                'city_id' => $request->city_id,
+                'order_status' => 'pending',
+                'is_paid' => $request->is_paid ? 1 : 0,
+                'transaction_id' => $request->transaction_id,
             ]);
 
-        
+
             foreach ($cartItems as $item) {
                 $product = $item->product;
 
@@ -1083,29 +1094,29 @@ class DashboardController extends Controller
                     $product->stock = max(0, $oldStock - $item->quantity);
                     $product->save();
 
-                
+
                     $bv = ($product->bv_points ?? 0) * $item->quantity;
                     $commissionAmount = $bv * ($commissionPercent / 100);
 
-                
-                    if ($product->branch_id) { 
+
+                    if ($product->branch_id) {
                         BranchCommission::create([
-                            'branch_id'         => $product->branch_id,
-                            'order_id'          => $order->id,
-                            'total_bv'          => $bv,
-                            'commission_percent'=> $commissionPercent,
+                            'branch_id' => $product->branch_id,
+                            'order_id' => $order->id,
+                            'total_bv' => $bv,
+                            'commission_percent' => $commissionPercent,
                             'commission_amount' => $commissionAmount,
-                            'status'            => 'earned',
+                            'status' => 'earned',
                         ]);
                     }
 
                     Log::info('Stock reduced + Commission recorded', [
-                        'product_id'        => $product->id,
-                        'ordered_qty'       => $item->quantity,
-                        'old_stock'         => $oldStock,
-                        'new_stock'         => $product->stock,
+                        'product_id' => $product->id,
+                        'ordered_qty' => $item->quantity,
+                        'old_stock' => $oldStock,
+                        'new_stock' => $product->stock,
                         'commission_amount' => $commissionAmount,
-                        'branch_id'         => $product->branch_id,
+                        'branch_id' => $product->branch_id,
                     ]);
                 }
             }
@@ -1115,15 +1126,15 @@ class DashboardController extends Controller
             $user->save();
 
             UsersBV::create([
-                'user_id'       => $user->id,
+                'user_id' => $user->id,
                 'membership_id' => $user->membership_id,
-                'bv_points'     => $totalBV,
-                'upgrade_time'  => Carbon::now(),
-                'type'          => 'Self-purchased',
-                'position'      => $user->position,
+                'bv_points' => $totalBV,
+                'upgrade_time' => Carbon::now(),
+                'type' => 'Self-purchased',
+                'position' => $user->position,
             ]);
 
-        // Distribute BV to sponsor (your existing code)
+            // Distribute BV to sponsor (your existing code)
             if ($user->sponsor_id) {
                 $sponsor = User::find($user->sponsor_id);
                 if ($sponsor) {
@@ -1133,7 +1144,7 @@ class DashboardController extends Controller
                         $totalBV,
                         $user->membership_id,
                         $user->id,
-                       'Referral from products'
+                        'Referral from products'
                     );
                 }
             }
@@ -1146,7 +1157,7 @@ class DashboardController extends Controller
         } catch (\Exception $e) {
             Log::error('❌ storeOrder failed', [
                 'message' => $e->getMessage(),
-                'trace'   => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString()
             ]);
             return back()->with('error', 'Something went wrong while placing the order.');
         }
@@ -1234,7 +1245,7 @@ class DashboardController extends Controller
     public function updateCartQuantity(Request $request)
     {
         $request->validate([
-            'id'     => 'required|integer|exists:carts,id',
+            'id' => 'required|integer|exists:carts,id',
             'action' => 'required|in:increase,decrease',
         ]);
 
@@ -1250,27 +1261,27 @@ class DashboardController extends Controller
         }
 
         // pull price + gst from product
-        $price         = $cartItem->product->distributor_price ?? 0;
-        $gstPercent    = $cartItem->product->gst ?: 0;
-        $gstAmount     = ($price * $gstPercent) / 100;
-        $unitPrice     = $price + $gstAmount;
+        $price = $cartItem->product->distributor_price ?? 0;
+        $gstPercent = $cartItem->product->gst ?: 0;
+        $gstAmount = ($price * $gstPercent) / 100;
+        $unitPrice = $price + $gstAmount;
 
         // recalc grand total and BV
         $newGrandTotal = $unitPrice * $quantity;
-        $bvPoints      = $cartItem->product->bv_points ?? 0;
-        $totalBV       = $bvPoints * $quantity;
+        $bvPoints = $cartItem->product->bv_points ?? 0;
+        $totalBV = $bvPoints * $quantity;
 
         // save back to cart
-        $cartItem->quantity     = $quantity;
-        $cartItem->grand_total  = $newGrandTotal;
-        $cartItem->total_bv     = $totalBV;
+        $cartItem->quantity = $quantity;
+        $cartItem->grand_total = $newGrandTotal;
+        $cartItem->total_bv = $totalBV;
         $cartItem->save();
 
         return response()->json([
-            'success'     => true,
-            'quantity'    => $quantity,
+            'success' => true,
+            'quantity' => $quantity,
             'grand_total' => number_format($newGrandTotal, 2),
-            'total_bv'    => $totalBV,
+            'total_bv' => $totalBV,
         ]);
     }
 
@@ -1302,19 +1313,19 @@ class DashboardController extends Controller
     public function updateDeliveryCharge(Request $request)
     {
         $request->validate([
-            'cart_id'         => 'required|integer|exists:carts,id',
+            'cart_id' => 'required|integer|exists:carts,id',
             'delivery_charge' => 'required|numeric|min:0',
-            'total_bv'        => 'nullable|numeric|min:0',
+            'total_bv' => 'nullable|numeric|min:0',
         ]);
 
         $cart = Cart::findOrFail($request->cart_id);
 
-        $basePrice    = $cart->price ?? 0;
-        $quantity     = $cart->quantity ?? 1;
+        $basePrice = $cart->price ?? 0;
+        $quantity = $cart->quantity ?? 1;
         $productTotal = $basePrice * $quantity;
 
         $cart->delivery_charges = $request->delivery_charge;
-        $cart->grand_total      = $productTotal + $request->delivery_charge;
+        $cart->grand_total = $productTotal + $request->delivery_charge;
 
         if ($request->filled('total_bv')) {
             $cart->total_bv = $request->total_bv;
@@ -1323,7 +1334,7 @@ class DashboardController extends Controller
         $cart->save();
 
         return response()->json([
-            'success'   => true,
+            'success' => true,
             'new_grand' => number_format($cart->grand_total, 2),
         ]);
     }
@@ -1331,18 +1342,18 @@ class DashboardController extends Controller
     public function getChargesByState(Request $request)
     {
         $request->validate(['state_id' => 'required|integer']);
-        
+
         // Get zone_id from state_id
         $zoneId = ShippingZone::where('state_id', $request->state_id)->value('id');
-        
+
         if (!$zoneId) {
             return response()->json(['success' => false, 'message' => 'No shipping zone found']);
         }
-        
+
         $charges = DeliveryCharge::where('zone_id', $zoneId)
-                    ->orderBy('weight')
-                    ->get();
-                    
+            ->orderBy('weight')
+            ->get();
+
         return response()->json([
             'success' => true,
             'charges' => $charges
@@ -1354,8 +1365,8 @@ class DashboardController extends Controller
         // Split values
         $productIds = explode('|', $order->product_id);
         $quantities = explode('|', $order->product_quantity);
-        $prices     = explode('|', $order->product_total_price);
-        $sizes      = explode('|', $order->size);
+        $prices = explode('|', $order->product_total_price);
+        $sizes = explode('|', $order->size);
 
         // Optional: Fetch product info
         $products = collect($productIds)->map(function ($id) {
@@ -1363,22 +1374,22 @@ class DashboardController extends Controller
         });
 
         return view('frontend.user.order-view-details', [
-            'order'      => $order,      // All order_details columns
-            'products'   => $products,
+            'order' => $order,      // All order_details columns
+            'products' => $products,
             'quantities' => $quantities,
-            'prices'     => $prices,
-            'sizes'      => $sizes,
+            'prices' => $prices,
+            'sizes' => $sizes,
         ]);
     }
 
     public function downloadInvoice(OrderDetail $order)
     {
-        $productIds   = explode('|', $order->product_id);
-        $quantities   = explode('|', $order->product_quantity);
-        $prices       = explode('|', $order->product_total_price);
-        $sizes        = explode('|', $order->size);
-        $gstPercents  = explode('|', $order->product_gst_percent);
-        $gstAmounts   = explode('|', $order->product_gst_amount);
+        $productIds = explode('|', $order->product_id);
+        $quantities = explode('|', $order->product_quantity);
+        $prices = explode('|', $order->product_total_price);
+        $sizes = explode('|', $order->size);
+        $gstPercents = explode('|', $order->product_gst_percent);
+        $gstAmounts = explode('|', $order->product_gst_amount);
 
         $products = collect($productIds)->map(function ($id) {
             return Product::find($id);
@@ -1389,31 +1400,31 @@ class DashboardController extends Controller
         foreach ($products as $index => $product) {
             if ($product) {
                 $productData->push([
-                    'name'        => $product->name,
-                    'size'        => $sizes[$index] ?? 'N/A',
-                    'quantity'    => $quantities[$index] ?? 1,
-                    'unit_price'  => isset($prices[$index], $quantities[$index]) && $quantities[$index] != 0
-                                        ? $prices[$index] / $quantities[$index]
-                                        : 0,
+                    'name' => $product->name,
+                    'size' => $sizes[$index] ?? 'N/A',
+                    'quantity' => $quantities[$index] ?? 1,
+                    'unit_price' => isset($prices[$index], $quantities[$index]) && $quantities[$index] != 0
+                        ? $prices[$index] / $quantities[$index]
+                        : 0,
                     'gst_percent' => $gstPercents[$index] ?? 0,
-                    'gst_amount'  => $gstAmounts[$index] ?? 0,
-                    'price'       => $prices[$index] ?? 0,
+                    'gst_amount' => $gstAmounts[$index] ?? 0,
+                    'price' => $prices[$index] ?? 0,
                 ]);
             }
         }
 
         $invoiceData = [
-            'order'          => $order,
-            'products'       => $productData,
-            'productTotal'   => array_sum($prices),
-            'grandTotal'     => (float) $order->grand_total,
+            'order' => $order,
+            'products' => $productData,
+            'productTotal' => array_sum($prices),
+            'grandTotal' => (float) $order->grand_total,
             'deliveryCharge' => (float) $order->total_delivery_charge,
-            'totalBV'        => (float) $order->total_bv,
+            'totalBV' => (float) $order->total_bv,
             'totalGstAmount' => array_sum($gstAmounts),
         ];
 
         $pdf = Pdf::loadView('frontend.user.order-invoice-pdf', $invoiceData)
-                ->setOptions(['defaultFont' => 'DejaVu Sans']);
+            ->setOptions(['defaultFont' => 'DejaVu Sans']);
 
         return $pdf->download("invoice-order-{$order->id}.pdf");
     }
@@ -1422,9 +1433,9 @@ class DashboardController extends Controller
     {
         $productIds = explode('|', $order->product_id);
         $quantities = explode('|', $order->product_quantity);
-        $unitPrices = explode('|', $order->product_total_price); 
-        $sizes      = explode('|', $order->size);
-        $statuses   = explode('|', $order->order_status);
+        $unitPrices = explode('|', $order->product_total_price);
+        $sizes = explode('|', $order->size);
+        $statuses = explode('|', $order->order_status);
 
         $products = [];
 
@@ -1433,22 +1444,22 @@ class DashboardController extends Controller
 
             if ($product) {
                 $products[] = [
-                    'product'   => $product,
-                    'quantity'  => (int)($quantities[$i] ?? 1),
-                    'unitPrice' => (float)($unitPrices[$i] ?? 0),
-                    'size'      => $sizes[$i] ?? '—',
-                    'status'    => $statuses[$i] ?? 'pending',
+                    'product' => $product,
+                    'quantity' => (int) ($quantities[$i] ?? 1),
+                    'unitPrice' => (float) ($unitPrices[$i] ?? 0),
+                    'size' => $sizes[$i] ?? '—',
+                    'status' => $statuses[$i] ?? 'pending',
                 ];
             }
         }
 
         return view('frontend.user.order-view-details', [
-            'order'          => $order,
-            'products'       => $products,
+            'order' => $order,
+            'products' => $products,
             'deliveryCharge' => (float) $order->delivery_charge,
-            'grandTotal'     => (float) $order->grand_total,  // no calculation
-            'totalBV'        => (float) $order->total_bv ?? 0,
-            'partner_id'     => Auth::user()->partner_id ?? null,
+            'grandTotal' => (float) $order->grand_total,  // no calculation
+            'totalBV' => (float) $order->total_bv ?? 0,
+            'partner_id' => Auth::user()->partner_id ?? null,
         ]);
     }
 
@@ -1456,9 +1467,9 @@ class DashboardController extends Controller
     {
         $productIds = explode('|', $order->product_id);
         $quantities = explode('|', $order->product_quantity);
-        $prices     = explode('|', $order->product_total_price);
-        $sizes      = explode('|', $order->size);
-        $statuses   = explode('|', $order->order_status);
+        $prices = explode('|', $order->product_total_price);
+        $sizes = explode('|', $order->size);
+        $statuses = explode('|', $order->order_status);
 
         $products = [];
         $productTotal = 0;
@@ -1475,14 +1486,14 @@ class DashboardController extends Controller
             $gst_amount = ($subtotal * $gst_percent) / 100;
 
             $products[] = [
-                'name'        => $product->name ?? 'N/A',
-                'size'        => $sizes[$index] ?? '—',
-                'quantity'    => $quantity,
-                'unit_price'  => $unit_price,
-                'price'       => $subtotal + $gst_amount,
-                'status'      => ucfirst($statuses[$index] ?? 'Pending'),
+                'name' => $product->name ?? 'N/A',
+                'size' => $sizes[$index] ?? '—',
+                'quantity' => $quantity,
+                'unit_price' => $unit_price,
+                'price' => $subtotal + $gst_amount,
+                'status' => ucfirst($statuses[$index] ?? 'Pending'),
                 'gst_percent' => $gst_percent,
-                'gst_amount'  => $gst_amount,
+                'gst_amount' => $gst_amount,
             ];
 
             $productTotal += $subtotal + $gst_amount;
@@ -1492,11 +1503,11 @@ class DashboardController extends Controller
         $user = Auth::user();
 
         $pdf = Pdf::loadView('frontend.user.order-invoice-pdf', [
-            'order'           => $order,
-            'products'        => $products,
-            'partner_id'      => $user->partner_id ?? null,
-            'productTotal'    => $productTotal,
-            'totalGstAmount'  => $totalGstAmount,
+            'order' => $order,
+            'products' => $products,
+            'partner_id' => $user->partner_id ?? null,
+            'productTotal' => $productTotal,
+            'totalGstAmount' => $totalGstAmount,
         ])->setOptions(['defaultFont' => 'DejaVu Sans']);
 
         return $pdf->download("invoice-order-{$order->id}.pdf");

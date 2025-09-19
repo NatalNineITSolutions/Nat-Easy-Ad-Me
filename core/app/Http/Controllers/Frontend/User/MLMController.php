@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use App\Models\UsersBv;
+use App\Models\UsersBV;
 use App\Jobs\SendRegisterUserEmailJob;
 use Modules\Membership\app\Models\Membership;
 use App\Mail\BasicMail;
@@ -47,6 +47,31 @@ class MLMController extends Controller
     //     return view('frontend.user.genology.add-member', compact('sponsor', 'position'));
     // }
 
+    // public function addNewMember(Request $request)
+    // {
+    //     $sponsorId = $request->query('sponsor');
+    //     $position = $request->query('position');
+
+    //     // Validate the parameters
+    //     if (!$sponsorId || !in_array($position, ['left', 'right'])) {
+    //         return redirect()->back()->withErrors(['error' => __('Invalid sponsor or position provided.')]);
+    //     }
+
+    //     $sponsor = User::find($sponsorId);
+    //     if (!$sponsor) {
+    //         return redirect()->back()->withErrors(['error' => __('Sponsor user not found.')]);
+    //     }
+
+    //     // Get the root user (the top-most user in the MLM system)
+    //     $rootUser = auth()->user();
+
+    //     return view('frontend.user.genology.add-member', [
+    //         'parentUser' => $sponsor,  // Immediate parent (the user under whom we're adding)
+    //         'rootUser' => $rootUser,     // The root user of the MLM tree
+    //         'position' => $position
+    //     ]);
+    // }
+
     public function addNewMember(Request $request)
     {
         $sponsorId = $request->query('sponsor');
@@ -57,17 +82,18 @@ class MLMController extends Controller
             return redirect()->back()->withErrors(['error' => __('Invalid sponsor or position provided.')]);
         }
 
+        // Get sponsor (parent) user
         $sponsor = User::find($sponsorId);
         if (!$sponsor) {
             return redirect()->back()->withErrors(['error' => __('Sponsor user not found.')]);
         }
 
-        // Get the root user (the top-most user in the MLM system)
-        $rootUser = auth()->user();
+        // Get root user only if authenticated
+        $rootUser = auth()->check() ? auth()->user() : null;
 
         return view('frontend.user.genology.add-member', [
-            'parentUser' => $sponsor,  // Immediate parent (the user under whom we're adding)
-            'rootUser' => $rootUser,     // The root user of the MLM tree
+            'parentUser' => $sponsor,      // Sponsor under whom the new member is being added
+            'rootUser' => $rootUser,       // Current user (if logged in)
             'position' => $position
         ]);
     }
@@ -80,13 +106,13 @@ class MLMController extends Controller
             $validationRules = [
                 'first_name' => 'required|max:191',
                 'last_name' => 'required|max:191',
-                'email' => 'required|email|unique:users|max:191',
-                'username' => 'required|unique:users|max:191',
-                'phone' => 'required|max:191',
+                'email' => 'nullable|email|unique:users,email|max:191',
+                'username' => 'required|unique:users,username|max:191',
+                'phone' => 'nullable|max:191|unique:users,phone',
                 'password' => 'required|min:6|max:191',
                 'confirm_password' => 'required|same:password',
-                'parent_id' => 'required|exists:users,id',  // Immediate parent (the node clicked)
-                'root_id' => 'required|exists:users,id',    // Root user of the tree
+                'parent_id' => 'required|exists:users,id',
+                'root_id' => 'required|exists:users,id',
                 'position' => 'required|in:left,right',
                 'gender' => 'required|in:male,female',
                 'dob' => 'required|date|before:today',
@@ -101,12 +127,12 @@ class MLMController extends Controller
             try {
                 $email_verify_token = sprintf("%d", random_int(123456, 999999));
 
-                $phone_number = Str::replace(['-', '(', ')', ' '], '', $request->phone);
-                $country_code = '+' . ltrim($request->country_code, '+');
-                $full_phone_number = $country_code . ' - ' . $phone_number;
-
-                if (!empty($full_phone_number) && User::where('phone', $full_phone_number)->exists()) {
-                    return redirect()->back()->withErrors(['phone' => __('Phone number is already taken')]);
+                // ✅ Phone handling (only if provided)
+                $full_phone_number = null;
+                if (!empty($request->phone)) {
+                    $phone_number = Str::replace(['-', '(', ')', ' '], '', $request->phone);
+                    $country_code = '+' . ltrim($request->country_code, '+');
+                    $full_phone_number = $country_code . ' - ' . $phone_number;
                 }
 
                 // Generate unique partner ID
@@ -121,7 +147,7 @@ class MLMController extends Controller
                 $user = new User([
                     'first_name' => $request->first_name,
                     'last_name' => $request->last_name,
-                    'email' => $request->email,
+                    'email' => $request->email ?? null,
                     'username' => $request->username,
                     'phone' => $full_phone_number,
                     'password' => Hash::make($request->password),
@@ -129,8 +155,8 @@ class MLMController extends Controller
                     'email_verify_token' => $email_verify_token,
                     'partner_id' => $partnerId,
                     'partner_name' => $partnerName,
-                    'sponsor_id' => $request->root_id,      // The root user who owns this tree
-                    'parent_id' => $request->parent_id,     // The immediate parent (node clicked)
+                    'sponsor_id' => $request->root_id,
+                    'parent_id' => $request->parent_id,
                     'gender' => $request->gender,
                     'dob' => $request->dob,
                     'position' => $request->position,
@@ -144,7 +170,7 @@ class MLMController extends Controller
                 $membership_id = $default_membership ? $default_membership->id : 1;
                 $bv_points = $default_membership ? $default_membership->bv_points : 0;
 
-                UsersBv::create([
+                UsersBV::create([
                     'user_id' => $user->id,
                     'membership_id' => $membership_id,
                     'bv_points' => $bv_points,
@@ -163,7 +189,10 @@ class MLMController extends Controller
                     ]);
                 }
 
-                dispatch(new SendRegisterUserEmailJob($user, $request->password));
+                // ✅ Only send email if provided
+                if (!empty($user->email)) {
+                    dispatch(new SendRegisterUserEmailJob($user, $request->password));
+                }
 
                 return redirect()->route('user.genology')->with('success', __('New member registered successfully!'));
             } catch (\Exception $e) {

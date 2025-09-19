@@ -52,8 +52,6 @@
     </div>
 @endif
 
-
-
 @if($page_post->layout === 'sidebar_layout')
     <div class="blog-list-area-wrapper index-01">
         <div class="container {{$page_post->page_class}}">

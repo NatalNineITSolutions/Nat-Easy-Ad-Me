@@ -24,8 +24,8 @@
                 <tr>
                     <th>#</th>
                     <th>{{ __('Zone') }}</th>
-                    <th>{{ __('Weight (in grams)') }}</th>
-                    <th>{{ __('Default Delivery Charge') }}</th> {{-- ✅ New Column --}}
+                    <th>{{ __('Weight (g)') }}</th>
+                    <th>{{ __('Default Delivery Charge') }}</th>
                     <th>{{ __('Setting type') }}</th>
                     <th>{{ __('Minimum Order Amount') }}</th>
                     <th>{{ __('Delivery charge') }}</th>
@@ -37,8 +37,8 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $charge->zone->zone_name ?? '-' }}</td>
-                        <td>{{ $charge->weight_in_grams }}</td>
-                        <td>₹{{ number_format($charge->default_delivery_charge, 2) }}</td> {{-- ✅ New Column --}}
+                        <td>{{ rtrim(rtrim(number_format($charge->weight, 2), '0'), '.') }} g</td>
+                        <td>₹{{ number_format($charge->default_delivery_charge, 2) }}</td>
                         <td>{{ ucfirst(str_replace('_', ' ', $charge->setting_type)) }}</td>
                         <td>{{ $charge->min_order ? number_format($charge->min_order, 2) : __('N/A') }}</td>
                         <td>₹{{ number_format($charge->delivery_charge, 2) }}</td>
@@ -62,7 +62,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="text-center">
+                        <td colspan="9" class="text-center">
                             {{ __('No delivery charges found.') }}
                         </td>
                     </tr>

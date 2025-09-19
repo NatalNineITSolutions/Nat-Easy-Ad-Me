@@ -14,7 +14,8 @@ class BVDistributionService
         User $user,
         int  $bvPoints,
         int  $upgradeMembershipId,
-        int  $originalUserId
+        int  $originalUserId,
+        string $referralType = 'Referral'
     ) {
         if (! $user->parent_id) {
             return;
@@ -39,13 +40,15 @@ class BVDistributionService
         $parent->bv_points += $bvPoints;
         $parent->save();
 
+        $type = $referralType === 'Referral from products' ? 'Referral from products' : 'Referral';
+
         // 2) record the referral‐BV
         $bvRecord = UsersBV::create([
             'user_id'       => $parent->id,
             'membership_id' => $upgradeMembershipId,
             'bv_points'     => $bvPoints,
             'upgrade_time'  => Carbon::now(),
-            'type'          => 'Referral',
+            'type'          => $type,
             'position'      => $user->position,
         ]);
 

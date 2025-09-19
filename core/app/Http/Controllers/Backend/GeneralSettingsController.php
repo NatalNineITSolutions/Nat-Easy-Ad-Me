@@ -109,6 +109,7 @@ class GeneralSettingsController extends Controller
             'site_tag_line' => 'nullable|string',
             'site_footer_copyright' => 'nullable|string',
             'gst_number' => 'nullable|string',
+            'business_address' => 'nullable|string',
         ]);
 
         $this->validate($request, [
@@ -121,10 +122,12 @@ class GeneralSettingsController extends Controller
         $_tag_line = 'site_tag_line';
         $_footer_copyright = 'site_footer_copyright';
         $_gst_number = 'gst_number';
+        $_business_address = 'business_address';
         update_static_option($_title, $request->$_title);
         update_static_option($_tag_line, $request->$_tag_line);
         update_static_option($_footer_copyright, $request->$_footer_copyright);
         update_static_option($_gst_number, $request->$_gst_number);
+        update_static_option($_business_address, $request->$_business_address);
         
 
         $all_fields = [
@@ -582,5 +585,24 @@ class GeneralSettingsController extends Controller
         return back()->with(FlashMsg::item_new('Database Upgraded Successfully'));
     }
 
+    public function branchCommission()
+    {
+        return view('backend.general-settings.branch-commission');
+    }
+
+    public function updateBranchCommission(Request $request)
+    {
+        $request->validate([
+            'branch_commission' => 'required|numeric|min:0',
+        ]);
+
+        // use the helper just like site identity update
+        update_static_option('Branch', $request->branch_commission);
+
+        return redirect()->back()->with([
+            'msg' => __('Branch commission settings updated successfully'),
+            'type' => 'success'
+        ]);
+    }
 
 }

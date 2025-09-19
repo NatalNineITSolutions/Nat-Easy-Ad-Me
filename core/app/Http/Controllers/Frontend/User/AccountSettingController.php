@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Mail;
 use Intervention\Image\Facades\Image;
 use Modules\Membership\app\Models\BusinessHours;
 use Modules\Membership\app\Models\UserMembership;
+use Modules\CountryManage\app\Models\City;
+use Modules\CountryManage\app\Models\State;
 
 class AccountSettingController extends Controller
 {
@@ -243,4 +245,5 @@ class AccountSettingController extends Controller
         toastr_success(__('Verification information updated successfully'));
         return redirect()->back();
     }
+
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Backend\AdvertisementController;
+use App\Http\Controllers\Backend\VendorController;
 use App\Models\User;
 use App\Models\UserPayoutDetail;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,9 @@ use App\Http\Controllers\Backend\PageSettingsController;
 use App\Http\Controllers\Backend\MapSettings;
 use App\Http\Controllers\Backend\ShippingController;
 use App\Http\Controllers\Backend\OrderController;
+use App\Http\Controllers\Backend\AttributeController;
+use App\Http\Controllers\Backend\BranchesController;
+use App\Http\Controllers\Backend\LevelCommissionController;
 
 
 Route::middleware(['auth','setlang'])->group(function () {
@@ -142,6 +146,36 @@ Route::middleware(['auth','setlang'])->group(function () {
         });
     });
 
+    // Attribute Manage
+    Route::group(['prefix' => 'attributes'], function () {
+        Route::controller(AttributeController::class)->group(function () {
+
+            // Unit
+            Route::get('/unit', 'index')->name('admin.attributes.unit.index')->permission('unit-view');
+            Route::get('/add-unit', 'create')->name('admin.attributes.unit.create')->permission('unit-create');
+            Route::post('/unit', 'store')->name('admin.attributes.unit.store')->permission('unit-create');
+            Route::get('/unit/{id}/edit', 'edit')->name('admin.attributes.unit.edit')->permission('unit-edit');
+            Route::put('/unit/{id}', 'update')->name('admin.attributes.unit.update')->permission('unit-edit');
+            Route::delete('/unit/{id}', 'destroy')->name('admin.attributes.unit.destroy')->permission('unit-delete');
+
+            // Size
+            Route::get('/size', 'sizeIndex')->name('admin.attributes.size.index')->permission('size-view');
+            Route::get('/add-size', 'addSize')->name('admin.attributes.size.create')->permission('size-create');
+            Route::post('/add-size', 'storeSize')->name('admin.attributes.size.store')->permission('size-create');
+            Route::get('/edit-size/{id}', 'editSize')->name('admin.attributes.size.edit')->permission('size-edit');
+            Route::put('/update-size/{id}', 'updateSize')->name('admin.attributes.size.update')->permission('size-edit');
+            Route::delete('/delete-size/{id}', 'deleteSize')->name('admin.attributes.size.destroy')->permission('size-delete');
+
+            // Delivery Option
+            Route::get('/delivery-option', 'deliveryOptionIndex')->name('admin.attributes.delivery.option.index')->permission('delivery-option-view');
+            Route::get('/add-delivery-option', 'addDeliveryOption')->name('admin.attributes.delivery.option.create')->permission('delivery-option-create');
+            Route::post('/add-delivery-option', 'storeDeliveryOption')->name('admin.attributes.delivery.option.store')->permission('delivery-option-create');
+            Route::get('/edit-delivery-option/{id}', 'editDeliveryOption')->name('admin.attributes.delivery.option.edit')->permission('delivery-option-edit');
+            Route::put('/update-delivery-option/{id}', 'updateDeliveryOption')->name('admin.attributes.delivery.option.update')->permission('delivery-option-edit');
+            Route::delete('/delivery-option/{id}', 'destroyDeliveryOption')->name('admin.attributes.delivery.option.destroy')->permission('delivery-option-delete');
+        });
+    });
+
     // Product Manage
     Route::group(['prefix' => 'products'], function () {
         Route::controller(\App\Http\Controllers\Backend\ProductController::class)->group(function () {
@@ -196,18 +230,32 @@ Route::middleware(['auth','setlang'])->group(function () {
 
             Route::put('/update-delivery-charge/{id}', 'updateDeliveryCharge')->name('admin.shipping.update.delivery.charge')->permission('shipping-edit');
 
-            // Delete delivery charge
             Route::delete('/delete-delivery-charge/{id}', 'deleteDeliveryCharge')->name('admin.shipping.delete.delivery.charge')->permission('shipping-delete');
 
         });
     });
 
+    // Order Manage
     Route::group(['prefix' => 'orders'], function () {
         Route::controller(OrderController::class)->group(function () {
 
             // Show All Orders (List)
             Route::get('/all', 'allOrders')->name('admin.orders.all')->permission('order-view');
+
+            // Update Status
             Route::put('/admin/orders/{id}/update-status', 'updateStatus')->name('admin.orders.update.status');
+
+            // View Order Details
+            Route::get('/view/{order}', 'viewOrderDetails')->name('admin.orders.view.details')->permission('order-view');
+
+            // Download Invoice
+            Route::get('/invoice/download/{order}', 'downloadInvoice')->name('admin.orders.invoice.download')->permission('order-view');
+
+            // Inside admin.orders route group
+            Route::put('/admin/orders/{order}/update-status', [OrderController::class, 'updateProductStatus'])->name('admin.orders.update.status.product')->permission('order-edit');
+
+            // Shipping Bill Download
+            Route::get('/shipping-bill/download/{order}',  'downloadShippingBill')->name('admin.orders.shipping.download')->permission('order-view');
 
         });
     });
@@ -224,7 +272,6 @@ Route::middleware(['auth','setlang'])->group(function () {
     Route::get('/password-change', [AdminProfileController::class, 'adminPassword'])->name('admin.profile.password.change');
     Route::post('/password-change', [AdminProfileController::class, 'adminPasswordChange']);
 
-
     //account suspend active
     Route::group(['prefix' => 'account'], function () {
         Route::controller(\App\Http\Controllers\Backend\SuspendActiveController::class)->group(function () {
@@ -232,7 +279,6 @@ Route::middleware(['auth','setlang'])->group(function () {
             Route::post('unsuspend/{id}', 'unsuspend')->name('admin.account.unsuspend');
         });
     });
-
 
     // Payout Manage
     Route::group(['prefix' => 'payout'], function () {
@@ -246,6 +292,35 @@ Route::middleware(['auth','setlang'])->group(function () {
         });
     });
 
+    // Branches Manage
+    Route::get('/branches', [BranchesController::class, 'index'])->name('admin.branches');
+    Route::get('/branches/{id}/commission', [BranchesController::class, 'commissionDetails'])->name('branch.commission.details');
+    Route::post('/branches/store', [BranchesController::class, 'store'])->name('admin.branches.store')->permission('branch-add');
+    Route::post('/branches/update/{id}', [BranchesController::class, 'update'])->name('admin.branches.update')->permission('branch-edit');
+    Route::post('/branches/delete/{id}', [BranchesController::class, 'destroy'])->name('admin.branches.delete')->permission('branch-delete');
+
+    // Branch Payout
+    Route::get('/branch-payout', [BranchesController::class, 'payout'])->name('admin.branch.payout');
+    Route::post('/branch-payout/generate', [BranchesController::class, 'generatePayout'])
+    ->name('admin.branch.payout.generate');
+    Route::get('/branch-payout-history', [BranchesController::class, 'branchPayoutHistory'])->name('admin.branch.payout.history');
+    Route::get('/branch-payout-history/{id}', [BranchesController::class, 'viewBranchPayoutHistory'])->name('admin.branch.payout.history.view');
+    Route::get('/branch-payout-history/{history}/download', [BranchesController::class, 'downloadPayoutStatement'])->name('admin.branch.payout.history.download');
+
+
+
+    // Level Based Commission
+    Route::get('/level-commission', [LevelCommissionController::class, 'index'])->name('admin.level.commission');
+    Route::post('/level-commission/store', [LevelCommissionController::class, 'store'])->name('admin.level.commission.store');
+    Route::get('/level-commission/{id}/edit', [LevelCommissionController::class, 'edit'])->name('admin.level.commission.edit');
+    Route::post('/level-commission/{id}/update', [LevelCommissionController::class, 'update'])->name('admin.level.commission.update');
+    Route::delete('/level-commission/{id}', [LevelCommissionController::class, 'destroy'])->name('admin.level.commission.delete');
+
+    // Vendors Manage
+    Route::get('/vendors', [VendorController::class, 'index'])->name('admin.vendors');
+    Route::post('/vendors/store', [VendorController::class, 'store'])->name('admin.vendors.store')->permission('vendor-add');
+    Route::post('/vendors/update/{id}', [VendorController::class, 'update'])->name('admin.vendors.update')->permission('vendor-edit');
+    Route::post('/vendors/delete/{id}', [VendorController::class, 'destroy'])->name('admin.vendors.delete')->permission('vendor-delete');
 
     // Listing manage
     Route::group(['prefix' => 'listings'], function () {
@@ -340,6 +415,8 @@ Route::middleware(['auth','setlang'])->group(function () {
             Route::get('deactivated/users-all', 'user_deactivated_all')->name('admin.user.deactivated.all')->permission('user-deactivated-list');
             Route::get('paginate/deactivated-user', 'user_deactivated_pagination')->name('admin.user.paginate.deactivated');
             Route::get('search/deactivated-user', 'search_deactivated_user')->name('admin.user.search.deactivated');
+
+            Route::get('user-reports', 'user_reports')->name('admin.user.reports')->permission('user-reports');
         });
     });
 
@@ -613,6 +690,10 @@ Route::middleware(['auth','setlang'])->group(function () {
         Route::get('/database-upgrade', [GeneralSettingsController::class, 'databaseUpgrade'])->name('admin.general.database.upgrade')->permission('database-upgrade-setting');
         Route::post('/database-upgrade', [GeneralSettingsController::class, 'databaseUpgradePost']);
 
+        //branch commission
+        Route::get('/branch-commission', [GeneralSettingsController::class, 'branchCommission'])->name('admin.general.branch.commission')->permission('branch-commission-settings');
+        Route::post('/branch-commission', [GeneralSettingsController::class, 'updateBranchCommission']);
+
         Route::post('/license-setting-verify', [GeneralSettingsController::class, 'licenseKeyGenerate'])->name('admin.general.license.key.generate')->permission('license-key-generate');
         Route::get('/update-check', [GeneralSettingsController::class, 'updateVersionCheck'])->name('admin.general.update.version.check')->permission('update-version-check');
         Route::post('/download-update/{productId}/{tenant}', [GeneralSettingsController::class, 'updateDownloadLatestVersion'])->name('admin.general.update.download.settings');
@@ -639,6 +720,7 @@ Route::post('/media-upload', [MediaUploadController::class, 'uploadMediaFile'])-
 Route::post('/media-upload/alt', [MediaUploadController::class, 'altChangeUploadMediaFile'])->name('admin.upload.media.file.alt.change');
 // media upload routes for restrict user in demo mode
 Route::post('/media-upload/loadmore', [MediaUploadController::class, 'getImageForLoadmore'])->name('admin.upload.media.file.loadmore');
+
 Route::get('/test-email', function() {
     $user = User::first();
     $payout = UserPayoutDetail::first();

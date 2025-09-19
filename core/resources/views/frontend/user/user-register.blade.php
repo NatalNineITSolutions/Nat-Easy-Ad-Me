@@ -8,12 +8,20 @@
             padding: 8px 0 6px 56px;
         }
 
-        span#phone_availability {
+        span#phone_availability,
+        span#email_availability,
+        span#user_name_availability {
             font-size: 13px;
+            display: block;
+            margin-top: 5px;
         }
 
         .select2-container .select2-selection--single {
             padding: 15px 16px;
+        }
+
+        .iti__selected-flag{
+            padding: 13px;
         }
     </style>
 @endsection
@@ -90,23 +98,25 @@
                                 <div class="input-form input-form2">
                                     <input type="text" class="ps-3" name="username" value="{{old('username')}}"
                                         id="username" placeholder="{{ __('Type Username') }}">
+                                    <span id="user_name_availability"></span>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-12">
                                 <label class="infoTitle">{{ __('Email') }}</label>
                                 <div class="input-form input-form2">
-                                    <input type="email" name="email" value="{{old('email')}}"
+                                    <input type="email" name="email" value="{{old('email')}}" id="email"
                                         placeholder="{{__('Type Email')}}">
                                     <div class="icon">
                                         <i class="lar la-envelope icon"></i>
                                     </div>
+                                    <span id="email_availability"></span>
                                 </div>
                             </div>
 
                             <div class="col-lg-6 col-md-12">
                                 <label class="infoTitle">{{ __('Phone Number') }}</label>
                                 <div class="input-form input-form2">
-                                    <input type="hidden" id="country-code" name="country_code">
+                                    <input type="hidden" id="country-code" name="country_code" class="countryCode">
                                     <input type="tel" name="phone" value="{{old('phone')}}" id="phone"
                                         placeholder="{{__('Type Phone')}}">
                                     <span id="phone_availability"></span>
@@ -179,15 +189,15 @@
                                 </label>
                             </div>
 
-                            <!-- @if(get_static_option('site_google_captcha_enable') == 'on')
-                                                                        <div class="col-md-12 my-3">
-                                                                            <div class="g-recaptcha" data-sitekey="{{ get_static_option('recaptcha_2_site_key')}}">
-                                                                            </div>
-                                                                            @if ($errors->has('g-recaptcha-response'))
-                                                                                <span class="text-danger">{{ $errors->first('g-recaptcha-response') }}</span>
-                                                                            @endif
-                                                                        </div>
-                                                                    @endif -->
+                            @if(get_static_option('site_google_captcha_enable') == 'on')
+                                <div class="col-md-12 my-3">
+                                    <div class="g-recaptcha" data-sitekey="{{ get_static_option('recaptcha_2_site_key')}}">
+                                    </div>
+                                    @if ($errors->has('g-recaptcha-response'))
+                                        <span class="text-danger">{{ $errors->first('g-recaptcha-response') }}</span>
+                                    @endif
+                                </div>
+                            @endif
 
                             <div class="col-sm-12 mt-2">
                                 <div class="btn-wrapper text-center">

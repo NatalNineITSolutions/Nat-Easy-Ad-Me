@@ -276,9 +276,9 @@
                         <div class="descriptionTop">
                             <div class="row gy-4">
                                 @if(!empty($listing->condition))
-                                <div class="col-4">
-                                    {{ __('Condition:') }} <span class="text-bold"> {{ $listing->condition }} </span>
-                                </div>
+                                    <div class="col-4">
+                                        {{ __('Condition:') }} <span class="text-bold"> {{ $listing->condition }} </span>
+                                    </div>
                                 @endif
                                 @if(!empty($listing->authenticity))
                                 <div class="col-4">

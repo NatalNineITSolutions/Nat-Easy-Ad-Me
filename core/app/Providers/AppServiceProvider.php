@@ -59,42 +59,45 @@ class AppServiceProvider extends ServiceProvider
 
 
     public function boot(): void
-{
-    Schema::defaultStringLength(191);
+    {
+        Schema::defaultStringLength(191);
 
-    try {
-        $all_language = Language::all();
-    } catch (\Exception $e) {
-        $all_language = null;
-    }
-
-    Paginator::useBootstrap();
-
-    if (get_static_option('site_force_ssl_redirection') === 'on') {
-        URL::forceScheme('https');
-    }
-
-    $this->loadViewsFrom(__DIR__.'/../../plugins/PageBuilder/views', 'pagebuilder');
-
-    // Share authenticated user & notification count globally
-    View::composer('*', function ($view) {
-        $user = Auth::user();
-        $view->with('user', $user);
-
-        // Add notification count logic
-        $notificationCount = 0;
-        if ($user) {
-            $notificationCount = ProfileRequest::whereHas('profile', function ($query) use ($user) {
-                    $query->where('user_id', $user->id);
-                })
-                ->where('status', 'pending')
-                ->count();
+        try {
+            $all_language = Language::all();
+        } catch (\Exception $e) {
+            $all_language = null;
         }
-        $view->with('notificationCount', $notificationCount);
-    });
-}
 
+        Paginator::useBootstrap();
 
+        if (get_static_option('site_force_ssl_redirection') === 'on') {
+            URL::forceScheme('https');
+        }
+
+        $this->loadViewsFrom(__DIR__.'/../../plugins/PageBuilder/views', 'pagebuilder');
+
+        // Share authenticated user & notification count globally
+        View::composer('*', function ($view) {
+            $user = Auth::user();
+            $view->with('user', $user);
+
+            // Notification count
+            $notificationCount = 0;
+            if ($user) {
+                $notificationCount = ProfileRequest::whereHas('profile', function ($query) use ($user) {
+                        $query->where('user_id', $user->id);
+                    })
+                    ->where('status', 'pending')
+                    ->count();
+            }
+            $view->with('notificationCount', $notificationCount);
+
+            // ✅ Add cart_count here
+            $cartCount = $user ? \App\Models\Cart::where('user_id', $user->id)->count() : 0;
+            $view->with('cart_count', $cartCount);
+        });
+
+    }
 
     // public function boot(): void
     // {

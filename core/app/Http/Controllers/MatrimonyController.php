@@ -524,7 +524,6 @@ class MatrimonyController extends Controller
             }
         }
 
-        // Join the paths with pipe if you want to keep the current storage format
         $imagePathString = !empty($imagePaths) ? implode('|', $imagePaths) : null;
 
         // Calculate age from date of birth

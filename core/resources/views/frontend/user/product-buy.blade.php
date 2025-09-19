@@ -1,177 +1,236 @@
 @extends('frontend.layout.master')
 
 @section('site-title')
-    {{ __('Buy Product') }}
+    Buy Product
 @endsection
 
 @section('style')
-    <style>
-
-        .section {
-            background-color: #F9FAFB;
-        }
-
-        .buy-section {
-            padding: 30px 0;
-        }
-        .product-summary img {
-            max-width: 100%;
-            height: auto;
-            object-fit: contain;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-        }
-
-        .left,
-        .right {
-            background-color: white;
-            padding: 15px 25px;
-            border-radius: 25px;
-        }
-
-        .select2-container .select2-dropdown .select2-results {
+<style>
+    .section {
+        background-color: #F9FAFB;
+    }
+    .buy-section {
+        padding: 30px 0;
+    }
+    .product-summary img {
+        max-width: 100%;
+        height: auto;
+        object-fit: contain;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+    }
+    .left, .right {
+        background-color: white;
+        padding: 15px 25px;
+        border-radius: 25px;
+    }
+    .select2-container .select2-dropdown .select2-results {
         max-height: 200px;
         overflow-y: auto;
-        } 
-
-        /* Hover background for Select2 options */
-        .select2-container--bootstrap4 .select2-results__option--highlighted {
-            background-color: #f0f0f0 !important; /* light gray or use your brand color */
-            color: #333; /* optional: dark text for readability */
-        }
-
-    </style>
+    }
+    .select2-container--bootstrap4 .select2-results__option--highlighted {
+        background-color: #f0f0f0 !important;
+        color: #333;
+    }
+</style>
 @endsection
 
 @section('content')
 <div class="section">
-    <div class="container buy-section"> 
+    <div class="container buy-section">
         <div class="row">
-            <!-- Left: Buy Form -->
-            <div class="col-md-6">
-                <div class="left">
-                    <h3 class="mb-4">{{ __('Shipping Information') }}</h3>
-                    <form action="#" method="POST">
-                        @csrf
+            <!-- Right: Product Summary -->
+            <div class="col-md-12">
+                <div class="right">
+                    <h5 class="mb-3">Order Summary</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sm" id="order-summary-table">
+                            <thead class="table-light text-center">
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Product Name</th>
+                                    <th>BV</th>
+                                    <th>Weight (g)</th>
+                                    <th>Size</th>
+                                    <th>Price (1 qty)</th>
+                                    <th>Quantity</th>
+                                    <th>Total Price</th>
+                                    <th>Delivery Charge</th>
+                                    <th>Total BV</th>
+                                    <th>Grand Total</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                @php
+                                    $totalBV = 0;
+                                    $subtotal = 0;
+                                    $totalDelivery = 0;
+                                @endphp
+                                @foreach($cartItems as $index => $item)
+                                    @php
+                                        $product = $item->product;
+                                        $qty = $item->quantity;
+                                        $basePrice = $item->price;
+                                        $gst = $product->gst ?? 0;
+                                        $gstAmount = ($basePrice * $gst) / 100;
+                                        $priceWithGst = $basePrice + $gstAmount;
+                                        $totalPrice = $priceWithGst * $qty;
+                                        $bv = $product->bv_points ?? 0;
+                                        $totalBV += $bv * $qty;
+                                        $subtotal += $totalPrice;
+                                        $deliveryCharge = 0;
+                                    @endphp
 
-                        <input type="hidden" name="quantity" value="{{ $quantity }}">
+                                    <tr data-product-id="{{ $item->product->id }}"
+                                        data-cart-id="{{ $item->id }}"
+                                        data-quantity="{{ $item->quantity }}"
+                                        data-price="{{ number_format(($item->price + (($item->price * ($item->product->gst ?? 0)) / 100)), 2, '.', '') }}"
+                                        data-bv="{{ $item->product->bv_points ?? 0 }}"
+                                        data-weight="{{ $item->product->weight ?? 0 }}"
+                                        data-size="{{ strtolower($item->size->name ?? '') }}">
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $product->name }}</td>
+                                        <td>{{ $bv }}</td>
+                                        <td>{{ $product->weight ? (int) $product->weight . ' g' : '—' }}</td>
+                                        <td>{{ $item->size->name ?? '—' }}</td>
+                                        <td>
+                                            ₹{{ number_format($basePrice, 2) }}<br>
+                                            <small>+ ₹{{ number_format($gstAmount, 2) }} GST</small>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex justify-content-center align-items-center">
+                                                <button type="button"
+                                                    class="btn btn-sm btn-outline-secondary rounded-circle me-1 update-qty-btn"
+                                                    data-action="decrease"
+                                                    data-id="{{ $item->id }}">−</button>
+                                                <input type="text"
+                                                    class="form-control form-control-sm text-center px-1 qty-input"
+                                                    value="{{ $qty }}"
+                                                    readonly
+                                                    style="width: 40px;">
+                                                <button type="button"
+                                                    class="btn btn-sm btn-outline-secondary rounded-circle ms-1 update-qty-btn"
+                                                    data-action="increase"
+                                                    data-id="{{ $item->id }}">+</button>
+                                            </div>
+                                        </td>
+
+                                        @php
+                                            $gstAmount = ($item->price * ($item->product->gst ?? 0)) / 100;
+                                            $priceWithGst = $item->price + $gstAmount;
+                                            $totalPrice = $priceWithGst * $item->quantity;
+                                            $bv = $item->product->bv_points ?? 0;
+                                            $totalBV = $bv * $item->quantity;
+                                            $deliveryCharge = 0; // JS will populate later
+                                        @endphp
+
+                                        <td class="product-total-cell">₹{{ number_format($totalPrice, 2) }}</td>
+                                        <td class="delivery-charge-cell">₹{{ number_format($deliveryCharge, 2) }}</td>
+                                        <td class="bv-total-cell">{{ $bv * $qty }}</td>
+                                        <td class="row-grand-total-cell">₹{{ number_format($totalPrice + $deliveryCharge, 2) }}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-danger remove-cart-item" data-id="{{ $item->id }}">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    @php
+                        $grandTotal = $subtotal + $totalDelivery;
+                    @endphp
+
+                    <div class="mt-3 text-end">
+                        <p class="mb-1"><strong>Subtotal:</strong> <span id="summary-subtotal">₹{{ number_format($subtotal, 2) }}</span></p>
+                        <p class="mb-1"><strong>Delivery Charge:</strong> <span id="summary-delivery-charge">₹{{ number_format($totalDelivery, 2) }}</span></p>
+                        <p class="mb-1"><strong>Total BV:</strong> <span id="summary-total-bv">{{ $totalBV }}</span></p>
+                        <p class="mb-0 fs-5"><strong>Grand Total:</strong> <span id="summary-grand-total">₹{{ number_format($grandTotal, 2) }}</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Left: Shipping Form -->
+            <div class="col-md-12 mt-3">
+                <div class="left">
+                    <h3 class="mb-4">Shipping Information</h3>
+                    <form action="{{ route('user.order.store') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="bv_points" value="{{ $totalBV }}">
 
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label for="name" class="form-label">Full Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="name" id="name" class="form-control" required>
+                                    <label class="form-label">Full Name <span class="text-danger">*</span></label>
+                                    <input type="text" id="input_name" name="name" class="form-control" required value="{{ old('name', $user->username ?? '') }}">
                                 </div>
-                            </div>  
-
-                            <div class="col-md-6">
+                            </div>
+                            <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label for="email" class="form-label">{{ __('Email') }}<span class="text-danger">*</span></label>
-                                    <input type="email" name="email" id="email" class="form-control" required>
+                                    <label class="form-label">Email <span class="text-danger">*</span></label>
+                                    <input type="email" id="input_email"  name="email" class="form-control" required value="{{ old('email', $user->email ?? '') }}">
                                 </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                <input type="text" id="input_phone" name="phone_number" class="form-control" maxlength="10" pattern="\d{10}" required value="{{ old('phone_number', $user->phone ?? '') }}">
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">{{ __('Phone Number') }}<span class="text-danger">*</span></label>
-                            <input type="text" name="phone" id="phone" class="form-control" maxlength="10" pattern="\d{10}" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="address" class="form-label">{{ __('Address') }}<span class="text-danger">*</span></label>
-                            <textarea name="address" id="address" rows="3" class="form-control" required></textarea>
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label class="form-label">Address <span class="text-danger">*</span></label>
+                                <textarea name="address" class="form-control" rows="3" required>{{ old('address', $identity->address ?? '') }}</textarea>
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="form-label">Pincode <span class="text-danger">*</span></label>
+                                <input type="text" name="pincode" class="form-control" maxlength="6" pattern="\d{6}" required value="{{ old('pincode', $identity->zip_code ?? '') }}">
+                            </div>
                         </div>
 
                         <div class="row mb-3">
-                            <!-- Country -->
                             <div class="col-md-4">
-                                <label class="form-label">Country<span class="text-danger">*</span></label>
-                                <select id="country" name="country" class="form-control">
+                                <label class="form-label">Country <span class="text-danger">*</span></label>
+                                <select id="country_id" class="form-control">
                                     <option value="">Select Country</option>
                                     @foreach($countries as $country)
-                                        <option value="{{ $country->id }}">{{ $country->country }}</option>
+                                        <option value="{{ $country->id }}" {{ isset($identity) && $identity->country_id == $country->id ? 'selected' : '' }}>
+                                            {{ $country->country }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
-
-                            <!-- State -->
                             <div class="col-md-4">
-                                <label class="form-label">State<span class="text-danger">*</span></label>
-                                <select id="state" name="state" class="form-control" disabled>
+                                <label class="form-label">State <span class="text-danger">*</span></label>
+                                <select id="state_id" name="state" class="form-control get_country_state">
                                     <option value="">Select State</option>
+                                    @foreach($states as $state)
+                                        <option value="{{ $state->id }}" {{ (isset($identity) && $identity->state_id == $state->id) ? 'selected' : '' }}>
+                                            {{ $state->state }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
-
-                            <!-- City -->
                             <div class="col-md-4">
-                                <label class="form-label">City<span class="text-danger">*</span></label>
-                                <select id="city" name="city" class="form-control" disabled>
+                                <label class="form-label">City <span class="text-danger">*</span></label>
+                                <select id="city_id" name="city" class="form-control get_state_city">
                                     <option value="">Select City</option>
+                                    @foreach($cities as $city)
+                                        <option value="{{ $city->id }}" {{ (isset($identity) && $identity->city_id == $city->id) ? 'selected' : '' }}>
+                                            {{ $city->city }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="pincode" class="form-label">{{ __('Pincode') }}<span class="text-danger">*</span></label>
-                            <input type="text" name="pincode" id="pincode" class="form-control" maxlength="6" pattern="\d{6}" required>
                         </div>
 
                         <button type="button" id="placeOrderBtn" class="btn btn-primary px-4">
                             {{ __('Place Order') }}
                         </button>
                     </form>
-                </div>
-            </div>
-
-            <!-- Right: Product Summary -->
-            <div class="col-md-6 right">
-                <h3 class="mb-4">{{ __('Product Summary') }}</h3>
-                @php
-                    $imgPath = $product->imageFile->path ?? 'no-image.png';
-                    $quantity = request()->query('quantity', 1); // Get from query parameter
-                    $gst = $product->gst ?? 0;
-                    $price = $product->distributor_price ?? 0;
-                    $weight = $product->weight ?? 0;
-                    $totalWeight = $weight * $quantity;
-                    $gstAmount = ($price * $gst) / 100;
-                    $totalPerItem = $price + $gstAmount;
-                    $finalTotal = $totalPerItem * $quantity;
-                @endphp
-
-                <div class="d-flex align-items-center gap-3">
-                    <img src="{{ asset('assets/uploads/media-uploader/' . $imgPath) }}"
-                        alt="{{ $product->name }}"
-                        style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
-                    
-                    <div class="flex-grow-1">
-                        <div class="d-flex justify-content-between">
-                            <strong>{{ $product->name }} × {{ $quantity }}</strong>
-                            <strong>₹{{ number_format($finalTotal, 2) }}</strong>
-                        </div>
-                        <div class="text-muted" style="font-size: 14px;">
-                            (₹{{ number_format($totalPerItem, 2) }} per item incl. GST)
-                        </div>
-                        @if($weight > 0)
-                            <div class="d-flex justify-content-between text-muted" style="font-size: 13px;">
-                                <span><strong>Weight:</strong> {{ $weight }}kg × {{ $quantity }}</span>
-                                <span><strong>{{ number_format($totalWeight, 2) }}kg</strong></span>
-                            </div>
-                        @endif
-                        <!-- In your product summary section -->
-                        <div id="delivery-charge-container" class="mt-2" style="display: none;">
-                            <div class="d-flex justify-content-between text-muted" style="font-size: 13px;">
-                                <span><strong>Delivery Charge:</strong></span>
-                                <span><strong id="delivery-charge-amount"></strong></span>
-                            </div>
-                            <div id="delivery-calculation" class="text-muted" style="font-size: 11px; display: none;">
-                                <span id="calculation-text"></span>
-                            </div>
-                        </div>
-                        <div id="grand-total-container" class="d-flex justify-content-between fw-bold text-dark mt-2" style="font-size: 14px; display: none;">
-                            <span><strong>Grand Total:</strong></span>
-                            <span><strong id="grand-total-amount"></strong></span>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -183,257 +242,562 @@
 
 @section('scripts')
 
+{{-- Razorpay Modal Script --}}
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-
-{{-- State and city fetch --}}
+{{-- Update Cart quantity and recalculate summary and fetch delivery charge on initial load --}}
 <script>
-    $(function(){
-        $('#country, #state, #city').select2({ theme: 'bootstrap4' });
+    document.addEventListener("DOMContentLoaded", function () {
+        const summarySelectors = {
+            subtotal: document.getElementById("summary-subtotal"),
+            delivery: document.getElementById("summary-delivery-charge"),
+            bv: document.getElementById("summary-total-bv"),
+            grand: document.getElementById("summary-grand-total")
+        };
 
-        const csrfToken = $('meta[name="csrf-token"]').attr('content');
-        const $country  = $('#country');
-        const $state    = $('#state');
-        const $city     = $('#city');
+        async function getDeliveryCharges(stateId) {
+            if (!stateId) return null;
+            try {
+                const response = await fetch("{{ route('user.get.delivery.charges') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({ state_id: stateId })
+                });
+                return await response.json();
+            } catch (error) {
+                console.error("Error fetching delivery charges:", error);
+                return null;
+            }
+        }
 
-        const deliveryCharges = @json($deliveryCharges);
-        const productWeight = {{ $product->weight ?? 0 }};
-        const quantity = {{ $quantity }};
-        const totalWeightInGrams = productWeight * quantity * 1000;
-        const productTotal = {{ $finalTotal }};
+        async function updateAllDeliveryCharges() {
+            const stateId = document.getElementById("state_id").value;
+            if (!stateId) return;
 
-        // Initialize with product total as grand total
-        $('#grand-total-amount').text(`₹${productTotal.toFixed(2)}`);
-        $('#grand-total-container').show();
-        $('#delivery-charge-amount').text('₹0.00');
-        $('#delivery-charge-container').show();
+            const deliveryData = await getDeliveryCharges(stateId);
+            if (!deliveryData?.success) return;
 
-        // Fetch states
-        $country.on('select2:select', function(e){
-            const countryID = e.params.data.id;
+            const charges = deliveryData.charges;
+            if (!charges || charges.length === 0) return;
 
-            $state.prop('disabled', true)
-                .html('<option selected disabled>Loading…</option>')
-                .trigger('change.select2');
+            // Total weight and subtotal (for delivery rule logic)
+            let totalWeight = 0, subtotal = 0;
+            const rows = document.querySelectorAll("#order-summary-table tbody tr");
 
-            fetch("{{ route('user.get.states') }}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({ country_id: countryID })
-            })
-            .then(r => r.json())
-            .then(states => {
-                $state.prop('disabled', false)
-                    .empty()
-                    .append(states.length
-                        ? '<option value="">Select State</option>'
-                        : '<option selected disabled>No states available</option>');
+            rows.forEach(row => {
+                const qty = parseInt(row.querySelector(".qty-input")?.value) || 1;
+                const weight = parseFloat(row.dataset.weight) || 0;
+                const price = parseFloat(row.dataset.price) || 0;
 
-                states.forEach(st => $state.append(new Option(st.state, st.id)));
-                $state.trigger('change.select2');
-            })
-            .catch(() => {
-                $state.prop('disabled', false)
-                    .html('<option selected disabled>Failed to load states</option>')
-                    .trigger('change.select2');
+                totalWeight += weight * qty;
+                subtotal += price * qty;
             });
-        });
 
-        // Fetch cities + Calculate delivery & grand total
-        $state.on('select2:select', function (e) {
-            const stateID = $state.val();
+            // Get final flat delivery charge (no multiplication/division)
+            charges.sort((a, b) => a.weight - b.weight);
+            const applicableRule = charges.find(rule => totalWeight <= rule.weight) || charges[charges.length - 1];
+            const deliveryCharge = subtotal >= parseFloat(applicableRule.min_order)
+                ? parseFloat(applicableRule.deliver_charge)
+                : parseFloat(applicableRule.default_delivery_charge);
 
-            $city.prop('disabled', true)
-                .html('<option selected disabled>Loading…</option>')
-                .trigger('change.select2');
+            // Apply same delivery charge to all rows without changes
+            rows.forEach(row => {
+                const qty = parseInt(row.querySelector(".qty-input")?.value) || 1;
+                const price = parseFloat(row.dataset.price) || 0;
+                const totalPrice = price * qty;
 
-            // Fetch cities
-            fetch("{{ route('user.get.cities') }}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({ state_id: stateID })
-            })
-            .then(r => r.json())
-            .then(cities => {
-                $city.prop('disabled', false)
-                    .empty()
-                    .append(cities.length
-                        ? '<option value="">Select City</option>'
-                        : '<option selected disabled>No cities available</option>');
+                row.querySelector(".delivery-charge-cell").textContent = `₹${deliveryCharge.toFixed(2)}`;
+                row.querySelector(".row-grand-total-cell").textContent = `₹${(totalPrice + deliveryCharge).toFixed(2)}`;
+            });
 
-                cities.forEach(city => $city.append(new Option(city.city, city.id)));
-                $city.trigger('change.select2');
+            recalculateSummary();
+        }
 
-                // === DELIVERY & GRAND TOTAL ===
-                const charge = deliveryCharges.find(c => parseInt(c.zone?.state_id) === parseInt(stateID));
-                let deliveryCharge = 0;
-                let calculationText = '';
-                let perUnitCharge = 0;
-                let perUnitGrams = 0;
+        function recalculateSummary() {
+            let subtotal = 0, totalBV = 0, delivery = 0;
 
-                if (charge && charge.weight_in_grams) {
-                    perUnitGrams = charge.weight_in_grams;
-                    
-                    // Check if product total meets minimum order for discounted rate
-                    if (productTotal >= charge.min_order) {
-                        perUnitCharge = charge.delivery_charge; // ₹25 for orders ₹2500+
-                        calculationText = `Discounted rate applied (order ≥ ₹${charge.min_order})`;
+            document.querySelectorAll("#order-summary-table tbody tr").forEach(row => {
+                const qty = parseInt(row.querySelector(".qty-input")?.value) || 1;
+                const price = parseFloat(row.dataset.price) || 0;
+                const bv = parseInt(row.dataset.bv) || 0;
+                const del = parseFloat(row.querySelector(".delivery-charge-cell")?.textContent.replace(/[^\d.]/g, '')) || 0;
+
+                subtotal += price * qty;
+                totalBV += bv * qty;
+                delivery += del;
+            });
+
+            const grand = subtotal + delivery;
+
+            summarySelectors.subtotal.textContent = `₹${subtotal.toFixed(2)}`;
+            summarySelectors.delivery.textContent = `₹${delivery.toFixed(2)}`;
+            summarySelectors.bv.textContent = totalBV;
+            summarySelectors.grand.textContent = `₹${grand.toFixed(2)}`;
+        }
+
+        document.querySelectorAll(".update-qty-btn").forEach(button => {
+            button.addEventListener("click", async function () {
+                const $btn = this;
+                const action = $btn.dataset.action;
+                const cartId = $btn.dataset.id;
+                const row = $btn.closest("tr");
+
+                if (!action || !cartId || $btn.disabled) return;
+
+                const qtyInput = row.querySelector(".qty-input");
+                let currentQty = parseInt(qtyInput.value);
+
+                if (action === "decrease" && currentQty <= 1) return;
+
+                $btn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`;
+                $btn.disabled = true;
+
+                try {
+                    const res = await fetch("{{ route('user.cart.update.quantity') }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                        },
+                        body: JSON.stringify({ id: cartId, action })
+                    });
+
+                    const data = await res.json();
+                    if (data.success) {
+                        const newQty = data.quantity;
+                        qtyInput.value = newQty;
+
+                        const price = parseFloat(row.dataset.price);
+                        const totalPrice = (price * newQty).toFixed(2);
+
+                        row.querySelector(".product-total-cell").textContent = `₹${totalPrice}`;
+                        row.querySelector(".bv-total-cell").textContent = data.total_bv;
+
+                        // Only update total and summary — delivery charge stays the same
+                        recalculateSummary();
                     } else {
-                        perUnitCharge = charge.default_delivery_charge; // ₹38 for orders < ₹2500
-                        calculationText = `Standard rate (order < ₹${charge.min_order})`;
+                        alert("Update failed.");
                     }
+                } catch (err) {
+                    console.error(err);
+                    alert("Error updating quantity.");
+                } finally {
+                    $btn.innerHTML = action === "increase" ? "+" : "-";
+                    $btn.disabled = false;
+                }
+            });
+        });
 
-                    const unitCount = Math.ceil(totalWeightInGrams / perUnitGrams);
-                    deliveryCharge = unitCount * perUnitCharge;
+        document.getElementById("state_id")?.addEventListener("change", updateAllDeliveryCharges);
+
+        updateAllDeliveryCharges(); // Initial load
+    });
+</script>
+
+{{-- Delete from cart and recalculate summary --}}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const summarySelectors = {
+            subtotal: document.getElementById("summary-subtotal"),
+            delivery: document.getElementById("summary-delivery-charge"),
+            bv: document.getElementById("summary-total-bv"),
+            grand: document.getElementById("summary-grand-total")
+        };
+
+        // Handle delete icon click
+        document.querySelectorAll(".remove-cart-item").forEach(button => {
+            button.addEventListener("click", async function () {
+                const $btn = this;
+                const cartId = $btn.dataset.id;
+                const row = $btn.closest("tr");
+
+                if (!cartId || !row) return;
+
+                const originalHTML = $btn.innerHTML;
+                $btn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`;
+                $btn.disabled = true;
+
+                try {
+                    const res = await fetch("{{ route('user.cart.remove') }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                        },
+                        body: JSON.stringify({ id: cartId })
+                    });
+
+                    const data = await res.json();
+                    if (data.success) {
+                        row.remove();
+                        recalculateSummary();
+
+                        // Optional: If cart is empty, show empty row
+                        const remainingRows = document.querySelectorAll("#order-summary-table tbody tr").length;
+                        if (remainingRows === 0) {
+                            const tbody = document.querySelector("#order-summary-table tbody");
+                            tbody.innerHTML = `<tr><td colspan="12" class="text-center text-muted">Your cart is now empty.</td></tr>`;
+                        }
+                    } else {
+                        $btn.innerHTML = originalHTML;
+                        $btn.disabled = false;
+                    }
+                } catch (err) {
+                    console.error("Delete failed:", err);
+                    $btn.innerHTML = originalHTML;
+                    $btn.disabled = false;
+                }
+            });
+        });
+
+        function recalculateSummary() {
+            let subtotal = 0, totalBV = 0, delivery = 0;
+
+            document.querySelectorAll("#order-summary-table tbody tr").forEach(row => {
+                const qty = parseInt(row.querySelector(".qty-input")?.value) || 1;
+                const price = parseFloat(row.dataset.price) || 0;
+                const bv = parseInt(row.dataset.bv) || 0;
+                const del = parseFloat(row.querySelector(".delivery-charge-cell")?.textContent.replace(/[^\d.]/g, '')) || 0;
+
+                subtotal += price * qty;
+                totalBV += bv * qty;
+                delivery += del;
+            });
+
+            const grand = subtotal + delivery;
+
+            summarySelectors.subtotal.textContent = `₹${subtotal.toFixed(2)}`;
+            summarySelectors.delivery.textContent = `₹${delivery.toFixed(2)}`;
+            summarySelectors.bv.textContent = totalBV;
+            summarySelectors.grand.textContent = `₹${grand.toFixed(2)}`;
+        }
+    });
+</script>
+
+{{-- Fetch Country, state and city --}}
+<script>
+    $(document).ready(function () {
+        // When Country Changes → Load States
+        $('#country_id').on('change', function () {
+            const country_id = $(this).val();
+
+            $('#state_id').prop('disabled', true).html('<option>Loading...</option>');
+            $('#city_id').prop('disabled', true).html('<option>Select City</option>');
+
+            $.ajax({
+                url: '{{ route("user.get.states") }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    country_id: country_id
+                },
+                success: function (states) {
+                    let options = '<option value="">Select State</option>';
+                    states.forEach(state => {
+                        options += `<option value="${state.id}">${state.state}</option>`;
+                    });
+                    $('#state_id').html(options).prop('disabled', false);
                     
-                    // Add calculation details
-                    calculationText += `<br>${totalWeightInGrams}g / ${perUnitGrams}g = ${unitCount} units × ₹${perUnitCharge} = ₹${deliveryCharge.toFixed(2)}`;
-                } else {
-                    calculationText = "Free delivery";
-                    deliveryCharge = 0;
+                    // Reset delivery charges when country changes
+                    updateDeliveryCharges(null);
+                },
+                error: function () {
+                    $('#state_id').html('<option value="">Error loading states</option>');
                 }
-
-                const grandTotal = productTotal + deliveryCharge;
-
-                $('#delivery-charge-amount').text(`₹${deliveryCharge.toFixed(2)}`);
-                $('#calculation-text').html(calculationText);
-                $('#delivery-calculation').show();
-                $('#delivery-charge-container').show();
-
-                $('#grand-total-amount').text(`₹${grandTotal.toFixed(2)}`);
-                $('#grand-total-container').show();
-            })
-            .catch(() => {
-                $city.prop('disabled', false)
-                    .html('<option selected disabled>Failed to load cities</option>')
-                    .trigger('change.select2');
             });
         });
-    });
-</script>
 
-{{-- Form validation and modal opening --}}
-<script>
-    $(function () {
-        $('#placeOrderBtn').on('click', function () {
-            let isValid = true;
-            const $form = $(this).closest('form');
+        // When State Changes → Load Cities and Update Delivery
+        $('#state_id').on('change', function () {
+            const state_id = $(this).val();
 
-            // Clear previous errors
-            $('.invalid-feedback').remove();
-            $('.is-invalid').removeClass('is-invalid');
+            // Load Cities
+            $('#city_id').prop('disabled', true).html('<option>Loading...</option>');
+            $.ajax({
+                url: '{{ route("user.get.cities") }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    state_id: state_id
+                },
+                success: function (cities) {
+                    let options = '<option value="">Select City</option>';
+                    cities.forEach(city => {
+                        options += `<option value="${city.id}">${city.city}</option>`;
+                    });
+                    $('#city_id').html(options).prop('disabled', false);
+                },
+                error: function () {
+                    $('#city_id').html('<option value="">Error loading cities</option>');
+                }
+            });
 
-            // Validate all required fields
-            $form.find('input[required], textarea[required], select.form-control').each(function () {
-                const $field = $(this);
-                const value = $field.val().trim();
+            // Update Delivery Charges
+            updateDeliveryCharges(state_id);
+        });
 
-                if (!value) {
-                    isValid = false;
-                    $field.addClass('is-invalid');
-                    $field.after('<div class="invalid-feedback">This field is required.</div>');
-                } else if ($field.attr('id') === 'phone') {
-                    const phoneRegex = /^\d{10}$/;
-                    if (!phoneRegex.test(value)) {
-                        isValid = false;
-                        $field.addClass('is-invalid');
-                        $field.after('<div class="invalid-feedback">Enter a valid 10-digit phone number.</div>');
+        // Function to get delivery charges from database
+        async function fetchDeliveryCharges(stateId) {
+            if (!stateId) return null;
+            
+            try {
+                const response = await fetch("{{ route('user.get.delivery.charges') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({ state_id: stateId })
+                });
+                
+                return await response.json();
+            } catch (error) {
+                console.error("Error fetching delivery charges:", error);
+                return null;
+            }
+        }
+
+        // Function to calculate delivery charge based on weight
+        function calculateDelivery(charges, totalWeight, subtotal) {
+            if (!charges || charges.length === 0) return 0;
+            
+            // Sort charges by weight ascending
+            charges.sort((a, b) => a.weight - b.weight);
+            
+            // Find the first rule where weight >= totalWeight
+            const applicableRule = charges.find(rule => totalWeight <= rule.weight);
+            
+            if (applicableRule) {
+                return subtotal >= parseFloat(applicableRule.min_order) 
+                    ? parseFloat(applicableRule.deliver_charge)
+                    : parseFloat(applicableRule.default_delivery_charge);
+            }
+            
+            // If weight exceeds all rules, use the last (highest weight) rule
+            const lastRule = charges[charges.length - 1];
+            return subtotal >= parseFloat(lastRule.min_order)
+                ? parseFloat(lastRule.deliver_charge)
+                : parseFloat(lastRule.default_delivery_charge);
+        }
+
+        // Function to update delivery charges
+        async function updateDeliveryCharges(stateId) {
+            // Get all cart items
+            const cartItems = [];
+            $('#order-summary-table tbody tr').each(function() {
+                const cartId = $(this).data('cart-id');
+                const qty = parseInt($(this).find('.qty-input').val());
+                const price = parseFloat($(this).data('price'));
+                const bv = parseInt($(this).data('bv'));
+                const weight = parseFloat($(this).data('weight')) || 0;
+
+                cartItems.push({
+                    cartId: cartId,
+                    quantity: qty,
+                    price: price,
+                    bv: bv,
+                    weight: weight
+                });
+            });
+
+            // Calculate totals
+            let subtotal = 0, totalWeight = 0;
+            cartItems.forEach(item => {
+                subtotal += item.price * item.quantity;
+                totalWeight += item.weight * item.quantity;
+            });
+
+            // Get delivery charges from database
+            const deliveryData = await fetchDeliveryCharges(stateId);
+            const deliveryCharge = deliveryData?.success 
+                ? calculateDelivery(deliveryData.charges, totalWeight, subtotal)
+                : 0;
+
+            // Calculate charge per item (distribute evenly)
+            const perItemDelivery = cartItems.length > 0 ? deliveryCharge / cartItems.length : 0;
+
+            // Update each cart item via API
+            cartItems.forEach(item => {
+                $.ajax({
+                    url: '{{ route("user.cart.update.delivery") }}',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        cart_id: item.cartId,
+                        delivery_charge: perItemDelivery,
+                        total_bv: item.bv * item.quantity
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // Update UI for this item
+                            const row = $(`tr[data-cart-id="${item.cartId}"]`);
+                            row.find('.delivery-charge-cell').text('₹' + perItemDelivery.toFixed(2));
+                            row.find('.row-grand-total-cell').text(
+                                '₹' + (item.price * item.quantity + perItemDelivery).toFixed(2)
+                            );
+                            
+                            // Update summary totals
+                            updateSummaryTotals();
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('Error updating delivery charge:', xhr.responseText);
                     }
-                }
+                });
+            });
+        }
+
+        // Function to update summary totals
+        function updateSummaryTotals() {
+            let subtotal = 0, totalBV = 0, delivery = 0;
+
+            $('#order-summary-table tbody tr').each(function() {
+                const qty = parseInt($(this).find('.qty-input').val());
+                const price = parseFloat($(this).data('price'));
+                const bv = parseInt($(this).data('bv'));
+                const del = parseFloat($(this).find('.delivery-charge-cell').text().replace(/[^\d.]/g, '')) || 0;
+
+                subtotal += price * qty;
+                totalBV += bv * qty;
+                delivery += del;
             });
 
-            if (isValid) {
-                // Populate modal fields with form data
-                $('#modal_name').val($('#name').val());
-                $('#modal_email').val($('#email').val());
-                $('#modal_phone').val($('#phone').val());
-                $('#modal_address').val($('#address').val());
-                $('#modal_pincode').val($('#pincode').val());
-                $('#modal_country_id').val($('#country').val());
-                $('#modal_state_id').val($('#state').val());
-                $('#modal_city_id').val($('#city').val());
+            const grandTotal = subtotal + delivery;
 
-                // VERY IMPORTANT: populate grand total and delivery charge too
-                const deliveryCharge = $('#delivery-charge-amount').text().replace(/[₹,]/g, '') || 0;
-                const grandTotal     = $('#grand-total-amount').text().replace(/[₹,]/g, '') || 0;
-
-                $('#modal_delivery_charge').val(deliveryCharge);
-                $('#modal_grand_total').val(grandTotal);
-
-                // Now show the Razorpay modal
-                const modal = new bootstrap.Modal(document.getElementById('orderPaymentModal'));
-                modal.show();
-            }
-
-        });
-
-        // Live input filtering for phone
-        $('#phone').on('input', function () {
-            this.value = this.value.replace(/\D/g, '').slice(0, 10);
-        });
-
-        // Remove error on change/input
-        $(document).on('input change', 'input, textarea, select', function () {
-            if ($(this).val() !== '') {
-                $(this).removeClass('is-invalid');
-                $(this).next('.invalid-feedback').remove();
-            }
-        });
+            $('#summary-subtotal').text('₹' + subtotal.toFixed(2));
+            $('#summary-delivery-charge').text('₹' + delivery.toFixed(2));
+            $('#summary-total-bv').text(totalBV);
+            $('#summary-grand-total').text('₹' + grandTotal.toFixed(2));
+        }
     });
 </script>
 
+{{-- Open Payment gateways modal --}}
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const payBtn = document.querySelector('#orderPaymentModal button[type="submit"]');
-
-    payBtn.addEventListener('click', function (e) {
+    $('#placeOrderBtn').on('click', function (e) {
         e.preventDefault();
 
-        const form = this.closest('form');
+        const name = $('#input_name').val();
+        const email = $('#input_email').val();
+        const phone = $('#input_phone').val();
+        const address = $('textarea[name="address"]').val();
+        const country = $('#country_id').val();
+        const state = $('#state_id').val();
+        const city = $('#city_id').val();
 
-        const grandTotal = parseFloat(document.getElementById('modal_grand_total').value) || 0;
-        const userName = document.getElementById('modal_name').value;
-        const email = document.getElementById('modal_email').value;
-        const phone = document.getElementById('modal_phone').value;
+        // Debug print
+        console.log('[placeOrderBtn] modal values:', 'name=', name, 'email=', email, 'phone=', phone,
+                    'address=', address, 'country_id=', country, 'state_id=', state, 'city_id=', city);
 
-        if (!grandTotal || !userName || !email || !phone) {
-            alert('Missing order information.');
+        if (!name || !email || !phone) {
+            alert('Please fill out name, email, and phone before continuing.');
             return;
         }
 
-        const options = {
-            key: "rzp_test_1DP5mmOlF5G5ag", 
-            amount: Math.round(grandTotal * 100), // Razorpay expects amount in paise
-            currency: "INR",
-            name: "EasyAdMe",
-            description: "Order Payment",
-            handler: function (response) {
-                // On successful payment
-                document.getElementById('modal_transaction_id').value = response.razorpay_payment_id;
-                document.getElementById('modal_is_paid').value = 1;
-                form.submit(); // Submit the form to backend (Laravel)
-            },
-            prefill: {
-                name: userName,
-                email: email,
-                contact: phone
-            },
-            theme: {
-                color: "#0d6efd"
-            }
-        };
+        $('#modal_name').val(name);
+        $('#modal_email').val(email);
+        $('#modal_phone').val(phone);
+        $('#modal_address').val(address);
+        $('#modal_country_id').val(country);
+        $('#modal_state_id').val(state);
+        $('#modal_city_id').val(city);
 
-        const razorpay = new Razorpay(options);
-        razorpay.open();
+        const deliveryCharge = $('#summary-delivery-charge').text().replace(/[^0-9.]/g, '');
+        const grandTotal = $('#summary-grand-total').text().replace(/[^0-9.]/g, '');
+        const bvPoints = $('#summary-total-bv').text();
+
+        $('#modal_delivery_charge').val(deliveryCharge);
+        $('#modal_grand_total').val(grandTotal);
+        $('#modal_bv_points').val(bvPoints);
+
+        const modalEl = document.getElementById('orderPaymentModal');
+        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+        modal.show();
     });
-});
+
 </script>
+
+{{-- Open Razorpay Modal --}}
+<script>
+  $(document).on('click', '#razorpayPayBtn', function () {
+    const grandTotal     = parseFloat($('#modal_grand_total').val()) || 0;
+    const amountInPaise  = Math.round(grandTotal * 100);
+
+    if (grandTotal <= 0 || amountInPaise <= 0) {
+      alert("Invalid payment amount");
+      return;
+    }
+
+    const options = {
+      key: "rzp_test_1DP5mmOlF5G5ag",
+      amount: amountInPaise,
+      currency: "INR",
+      name: "EasyAdMe",
+      description: "Order Payment",
+
+      handler: function (response) {
+        console.log('[Razorpay handler] res =', response);
+
+        // ✅ Fill in required hidden fields
+        $('#modal_transaction_id').val(response.razorpay_payment_id);
+        $('#modal_is_paid').val(1);
+
+        $('#modal_name').val($('input[name="name"]').val());
+        $('#modal_email').val($('input[name="email"]').val());
+        $('#modal_phone').val($('input[name="phone_number"]').val());
+        $('#modal_address').val($('textarea[name="address"]').val());
+        $('#modal_country_id').val($('#country_id').val());
+        $('#modal_state_id').val($('#state_id').val());
+        $('#modal_city_id').val($('#city_id').val());
+
+        // ✅ Check again before submitting
+        const allFieldsFilled =
+          $('#modal_name').val() &&
+          $('#modal_email').val() &&
+          $('#modal_phone').val() &&
+          $('#modal_address').val() &&
+          $('#modal_country_id').val() &&
+          $('#modal_state_id').val() &&
+          $('#modal_city_id').val();
+
+
+        console.log('modal_name:', $('#modal_name').val());
+        console.log('modal_email:', $('#modal_email').val());
+        console.log('modal_phone:', $('#modal_phone').val());
+        console.log('modal_address:', $('#modal_address').val());
+        console.log('modal_country_id:', $('#modal_country_id').val());
+        console.log('modal_state_id:', $('#modal_state_id').val());
+        console.log('modal_city_id:', $('#modal_city_id').val());
+
+        if (!allFieldsFilled) {
+          alert("Please ensure all fields are filled correctly before proceeding.");
+          return;
+        }
+
+        console.log('[Razorpay handler] Submitting form...');
+        document.querySelector('#orderPaymentModal form').submit();
+      },
+
+      prefill: {
+        name: $('input[name="name"]').val(),
+        email: $('input[name="email"]').val(),
+        contact: $('input[name="phone_number"]').val(),
+      },
+
+      notes: {
+        delivery_charge: $('#modal_delivery_charge').val(),
+        bv_points: $('#modal_bv_points').val()
+      },
+
+      theme: { color: "#0d6efd" }
+    };
+
+    const razorpay = new Razorpay(options);
+    razorpay.open();
+  });
+</script>
+
 @endsection

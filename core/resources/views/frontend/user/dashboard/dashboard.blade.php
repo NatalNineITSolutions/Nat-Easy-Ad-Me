@@ -38,7 +38,12 @@
                                                 </div>
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('Placement ID:') }}</span>
-                                                    <span class="stat-value">{{ $user->partner_id ?? __('N/A') }}</span>
+                                                    <span class="stat-value">
+                                                        {{ $placementBy ?? __('N/A') }}
+                                                        @if(!empty($placementById))
+                                                            ({{ $placementById }})
+                                                        @endif
+                                                    </span>
                                                 </div>
                                                 <div class="stat-item">
                                                     <span class="stat-label">{{ __('Name:') }}</span>

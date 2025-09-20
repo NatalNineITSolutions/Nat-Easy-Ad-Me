@@ -10,3 +10,129 @@
 [2025-09-18 16:42:12] production.INFO: LeftBV: 0  
 [2025-09-18 16:42:12] production.INFO: RightBV:0  
 [2025-09-18 16:42:12] production.INFO: RightBV:0  
+[2025-09-20 18:34:41] production.INFO: User registration request received. {"request_data":{"_token":"v5eb1pDUEGRz40lO9ds47MHVgGGMAaRIRO8uJ8q0","partner_id":"VG76Y3W5F1","partner_name":"EASYADME","partner_data":"1","first_name":"ASHLIN","last_name":"Rijo","username":"ashlinrijo","email":"ashlinrijo00@gmail.com","country_code":"91","phone":"7550326437","full_number":"+917550326437","dob":"2000-10-17","gender":"male","password":"@ashlinrijo00123","confirm_password":"@ashlinrijo00123","terms_conditions":"1","g-recaptcha-response":null}} 
+[2025-09-20 18:34:42] production.INFO: Admin partner used for registration {"admin_partner_id":"VG76Y3W5F1","admin_id":1} 
+[2025-09-20 18:34:43] production.INFO: User created successfully. {"user_id":16} 
+[2025-09-20 18:45:01] production.ERROR: file_put_contents(D:\laragon\www\Nat-Easy-Ad-Me\core\storage\framework/cache/data/0f/8e/0f8e58194be1f086a3ff1cf5352c83a9975e0093): Failed to open stream: Permission denied {"exception":"[object] (ErrorException(code: 0): file_put_contents(D:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\storage\\framework/cache/data/0f/8e/0f8e58194be1f086a3ff1cf5352c83a9975e0093): Failed to open stream: Permission denied at D:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php:204)
+[stacktrace]
+#0 D:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'file_put_conten...', 'D:\\\\laragon\\\\www\\\\...', 204)
+#1 [internal function]: Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'file_put_conten...', 'D:\\\\laragon\\\\www\\\\...', 204)
+#2 D:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(204): file_put_contents('D:\\\\laragon\\\\www\\\\...', '1758374160O:31:...', 2)
+#3 D:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cache\\FileStore.php(83): Illuminate\\Filesystem\\Filesystem->put('D:\\\\laragon\\\\www\\\\...', '1758374160O:31:...', true)
+#4 D:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cache\\Repository.php(216): Illuminate\\Cache\\FileStore->put('google_client_s...', Object(App\\Models\\Backend\\StaticOption), 60)
+#5 D:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cache\\Repository.php(398): Illuminate\\Cache\\Repository->put('google_client_s...', Object(App\\Models\\Backend\\StaticOption), 60)
+#6 D:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Cache\\CacheManager.php(429): Illuminate\\Cache\\Repository->remember('google_client_s...', 60, Object(Closure))
+#7 D:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Cache\\CacheManager->__call('remember', Array)
+#8 D:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Helpers\\helpers.php(115): Illuminate\\Support\\Facades\\Facade::__callStatic('remember', Array)
+#9 D:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\app\\Providers\\CustomConfigServiceProvider.php(24): get_static_option('google_client_s...')
+#10 D:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Providers\\CustomConfigServiceProvider->boot()
+#11 D:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#12 D:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#13 D:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#14 D:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#15 D:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1034): Illuminate\\Container\\Container->call(Array)
+#16 D:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1015): Illuminate\\Foundation\\Application->bootProvider(Object(App\\Providers\\CustomConfigServiceProvider))
+#17 [internal function]: Illuminate\\Foundation\\Application->Illuminate\\Foundation\\{closure}(Object(App\\Providers\\CustomConfigServiceProvider), 46)
+#18 D:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1014): array_walk(Array, Object(Closure))
+#19 D:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\BootProviders.php(17): Illuminate\\Foundation\\Application->boot()
+#20 D:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\BootProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#21 D:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(186): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#22 D:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(170): Illuminate\\Foundation\\Http\\Kernel->bootstrap()
+#23 D:\\laragon\\www\\Nat-Easy-Ad-Me\\core\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#24 D:\\laragon\\www\\Nat-Easy-Ad-Me\\index.php(54): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#25 {main}
+"} 
+[2025-09-20 18:49:20] production.INFO: LeftBV: 0  
+[2025-09-20 18:49:20] production.INFO: RightBV:0  
+[2025-09-20 18:50:41] production.INFO: LeftBV: 0  
+[2025-09-20 18:50:41] production.INFO: RightBV:0  
+[2025-09-20 18:50:49] production.INFO: Node BV/Pair calc {"user_id":2,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 18:50:49] production.INFO: Node BV/Pair calc {"user_id":4,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 18:50:49] production.INFO: Node BV/Pair calc {"user_id":8,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 18:50:49] production.INFO: Node BV/Pair calc {"user_id":9,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 18:50:49] production.INFO: Node BV/Pair calc {"user_id":5,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 18:50:49] production.INFO: Node BV/Pair calc {"user_id":10,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 18:50:49] production.INFO: Node BV/Pair calc {"user_id":11,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:40:22] production.INFO: LeftBV: 0  
+[2025-09-20 22:40:22] production.INFO: RightBV:0  
+[2025-09-20 22:40:22] production.INFO: LeftBV: 0  
+[2025-09-20 22:40:22] production.INFO: RightBV:0  
+[2025-09-20 22:45:26] production.INFO: Node BV/Pair calc {"user_id":2,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:45:26] production.INFO: Node BV/Pair calc {"user_id":4,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:45:26] production.INFO: Node BV/Pair calc {"user_id":8,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:45:26] production.INFO: Node BV/Pair calc {"user_id":9,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:45:26] production.INFO: Node BV/Pair calc {"user_id":5,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:45:26] production.INFO: Node BV/Pair calc {"user_id":10,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:45:26] production.INFO: Node BV/Pair calc {"user_id":11,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:51:29] production.INFO: MLM new member registration request received. {"request_data":{"_token":"dFll8bjQvGphq5R27wvFX9fIllZrd1gGSVoNkiKG","position":"left","sponsor_name":"EASYADME-BEN","username":"AAAAA","first_name":"AAAAAA","last_name":"BB","email":"aaa123@gmail.com","country_code":null,"phone":"8766554322","full_number":null,"dob":"1999-01-20","gender":"male","password":"12345678","confirm_password":"12345678","terms_conditions":"1","parent_id":"8","root_id":"2"}} 
+[2025-09-20 22:51:30] production.INFO: User created ID: 17 {"first_name":"AAAAAA","last_name":"BB","email":"aaa123@gmail.com","username":"AAAAA","phone":"+ - 8766554322","email_verify_token":"511432","partner_id":"GL2025955805","partner_name":"EASYADME-AAAAAA","sponsor_id":"2","parent_id":8,"gender":"male","dob":"1999-01-20","position":"left","_lft":5,"_rgt":6,"updated_at":"2025-09-20T17:21:30.000000Z","created_at":"2025-09-20T17:21:30.000000Z","id":17} 
+[2025-09-20 22:51:30] production.INFO: BV points initialized. {"user_id":17,"bv":0} 
+[2025-09-20 22:51:33] production.INFO: Node BV/Pair calc {"user_id":2,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:51:33] production.INFO: Node BV/Pair calc {"user_id":4,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:51:33] production.INFO: Node BV/Pair calc {"user_id":8,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:51:33] production.INFO: Node BV/Pair calc {"user_id":17,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:51:33] production.INFO: Node BV/Pair calc {"user_id":9,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:51:33] production.INFO: Node BV/Pair calc {"user_id":5,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:51:33] production.INFO: Node BV/Pair calc {"user_id":10,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:51:33] production.INFO: Node BV/Pair calc {"user_id":11,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:53:31] production.INFO: MLM new member registration request received. {"request_data":{"_token":"dFll8bjQvGphq5R27wvFX9fIllZrd1gGSVoNkiKG","position":"right","sponsor_name":"EASYADME-BEN","username":"aa","first_name":"ssa","last_name":"aa","email":"asasaws211@gmail.com","country_code":null,"phone":"3452443245","full_number":null,"dob":"2000-06-08","gender":"male","password":"101010","confirm_password":"101010","terms_conditions":"1","parent_id":"8","root_id":"2"}} 
+[2025-09-20 22:53:32] production.INFO: User created ID: 18 {"first_name":"ssa","last_name":"aa","email":"asasaws211@gmail.com","username":"aa","phone":"+ - 3452443245","email_verify_token":"549881","partner_id":"GL2025966127","partner_name":"EASYADME-SSA","sponsor_id":"2","parent_id":8,"gender":"male","dob":"2000-06-08","position":"right","_lft":7,"_rgt":8,"updated_at":"2025-09-20T17:23:32.000000Z","created_at":"2025-09-20T17:23:32.000000Z","id":18} 
+[2025-09-20 22:53:32] production.INFO: BV points initialized. {"user_id":18,"bv":0} 
+[2025-09-20 22:53:33] production.INFO: Node BV/Pair calc {"user_id":2,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:53:33] production.INFO: Node BV/Pair calc {"user_id":4,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:53:33] production.INFO: Node BV/Pair calc {"user_id":8,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:53:33] production.INFO: Node BV/Pair calc {"user_id":17,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:53:33] production.INFO: Node BV/Pair calc {"user_id":18,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:53:33] production.INFO: Node BV/Pair calc {"user_id":9,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:53:33] production.INFO: Node BV/Pair calc {"user_id":5,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:53:33] production.INFO: Node BV/Pair calc {"user_id":10,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:53:33] production.INFO: Node BV/Pair calc {"user_id":11,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:55:37] production.INFO: MLM new member registration request received. {"request_data":{"_token":"dFll8bjQvGphq5R27wvFX9fIllZrd1gGSVoNkiKG","position":"left","sponsor_name":"EASYADME-BEN","username":"ZZZAAA","first_name":"zAZAZ","last_name":"AZAZ","email":"azaza12@gmail.com","country_code":null,"phone":null,"full_number":null,"dob":"2002-08-16","gender":"male","password":"000009","confirm_password":"000009","terms_conditions":"1","parent_id":"9","root_id":"2"}} 
+[2025-09-20 22:55:38] production.INFO: User created ID: 19 {"first_name":"zAZAZ","last_name":"AZAZ","email":"azaza12@gmail.com","username":"ZZZAAA","phone":null,"email_verify_token":"727713","partner_id":"GL2025959187","partner_name":"EASYADME-ZAZAZ","sponsor_id":"2","parent_id":9,"gender":"male","dob":"2002-08-16","position":"left","_lft":11,"_rgt":12,"updated_at":"2025-09-20T17:25:38.000000Z","created_at":"2025-09-20T17:25:38.000000Z","id":19} 
+[2025-09-20 22:55:38] production.INFO: BV points initialized. {"user_id":19,"bv":0} 
+[2025-09-20 22:55:39] production.INFO: Node BV/Pair calc {"user_id":2,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:55:39] production.INFO: Node BV/Pair calc {"user_id":4,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:55:39] production.INFO: Node BV/Pair calc {"user_id":8,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:55:39] production.INFO: Node BV/Pair calc {"user_id":17,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:55:39] production.INFO: Node BV/Pair calc {"user_id":18,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:55:39] production.INFO: Node BV/Pair calc {"user_id":9,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:55:39] production.INFO: Node BV/Pair calc {"user_id":19,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:55:39] production.INFO: Node BV/Pair calc {"user_id":5,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:55:39] production.INFO: Node BV/Pair calc {"user_id":10,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:55:39] production.INFO: Node BV/Pair calc {"user_id":11,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:59:07] production.INFO: MLM new member registration request received. {"request_data":{"_token":"dFll8bjQvGphq5R27wvFX9fIllZrd1gGSVoNkiKG","position":"right","sponsor_name":"EASYADME-BEN","username":"arun123","first_name":"Arun","last_name":"J","email":"arunj@gmail.com","country_code":null,"phone":"7887653490","full_number":null,"dob":"1999-10-14","gender":"male","password":"asasas1","confirm_password":"asasas1","terms_conditions":"1","parent_id":"9","root_id":"2"}} 
+[2025-09-20 22:59:07] production.INFO: User created ID: 20 {"first_name":"Arun","last_name":"J","email":"arunj@gmail.com","username":"arun123","phone":"+ - 7887653490","email_verify_token":"477508","partner_id":"GL2025951633","partner_name":"EASYADME-ARUN","sponsor_id":"2","parent_id":9,"gender":"male","dob":"1999-10-14","position":"right","_lft":13,"_rgt":14,"updated_at":"2025-09-20T17:29:07.000000Z","created_at":"2025-09-20T17:29:07.000000Z","id":20} 
+[2025-09-20 22:59:07] production.INFO: BV points initialized. {"user_id":20,"bv":0} 
+[2025-09-20 22:59:09] production.INFO: Node BV/Pair calc {"user_id":2,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:59:09] production.INFO: Node BV/Pair calc {"user_id":4,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:59:09] production.INFO: Node BV/Pair calc {"user_id":8,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:59:09] production.INFO: Node BV/Pair calc {"user_id":17,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:59:09] production.INFO: Node BV/Pair calc {"user_id":18,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:59:09] production.INFO: Node BV/Pair calc {"user_id":9,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:59:09] production.INFO: Node BV/Pair calc {"user_id":19,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:59:09] production.INFO: Node BV/Pair calc {"user_id":20,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:59:09] production.INFO: Node BV/Pair calc {"user_id":5,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:59:09] production.INFO: Node BV/Pair calc {"user_id":10,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 22:59:09] production.INFO: Node BV/Pair calc {"user_id":11,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 23:09:41] production.INFO: Node BV/Pair calc {"user_id":2,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 23:09:41] production.INFO: Node BV/Pair calc {"user_id":4,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 23:09:41] production.INFO: Node BV/Pair calc {"user_id":8,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 23:09:41] production.INFO: Node BV/Pair calc {"user_id":17,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 23:09:41] production.INFO: Node BV/Pair calc {"user_id":18,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 23:09:41] production.INFO: Node BV/Pair calc {"user_id":9,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 23:09:41] production.INFO: Node BV/Pair calc {"user_id":19,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 23:09:41] production.INFO: Node BV/Pair calc {"user_id":20,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 23:09:41] production.INFO: Node BV/Pair calc {"user_id":5,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 23:09:41] production.INFO: Node BV/Pair calc {"user_id":10,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 23:09:41] production.INFO: Node BV/Pair calc {"user_id":11,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 23:10:09] production.INFO: Node BV/Pair calc {"user_id":2,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 23:10:09] production.INFO: Node BV/Pair calc {"user_id":4,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 23:10:09] production.INFO: Node BV/Pair calc {"user_id":8,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 23:10:09] production.INFO: Node BV/Pair calc {"user_id":17,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 23:10:09] production.INFO: Node BV/Pair calc {"user_id":18,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 23:10:09] production.INFO: Node BV/Pair calc {"user_id":9,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 23:10:09] production.INFO: Node BV/Pair calc {"user_id":19,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 23:10:09] production.INFO: Node BV/Pair calc {"user_id":20,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 23:10:09] production.INFO: Node BV/Pair calc {"user_id":5,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 23:10:09] production.INFO: Node BV/Pair calc {"user_id":10,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 
+[2025-09-20 23:10:09] production.INFO: Node BV/Pair calc {"user_id":11,"leftBV":0,"rightBV":0,"sealedL":0,"sealedR":0,"leftBP":0.0,"rightBP":0.0,"possible_pairs":0.0} 

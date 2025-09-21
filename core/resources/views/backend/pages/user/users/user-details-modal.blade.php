@@ -4,7 +4,12 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">{{ __('User Details') }} </h1>
-                <a class="user_info_edit cmnBtn btn_5 btn_bg_warning radius-5 btnIcon" href=""><i class="fas fa-pencil"></i></a>
+                <a class="user_info_edit cmnBtn btn_5 btn_bg_warning radius-5 btnIcon"
+                    href="javascript:void(0);"
+                    data-bs-toggle="modal"
+                    data-bs-target="#userDetailsEditModal">
+                    <i class="fas fa-pencil"></i>
+                </a>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
                 @csrf

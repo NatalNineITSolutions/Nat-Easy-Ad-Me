@@ -35,7 +35,7 @@ use App\Http\Controllers\Backend\BranchesController;
 use App\Http\Controllers\Backend\LevelCommissionController;
 
 
-Route::middleware(['auth','setlang'])->group(function () {
+Route::middleware(['auth', 'setlang'])->group(function () {
     // Dashboard
     Route::prefix('dashboard')->group(function () {
         Route::get('/', [AdminDashboardController::class, 'adminDashboard'])->name('admin.dashboard')->permission('admin-dashboard');
@@ -188,7 +188,7 @@ Route::middleware(['auth','setlang'])->group(function () {
 
             Route::put('/update-product/{id}', 'updateProduct')->name('admin.products.update')->permission('product-edit');
 
-            Route::delete('/delete-product/{id}','destroy')->name('admin.products.destroy')
+            Route::delete('/delete-product/{id}', 'destroy')->name('admin.products.destroy')
                 ->permission('product-delete');
 
             // Category
@@ -206,9 +206,9 @@ Route::middleware(['auth','setlang'])->group(function () {
         Route::controller(ShippingController::class)->group(function () {
             // Shipping Zone listing
             Route::get('/zones', 'shippingZones')->name('admin.shipping.zones')->permission('shipping-view');
-            
+
             Route::get('/add-zone', 'addZone')->name('admin.shipping.add')->permission('shipping-add');
-            
+
             Route::post('/get-states', 'getStates')->name('admin.shipping.get.states');
 
             Route::post('/store-zone', 'storeZone')->name('admin.shipping.store')->permission('shipping-add');
@@ -255,7 +255,7 @@ Route::middleware(['auth','setlang'])->group(function () {
             Route::put('/admin/orders/{order}/update-status', [OrderController::class, 'updateProductStatus'])->name('admin.orders.update.status.product')->permission('order-edit');
 
             // Shipping Bill Download
-            Route::get('/shipping-bill/download/{order}',  'downloadShippingBill')->name('admin.orders.shipping.download')->permission('order-view');
+            Route::get('/shipping-bill/download/{order}', 'downloadShippingBill')->name('admin.orders.shipping.download')->permission('order-view');
 
         });
     });
@@ -292,6 +292,18 @@ Route::middleware(['auth','setlang'])->group(function () {
         });
     });
 
+    // Level Commission Manage
+    Route::group(['prefix' => 'level-based-commission'], function () {
+        Route::controller(LevelCommissionController::class)->group(function () {
+            Route::get('/bv-commission', 'levelbvcommission')->name('level.bv.commission');
+            Route::get('/payouts', 'levelbasedpayout')
+                ->name('level.payouts.index');
+            Route::get('/payouts/pdf', [LevelCommissionController::class, 'downloadPdf'])
+                ->name('level.payouts.pdf');
+
+        });
+    });
+
     // Branches Manage
     Route::get('/branches', [BranchesController::class, 'index'])->name('admin.branches');
     Route::get('/branches/{id}/commission', [BranchesController::class, 'commissionDetails'])->name('branch.commission.details');
@@ -302,7 +314,7 @@ Route::middleware(['auth','setlang'])->group(function () {
     // Branch Payout
     Route::get('/branch-payout', [BranchesController::class, 'payout'])->name('admin.branch.payout');
     Route::post('/branch-payout/generate', [BranchesController::class, 'generatePayout'])
-    ->name('admin.branch.payout.generate');
+        ->name('admin.branch.payout.generate');
     Route::get('/branch-payout-history', [BranchesController::class, 'branchPayoutHistory'])->name('admin.branch.payout.history');
     Route::get('/branch-payout-history/{id}', [BranchesController::class, 'viewBranchPayoutHistory'])->name('admin.branch.payout.history.view');
     Route::get('/branch-payout-history/{history}/download', [BranchesController::class, 'downloadPayoutStatement'])->name('admin.branch.payout.history.download');
@@ -721,10 +733,10 @@ Route::post('/media-upload/alt', [MediaUploadController::class, 'altChangeUpload
 // media upload routes for restrict user in demo mode
 Route::post('/media-upload/loadmore', [MediaUploadController::class, 'getImageForLoadmore'])->name('admin.upload.media.file.loadmore');
 
-Route::get('/test-email', function() {
+Route::get('/test-email', function () {
     $user = User::first();
     $payout = UserPayoutDetail::first();
-    
+
     Mail::to($user->email)->send(new \App\Mail\PayoutProcessedMail($user, $payout));
     return 'Email sent!';
 });

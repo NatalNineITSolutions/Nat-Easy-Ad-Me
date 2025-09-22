@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{asset('assets/backend/css/bootstrap-tagsinput.css')}}">
     <x-summernote.css />
     <x-media.css />
-@endsection
+@endsection            
 @section('content')
     <div class="row g-4 mt-0">
         <div class="col-12 mt-0">

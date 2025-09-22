@@ -222,6 +222,20 @@
                         </ul>
                 </li>
 
+                {{-- Level Based Commission --}}
+                <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/level-based-commission/*')) active open show @endif">
+                    <a href="javascript:void(0)"> <i class="las la-th-list"></i>{{ __('Level Based Commission') }}</a>
+                        <ul class="submenu">
+                                <li class="dashboard__bottom__list__item @if(request()->is('admin/level-based-commission/bv-commission')) selected @endif">
+                                    <a href="{{ route('level.bv.commission') }}">{{ __('Commission Details') }}</a>
+                                </li>
+                                <li class="dashboard__bottom__list__item @if(request()->is('admin/level-based-commission/payouts')) selected @endif">
+                                    <a href="{{ route('level.payouts.index') }}">{{ __('Commission Payout') }}</a>
+                                </li>
+                        </ul>
+                </li>
+
+
                 <!--Admin advertisement manage -->
                 @if(get_static_option('google_adsense_status') == 'on')
                     @canany(['advertisement-list', 'advertisement-add'])

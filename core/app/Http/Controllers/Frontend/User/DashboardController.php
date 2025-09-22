@@ -9,6 +9,7 @@ use App\Models\Frontend\Review;
 use App\Models\UnlockedProfile;
 use App\Models\User;
 use App\Models\UsersBV;
+use App\Services\LevelCommissionService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -56,7 +57,7 @@ class DashboardController extends Controller
         $current_membership = optional($user->adsMembership);
         $previous_membership = $user->membershipHistory()->latest('created_at')->first();
 
-        // Basic user stats
+      
         $user_ads_posted = $user->listings()->count();
         $remaining_listings = $current_membership->listing_limit;
         $user_active_listings = $user->listings()->where('is_published', 1)->where('status', 1)->count();
@@ -80,27 +81,25 @@ class DashboardController extends Controller
         $profilesViewed = UnlockedProfile::where('user_id', $user_id)->count();
         $remainingProfileLimit = max(0, ($membershipInfo['profile_limit'] ?? 0) - $profilesViewed);
 
-        // BV / BP settings
+
         $bvvalue = ($membership?->category == 1)
             ? get_static_option('matrimony_bv_value')
             : get_static_option('payout_value');
         $bpConversionRate = get_static_option('bp_value') ?? 1;
         $sealingLimit = get_static_option('sealing_limitation') ?? 1;
 
-        // Get left and right BV points from user_flush_bvs table
+   
         $userFlushBvs = DB::table('user_flush_bvs')
             ->where('user_id', $user_id)
             ->latest('id')
             ->first();
 
-        // Sum BV points
         $leftBvPoints = $userFlushBvs ? $userFlushBvs->left_bv : 0;
         Log::info('LeftBV: ' . $leftBvPoints);
 
         $rightBvPoints = $userFlushBvs ? $userFlushBvs->right_bv : 0;
         Log::info('RightBV:' . $rightBvPoints);
 
-        // Flushable & remainder
         $sealingLimitBv = $sealingLimit * $bpConversionRate;
         $flushableAmount = floor(min($leftBvPoints, $rightBvPoints) / $sealingLimitBv) * $sealingLimitBv;
         $remainingLeft = max(0, $leftBvPoints - $flushableAmount);
@@ -108,7 +107,6 @@ class DashboardController extends Controller
         $flushedLeft = $leftBvPoints - $remainingLeft;
         $flushedRight = $rightBvPoints - $remainingRight;
 
-        // BP display
         $sealedLeftBv = min($leftBvPoints, $sealingLimitBv);
         $sealedRightBv = min($rightBvPoints, $sealingLimitBv);
         $leftBP = floor($sealedLeftBv / $bpConversionRate);
@@ -118,7 +116,7 @@ class DashboardController extends Controller
         $income = $equalizedBP * $pairincome;
         $showIncome = $equalizedBP > 0;
 
-        // Other stats
+
         $businesspoint = "$leftBvPoints <> $rightBvPoints";
         $totalBP = "$leftBP <> $rightBP";
         $balancedBP = "$leftBvPoints <> $rightBvPoints";
@@ -1150,6 +1148,7 @@ class DashboardController extends Controller
             }
 
             Cart::where('user_id', $user->id)->delete();
+            LevelCommissionService::process($order);
 
             return redirect()
                 ->route('user.order.history')

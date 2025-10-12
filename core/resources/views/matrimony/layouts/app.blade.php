@@ -355,6 +355,8 @@
         @yield('content') 
     </div>
 
+    <x-media.markup type="web" />
+
     @include('matrimony.partials.footer') 
 
     {{-- Bootstrap --}}
@@ -387,6 +389,8 @@
     </script>
 
     <script src="{{ asset('assets/common/js/jquery-3.7.1.min.js') }}"></script>
+
+    <x-media.js type="web" />
 
     <x-payment.payment-gateway-js />
     @yield('script') <!-- Custom scripts section -->

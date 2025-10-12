@@ -497,16 +497,14 @@
             </div>
         </div>
     </div>
+    <x-media.markup :type="'web'" />
 @endsection
 
 @include('matrimony.partials.gateway-markup')
-<x-media.markup :type="'web'" />
+
 
 @section('script')
-    @if(!empty(get_static_option('google_map_settings_on_off')))
-        <x-map.google-map-api-key-set />
-        <x-map.google-map-listing-js />
-    @endif
+<x-media.js :type="'web'" />
     {{-- Toaster initialization --}}
     <script>
         toastr.options = {
@@ -518,7 +516,7 @@
     </script>
 
     {{-- Media Upload Script --}}
-    <x-media.js :type="'web'" />
+
     <script>
         $(document).on('media_upload_selected', function (e, data) {
             if (data.trigger_button.hasClass('media_upload_form_btn')) {

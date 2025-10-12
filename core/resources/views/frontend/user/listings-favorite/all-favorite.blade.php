@@ -53,7 +53,7 @@
                                                         </h4>
                                                         <div class="pricing head4">{{ amount_with_currency_symbol(optional($favorite->listing)->price)}}</div>
                                                         <div class="btn-wrapper">
-                                                            @if($favorite->listing->is_featured === 1)
+                                                            @if(optional($favorite->listing)->is_featured === 1)
                                                                 <span class="pro-btn2">
                                                                     <svg width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                     <path d="M4 0V3.88889H7L3 10V6.11111H0L4 0Z" fill="white"/>

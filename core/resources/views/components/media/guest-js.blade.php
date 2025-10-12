@@ -55,7 +55,14 @@ $spinner_icon =  $type === 'admin' ? 'fas fa-spinner fa-spin' : 'fa-spin las la-
         function deleteImage(type){
             $.ajax({
                 type: "POST",
-                url: "{{route($type.'.guest.upload.media.file.delete') }}",
+                url: (function(){
+                    const deleteRoutes = {
+                        admin: @json(route('admin.guest.upload.media.file.delete')),
+                        web: @json(route('web.guest.upload.media.file.delete')),
+                        branch: @json(route('branch.guest.upload.media.file.delete')),
+                    };
+                    return deleteRoutes[type] ?? deleteRoutes['admin'];
+                })(),
                 data: {
                     _token: "{{csrf_token()}}",
                     img_id : $('.image_id').text(),
@@ -171,7 +178,14 @@ $spinner_icon =  $type === 'admin' ? 'fas fa-spinner fa-spin' : 'fa-spin las la-
 
             $.ajax({
                 type: "POST",
-                url: "{{ route($type.'.guest.upload.media.file.alt.change')}}",
+                url: (function(){
+                    const altRoutes = {
+                        admin: @json(route('admin.guest.upload.media.file.alt.change')),
+                        web: @json(route('web.guest.upload.media.file.alt.change')),
+                        branch: @json(route('branch.guest.upload.media.file.alt.change')),
+                    };
+                    return altRoutes[document.getElementById('mediaType')?.value ?? 'admin'] ?? altRoutes['admin'];
+                })(),
                 data: {
                     _token: "{{csrf_token()}}",
                     imgid: parseInt(imgId),
@@ -229,7 +243,14 @@ $spinner_icon =  $type === 'admin' ? 'fas fa-spinner fa-spin' : 'fa-spin las la-
 
             $.ajax({
                 type: "POST",
-                url: "{{route($type.'.guest.upload.media.file.all')}}",
+                url: (function(){
+                    const allRoutes = {
+                        admin: @json(route('admin.guest.upload.media.file.all')),
+                        web: @json(route('web.guest.upload.media.file.all')),
+                        branch: @json(route('branch.guest.upload.media.file.all')),
+                    };
+                    return allRoutes[document.getElementById('mediaType')?.value ?? 'admin'] ?? allRoutes['admin'];
+                })(),
                 data: {
                     _token: "{{csrf_token()}}",
                     'selected' : selectedImage
@@ -301,7 +322,14 @@ $spinner_icon =  $type === 'admin' ? 'fas fa-spinner fa-spin' : 'fa-spin las la-
             $('#loadmorewrap button').append(' <i class="{{$spinner_icon}}"></i>'); //la spinner
             $.ajax({
                 type: "POST",
-                url: "{{route($type.'.guest.upload.media.file.loadmore')}}",
+                url: (function(){
+                    const loadmoreRoutes = {
+                        admin: @json(route('admin.guest.upload.media.file.loadmore')),
+                        web: @json(route('web.guest.upload.media.file.loadmore')),
+                        branch: @json(route('branch.guest.upload.media.file.loadmore')),
+                    };
+                    return loadmoreRoutes[document.getElementById('mediaType')?.value ?? 'admin'] ?? loadmoreRoutes['admin'];
+                })(),
                 data: {
                     _token: "{{csrf_token()}}",
                     'skip' : skipp

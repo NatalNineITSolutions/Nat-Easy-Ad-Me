@@ -547,17 +547,16 @@
             </form>
             @endif
         </div>
-    <x-media.markup :type="'web'"/>
+    <!-- <x-media.markup :type="'web'"/> -->
 @endsection
 @section('scripts')
     <x-frontend.js.phone-number-check-for-listing/>
     <x-frontend.js.listing-attribute-js/>
     @if(!empty(get_static_option('google_map_settings_on_off')))
-    <x-map.google-map-api-key-set/>
-    <x-map.google-map-listing-js/>
+        <x-map.google-map-api-key-set/>
+        <x-map.google-map-listing-js/>
     @endif
-
-    <x-media.js :type="'web'"/>
+    <!-- <x-media.js :type="'web'"/> -->
 
     <script src="{{asset('assets/backend/js/sweetalert2.js')}}"></script>
     <script src="{{asset('assets/frontend/js/multi-step.js')}}"></script>

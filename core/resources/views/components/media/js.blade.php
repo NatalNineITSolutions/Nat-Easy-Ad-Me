@@ -76,7 +76,15 @@
         function deleteImage(type) {
             $.ajax({
                 type: "POST",
-                url: "{{ route($type . '.upload.media.file.delete') }}",
+                url: (function(){
+                    // safe lookup for delete route based on type, fallback to admin
+                    const deleteRoutes = {
+                        admin: @json(route('admin.upload.media.file.delete')),
+                        web: @json(route('web.upload.media.file.delete')),
+                        branch: @json(route('branch.upload.media.file.delete')),
+                    };
+                    return deleteRoutes[type] ?? deleteRoutes['admin'];
+                })(),
                 data: {
                     _token: "{{ csrf_token() }}",
                     img_id: $('.image_id').text(),
@@ -194,7 +202,14 @@
 
             $.ajax({
                 type: "POST",
-                url: "{{ route($type . '.upload.media.file.alt.change') }}",
+                url: (function(){
+                    const altRoutes = {
+                        admin: @json(route('admin.upload.media.file.alt.change')),
+                        web: @json(route('web.upload.media.file.alt.change')),
+                        branch: @json(route('branch.upload.media.file.alt.change')),
+                    };
+                    return altRoutes[document.getElementById('mediaType').value] ?? altRoutes['admin'];
+                })(),
                 data: {
                     _token: "{{ csrf_token() }}",
                     imgid: parseInt(imgId),
@@ -260,9 +275,6 @@
 
 
 
-
-        console.log("i", uploadUrl)
-
         function loadAllImages() {
             const $trigger = $('#load_all_media_images');
             const selectedImage = $trigger.data('selectedimage');
@@ -282,7 +294,7 @@
             console.log('Loading images for type:', uploadUrl);
             $.ajax({
                 type: "POST",
-                url: "{{ route($type . '.upload.media.file.all') }}",
+                url: uploadUrl,
                 data: {
                     _token: "{{ csrf_token() }}",
                     'selected': selectedImage
@@ -361,7 +373,14 @@
             $('#loadmorewrap button').append(' <i class="{{ $spinner_icon }}"></i>'); //la spinner
             $.ajax({
                 type: "POST",
-                url: "{{ route($type . '.upload.media.file.loadmore') }}",
+                url: (function(){
+                    const loadmoreRoutes = {
+                        admin: @json(route('admin.upload.media.file.loadmore')),
+                        web: @json(route('web.upload.media.file.loadmore')),
+                        branch: @json(route('branch.upload.media.file.loadmore')),
+                    };
+                    return loadmoreRoutes[document.getElementById('mediaType').value] ?? loadmoreRoutes['admin'];
+                })(),
                 data: {
                     _token: "{{ csrf_token() }}",
                     'skip': skipp

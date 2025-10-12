@@ -37,6 +37,6 @@
             $(document).ready(function () {
                 <x-btn.update/>
             });
-        })(jQuery);
+        })(jQuery); 
     </script>
 @endsection

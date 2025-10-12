@@ -362,6 +362,8 @@ class DashboardController extends Controller
                 ->where('status', 1)
                 ->first(),
             'countries' => Country::where('status', 1)->get(),
+            'states' => State::where('status', 1)->get(),
+            'cities' => City::where('status', 1)->get(),
         ];
 
         if ($request->isMethod('post')) {

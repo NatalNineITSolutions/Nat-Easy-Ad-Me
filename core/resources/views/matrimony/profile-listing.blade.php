@@ -497,14 +497,14 @@
             </div>
         </div>
     </div>
-    <x-media.markup :type="'web'" />
+    <!-- <x-media.markup :type="'web'" /> -->
 @endsection
 
 @include('matrimony.partials.gateway-markup')
 
 
 @section('script')
-<x-media.js :type="'web'" />
+<!-- <x-media.js :type="'web'" /> -->
     {{-- Toaster initialization --}}
     <script>
         toastr.options = {

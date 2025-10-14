@@ -7,7 +7,7 @@
             @if(!empty($member_find))
                 <li class="single chatBar">
                     <a href="{{route('member.live.chat')}}" class="reload_unseen_message_count">
-                        <button class="chat"><i class="fa-regular fa-comment-dots"></i>
+                        <button class="chat" title="Open Chat"><i class="fa-regular fa-comment-dots"></i>
                             @php
                                 $unseen_message_count = \App\Models\User::select('id')->withCount([
                                     'member_unseen_message' => function ($q) {
@@ -26,7 +26,7 @@
             @else
                 <li class="single chatBar">
                     <a href="{{route('user.live.chat')}}" class="reload_unseen_message_count">
-                        <button class="chat"><i class="fa-regular fa-comment-dots"></i>
+                        <button class="chat" title="Open Chat"><i class="fa-regular fa-comment-dots"></i>
                             @php
                                 $unseen_message_count = \App\Models\User::select('id')->withCount([
                                     'user_unseen_message' => function ($q) {
@@ -46,10 +46,10 @@
             @endif
         @endif
 
-        <li class="single"><a href="{{ route('user.listing.favorite.all') }}" class="heart"><i
+        <li class="single" title="Favorite"><a href="{{ route('user.listing.favorite.all') }}" class="heart"><i
                     class="lar la-heart icon"></i></a></li>
 
-        <li class="single position-relative">
+        <li class="single position-relative" title="Cart">
             <a href="{{ route('user.product.buy') }}" class="heart position-relative">
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count" style="font-size: 10px;">
                     {{ $cart_count }}

@@ -213,7 +213,7 @@
                                         <div class="col-lg-8">
                                             <div class="post-add-wraper">
                                                 <div class="item-name box-shadow1 p-24">
-                                                    <label for="item-name" id="item-name-label">{{ __('Item Name') }} <span class="text-danger">*</span> </label>
+                                                    <label for="item-name" id="item-name-label">{{ __('Advertisement Name') }} <span class="text-danger">*</span> </label>
                                                     <input type="text" name="title" id="title" value="{{ old('title') }}" class="input-filed w-100" placeholder="{{ __('Item Name') }}">
 
                                                     <div class="input-form input-form2 permalink_label">
@@ -228,12 +228,12 @@
 
                                                 </div>
                                                 <div class="about-item box-shadow1 p-24 mt-4">
-                                                    <h3 class="head4">{{ __('About Item') }}</h3>
+                                                    <h3 class="head4">{{ __('About ') }}</h3>
                                                     <div class="about-item-form">
                                                         <div class="row g-3 mt-3">
                                                             <div class="col-sm-4">
                                                                 <div class="item-catagory-wraper">
-                                                                    <label for="item-catagory">{{ __('Item Category') }} <span class="text-danger">*</span> </label>
+                                                                    <label for="item-catagory">{{ __(' Category') }} <span class="text-danger">*</span> </label>
                                                                     <select name="category_id" id="category" class="select-itms select2_activation">
                                                                         <option value="">{{__('Select Category')}}</option>
                                                                         @foreach($categories as $cat)
@@ -547,17 +547,16 @@
             </form>
             @endif
         </div>
-    <x-media.markup :type="'web'"/>
+    <!-- <x-media.markup :type="'web'"/> -->
 @endsection
 @section('scripts')
     <x-frontend.js.phone-number-check-for-listing/>
     <x-frontend.js.listing-attribute-js/>
     @if(!empty(get_static_option('google_map_settings_on_off')))
-    <x-map.google-map-api-key-set/>
-    <x-map.google-map-listing-js/>
+        <x-map.google-map-api-key-set/>
+        <x-map.google-map-listing-js/>
     @endif
-
-    <x-media.js :type="'web'"/>
+    <!-- <x-media.js :type="'web'"/> -->
 
     <script src="{{asset('assets/backend/js/sweetalert2.js')}}"></script>
     <script src="{{asset('assets/frontend/js/multi-step.js')}}"></script>

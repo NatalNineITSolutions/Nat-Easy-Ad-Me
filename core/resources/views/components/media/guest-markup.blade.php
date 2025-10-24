@@ -28,7 +28,19 @@
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="upload_files" role="tabpanel" >
                         <div class="dropzone-form-wrapper">
-                            <form action="{{ route($type. '.'.'guest.upload.media.file')}}" method="post" id="placeholderfForm" class="dropzone" enctype="multipart/form-data">
+                            {{-- Store guest route map to avoid evaluating dynamic named routes at render time --}}
+                            <form
+                                action="{{ route('admin.guest.upload.media.file') }}"
+                                data-route-map='@json([
+                                    'admin' => route('admin.guest.upload.media.file'),
+                                    'web' => route('web.guest.upload.media.file'),
+                                    'branch' => route('branch.guest.upload.media.file'),
+                                ])'
+                                method="post"
+                                id="placeholderfForm"
+                                class="dropzone"
+                                enctype="multipart/form-data"
+                            >
                                 @csrf
                             </form>
                         </div>

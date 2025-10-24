@@ -244,7 +244,11 @@
                             <label class="form-label">State <span class="text-danger">*</span></label>
                             <select name="state_id" id="state_id" class="form-control select2" required>
                                 <option value="">Select State</option>
-                                <!-- States will be loaded via AJAX -->
+                                @foreach($states as $state)
+                                    <option value="{{ $state->id }}" {{ (isset($identity) && $identity->state_id == $state->id) ? 'selected' : '' }}>
+                                        {{ $state->state }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -252,7 +256,11 @@
                             <label class="form-label">City <span class="text-danger">*</span></label>
                             <select name="city_id" id="city_id" class="form-control select2" required>
                                 <option value="">Select City</option>
-                                <!-- Cities will be loaded via AJAX -->
+                                @foreach($cities as $city)
+                                    <option value="{{ $city->id }}" {{ (isset($identity) && $identity->city_id == $city->id) ? 'selected' : '' }}>
+                                        {{ $city->city }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                     </div>

@@ -31,7 +31,6 @@
     <x-media.markup/>
 @endsection
 @section('scripts')
-    <x-media.js/>
     <script src="{{asset('assets/backend/js/jquery-ui.js')}}"></script>
     <script src="{{asset('assets/backend/js/fontawesome-iconpicker.min.js')}}"></script>
     <script>

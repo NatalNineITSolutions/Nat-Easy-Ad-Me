@@ -30,13 +30,13 @@
 <x-media.markup/>
 @endsection
 @section('scripts')
-    <x-media.js/>
+    <!-- <x-media.js/> -->
     <script>
         (function($){
             "use strict";
             $(document).ready(function () {
                 <x-btn.update/>
             });
-        })(jQuery);
+        })(jQuery); 
     </script>
 @endsection

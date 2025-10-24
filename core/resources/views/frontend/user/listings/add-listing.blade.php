@@ -213,7 +213,7 @@
                                         <div class="col-lg-8">
                                             <div class="post-add-wraper">
                                                 <div class="item-name box-shadow1 p-24">
-                                                    <label for="item-name" id="item-name-label">{{ __('Name') }} <span class="text-danger">*</span> </label>
+                                                    <label for="item-name" id="item-name-label">{{ __('Advertisement Name') }} <span class="text-danger">*</span> </label>
                                                     <input type="text" name="title" id="title" value="{{ old('title') }}" class="input-filed w-100" placeholder="{{ __('Item Name') }}">
 
                                                     <div class="input-form input-form2 permalink_label">

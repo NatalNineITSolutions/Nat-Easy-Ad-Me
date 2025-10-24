@@ -58,7 +58,7 @@
             </a>
         </li>
 
-        <li class="single userAccount"> 
+        <li class="single userAccount" title="Dashboard"> 
             <x-frontend.user.user-profile-image />
             <div class="userAccount-wrapper">
                 <ul class="ac-list">

@@ -77,8 +77,8 @@
               <td>{{ $loop->iteration }}</td>
               <td>
                 <div class="d-flex align-items-center gap-3">
-                    <img src="{{ asset('assets/uploads/media-uploader/'.$product->imageFile->path ?? 'assets/common/img/default.jpg') }}"
-                        style="width:50px;height:50px;object-fit:cover;border-radius:4px;">
+                    <img src="{{ asset('assets/uploads/media-uploader/' . ($product->imageFile->path ?? 'default.jpg')) }}"
+                      style="width:50px;height:50px;object-fit:cover;border-radius:4px;">
                     <div class="d-flex flex-column">
                         <span>{{ $product->name }}</span>
                         @if($product->branch)

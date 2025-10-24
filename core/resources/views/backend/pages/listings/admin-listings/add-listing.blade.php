@@ -112,7 +112,7 @@
             <div class="dashboard__card bg__white padding-20 radius-10">
                 <div class="header-wrap d-flex justify-content-between mb-4">
                     <div class="left-content">
-                        <h4 class="header-title">{{__('Add New Listing')}}   </h4>
+                        <h4 class="header-title">{{__('Add New Listing')}}</h4>
                     </div>
                     <div class="right-content">
                         <a class="cmnBtn btn_5 btn_bg_info radius-5" href="{{route('admin.all.listings')}}">{{__('All Listings')}}</a>
@@ -495,12 +495,12 @@
         </div>
 
     </div>
-    <x-media.markup/>
+    <!-- <x-media.markup/> -->
 @endsection
 @section('scripts')
     <x-frontend.js.listing-attribute-js/>
     <x-frontend.js.phone-number-check-for-listing/>
-    <x-media.js />
+    <!-- <x-media.js /> -->
     <x-summernote.js/>
     <x-frontend.js.new-tag-add-js/>
     @if(!empty(get_static_option('google_map_settings_on_off')))

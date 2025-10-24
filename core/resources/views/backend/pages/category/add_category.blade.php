@@ -83,7 +83,6 @@
         <x-icon.icon-picker/>
     </script>
     <x-summernote.js/>
-    <x-media.js />
     <script>
         (function ($) {
             "use strict";

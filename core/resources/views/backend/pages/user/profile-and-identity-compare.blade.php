@@ -7,14 +7,14 @@
                     <input type="hidden" id="user_id_for_verified_status" value="{{ $user_details->id }}">
                 </div>
                 <div class="userDetails__wrapper userProfile__details mt-3">
-                    <div class="userProfile__details__thumb mb-3"  style="height: 100px;width: 70px">
+                    <div class="userProfile__details__thumb mb-3"  style="height: 200px;width: 200px">
                         @if(!empty($user_details->image))
                            {!! render_image_markup_by_attachment_id($user_details->image, '', 'thumb') !!}
                          @else
                             <x-image.user-no-image/>
                          @endif
                     </div>
-                    <p class="userDetails__wrapper__item"><strong>{{ __('Full Name:') }}</strong> {{ $user_details->first_name.' '.$user_details->last_name }}</p>
+                    <p class="userDetails__wrapper__item" style="font-size: 22px;"><strong>{{ __('Full Name:') }}</strong> {{ $user_details->first_name.' '.$user_details->last_name }}</p>
                     <p class="userDetails__wrapper__item"><strong>{{ __('Username:') }}</strong> {{ $user_details->username ?? '' }}</p>
                     <p class="userDetails__wrapper__item"><strong>{{ __('Email:') }}</strong> {{ $user_details->email ?? '' }}</p>
                     <p class="userDetails__wrapper__item"><strong>{{ __('Phone:') }}</strong> {{ $user_details->phone ?? '' }}</p>

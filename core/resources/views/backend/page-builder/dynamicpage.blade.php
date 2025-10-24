@@ -113,6 +113,7 @@
 @endsection
 @section('scripts')
     <x-pagebuilder.js/>
+    <x-media.js/>
     <script>
         (function ($) {
             "use strict";

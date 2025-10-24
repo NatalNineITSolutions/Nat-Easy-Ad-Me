@@ -97,7 +97,6 @@
  <x-media.markup/>
 @endsection
 @section('scripts')
-    <x-media.js/>
     <script>
         (function ($) {
             "use strict";

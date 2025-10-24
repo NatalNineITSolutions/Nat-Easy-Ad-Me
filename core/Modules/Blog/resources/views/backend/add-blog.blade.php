@@ -143,7 +143,6 @@
 @section('scripts')
     <script src="{{asset('assets/backend/js/bootstrap-tagsinput.js')}}"></script>
     <x-summernote.js/>
-    <x-media.js/>
     <script>
         //Date Picker
         flatpickr('#tag_data', {

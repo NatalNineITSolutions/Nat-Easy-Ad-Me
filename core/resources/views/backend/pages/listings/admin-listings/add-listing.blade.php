@@ -495,12 +495,12 @@
         </div>
 
     </div>
-    <!-- <x-media.markup/> -->
+    <x-media.markup/>
 @endsection
 @section('scripts')
     <x-frontend.js.listing-attribute-js/>
     <x-frontend.js.phone-number-check-for-listing/>
-    <!-- <x-media.js /> -->
+    <x-media.js />
     <x-summernote.js/>
     <x-frontend.js.new-tag-add-js/>
     @if(!empty(get_static_option('google_map_settings_on_off')))

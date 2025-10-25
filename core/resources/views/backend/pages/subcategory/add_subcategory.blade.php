@@ -52,13 +52,11 @@
 
     <!-- New Subcategory Input -->
     <div class="form__input__single">
-    <label for="sub_category_id" class="form__input__single__label">{{ __('Saved Sub Categories') }}</label>
-    <select name="sub_category_id" id="sub_category_id" class="select2_activation radius-5">
-        <option value="">{{ __('Select Sub Category') }}</option>
-    </select>
-</div>
+        <label for="name" class="form__input__single__label">{{ __('Or Create New Sub Category') }}</label>
+        <input type="text" class="form-control" name="name" id="name" placeholder="{{ __('Enter new subcategory name') }}">
+    </div>
 
-
+    
                         <div class="form__input__single permalink_label">
                             <label class="text-dark form__input__single__label">{{__('Permalink * :')}}
                                 <span id="slug_show" class="display-inline"></span>
@@ -100,6 +98,7 @@
     <x-media.markup/>
 @endsection
 @section('scripts')
+    <x-media.js/>
     <script src="{{asset('assets/backend/js/bootstrap-tagsinput.js')}}"></script>
     <script src="{{asset('assets/backend/js/fontawesome-iconpicker.min.js')}}"></script>
     <script>
@@ -151,54 +150,4 @@
             });
         })(jQuery)
     </script>
-    <script>
-    (function ($) {
-        "use strict";
-        $(document).ready(function () {
-
-            // When category changes, fetch subcategories
-            $(document).on('change', '#category_id', function () {
-                let categoryId = $(this).val();
-                let $subcat = $('#sub_category_id');
-
-                if (categoryId) {
-                    $subcat.html('<option value="">{{ __('Loading...') }}</option>');
-                    $.ajax({
-                        url: "{{ route('admin.get.subcategory.by.category') }}",
-                        type: "GET",
-                        data: { category_id: categoryId },
-                        success: function (data) {
-                            if (data.markup) {
-                                $subcat.html('<option value="">{{ __('Select Sub Category') }}</option>' + data.markup);
-                            } else {
-                                $subcat.html('<option value="">{{ __('No Subcategories Found') }}</option>');
-                            }
-                        },
-                        error: function () {
-                            $subcat.html('<option value="">{{ __('Failed to Load') }}</option>');
-                        }
-                    });
-                } else {
-                    $subcat.html('<option value="">{{ __('Select Sub Category') }}</option>');
-                }
-            });
-
-        });
-    })(jQuery);
-</script>
-<script>
-   $(document).ready(function() {
-    $('#sub_category_id').select2({
-        placeholder: "{{ __('Select Sub Category') }}",
-        allowClear: false,
-        disabled: false // not fully disabled
-    });
-
-    // Prevent opening the dropdown
-    $('#sub_category_id').on('select2:opening', function (e) {
-        e.preventDefault();
-    });
-});
-</script>
-
 @endsection

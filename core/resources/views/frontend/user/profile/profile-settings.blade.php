@@ -113,14 +113,19 @@
             </div>
         </div>
     </div>
- @include('frontend.user.profile.edit-profile-info-modal')
     <x-media.markup :type="'web'"/>
+ @include('frontend.user.profile.edit-profile-info-modal')
+    
 @endsection
 @section('scripts')
-   @include('frontend.user.profile.profile-bg-js')
-    <script src="{{asset('assets/backend/js/sweetalert2.js')}}"></script>
-    <x-media.js :type="'web'"/>
+    @include('frontend.user.profile.profile-bg-js')
+    <script src="{{asset('assets/backend/js/sweetalert2.js')}}"></script> 
+    
+    {{-- Load Media JS here (Ensure this line is present and uncommented) --}}
+    <x-media.js :type="'web'"/> 
+    
     @include('frontend.user.profile.profile-js')
+    {{-- Toastr success message --}}
     @if(session('success'))
         <script>
             toastr.success('{{ session('success') }}', 'Success');

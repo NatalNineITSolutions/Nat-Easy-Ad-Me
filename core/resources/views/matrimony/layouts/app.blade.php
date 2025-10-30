@@ -359,14 +359,27 @@
 
     @include('matrimony.partials.footer') 
 
-    {{-- Bootstrap --}}
+    {{-- SCRIPTS --}}
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" 
+        crossorigin="anonymous"></script>
+    
+    <script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    </script>        
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Include jQuery (required for Toastr) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- Include Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <x-media.js type="web" /> 
+
+    <x-payment.payment-gateway-js />
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -387,10 +400,6 @@
             });
         });
     </script>
-
-    <script src="{{ asset('assets/common/js/jquery-3.7.1.min.js') }}"></script>
-
-    <x-media.js type="web" />
 
     <x-payment.payment-gateway-js />
     @yield('script') <!-- Custom scripts section -->

@@ -150,4 +150,36 @@
             });
         })(jQuery)
     </script>
+    <script>
+$(document).ready(function() {
+    $('#category_id').on('change', function() {
+        let categoryId = $(this).val();
+        let subCategorySelect = $('#sub_category_id');
+
+        // Clear existing options
+        subCategorySelect.html('<option value="">Select Sub Category</option>');
+
+        if (categoryId) {
+            $.ajax({
+                url: "{{ route('admin.get.subcategory.by.category') }}",
+                type: "GET",
+                data: { category_id: categoryId },
+                success: function(response) {
+                    subCategorySelect.append(response.markup);
+
+                    // Re-init Select2 if active
+                    if ($.fn.select2) {
+                        subCategorySelect.trigger('change.select2');
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Error fetching subcategories:', xhr.responseText);
+                }
+            });
+        }
+    });
+});
+</script>
+
+
 @endsection

@@ -41,6 +41,15 @@
                         </div>
 
                         <div class="form__input__single">
+    <label for="childcategory" class="form__input__single__label">
+        {{__('Saved Child Category')}} <span class="text-danger">*</span>
+    </label>
+    <select name="child_category_id" id="childcategory" class="select2_activation form__control radius-5">
+        <option value="">{{__(' Child Category')}}</option>
+    </select>
+</div>
+
+                        <div class="form__input__single">
                             <label for="name" class="form__input__single__label">{{__('Child Category')}}</label>
                             <input type="text" class="form__control radius-5" name="name" id="name" placeholder="{{__('Child Category Name')}}">
                         </div>
@@ -158,4 +167,32 @@
             });
         })(jQuery)
     </script>
+    <script>
+        // When subcategory changes, load child categories
+$('#subcategory').on('change', function() {
+    let subCategoryId = $(this).val();
+    let childCategorySelect = $('#childcategory');
+
+    childCategorySelect.html('<option value="">Select Child Category</option>');
+
+    if (subCategoryId) {
+        $.ajax({
+            url: "{{ route('admin.get.childcategory.by.subcategory') }}",
+            type: "GET",
+            data: { sub_category_id: subCategoryId },
+            success: function(response) {
+                childCategorySelect.append(response.markup);
+
+                // If using Select2
+                if ($.fn.select2) {
+                    childCategorySelect.trigger('change.select2');
+                }
+            },
+            error: function(xhr) {
+                console.error('Error fetching child categories:', xhr.responseText);
+            }
+        });
+    }
+});
+</script>
 @endsection

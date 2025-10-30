@@ -93,8 +93,9 @@
                                 </select>
                                 <button type="submit" class="cmnBtn btn_5 btn_bg_blue radius-5">{{ __('Filter') }}</button>
                                 @if(request()->has('date') || request()->has('status'))
-                                    <a href="{{ route('admin.level.based.payouts.index') }}"
-                                        class="cmnBtn reset-btn radius-5">{{ __('Reset') }}</a>
+                                    <a href="{{ route('level.payouts.index') }}" class="cmBtn reset-btn radius-5">
+                                        {{ __('Reset') }}
+                                    </a>
                                 @endif
                             </form>
                         </div>

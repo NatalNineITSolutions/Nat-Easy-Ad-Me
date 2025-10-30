@@ -311,84 +311,98 @@
     <x-media.markup />
 @endsection
 
-<script>
-    const sizeOptions = @json($sizes->map(fn($s) => ['id' => $s->id, 'name' => $s->name]));
-
-    document.addEventListener('DOMContentLoaded', function () {
-        let variantIndex = 1;
-        const labels = {
-            size: "{{ __('Item Size') }}",
-            price: "{{ __('Additional Price') }}",
-            stock: "{{ __('Stock Count') }}"
-        };
-
-        const addBtn = document.getElementById('add-variant-btn');
-        const wrapper = document.getElementById('variant-wrapper');
-
-        function getSizeDropdown() {
-            let html = `<select name="size_id[]" class="form-control" required>
-                            <option value="">${labels.size}</option>`;
-            sizeOptions.forEach(option => {
-                html += `<option value="${option.id}">${option.name}</option>`;
-            });
-            html += `</select>`;
-            return html;
-        }
-
-        addBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            const box = document.createElement('div');
-            box.className = 'variant-box mb-3 border rounded p-3 position-relative';
-            box.innerHTML = `
-                <div class="row g-3 align-items-end">
-                    <div class="col-md-2">
-                        <label class="form-label">${labels.size}</label>
-                        ${getSizeDropdown()}
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">${labels.price}</label>
-                        <input type="number" step="0.01" name="size_price[]" class="form-control" placeholder="e.g. 50">
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">${labels.stock}</label>
-                        <input type="number" name="size_stock[]" class="form-control" placeholder="e.g. 25">
-                    </div>
-                    <div class="col-md-2 d-flex align-items-end">
-                        <button type="button" class="btn btn-danger btn-sm remove-variant" style="height: 38px;">
-                            <i class="las la-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
-            wrapper.appendChild(box);
-            variantIndex++;
-        });
-
-        wrapper.addEventListener('click', function (e) {
-            const btn = e.target.closest('.remove-variant');
-            if (btn) {
-                e.preventDefault();
-                btn.closest('.variant-box').remove();
-            }
-        });
-    });
-</script>
-
 @section('script')
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.bundle.min.js"></script>
+    {{-- 1. Load jQuery FIRST --}}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    {{-- 2. Load Bootstrap SECOND (it depends on jQuery) --}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.bundle.min.js"></script>
+
+    {{-- 3. Load Toastr THIRD (it also depends on jQuery) --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-    {{-- Media Upload Script --}}
+    {{-- 4. Load Media Uploader JS FOURTH (after jQuery and Bootstrap) --}}
     <x-media.js />
 
+    {{-- 5. All your other page scripts can now run --}}
     <script>
-        @if($errors->any())
-            @foreach($errors->all() as $error)
+        // Toastr error notifications
+        @if ($errors->any())
+            @foreach ($errors->all() as $error)
                 toastr.error("{{ $error }}");
             @endforeach
         @endif
-    </script>
 
-    
+        // Variant-adding logic
+        const sizeOptions = @json($sizes->map(fn($s) => ['id' => $s->id, 'name' => $s->name]));
+
+        document.addEventListener('DOMContentLoaded', function() {
+            let variantIndex = {{ count($existingSizes) > 0 ? count($existingSizes) : 1 }}; // Start index correctly
+            const labels = {
+                size: "{{ __('Item Size') }}",
+                price: "{{ __('Additional Price') }}",
+                stock: "{{ __('Stock Count') }}",
+                select_size: "{{ __('Select Size') }}"
+            };
+
+            const addBtn = document.getElementById('add-variant-btn');
+            const wrapper = document.getElementById('variant-wrapper');
+
+            function getSizeDropdown() {
+                let html = `<select name="size_id[]" class="form-control" required>
+                                <option value="">${labels.select_size}</option>`;
+                sizeOptions.forEach(option => {
+                    html += `<option value="${option.id}">${option.name}</option>`;
+                });
+                html += `</select>`;
+                return html;
+            }
+
+           // Only add event listener if the button exists on the page
+            if (addBtn) {
+                 addBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const box = document.createElement('div');
+                    box.className = 'variant-box mb-3 border rounded p-3 position-relative';
+                    box.innerHTML = `
+                        <div class="row g-3 align-items-end">
+                            <div class="col-md-2">
+                                <label class="form-label">${labels.size}</label>
+                                ${getSizeDropdown()}
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">${labels.price}</label>
+                                <input type="number" step="0.01" name="size_price[]" class="form-control" placeholder="e.g. 50">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">${labels.stock}</label>
+                                <input type="number" name="size_stock[]" class="form-control" placeholder="e.g. 25">
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="button" class="btn btn-danger btn-sm remove-variant" style="height: 38px;">
+                                    <i class="las la-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    // Only append if the wrapper exists
+                    if (wrapper) {
+                        wrapper.appendChild(box);
+                    }
+                    variantIndex++;
+                });
+            }
+
+            // Only add event listener if the wrapper exists
+            if (wrapper) {
+                 wrapper.addEventListener('click', function(e) {
+                    const btn = e.target.closest('.remove-variant');
+                    if (btn) {
+                        e.preventDefault();
+                        btn.closest('.variant-box').remove();
+                    }
+                });
+            }
+        });
+    </script>
 @endsection

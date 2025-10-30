@@ -53,33 +53,24 @@
                                     </div>
                                 </div>
                             </footer>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
-</div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    @include('backend/partials/footer')
 
-
-
-@include('backend/partials/footer')
-
-<!-- <x-media.markup :type="'web'" /> -->
-</body>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"
-            integrity="sha256-/xUj+3OJ+n2QH55GKa5--6/UEP5jhEc3+xUnMvrZhHE="
+    {{-- SCRIPTS --}}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" 
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" 
             crossorigin="anonymous"></script>
 
-<!-- Bootstrap 4 (for jQuery modal) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-<!-- Select2 -->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<!-- 
-<x-media.js :type="'web'" /> -->
+    @yield('script') 
+
+</body>
 </html>
-

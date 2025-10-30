@@ -409,10 +409,20 @@
                                                 
                                                 <!-- start previous / next buttons -->
                                                 <div class="continue-btn mt-3">
-                                                    <div class="btn-wrapper mb-10 d-flex justify-content-end gap-3">
-                                                        <button class="red-btn w-100 d-block" style="border: none" id="nextBtn" type="button">{{__('Continue')}}</button>
-                                                    </div>
-                                                </div>
+                                            {{-- Terms and Conditions Checkbox --}}
+                                            <div class="form-check mt-3 mb-3">
+                                                <input class="form-check-input" type="checkbox" value="1" id="termsCheckbox" name="terms_agreed" required>
+                                                <label class="form-check-label" for="termsCheckbox" style="font-size: 14px; font-weight: 500;">
+                                                    {{ __('I have read and agree to the') }} 
+                                                    <a href="{{ url('/terms-and-conditions-for-advertisers') }}" target="_blank" style="color: #0d6efd; text-decoration: underline;">{{ __('Terms and Conditions') }}</a>. 
+                                                    <span class="text-danger">*</span>
+                                                </label>
+                                            </div>
+                                            {{-- End Terms and Conditions Checkbox --}}
+                                                <div class="btn-wrapper mb-10 d-flex justify-content-end gap-3">
+                                                    <button class="red-btn w-100 d-block" style="border: none" id="nextBtn" type="button">{{__('Continue')}}</button>
+                                                </div>
+                                            </div>
                                             </div>
                                         </div>
                                     </div>
@@ -547,7 +557,7 @@
             </form>
             @endif
         </div>
-    <!-- <x-media.markup :type="'web'"/> -->
+    <x-media.markup :type="'web'"/>
 @endsection
 @section('scripts')
     <x-frontend.js.phone-number-check-for-listing/>
@@ -556,7 +566,7 @@
         <x-map.google-map-api-key-set/>
         <x-map.google-map-listing-js/>
     @endif
-    <!-- <x-media.js :type="'web'"/> -->
+    <x-media.js :type="'web'"/>
 
     <script src="{{asset('assets/backend/js/sweetalert2.js')}}"></script>
     <script src="{{asset('assets/frontend/js/multi-step.js')}}"></script>
@@ -575,6 +585,31 @@
         (function ($) {
             "use strict";
             $(document).ready(function () {
+
+
+                // Disable Continue button initially and handle checkbox state
+const termsCheckbox = $('#termsCheckbox');
+const nextBtn = $('#nextBtn');
+
+// Initial state
+nextBtn.prop('disabled', true); 
+nextBtn.css('opacity', '0.5'); // Visually indicate disabled state
+
+termsCheckbox.on('change', function() {
+    if ($(this).is(':checked')) {
+        nextBtn.prop('disabled', false);
+        nextBtn.css('opacity', '1');
+    } else {
+        nextBtn.prop('disabled', true);
+        nextBtn.css('opacity', '0.5');
+    }
+});
+
+// Ensure the button state is correct if the form is reloaded with errors
+if (termsCheckbox.is(':checked')) {
+     nextBtn.prop('disabled', false);
+     nextBtn.css('opacity', '1');
+}
 
 
                 // phone hidden

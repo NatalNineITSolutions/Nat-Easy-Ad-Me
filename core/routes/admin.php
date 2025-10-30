@@ -485,6 +485,8 @@ Route::middleware(['auth', 'setlang'])->group(function () {
         // get sub category for select
         Route::post('/admin-get-dependent-subcategory', [ChildCategoryController::class, 'getSubcategory'])->name('admin.select.subcategory');
         Route::get('/get-subcategory-by-category', [ChildCategoryController::class, 'getSubCategoryByCategoryId'])->name('admin.get.subcategory.by.category');
+        Route::get('/get-childcategory-by-subcategory', [ChildCategoryController::class, 'getChildCategoryBySubcategoryId'])->name('admin.get.childcategory.by.subcategory');
+
     });
 
     /*------------------ ADMIN PAGE MANAGE --------------*/

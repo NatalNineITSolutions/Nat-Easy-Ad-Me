@@ -497,14 +497,14 @@
             </div>
         </div>
     </div>
-    <!-- <x-media.markup :type="'web'" /> -->
+    <x-media.markup :type="'web'" />
 @endsection
 
 @include('matrimony.partials.gateway-markup')
 
 
 @section('script')
-<!-- <x-media.js :type="'web'" /> -->
+
     {{-- Toaster initialization --}}
     <script>
         toastr.options = {
@@ -516,6 +516,7 @@
     </script>
 
     {{-- Media Upload Script --}}
+    <x.media.js :type="'web'"/>
 
     <script>
         $(document).on('media_upload_selected', function (e, data) {

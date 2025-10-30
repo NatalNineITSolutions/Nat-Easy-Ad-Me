@@ -110,17 +110,35 @@ class LocationListing extends PageBuilderBase
         $latitude = session('latitude');
         $longitude = session('longitude');
 
+        // dd('latitude: '.$latitude.' longitude: '.$longitude);
+
         $listings = Listing::where('status', 1)
             ->where('is_published', 1);
 
         if ($latitude && $longitude) {
-            $listings = $listings->selectRaw(
-                "*, (6371 * acos(cos(radians(?)) * cos(radians(lat)) * cos(radians(lon) - radians(?)) + sin(radians(?)) * sin(radians(lat)))) AS distance",
-                [$latitude, $longitude, $latitude]
-            )
-                ->havingRaw('distance <= ?', [$distance])
-                ->orderBy('distance', 'asc');
-        } 
+    $distance = $distance; // fallback to 10,000 km for testing
+
+    \Log::info("Geo filter active", [
+        'lat' => $latitude,
+        'lon' => $longitude,
+        'distance' => $distance,
+    ]);
+
+    $listings = $listings->whereNotNull('lat')->whereNotNull('lon')
+        ->selectRaw("
+            ,
+            (6371 acos(
+                cos(radians(?)) *
+                cos(radians(lat)) *
+                cos(radians(lon) - radians(?)) +
+                sin(radians(?)) *
+                sin(radians(lat))
+            )) AS distance
+        ", [$latitude, $longitude, $latitude])
+        // comment out havingRaw temporarily to test
+        // ->havingRaw('distance <= ?', [$distance])
+        ->orderBy('distance', 'asc');
+} 
 
         $listings = $listings->take($items)->get();
 

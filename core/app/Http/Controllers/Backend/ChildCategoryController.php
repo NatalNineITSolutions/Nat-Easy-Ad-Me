@@ -189,4 +189,25 @@ ITEM;
             return view('backend.pages.child-category.search-child-category', compact('child_categories'))->render();
         }
     }
+
+    public function getChildCategoryBySubcategoryId(Request $request)
+{
+    $sub_category_id = $request->sub_category_id;
+
+    $childCategories = ChildCategory::where('sub_category_id', $sub_category_id)
+        ->where('status', 1)
+        ->get();
+
+    $data = '';
+    foreach ($childCategories as $child) {
+        $id = $child->id;
+        $name = $child->name;
+        $data .= <<<ITEM
+        <option value="{$id}">{$name}</option>
+ITEM;
+    }
+
+    return response()->json(['markup' => $data]);
+}
+
 }

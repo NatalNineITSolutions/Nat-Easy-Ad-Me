@@ -69,23 +69,55 @@
         }
     </style>
 
-    <x-media.markup :type="'web'" />
+    <x-media.markup />
+{{-- SCRIPTS --}}
 
-  <!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"
-            integrity="sha256-/xUj+3OJ+n2QH55GKa5--6/UEP5jhEc3+xUnMvrZhHE="
-            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" 
+        crossorigin="anonymous"></script>
 
-<!-- Bootstrap 4 (for jQuery modal) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    </script>        
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Select2 -->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-<x-media.js :type="'web'" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    {{-- Page-specific scripts --}}
-    @yield('scripts')
+    <x-payment.payment-gateway-js />
+
+    <x-media.js /> 
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Select elements
+            const menuToggle = document.querySelector(".menu-toggle");
+            const mobileMenu = document.getElementById("mobileMenu");
+
+            // Ensure menuToggle exists before adding listener
+            if (menuToggle && mobileMenu) {
+                // Toggle menu on click
+                menuToggle.addEventListener("click", function () {
+                    mobileMenu.classList.toggle("show");
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener("click", function (event) {
+                    if (!menuToggle.contains(event.target) && !mobileMenu.contains(event.target)) {
+                        mobileMenu.classList.remove("show");
+                    }
+                });
+            }
+        });
+    </script>
+
+    @yield('scripts') 
+
 </body>
 </html>

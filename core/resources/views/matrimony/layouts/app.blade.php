@@ -355,7 +355,6 @@
         @yield('content') 
     </div>
 
-    <x-media.markup type="web" />
 
     @include('matrimony.partials.footer') 
 
@@ -376,8 +375,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-    <x-media.js type="web" /> 
 
     <x-payment.payment-gateway-js />
 

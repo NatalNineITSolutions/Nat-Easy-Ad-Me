@@ -149,7 +149,7 @@ class ListingController extends Controller
                 'sub_category_id' => 'nullable|exists:sub_categories,id,category_id,' . $request->category_id,
                 'child_category_id' => 'nullable|exists:child_categories,id,sub_category_id,' . $request->sub_category_id,
                 'title' => 'required|max:191',
-                'description' => 'required|min:150',
+                'description' => 'required|min:20',
                 'slug' => 'required|max:255|unique:listings',
                 'price' => $request->category_id == 54 ? 'nullable|numeric' : 'required|numeric',
                 // Job-related fields validation

@@ -623,9 +623,6 @@
                                 <label class="form-label">Higher Education</label>
                                 <select class="form-select" name="education" id="education">
                                     <option value="" selected>Choose one</option>
-                                    <option value="BE">BE</option>
-                                    <option value="MBA">MBA</option>
-                                    <option value="MBBS">MBBS</option>
                                 </select>
                             </div>
 
@@ -1210,6 +1207,73 @@
             validateSection(event, 4);
         });
     </script>
+  <script>
+document.addEventListener('DOMContentLoaded', async function () {
+  // helper to fetch and parse json, returns array or null
+  async function fetchList(url) {
+    try {
+      const res = await fetch(url, { cache: 'no-store' });
+      console.log('[LIST DEBUG] fetched', url, res.status);
+      if (!res.ok) { console.warn('[LIST DEBUG] non-OK', url, res.status); return null; }
+      const text = await res.text();
+      try {
+        const parsed = JSON.parse(text);
+        if (!Array.isArray(parsed)) { console.warn('[LIST DEBUG] not array', url); return null; }
+        return parsed;
+      } catch (pe) {
+        console.error('[LIST DEBUG] JSON parse error for', url, pe);
+        return null;
+      }
+    } catch (err) {
+      console.error('[LIST DEBUG] fetch error for', url, err);
+      return null;
+    }
+  }
+
+  // populate a select element with given list (array of strings)
+  function populateSelect(selectId, list, fallback) {
+    const sel = document.getElementById(selectId);
+    if (!sel) return;
+    const currentVal = sel.value || '';
+    const source = (Array.isArray(list) && list.length) ? list : fallback;
+    if (!Array.isArray(list) || !list.length) console.warn(`[LIST DEBUG] using fallback for ${selectId}`);
+    let html = '<option value="">Choose one</option>';
+    source.forEach(item => {
+      const val = item == null ? '' : String(item);
+      const esc = val.replace(/"/g, '&quot;');
+      const selAttr = (currentVal && currentVal === val) ? ' selected' : '';
+      html += `<option value="${esc}"${selAttr}>${esc}</option>`;
+    });
+    sel.innerHTML = html;
+    // If select2 in use, notify
+    if (window.jQuery && $(sel).hasClass('select2')) {
+      try { $(sel).trigger('change.select2'); } catch(e){ console.warn('select2 refresh failed', e); }
+    }
+  }
+
+  // fallback lists (short safe defaults)
+  const eduFallback = [
+    "High School","Intermediate / 12th","Diploma","Bachelor's Degree (BA / BSc / BCom)",
+    "B.Tech / BE","MBA / PGDM","MBBS / BDS","Master's Degree (MA / MSc / MCom)","Other"
+  ];
+  const occFallback = [
+    "Developer / Programmer","Doctor","Teacher","Engineer","Business Owner","Unemployed","Other"
+  ];
+
+  // fetch both lists in parallel
+  const [eduList, occList] = await Promise.all([
+    fetchList('/data/educations.json'),
+    fetchList('/data/occupations.json')
+  ]);
+
+  // populate selects (only if elements exist on page)
+  populateSelect('education', eduList, eduFallback);
+  populateSelect('occupation', occList, occFallback);
+
+  console.log('[LIST DEBUG] done populating education & occupation');
+});
+</script>
+
 </body>
 
 </html>

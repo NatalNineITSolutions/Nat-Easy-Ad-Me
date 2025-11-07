@@ -2,15 +2,15 @@
     $segment = request()->segment(1);
 
     // If the URL is like /user/..., treat it as “web”
-    if ($segment === 'user') {
-        $type = 'web';
-    }
-    // Otherwise, if there’s any segment, use it; else default to admin
-    elseif ($segment) {
-        $type = $segment;
-    } else {
+  if ($segment === 'admin') {
         $type = 'admin';
     }
+    // Otherwise, if there’s any segment, use it; else default to admin
+    elseif (in_array($segment, ['admin', 'web', 'user', 'branch'])) {
+    $type = $segment;
+} else {
+    $type = 'web';
+}
 
     $trash_icon = $type === 'admin' ? 'ti-trash' : 'las la-trash';
     $check_icon = $type === 'admin' ? 'fas fa-check' : 'las la-check';

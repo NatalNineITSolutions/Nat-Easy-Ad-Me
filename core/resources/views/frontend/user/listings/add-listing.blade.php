@@ -498,11 +498,20 @@
                                                     </div>
                                                 @endif
                                                 <div class="address-text mt-3">
-                                                    <input type="hidden" name="latitude" id="latitude">
-                                                    <input type="hidden" name="longitude" id="longitude">
-                                                    <label for="address-text">{{ __('Address') }}</label>
-                                                    <input type="text" class="w-100 input-filed" name="address" id="user_address" value="{{ old('address') }}" placeholder="{{__('Address')}}">
-                                                </div>
+    <input type="hidden" name="latitude" id="latitude">
+    <input type="hidden" name="longitude" id="longitude">
+
+    <label for="address-text">{{ __('Address') }}</label>
+    <input
+        type="text"
+        class="w-100 input-filed"
+        name="address"
+        id="user_address"
+        value="{{ old('address') }}"
+        placeholder="{{ __('Address') }}"
+        readonly
+    >
+</div>
                                             </div>
                                             <div class="video box-shadow1 p-24 mt-3 mb-3">
                                                 <label for="vedio-link">{{ __('Video Url') }}</label>
@@ -840,6 +849,103 @@ if (termsCheckbox.is(':checked')) {
             });
         })(jQuery);
     </script>
+
+    <script>
+(function () {
+  // Kanyakumari coordinates
+  const defaultCenter = { lat: 8.0883, lng: 77.5385 };
+  const defaultZoom = 12; // adjust if you want further zoom
+
+  // Try to apply center when google maps becomes available.
+  function applyDefaultCenter() {
+    try {
+      // If there's already a global "map" object created by other script -> reuse it
+      if (window.map && typeof window.map.setCenter === 'function') {
+        window.map.setCenter(defaultCenter);
+        window.map.setZoom(defaultZoom);
+        console.info('[MAP] Centered existing map to Kanyakumari');
+        return true;
+      }
+
+      // Otherwise, try to create a new map in #map_canvas if Google Maps API loaded
+      if (window.google && window.google.maps) {
+        const mapCanvas = document.getElementById('map_canvas');
+        if (!mapCanvas) {
+          console.warn('[MAP] #map_canvas not found yet');
+          return false;
+        }
+
+        // Create a new map instance and store on window.map so other code can reuse
+        window.map = new google.maps.Map(mapCanvas, {
+          center: defaultCenter,
+          zoom: defaultZoom,
+        });
+
+        // If pac-input exists, wire up a SearchBox (optional - works with the Places library)
+        const input = document.getElementById('pac-input');
+        if (input && window.google.maps.places) {
+          const searchBox = new google.maps.places.SearchBox(input);
+          window.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+          // Bias the SearchBox results towards map viewport.
+          window.map.addListener('bounds_changed', function () {
+            searchBox.setBounds(window.map.getBounds());
+          });
+
+          // When user selects a place, recenter map and set marker (optional)
+          let marker = null;
+          searchBox.addListener('places_changed', function () {
+            const places = searchBox.getPlaces();
+            if (!places || !places.length) return;
+
+            const place = places[0];
+            if (!place.geometry || !place.geometry.location) return;
+
+            window.map.setCenter(place.geometry.location);
+            window.map.setZoom(14);
+
+            if (marker) marker.setMap(null);
+            marker = new google.maps.Marker({
+              position: place.geometry.location,
+              map: window.map,
+            });
+
+            // update hidden lat/lng inputs if present
+            const latInput = document.getElementById('latitude');
+            const lngInput = document.getElementById('longitude');
+            if (latInput) latInput.value = place.geometry.location.lat();
+            if (lngInput) lngInput.value = place.geometry.location.lng();
+          });
+        }
+
+        console.info('[MAP] Created new map centered to Kanyakumari');
+        return true;
+      }
+
+      // Google API not ready yet
+      return false;
+    } catch (err) {
+      console.error('[MAP] applyDefaultCenter error:', err);
+      return false;
+    }
+  }
+
+  // Poll until the map is ready (or until timeout)
+  let attempts = 0;
+  const maxAttempts = 50; // ~50 * 200ms = 10 seconds max wait
+  const interval = setInterval(function () {
+    attempts++;
+    const done = applyDefaultCenter();
+    if (done || attempts >= maxAttempts) {
+      clearInterval(interval);
+      if (!done) {
+        console.warn('[MAP] Could not set default center — google maps API may be blocked or #map_canvas missing.');
+      }
+    }
+  }, 200);
+})();
+</script>
+
 
     @if(session('success'))
         <script>

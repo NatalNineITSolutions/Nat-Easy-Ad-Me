@@ -95,10 +95,10 @@
             </div>
         </div>
     </div>
-    <x-media.markup/>
+    
 @endsection
 @section('scripts')
-    <x-media.js/>
+    
     <script src="{{asset('assets/backend/js/bootstrap-tagsinput.js')}}"></script>
     <script src="{{asset('assets/backend/js/fontawesome-iconpicker.min.js')}}"></script>
     <script>

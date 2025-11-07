@@ -59,6 +59,7 @@
     </div>
     </div>
     </div>
+    <x-media.markup/>
     @include('backend/partials/footer')
 
     {{-- SCRIPTS --}}
@@ -71,6 +72,7 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     @yield('script') 
+    <x-media.js />
 
 </body>
 </html>

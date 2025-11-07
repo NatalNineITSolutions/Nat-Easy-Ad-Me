@@ -308,7 +308,7 @@
     </div>
 
     {{-- Media Modal Markup --}}
-    <x-media.markup />
+   
 @endsection
 
 @section('script')
@@ -322,7 +322,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
     {{-- 4. Load Media Uploader JS FOURTH (after jQuery and Bootstrap) --}}
-    <x-media.js />
+    
 
     {{-- 5. All your other page scripts can now run --}}
     <script>

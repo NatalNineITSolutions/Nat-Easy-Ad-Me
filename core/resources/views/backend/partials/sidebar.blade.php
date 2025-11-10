@@ -1,13 +1,5 @@
 <div class="dashboard__left dashboard-left-content">
     <div class="dashboard__left__main">
-        <div class="dashboard__left__close close-bars"><i class="fa-solid fa-times"></i></div>
-        <div class="dashboard__top">
-            <div class="dashboard__top__logo">
-                <a href="{{route('admin.dashboard')}}">
-                {!! render_image_markup_by_attachment_id(get_static_option('site_logo')) !!}
-                </a>
-            </div>
-        </div>
 
 
         <div class="dashboard__bottom mt-5">
@@ -25,45 +17,60 @@
                     </li>
                 @endcan
 
-                {{-- Branch Manage --}}
-                <li class="dashboard__bottom__list__item has-children 
-                    @if (request()->is('admin/branches*')) active open show @endif">
-                    <a href="javascript:void(0)">
-                        <i class="las la-cogs"></i> {{ __('Branch Manage') }}
-                    </a>
+                {{-- User Manage --}}
+                @canany(['user-list', 'user-deactivated-list', 'user-verify-status', 'user-add'])
+                    <li  class="dashboard__bottom__list__item has-children @if (request()->is('admin/user*')) active open show @endif">
+                        <a href="javascript:void(0)"> <i class="las la-user-circle"></i> {{ __('User Manage') }} </a>
+                        <ul class="submenu">
+                            @can('user-list')
+                                <li class="dashboard__bottom__list__item @if (request()->routeIs(['admin.user.all'])) selected @endif">
+                                    <a href="{{ route('admin.user.all') }}"> {{ __('All Users') }} </a>
+                                </li>
+                            @endcan
+                            @can('user-deactivated-list')
+                                <li class="dashboard__bottom__list__item @if (request()->routeIs(['admin.user.deactivated.all'])) selected @endif">
+                                    <a href="{{ route('admin.user.deactivated.all') }}"> {{ __('Deactivated Users') }} </a>
+                                </li>
+                            <li class="dashboard__bottom__list__item @if (request()->routeIs(['admin.user.restore'])) selected @endif">
+                                    <a href="{{ route('admin.user.restore') }}"> {{ __('Trash List') }} </a>
+                                </li>
+                            @endcan
+                            @can('user-verify-status')
+                                <li class="dashboard__bottom__list__item @if (request()->routeIs(['admin.user.verification.request'])) selected @endif">
+                                    <a href="{{ route('admin.user.verification.request') }}">
+                                        {{ __('Identity Verify Requests') }} </a>
+                                </li>
+                            @endcan
+                            @can('user-add')
+                            <li class="dashboard__bottom__list__item @if (request()->routeIs(['admin.user.add'])) selected @endif">
+                                <a href="{{ route('admin.user.add') }}">
+                                    {{ __('Add New User') }} </a>
+                            </li>
+                            @endcan
+
+                            <li class="dashboard__bottom__list__item @if (request()->routeIs(['admin.user.reports'])) selected @endif">
+                                <a href="{{ route('admin.user.reports') }}">
+                                    {{ __('User Reports') }}
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endcanany
+
+
+                {{-- Product Manage --}}
+                <li class="dashboard__bottom__list__item has-children @if (request()->is('admin/products*')) active open show @endif">
+                    <a href="javascript:void(0)"> <i class="las la-th-list"></i> {{ __('Product Manage') }} </a>
                     <ul class="submenu">
-                        <li class="dashboard__bottom__list__item @if(request()->is('admin/branches')) selected @endif">
-                            <a href="{{ route('admin.branches') }}">
-                                <span class="icon_title">{{ __('Branches') }}</span>
-                            </a>
+                        <li class="dashboard__bottom__list__item @if (request()->is('admin/products')) selected @endif">
+                            <a href="{{ route('admin.products.index') }}"> {{ __('All Products') }} </a>
                         </li>
-                        <li class="dashboard__bottom__list__item @if(request()->is('admin/branch-payout')) selected @endif">
-                            <a href="{{ route('admin.branch.payout') }}">
-                                <span class="icon_title">{{ __('Branch Payout') }}</span>
-                            </a>
-                        </li>
-                        <li class="dashboard__bottom__list__item @if(request()->is('admin/branch-payout-history')) selected @endif">
-                            <a href="{{ route('admin.branch.payout.history') }}">
-                                <span class="icon_title">{{ __('Branch Payout History') }}</span>
-                            </a>
+                        <li class="dashboard__bottom__list__item @if (request()->is('admin/products/categories')) selected @endif">
+                            <a href="{{ route('admin.products.category.index') }}"> {{ __('All Categories') }} </a>
                         </li>
                     </ul>
                 </li>
 
-                <li class="dashboard__bottom__list__item @if(request()->is('admin/level-commission')) active @endif">
-                    <a href="{{ route('admin.level.commission') }}"> <i class="las la-percentage"></i> 
-                        <span class="icon_title">{{ __('Commission') }}</span> 
-                    </a> 
-                </li>
-
-
-                @can('admin-dashboard')
-                    <li class="dashboard__bottom__list__item @if(request()->is('admin/vendors')) active @endif">
-                        <a href="{{route('admin.vendors')}}"><i class="las la-store"></i>
-                            <span class="icon_title">{{ __('Vendors') }}</span>
-                        </a>
-                    </li>
-                @endcan
 
                 <!--Admin listing manage -->
                 @canany(['user-listing-list', 'guest-listing-list', 'admin-listing-list', 'report-reason-list', 'listing-report-list'])
@@ -108,6 +115,133 @@
                     </li>
                 @endcanany
 
+                <!--Admin advertisement manage -->
+                @if(get_static_option('google_adsense_status') == 'on')
+                    @canany(['advertisement-list', 'advertisement-add'])
+                        <li  class="dashboard__bottom__list__item has-children @if (request()->is('admin/advertisement/*')) active open show @endif">
+                            <a href="javascript:void(0)"> <i class="las la-ad"></i> {{ __('Advertisements Manage') }} </a>
+                            <ul class="submenu">
+                                @can('advertisement-list')
+                                <li class="dashboard__bottom__list__item @if (request()->is('admin/advertisement/index')) selected @endif">
+                                    <a href="{{ route('admin.advertisement') }}"> {{ __('All Advertisements') }} </a>
+                                </li>
+                                @endcan
+                                @can('advertisement-add')
+                                <li class="dashboard__bottom__list__item @if (request()->is('admin/advertisement/new')) selected @endif">
+                                    <a href="{{ route('admin.advertisement.new') }}"> {{ __('Add New Advertisement') }} </a>
+                                </li>
+                                @endcan
+                            </ul>
+                        </li>
+                     @endcanany
+                @endif
+
+
+                @canany(['category-list', 'category-add'])
+                <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/category/*')) active open @endif">
+                    <a href="javascript:void(0)"><i class="las la-th-list"></i>
+                        <span class="icon_title">{{ __('Categories') }}</span>
+                    </a>
+                    <ul class="submenu" style="@if(request()->is('admin/category/*')) display:block; @endif">
+                        @can('category-list')
+                        <li class="dashboard__bottom__list__item @if(request()->is('admin/category/index')) selected @endif">
+                            <a href="{{ route('admin.category') }}">{{ __('All Category') }}</a>
+                        </li>
+                        @endcan
+                       @can('category-add')
+                        <li class="dashboard__bottom__list__item @if(request()->is('admin/category/add-new-category')) selected @endif">
+                            <a href="{{ route('admin.category.new') }}">{{ __('Add New Category') }}</a>
+                        </li>
+                        @endcan
+                    </ul>
+                </li>
+               @endcanany
+
+
+              @canany(['subcategory-list', 'subcategory-add'])
+                <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/subcategory/*')) active open @endif">
+                    <a href="javascript:void(0)"><i class="las la-th-list"></i>
+                        <span class="icon_title">{{ __('Subcategories') }}</span>
+                    </a>
+                    <ul class="submenu" style="@if(request()->is('admin/subcategory/*')) display:block; @endif">
+                        @can('subcategory-list')
+                        <li class="dashboard__bottom__list__item @if(request()->is('admin/subcategory/index')) selected @endif">
+                            <a href="{{ route('admin.subcategory') }}">{{ __('All Subcategories') }}</a>
+                        </li>
+                        @endcan
+                        @can('subcategory-add')
+                        <li class="dashboard__bottom__list__item @if(request()->is('admin/subcategory/add-new-subcategory')) selected @endif">
+                            <a href="{{ route('admin.subcategory.new') }}">{{ __('Add New Subcategory') }}</a>
+                        </li>
+                       @endcan
+                    </ul>
+                  </li>
+                @endcanany
+
+
+                    <!-- Child Categories Manage -->
+                    @canany(['child-category-list', 'child-category-add'])
+                        <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/child-category/*')) active open @endif">
+                            <a href="javascript:void(0)">
+                                <i class="las la-th-list"></i>
+                                <span class="icon_title">{{ __('Child Categories') }}</span>
+                            </a>
+                            <ul class="submenu" style="@if(request()->is('admin/child-category/*')) display:block; @endif">
+                                @can('child-category-list')
+                                    <li class="dashboard__bottom__list__item @if(request()->is('admin/child-category/index')) selected @endif">
+                                        <a href="{{ route('admin.child.category') }}">{{ __('All Child Categories') }}</a>
+                                    </li>
+                                @endcan
+                                @can('child-category-add')
+                                    <li class="dashboard__bottom__list__item @if(request()->is('admin/child-category/add-new-child-category')) selected @endif">
+                                        <a href="{{ route('admin.child.category.new') }}">{{ __('Add New Child Category') }}</a>
+                                    </li>
+                                @endcan
+                            </ul>
+                        </li>
+                    @endcanany
+
+                {{-- Branch Manage --}}
+                <li class="dashboard__bottom__list__item has-children 
+                    @if (request()->is('admin/branches*')) active open show @endif">
+                    <a href="javascript:void(0)">
+                        <i class="las la-cogs"></i> {{ __('Branch Manage') }}
+                    </a>
+                    <ul class="submenu">
+                        <li class="dashboard__bottom__list__item @if(request()->is('admin/branches')) selected @endif">
+                            <a href="{{ route('admin.branches') }}">
+                                <span class="icon_title">{{ __('Branches') }}</span>
+                            </a>
+                        </li>
+                        <li class="dashboard__bottom__list__item @if(request()->is('admin/branch-payout')) selected @endif">
+                            <a href="{{ route('admin.branch.payout') }}">
+                                <span class="icon_title">{{ __('Branch Payout') }}</span>
+                            </a>
+                        </li>
+                        <li class="dashboard__bottom__list__item @if(request()->is('admin/branch-payout-history')) selected @endif">
+                            <a href="{{ route('admin.branch.payout.history') }}">
+                                <span class="icon_title">{{ __('Branch Payout History') }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="dashboard__bottom__list__item @if(request()->is('admin/level-commission')) active @endif">
+                    <a href="{{ route('admin.level.commission') }}"> <i class="las la-percentage"></i> 
+                        <span class="icon_title">{{ __('Commission Settings') }}</span> 
+                    </a> 
+                </li>
+
+
+                @can('admin-dashboard')
+                    <li class="dashboard__bottom__list__item @if(request()->is('admin/vendors')) active @endif">
+                        <a href="{{route('admin.vendors')}}"><i class="las la-store"></i>
+                            <span class="icon_title">{{ __('Vendors') }}</span>
+                        </a>
+                    </li>
+                @endcan
+
+
                 {{-- Attribute Manage --}}
                 <li class="dashboard__bottom__list__item has-children @if (request()->is('admin/attributes/*')) active open show @endif">
                     <a href="javascript:void(0)">
@@ -128,18 +262,6 @@
                     </ul>
                 </li>
 
-                {{-- Product Manage --}}
-                <li class="dashboard__bottom__list__item has-children @if (request()->is('admin/products*')) active open show @endif">
-                    <a href="javascript:void(0)"> <i class="las la-th-list"></i> {{ __('Product Manage') }} </a>
-                    <ul class="submenu">
-                        <li class="dashboard__bottom__list__item @if (request()->is('admin/products')) selected @endif">
-                            <a href="{{ route('admin.products.index') }}"> {{ __('All Products') }} </a>
-                        </li>
-                        <li class="dashboard__bottom__list__item @if (request()->is('admin/products/categories')) selected @endif">
-                            <a href="{{ route('admin.products.category.index') }}"> {{ __('All Categories') }} </a>
-                        </li>
-                    </ul>
-                </li>
 
                 {{-- Shipping Manage --}}
                 <li class="dashboard__bottom__list__item has-children @if (request()->is('admin/shipping*')) active open show @endif">
@@ -234,134 +356,6 @@
                                 </li>
                         </ul>
                 </li>
-
-
-                <!--Admin advertisement manage -->
-                @if(get_static_option('google_adsense_status') == 'on')
-                    @canany(['advertisement-list', 'advertisement-add'])
-                        <li  class="dashboard__bottom__list__item has-children @if (request()->is('admin/advertisement/*')) active open show @endif">
-                            <a href="javascript:void(0)"> <i class="las la-ad"></i> {{ __('Advertisements Manage') }} </a>
-                            <ul class="submenu">
-                                @can('advertisement-list')
-                                <li class="dashboard__bottom__list__item @if (request()->is('admin/advertisement/index')) selected @endif">
-                                    <a href="{{ route('admin.advertisement') }}"> {{ __('All Advertisements') }} </a>
-                                </li>
-                                @endcan
-                                @can('advertisement-add')
-                                <li class="dashboard__bottom__list__item @if (request()->is('admin/advertisement/new')) selected @endif">
-                                    <a href="{{ route('admin.advertisement.new') }}"> {{ __('Add New Advertisement') }} </a>
-                                </li>
-                                @endcan
-                            </ul>
-                        </li>
-                     @endcanany
-                @endif
-
-
-                {{-- User Manage --}}
-                @canany(['user-list', 'user-deactivated-list', 'user-verify-status', 'user-add'])
-                    <li  class="dashboard__bottom__list__item has-children @if (request()->is('admin/user*')) active open show @endif">
-                        <a href="javascript:void(0)"> <i class="las la-user-circle"></i> {{ __('User Manage') }} </a>
-                        <ul class="submenu">
-                            @can('user-list')
-                                <li class="dashboard__bottom__list__item @if (request()->routeIs(['admin.user.all'])) selected @endif">
-                                    <a href="{{ route('admin.user.all') }}"> {{ __('All Users') }} </a>
-                                </li>
-                            @endcan
-                            @can('user-deactivated-list')
-                                <li class="dashboard__bottom__list__item @if (request()->routeIs(['admin.user.deactivated.all'])) selected @endif">
-                                    <a href="{{ route('admin.user.deactivated.all') }}"> {{ __('Deactivated Users') }} </a>
-                                </li>
-                            <li class="dashboard__bottom__list__item @if (request()->routeIs(['admin.user.restore'])) selected @endif">
-                                    <a href="{{ route('admin.user.restore') }}"> {{ __('Trash List') }} </a>
-                                </li>
-                            @endcan
-                            @can('user-verify-status')
-                                <li class="dashboard__bottom__list__item @if (request()->routeIs(['admin.user.verification.request'])) selected @endif">
-                                    <a href="{{ route('admin.user.verification.request') }}">
-                                        {{ __('Identity Verify Requests') }} </a>
-                                </li>
-                            @endcan
-                            @can('user-add')
-                            <li class="dashboard__bottom__list__item @if (request()->routeIs(['admin.user.add'])) selected @endif">
-                                <a href="{{ route('admin.user.add') }}">
-                                    {{ __('Add New User') }} </a>
-                            </li>
-                            @endcan
-
-                            <li class="dashboard__bottom__list__item @if (request()->routeIs(['admin.user.reports'])) selected @endif">
-                                <a href="{{ route('admin.user.reports') }}">
-                                    {{ __('User Reports') }}
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                @endcanany
-
-
-               @canany(['category-list', 'category-add'])
-                <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/category/*')) active open @endif">
-                    <a href="javascript:void(0)"><i class="las la-th-list"></i>
-                        <span class="icon_title">{{ __('Categories') }}</span>
-                    </a>
-                    <ul class="submenu" style="@if(request()->is('admin/category/*')) display:block; @endif">
-                        @can('category-list')
-                        <li class="dashboard__bottom__list__item @if(request()->is('admin/category/index')) selected @endif">
-                            <a href="{{ route('admin.category') }}">{{ __('All Category') }}</a>
-                        </li>
-                        @endcan
-                       @can('category-add')
-                        <li class="dashboard__bottom__list__item @if(request()->is('admin/category/add-new-category')) selected @endif">
-                            <a href="{{ route('admin.category.new') }}">{{ __('Add New Category') }}</a>
-                        </li>
-                        @endcan
-                    </ul>
-                </li>
-               @endcanany
-
-
-              @canany(['subcategory-list', 'subcategory-add'])
-                <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/subcategory/*')) active open @endif">
-                    <a href="javascript:void(0)"><i class="las la-th-list"></i>
-                        <span class="icon_title">{{ __('Subcategories') }}</span>
-                    </a>
-                    <ul class="submenu" style="@if(request()->is('admin/subcategory/*')) display:block; @endif">
-                        @can('subcategory-list')
-                        <li class="dashboard__bottom__list__item @if(request()->is('admin/subcategory/index')) selected @endif">
-                            <a href="{{ route('admin.subcategory') }}">{{ __('All Subcategories') }}</a>
-                        </li>
-                        @endcan
-                        @can('subcategory-add')
-                        <li class="dashboard__bottom__list__item @if(request()->is('admin/subcategory/add-new-subcategory')) selected @endif">
-                            <a href="{{ route('admin.subcategory.new') }}">{{ __('Add New Subcategory') }}</a>
-                        </li>
-                       @endcan
-                    </ul>
-                  </li>
-                @endcanany
-
-
-                    <!-- Child Categories Manage -->
-                    @canany(['child-category-list', 'child-category-add'])
-                        <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/child-category/*')) active open @endif">
-                            <a href="javascript:void(0)">
-                                <i class="las la-th-list"></i>
-                                <span class="icon_title">{{ __('Child Categories') }}</span>
-                            </a>
-                            <ul class="submenu" style="@if(request()->is('admin/child-category/*')) display:block; @endif">
-                                @can('child-category-list')
-                                    <li class="dashboard__bottom__list__item @if(request()->is('admin/child-category/index')) selected @endif">
-                                        <a href="{{ route('admin.child.category') }}">{{ __('All Child Categories') }}</a>
-                                    </li>
-                                @endcan
-                                @can('child-category-add')
-                                    <li class="dashboard__bottom__list__item @if(request()->is('admin/child-category/add-new-child-category')) selected @endif">
-                                        <a href="{{ route('admin.child.category.new') }}">{{ __('Add New Child Category') }}</a>
-                                    </li>
-                                @endcan
-                            </ul>
-                        </li>
-                    @endcanany
 
 
                     <!-- Pages Manage -->

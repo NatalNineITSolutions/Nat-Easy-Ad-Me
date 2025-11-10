@@ -1,5 +1,5 @@
 <div class="business-hour enquiry-hour box-shadow1 mt-4">
-    <h3 class="head5 enquiry-head d-flex">{{ __('Enquiry Form') }}</h3>
+    <h3 class="head5 enquiry-head d-flex">{{ __('Complaints and Suggestions') }}</h3>
     <div class="enquiry-wraper">
         <div class="enquiry_form_submit"></div>
         <form id="enquiryForm" action="{{ route('visitor.enquiry.form.submit') }}" method="post"
@@ -36,7 +36,7 @@
                 </div>
             @endif
 
-            <button type="submit" class="red-btn mt-3">{{ __('Submit Enquiry') }}</button>
+            <button type="submit" class="red-btn mt-3">{{ __('Submit') }}</button>
         </form>
     </div>
 </div>

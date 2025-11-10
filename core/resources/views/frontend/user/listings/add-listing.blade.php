@@ -127,7 +127,7 @@
              padding: 0;
         }
     </style>
-    <x-css.phone-number-css/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css" />
 @endsection
 @section('content')
         <div class="add-listing-wrapper mt-5 mb-5">
@@ -569,7 +569,29 @@
     <x-media.markup :type="'web'"/>
 @endsection
 @section('scripts')
-    <x-frontend.js.phone-number-check-for-listing/>
+    {{-- NEW SCRIPT WITH INDIA AS DEFAULT --}}
+{{-- REPLACE the old script with THIS one --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+<script>
+    // Set a global flag to make SURE this only runs once
+    if (typeof window.phoneInputInitialized === 'undefined') {
+        window.phoneInputInitialized = true; // Set the flag
+
+        document.addEventListener("DOMContentLoaded", function() {
+            var input = document.querySelector("#phone");
+            
+            // Double-check that it's not already initialized
+            if (input && !input.classList.contains('iti-hidden-input')) {
+                window.intlTelInput(input, {
+                    initialCountry: "in", 
+                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
+                    separateDialCode: true,
+                    preferredCountries: ["in", "us", "gb"], 
+                });
+            }
+        });
+    }
+</script>
     <x-frontend.js.listing-attribute-js/>
     @if(!empty(get_static_option('google_map_settings_on_off')))
         <x-map.google-map-api-key-set/>
@@ -579,7 +601,7 @@
 
     <script src="{{asset('assets/backend/js/sweetalert2.js')}}"></script>
     <script src="{{asset('assets/frontend/js/multi-step.js')}}"></script>
-    <x-summernote.js/>
+    
     <script src="{{asset('assets/backend/js/bootstrap-tagsinput.js')}}"></script>
     <x-frontend.js.new-tag-add-js/>
 

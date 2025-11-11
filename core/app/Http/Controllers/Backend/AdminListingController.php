@@ -120,7 +120,7 @@ class AdminListingController extends Controller
             $request->validate([
                 'category_id' => 'required',
                 'title' => 'required|max:191',
-                'description' => 'required|min:150',
+                'description' => 'required|min:20',
                 'slug' => 'required|unique:listings',
                 'price' => 'required|numeric',
                 // Attributes Validation
@@ -253,7 +253,7 @@ class AdminListingController extends Controller
             $request->validate([
                 'category_id' => 'required',
                 'title' => 'required|max:191',
-                'description' => 'required|min:150',
+                'description' => 'required|min:20',
                 'slug' => 'required|unique:listings,slug,' . $id . ',id',
                 'price' => 'required|numeric',
                 // Attributes Validation

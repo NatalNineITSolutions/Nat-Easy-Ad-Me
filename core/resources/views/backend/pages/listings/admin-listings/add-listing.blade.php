@@ -275,7 +275,7 @@
 
                                                         <!-- Description -->
                                                         <div class="form__input__single mt-3">
-                                                            <label class="form__input__single__label">{{ __('Description') }} <span class="text-danger">*</span> <span class="text-danger">{{ __('minimum 150 characters.') }}</span> </label>
+                                                            <label class="form__input__single__label">{{ __('Description') }} <span class="text-danger">*</span> <span class="text-danger">{{ __('minimum 20 characters.') }}</span> </label>
                                                             <div class="input-form input-form2">
                                                                 <textarea class="textarea--form summernote" name="description" placeholder="{{__('Type Description')}}">{{ old('description') }}</textarea>
                                                             </div>
@@ -499,7 +499,27 @@
 @endsection
 @section('scripts')
     <x-frontend.js.listing-attribute-js/>
-    <x-frontend.js.phone-number-check-for-listing/>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+<script>
+    // Set a global flag to make SURE this only runs once
+    if (typeof window.phoneInputInitialized === 'undefined') {
+        window.phoneInputInitialized = true; // Set the flag
+
+        document.addEventListener("DOMContentLoaded", function() {
+            var input = document.querySelector("#phone");
+            
+            // Double-check that it's not already initialized
+            if (input && !input.classList.contains('iti-hidden-input')) {
+                window.intlTelInput(input, {
+                    initialCountry: "in", 
+                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
+                    separateDialCode: true,
+                    preferredCountries: ["in", "us", "gb"], 
+                });
+            }
+        });
+    }
+</script>
     <x-media.js />
     <x-summernote.js/>
     <x-frontend.js.new-tag-add-js/>

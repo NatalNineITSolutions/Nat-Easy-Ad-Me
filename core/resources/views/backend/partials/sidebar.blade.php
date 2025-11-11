@@ -1,5 +1,13 @@
 <div class="dashboard__left dashboard-left-content">
     <div class="dashboard__left__main">
+        <div class="dashboard__left__close close-bars"><i class="fa-solid fa-times"></i></div>
+            <div class="dashboard__top">
+                <div class="dashboard__top__logo">
+                    <a href="{{route('admin.dashboard')}}">
+                        {!! render_image_markup_by_attachment_id(get_static_option('site_logo')) !!}
+                    </a>
+                </div>
+            </div>
 
 
         <div class="dashboard__bottom mt-5">
@@ -201,6 +209,22 @@
                         </li>
                     @endcanany
 
+                    {{-- Payout manage --}}
+                <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/payout/*')) active open show @endif">
+                    <a href="javascript:void(0)"> <i class="las la-th-list"></i>{{ __('Payout Manage') }}</a>
+                        <ul class="submenu">
+                                <li class="dashboard__bottom__list__item @if(request()->is('admin/payout/user-bv-referrals')) selected @endif">
+                                    <a href="{{ route('user.bv.referrals') }}">{{ __('User Payout Details') }}</a>
+                                </li>
+                                <li class="dashboard__bottom__list__item @if(request()->is('admin/payout/settings')) selected @endif">
+                                    <a href="{{ route('payout.settings') }}">{{ __('Payout Settings') }}</a>
+                                </li>
+                                <li class="dashboard__bottom__list__item @if(request()->is('admin/payout/income-dividing-system')) selected @endif">
+                                    <a href="{{ route('income.payout.manage') }}">{{ __('Income Dividing System') }}</a>
+                                </li>
+                        </ul>
+                </li>
+
                 {{-- Branch Manage --}}
                 <li class="dashboard__bottom__list__item has-children 
                     @if (request()->is('admin/branches*')) active open show @endif">
@@ -326,22 +350,6 @@
                             <a href="{{ route('admin.matrimony.profile.listing') }}"> {{ __('Matrimony Settings') }} </a>
                         </li>
                     </ul>
-                </li>
-
-                {{-- Payout manage --}}
-                <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/payout/*')) active open show @endif">
-                    <a href="javascript:void(0)"> <i class="las la-th-list"></i>{{ __('Payout Manage') }}</a>
-                        <ul class="submenu">
-                                <li class="dashboard__bottom__list__item @if(request()->is('admin/payout/user-bv-referrals')) selected @endif">
-                                    <a href="{{ route('user.bv.referrals') }}">{{ __('User Payout Details') }}</a>
-                                </li>
-                                <li class="dashboard__bottom__list__item @if(request()->is('admin/payout/settings')) selected @endif">
-                                    <a href="{{ route('payout.settings') }}">{{ __('Payout Settings') }}</a>
-                                </li>
-                                <li class="dashboard__bottom__list__item @if(request()->is('admin/payout/income-dividing-system')) selected @endif">
-                                    <a href="{{ route('income.payout.manage') }}">{{ __('Income Dividing System') }}</a>
-                                </li>
-                        </ul>
                 </li>
 
                 {{-- Level Based Commission --}}

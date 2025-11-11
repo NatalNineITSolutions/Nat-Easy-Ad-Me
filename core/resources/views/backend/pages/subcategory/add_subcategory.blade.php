@@ -42,21 +42,10 @@
                         </div>
 
 
-                        <!-- Dynamic Subcategory Dropdown -->
-    <div class="form__input__single">
-        <label for="sub_category_id" class="form__input__single__label">{{ __('Saved Sub Categories') }}</label>
-        <select name="sub_category_id" id="sub_category_id" class="select2_activation radius-5">
-            <option value="">{{ __('Select Sub Category') }}</option>
-        </select>
-    </div>
-
-    <!-- New Subcategory Input -->
-    <div class="form__input__single">
-        <label for="name" class="form__input__single__label">{{ __('Or Create New Sub Category') }}</label>
-        <input type="text" class="form-control" name="name" id="name" placeholder="{{ __('Enter new subcategory name') }}">
-    </div>
-
-    
+                        <div class="form__input__single">
+                            <label for="name" class="form__input__single__label">{{__('Sub Category')}}</label>
+                            <input type="text" class="form-control" name="name" id="name" placeholder="{{__('Sub Category')}}">
+                        </div>
                         <div class="form__input__single permalink_label">
                             <label class="text-dark form__input__single__label">{{__('Permalink * :')}}
                                 <span id="slug_show" class="display-inline"></span>
@@ -95,16 +84,16 @@
             </div>
         </div>
     </div>
-    
+    <x-media.markup/>
 @endsection
 @section('scripts')
-    
     <script src="{{asset('assets/backend/js/bootstrap-tagsinput.js')}}"></script>
     <script src="{{asset('assets/backend/js/fontawesome-iconpicker.min.js')}}"></script>
     <script>
         <x-icon.icon-picker/>
     </script>
     <x-summernote.js/>
+    <x-media.js />
     <script>
         (function ($) {
             "use strict";
@@ -150,36 +139,4 @@
             });
         })(jQuery)
     </script>
-    <script>
-$(document).ready(function() {
-    $('#category_id').on('change', function() {
-        let categoryId = $(this).val();
-        let subCategorySelect = $('#sub_category_id');
-
-        // Clear existing options
-        subCategorySelect.html('<option value="">Select Sub Category</option>');
-
-        if (categoryId) {
-            $.ajax({
-                url: "{{ route('admin.get.subcategory.by.category') }}",
-                type: "GET",
-                data: { category_id: categoryId },
-                success: function(response) {
-                    subCategorySelect.append(response.markup);
-
-                    // Re-init Select2 if active
-                    if ($.fn.select2) {
-                        subCategorySelect.trigger('change.select2');
-                    }
-                },
-                error: function(xhr) {
-                    console.error('Error fetching subcategories:', xhr.responseText);
-                }
-            });
-        }
-    });
-});
-</script>
-
-
 @endsection

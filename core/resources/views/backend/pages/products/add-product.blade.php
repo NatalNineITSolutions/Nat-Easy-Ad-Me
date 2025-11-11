@@ -308,15 +308,16 @@
     </div>
 
     {{-- Media Modal Markup --}}
-   
+   <x-media.markup/>
 @endsection
 
-@section('script')
+@section('scripts')
     {{-- 1. Load jQuery FIRST --}}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+     <x-media.js/>
+    {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     {{-- 2. Load Bootstrap SECOND (it depends on jQuery) --}}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.bundle.min.js"></script> --}}
 
     {{-- 3. Load Toastr THIRD (it also depends on jQuery) --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>

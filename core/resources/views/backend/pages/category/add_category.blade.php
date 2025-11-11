@@ -74,16 +74,16 @@
             </div>
         </div>
     </div>
-    
+    <x-media.markup/>
 @endsection
 @section('scripts')
-   
     <script src="{{asset('assets/backend/js/bootstrap-tagsinput.js')}}"></script>
     <script src="{{asset('assets/backend/js/fontawesome-iconpicker.min.js')}}"></script>
     <script>
         <x-icon.icon-picker/>
     </script>
     <x-summernote.js/>
+    <x-media.js />
     <script>
         (function ($) {
             "use strict";

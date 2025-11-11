@@ -7,14 +7,7 @@
                     <span class="dashboard__sidebarIcon__mobile sidebar-icon d-lg-none"></span>
                 </div>
             </div>
-            <div class="dashboard__left__close close-bars"><i class="fa-solid fa-times"></i></div>
-        <div class="dashboard__top">
-            <div class="dashboard__top__logo">
-                <a href="{{route('admin.dashboard')}}">
-                {!! render_image_markup_by_attachment_id(get_static_option('site_logo')) !!}
-                </a>
-            </div>
-        </div>
+            
         </div>
         <!--end -->
 

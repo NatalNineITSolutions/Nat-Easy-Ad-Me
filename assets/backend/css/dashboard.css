@@ -15893,6 +15893,13 @@ textarea.textarea-height {
   margin-inline: auto;
 }
 
+.dashboard__top__logo a img {
+    max-width: 80px !important;  /* You can change 150px to 120px if you want it smaller */
+    height: auto !important;
+    margin: 0 auto;
+    display: block;
+}
+
 .padding-20 {
   padding: 20px;
 }

@@ -95,6 +95,7 @@
             outline: none;
             box-shadow: none;
             margin: auto;
+            font-size: 20px;
         }
 
         .new_image_add_listing .attachment-preview {

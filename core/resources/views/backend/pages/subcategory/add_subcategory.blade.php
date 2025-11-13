@@ -42,6 +42,16 @@
                         </div>
 
 
+                        {{-- NEW: Existing subcategories for selected category --}}
+<div class="form__input__single" id="existing_subcats_wrapper" style="display:none;">
+    <label for="existing_subcategory" class="form__input__single__label">{{__('Existing Subcategories')}}</label>
+    <select id="existing_subcategory" class="select2_activation radius-5" disabled>
+        <option value="">{{ __('-- Select Category First --') }}</option>
+    </select>
+    <small class="text-muted d-block mt-1">{{ __('These are the subcategories already created under the selected category.') }}</small>
+</div>
+
+
                         <div class="form__input__single">
                             <label for="name" class="form__input__single__label">{{__('Sub Category')}}</label>
                             <input type="text" class="form-control" name="name" id="name" placeholder="{{__('Sub Category')}}">
@@ -135,6 +145,70 @@
                     $('.subcategory_slug').val(slug);
                     $('.subcategory_slug').hide();
                 });
+
+                // --- load existing subcategories for chosen category using your admin route
+$('#category_id').on('change', function () {
+    var catId = $(this).val();
+    var $wrapper = $('#existing_subcats_wrapper');
+    var $select  = $('#existing_subcategory');
+
+    if (!catId) {
+        $select.prop('disabled', true).html('<option value="">{{ __("-- Select Category First --") }}</option>');
+        $wrapper.hide();
+        return;
+    }
+
+    $wrapper.show();
+    $select.prop('disabled', true).html('<option>{{ __("Loading...") }}</option>');
+
+    $.ajax({
+        url: "{{ route('admin.get.subcategory.by.category') }}", // existing admin GET route
+        method: 'GET',
+        data: { category_id: catId }, // route expects category_id as query param
+        dataType: 'json',
+        timeout: 8000,
+        success: function (data) {
+            if (!data || !Array.isArray(data) || data.length === 0) {
+                $select.html('<option value="">{{ __("-- No subcategories --") }}</option>');
+                $select.prop('disabled', true);
+                return;
+            }
+
+            var options = '<option value="">{{ __("-- Select Subcategory (for info) --") }}</option>';
+            $.each(data, function (i, s) {
+                options += '<option value="' + s.id + '">' + s.name + '</option>';
+            });
+
+            $select.html(options).prop('disabled', false);
+
+            // refresh select2 if used
+            if ($select.hasClass('select2-hidden-accessible')) {
+                try { $select.trigger('change.select2'); } catch(e) {}
+            }
+            console.info('Loaded subcategories for category:', catId);
+        },
+        error: function (xhr) {
+            $select.html('<option value="">{{ __("Error loading") }}</option>');
+            $select.prop('disabled', true);
+            console.error('Ajax error loading subcategories:', {
+                status: xhr.status,
+                statusText: xhr.statusText,
+                body: xhr.responseText
+            });
+        }
+    });
+});
+
+// auto-load if category is already selected on page load
+var preselected = $('#category_id').val();
+if (preselected) {
+    $('#category_id').trigger('change');
+}
+
+$('#existing_subcategory').select2({
+    disabled: true,
+    minimumResultsForSearch: Infinity // hide search bar
+});
 
             });
         })(jQuery)

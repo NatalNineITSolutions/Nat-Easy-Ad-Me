@@ -50,6 +50,15 @@
                             </select>
                         </div>
 
+                        {{-- Existing child categories for selected subcategory (view-only) --}}
+<div class="form__input__single" id="existing_childcats_wrapper" style="display:none;">
+    <label for="existing_childcategory" class="form__input__single__label">{{ __('Existing Child Categories') }}</label>
+    <select id="existing_childcategory" class="select2_activation radius-5">
+        <option value="">{{ __('-- Select Sub Category First --') }}</option>
+    </select>
+    <small class="text-muted d-block mt-1">{{ __('These are the child categories already created under the selected subcategory.') }}</small>
+</div>
+
                         <div class="form__input__single">
                             <label for="name" class="form__input__single__label">{{__('Child Category Name')}}</label>
                             <input type="text" class="form__control radius-5" name="name" id="name" value="{{$child_category->name}}" placeholder="{{__('Child Category Name')}}">
@@ -298,6 +307,110 @@
                         $(this).summernote('code', $(this).data('content'));
                     });
                 }
+
+
+                 // load existing child categories when subcategory changes (view-only but openable)
+$('#subcategory').on('change', function () {
+    var subId = $(this).val();
+    var $wrapper = $('#existing_childcats_wrapper');
+    var $select  = $('#existing_childcategory');
+
+    if (!subId) {
+        $select.prop('disabled', true).html('<option value="">{{ __("-- Select Sub Category First --") }}</option>');
+        $wrapper.hide();
+        return;
+    }
+
+    $wrapper.show();
+    // make it openable — show loading then enable to allow opening
+    $select.prop('disabled', false).html('<option>{{ __("Loading...") }}</option>');
+
+    $.ajax({
+        url: "{{ route('admin.get.childcategory.by.subcategory') }}",
+        method: 'GET',
+        data: { sub_category_id: subId },
+        dataType: 'json',
+        success: function (data) {
+            // data expected as array [{id,name}, ...]
+            if (!data || !Array.isArray(data) || data.length === 0) {
+                $select.html('<option value="">{{ __("-- No child categories --") }}</option>');
+                // keep it non-interactive if empty
+                $select.prop('disabled', true);
+                // update plugin UI
+                try { $select.niceSelect('update'); } catch(e){}
+                try { $select.trigger('change.select2'); } catch(e){}
+                return;
+            }
+
+            var options = '<option value="">{{ __("-- Select Child Category (for info) --") }}</option>';
+            $.each(data, function (i, s) {
+                options += '<option value="' + s.id + '">' + s.name + '</option>';
+            });
+
+            $select.html(options);
+            // enable so user can open and view options
+            $select.prop('disabled', false);
+
+            // update niceSelect/select2 if used:
+            try { $select.niceSelect('update'); } catch(e){}
+            try { $select.trigger('change.select2'); } catch(e){}
+
+            // store the current selection index so we can revert if user changes it
+            $select.data('lockedIndex', $select.prop('selectedIndex'));
+        },
+        error: function (xhr) {
+            $select.html('<option value="">{{ __("Error loading") }}</option>');
+            $select.prop('disabled', true);
+            console.error('Ajax error loading child categories:', xhr.status, xhr.responseText);
+        }
+    });
+});
+
+// ---- make existing_childcategory openable but not changeable ----
+(function(){
+  var $viewOnly = $('#existing_childcategory');
+
+  // remember index on mousedown/focus (covers mouse and keyboard)
+  $viewOnly.on('focus mousedown', function(){
+    $(this).data('lockedIndex', this.selectedIndex);
+  });
+
+  // revert selection immediately if changed
+  $viewOnly.on('change', function(){
+    var locked = $(this).data('lockedIndex');
+    if (typeof locked !== 'undefined') {
+      var that = this;
+      setTimeout(function(){
+        that.selectedIndex = locked;
+        // refresh plugin UI if needed
+        if ($(that).hasClass('nice-select')) {
+          try { $(that).niceSelect('update'); } catch(e) {}
+        }
+        if ($(that).hasClass('select2-hidden-accessible')) {
+          try { $(that).trigger('change.select2'); } catch(e) {}
+        }
+      }, 0);
+    }
+  });
+
+  // prevent arrow keys from changing selection (allows Tab/Enter)
+  $viewOnly.on('keydown', function(e){
+    if ([9,13].indexOf(e.keyCode) === -1) {
+      e.preventDefault();
+    }
+  });
+})();
+  
+// auto-load on page load if category/subcategory preselected
+var preCategory = $('#category').val();
+if (preCategory) {
+    $('#category').trigger('change');
+} else {
+    var preSub = $('#subcategory').val();
+    if (preSub) {
+        $('#subcategory').trigger('change');
+    }
+}
 
             });
         })(jQuery)

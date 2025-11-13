@@ -159,19 +159,19 @@ class ChildCategoryController extends Controller
     }
 
     // category select change to sub category in modal data
-    public function getSubcategoryByCategoryId(Request $request){
-        $category_id = $request->category_id;
-        $subcategories = Subcategory::where('category_id',$category_id)->where('status',1)->get();
-        $data = '';
-        foreach ($subcategories as $sub){
-            $id = $sub->id;
-            $name = $sub->name;
-            $data.= <<<ITEM
-       <option value="{$id}">{$name}</option>
-ITEM;
-        }
-        return response()->json(['markup' => $data]);
-    }
+    public function getSubcategoryByCategoryId(Request $request)
+{
+    $category_id = $request->category_id;
+
+    $subcategories = SubCategory::where('category_id', $category_id)
+        ->where('status', 1)
+        ->orderBy('name')
+        ->get(['id','name']);
+
+    // return a clean array of {id,name}
+    return response()->json($subcategories);
+}
+
 
     public function searchChildCategory(Request $request)
     {
@@ -196,18 +196,11 @@ ITEM;
 
     $childCategories = ChildCategory::where('sub_category_id', $sub_category_id)
         ->where('status', 1)
-        ->get();
+        ->orderBy('name')
+        ->get(['id', 'name']);
 
-    $data = '';
-    foreach ($childCategories as $child) {
-        $id = $child->id;
-        $name = $child->name;
-        $data .= <<<ITEM
-        <option value="{$id}">{$name}</option>
-ITEM;
-    }
-
-    return response()->json(['markup' => $data]);
+    // return a clean array of {id,name}
+    return response()->json($childCategories);
 }
 
 }

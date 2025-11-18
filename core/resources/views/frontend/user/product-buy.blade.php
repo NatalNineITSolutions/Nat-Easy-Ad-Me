@@ -32,6 +32,13 @@
         background-color: #f0f0f0 !important;
         color: #333;
     }
+  select.select2-hidden-accessible {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    position: absolute !important;
+}
 </style>
 @endsection
 
@@ -237,6 +244,9 @@
     </div>
 </div>
 @endsection
+<script>
+    window.disableSelect2 = true;
+</script>
 
 @include('frontend.user.gateway-markup')
 
@@ -478,202 +488,6 @@
 </script>
 
 {{-- Fetch Country, state and city --}}
-<script>
-    $(document).ready(function () {
-        // When Country Changes → Load States
-        $('#country_id').on('change', function () {
-            const country_id = $(this).val();
-
-            $('#state_id').prop('disabled', true).html('<option>Loading...</option>');
-            $('#city_id').prop('disabled', true).html('<option>Select City</option>');
-
-            $.ajax({
-                url: '{{ route("user.get.states") }}',
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    country_id: country_id
-                },
-                success: function (states) {
-                    let options = '<option value="">Select State</option>';
-                    states.forEach(state => {
-                        options += `<option value="${state.id}">${state.state}</option>`;
-                    });
-                    $('#state_id').html(options).prop('disabled', false);
-                    
-                    // Reset delivery charges when country changes
-                    updateDeliveryCharges(null);
-                },
-                error: function () {
-                    $('#state_id').html('<option value="">Error loading states</option>');
-                }
-            });
-        });
-
-        // When State Changes → Load Cities and Update Delivery
-        $('#state_id').on('change', function () {
-            const state_id = $(this).val();
-
-            // Load Cities
-            $('#city_id').prop('disabled', true).html('<option>Loading...</option>');
-            $.ajax({
-                url: '{{ route("user.get.cities") }}',
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    state_id: state_id
-                },
-                success: function (cities) {
-                    let options = '<option value="">Select City</option>';
-                    cities.forEach(city => {
-                        options += `<option value="${city.id}">${city.city}</option>`;
-                    });
-                    $('#city_id').html(options).prop('disabled', false);
-                },
-                error: function () {
-                    $('#city_id').html('<option value="">Error loading cities</option>');
-                }
-            });
-
-            // Update Delivery Charges
-            updateDeliveryCharges(state_id);
-        });
-
-        // Function to get delivery charges from database
-        async function fetchDeliveryCharges(stateId) {
-            if (!stateId) return null;
-            
-            try {
-                const response = await fetch("{{ route('user.get.delivery.charges') }}", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                    },
-                    body: JSON.stringify({ state_id: stateId })
-                });
-                
-                return await response.json();
-            } catch (error) {
-                console.error("Error fetching delivery charges:", error);
-                return null;
-            }
-        }
-
-        // Function to calculate delivery charge based on weight
-        function calculateDelivery(charges, totalWeight, subtotal) {
-            if (!charges || charges.length === 0) return 0;
-            
-            // Sort charges by weight ascending
-            charges.sort((a, b) => a.weight - b.weight);
-            
-            // Find the first rule where weight >= totalWeight
-            const applicableRule = charges.find(rule => totalWeight <= rule.weight);
-            
-            if (applicableRule) {
-                return subtotal >= parseFloat(applicableRule.min_order) 
-                    ? parseFloat(applicableRule.deliver_charge)
-                    : parseFloat(applicableRule.default_delivery_charge);
-            }
-            
-            // If weight exceeds all rules, use the last (highest weight) rule
-            const lastRule = charges[charges.length - 1];
-            return subtotal >= parseFloat(lastRule.min_order)
-                ? parseFloat(lastRule.deliver_charge)
-                : parseFloat(lastRule.default_delivery_charge);
-        }
-
-        // Function to update delivery charges
-        async function updateDeliveryCharges(stateId) {
-            // Get all cart items
-            const cartItems = [];
-            $('#order-summary-table tbody tr').each(function() {
-                const cartId = $(this).data('cart-id');
-                const qty = parseInt($(this).find('.qty-input').val());
-                const price = parseFloat($(this).data('price'));
-                const bv = parseInt($(this).data('bv'));
-                const weight = parseFloat($(this).data('weight')) || 0;
-
-                cartItems.push({
-                    cartId: cartId,
-                    quantity: qty,
-                    price: price,
-                    bv: bv,
-                    weight: weight
-                });
-            });
-
-            // Calculate totals
-            let subtotal = 0, totalWeight = 0;
-            cartItems.forEach(item => {
-                subtotal += item.price * item.quantity;
-                totalWeight += item.weight * item.quantity;
-            });
-
-            // Get delivery charges from database
-            const deliveryData = await fetchDeliveryCharges(stateId);
-            const deliveryCharge = deliveryData?.success 
-                ? calculateDelivery(deliveryData.charges, totalWeight, subtotal)
-                : 0;
-
-            // Calculate charge per item (distribute evenly)
-            const perItemDelivery = cartItems.length > 0 ? deliveryCharge / cartItems.length : 0;
-
-            // Update each cart item via API
-            cartItems.forEach(item => {
-                $.ajax({
-                    url: '{{ route("user.cart.update.delivery") }}',
-                    method: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        cart_id: item.cartId,
-                        delivery_charge: perItemDelivery,
-                        total_bv: item.bv * item.quantity
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            // Update UI for this item
-                            const row = $(`tr[data-cart-id="${item.cartId}"]`);
-                            row.find('.delivery-charge-cell').text('₹' + perItemDelivery.toFixed(2));
-                            row.find('.row-grand-total-cell').text(
-                                '₹' + (item.price * item.quantity + perItemDelivery).toFixed(2)
-                            );
-                            
-                            // Update summary totals
-                            updateSummaryTotals();
-                        }
-                    },
-                    error: function(xhr) {
-                        console.error('Error updating delivery charge:', xhr.responseText);
-                    }
-                });
-            });
-        }
-
-        // Function to update summary totals
-        function updateSummaryTotals() {
-            let subtotal = 0, totalBV = 0, delivery = 0;
-
-            $('#order-summary-table tbody tr').each(function() {
-                const qty = parseInt($(this).find('.qty-input').val());
-                const price = parseFloat($(this).data('price'));
-                const bv = parseInt($(this).data('bv'));
-                const del = parseFloat($(this).find('.delivery-charge-cell').text().replace(/[^\d.]/g, '')) || 0;
-
-                subtotal += price * qty;
-                totalBV += bv * qty;
-                delivery += del;
-            });
-
-            const grandTotal = subtotal + delivery;
-
-            $('#summary-subtotal').text('₹' + subtotal.toFixed(2));
-            $('#summary-delivery-charge').text('₹' + delivery.toFixed(2));
-            $('#summary-total-bv').text(totalBV);
-            $('#summary-grand-total').text('₹' + grandTotal.toFixed(2));
-        }
-    });
-</script>
 
 {{-- Open Payment gateways modal --}}
 <script>
@@ -799,5 +613,72 @@
     razorpay.open();
   });
 </script>
+<script>
+$(document).ready(function () {
+
+    // 1️⃣ Remove any existing Select2 containers (from earlier scripts)
+    $('#country_id').next('.select2-container').remove();
+    $('#state_id').next('.select2-container').remove();
+    $('#city_id').next('.select2-container').remove();
+
+    // 2️⃣ Destroy any existing Select2 instance safely (if already bound)
+    if ($('#country_id').data('select2')) {
+        $('#country_id').select2('destroy');
+    }
+    if ($('#state_id').data('select2')) {
+        $('#state_id').select2('destroy');
+    }
+    if ($('#city_id').data('select2')) {
+        $('#city_id').select2('destroy');
+    }
+
+    // 3️⃣ Initialize Select2 ONCE, clean and controlled
+    $('#country_id').select2({ width: '100%' });
+    $('#state_id').select2({ width: '100%' });
+    $('#city_id').select2({ width: '100%' });
+
+    // 4️⃣ Your existing change/ AJAX logic stays the same
+    $(document).on('select2:select', '#country_id', function () {
+        $(this).trigger('change');
+    });
+    $(document).on('select2:select', '#state_id', function () {
+        $(this).trigger('change');
+    });
+    $(document).on('select2:select', '#city_id', function () {
+        $(this).trigger('change');
+    });
+
+    $(document).on('change', '#country_id', function () {
+        console.log("COUNTRY CHANGED:", $(this).val());
+
+        const id = $(this).val();
+        $('#state_id').prop('disabled', true).html('<option>Loading...</option>');
+        $('#city_id').prop('disabled', true).html('<option>Select City</option>');
+
+        $.post('{{ route("user.get.states") }}', {country_id: id}, function (states) {
+            let html = '<option value="">Select State</option>';
+            states.forEach(s => html += `<option value="${s.id}">${s.state}</option>`);
+            $('#state_id').html(html).prop('disabled', false).trigger('change.select2');
+        });
+    });
+
+    $(document).on('change', '#state_id', function () {
+        console.log("STATE CHANGED:", $(this).val());
+
+        const id = $(this).val();
+        $('#city_id').prop('disabled', true).html('<option>Loading...</option>');
+
+        $.post('{{ route("user.get.cities") }}', {state_id: id}, function (cities) {
+            let html = '<option value="">Select City</option>';
+            cities.forEach(c => html += `<option value="${c.id}">${c.city}</option>`);
+            $('#city_id').html(html).prop('disabled', false).trigger('change.select2');
+        });
+
+        updateDeliveryCharges(id);
+    });
+
+});
+</script>
+
 
 @endsection

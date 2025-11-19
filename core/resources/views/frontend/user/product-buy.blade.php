@@ -555,19 +555,25 @@
       handler: function (response) {
         console.log('[Razorpay handler] res =', response);
 
-        // ✅ Fill in required hidden fields
+        // 🔥 CLEAN PHONE NUMBER (remove +, -, spaces, and keep last 10 digits)
+        const cleanPhone = $('input[name="phone_number"]')
+            .val()
+            .replace(/\D/g, '')   // remove all non-digits
+            .slice(-10);          // keep last 10 digits only
+
+        // ✅ Fill hidden form fields
         $('#modal_transaction_id').val(response.razorpay_payment_id);
         $('#modal_is_paid').val(1);
 
         $('#modal_name').val($('input[name="name"]').val());
         $('#modal_email').val($('input[name="email"]').val());
-        $('#modal_phone').val($('input[name="phone_number"]').val());
+        $('#modal_phone').val(cleanPhone);
         $('#modal_address').val($('textarea[name="address"]').val());
         $('#modal_country_id').val($('#country_id').val());
         $('#modal_state_id').val($('#state_id').val());
         $('#modal_city_id').val($('#city_id').val());
 
-        // ✅ Check again before submitting
+        // Check required fields
         const allFieldsFilled =
           $('#modal_name').val() &&
           $('#modal_email').val() &&
@@ -576,15 +582,6 @@
           $('#modal_country_id').val() &&
           $('#modal_state_id').val() &&
           $('#modal_city_id').val();
-
-
-        console.log('modal_name:', $('#modal_name').val());
-        console.log('modal_email:', $('#modal_email').val());
-        console.log('modal_phone:', $('#modal_phone').val());
-        console.log('modal_address:', $('#modal_address').val());
-        console.log('modal_country_id:', $('#modal_country_id').val());
-        console.log('modal_state_id:', $('#modal_state_id').val());
-        console.log('modal_city_id:', $('#modal_city_id').val());
 
         if (!allFieldsFilled) {
           alert("Please ensure all fields are filled correctly before proceeding.");
@@ -598,7 +595,12 @@
       prefill: {
         name: $('input[name="name"]').val(),
         email: $('input[name="email"]').val(),
-        contact: $('input[name="phone_number"]').val(),
+
+        // 🔥 Prefill with clean phone too
+        contact: $('input[name="phone_number"]')
+            .val()
+            .replace(/\D/g, '')
+            .slice(-10),
       },
 
       notes: {
@@ -613,6 +615,7 @@
     razorpay.open();
   });
 </script>
+
 <script>
 $(document).ready(function () {
 

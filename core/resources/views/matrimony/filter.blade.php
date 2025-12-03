@@ -5,6 +5,55 @@
         filter: blur(6px);
         transition: filter 0.3s ease;
     }
+
+     /* Compact profile card */
+    .compact-grid { display:flex; flex-wrap:wrap; gap:1rem; margin:0 -0.5rem; }
+    .compact-col { padding:0 0.5rem; width:100%; }
+
+    @media(min-width:576px){ .compact-col { width:50%; } }   /* 2 cards */
+    @media(min-width:900px){ .compact-col { width:33.3333%; } } /* 3 cards */
+    @media(min-width:1400px){ .compact-col { width:25%; } }  /* 4 cards */
+
+    .compact-card {
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        text-align:center;
+        padding:12px;
+        border-radius:10px;
+        background:#fff;
+        border:1px solid rgba(15,23,42,0.04);
+        box-shadow:0 6px 14px rgba(16,24,40,0.03);
+        transition:transform .12s ease, box-shadow .12s ease;
+        height:100%;
+    }
+
+    .compact-card:hover { transform:translateY(-4px); box-shadow:0 10px 20px rgba(16,24,40,0.06); }
+
+    .compact-avatar {
+        width:80px;
+        height:80px;
+        border-radius:50%;
+        overflow:hidden;
+        margin-bottom:10px;
+        display:inline-block;
+        border:4px solid #fff;
+        box-shadow:0 6px 12px rgba(16,24,40,0.06);
+        background:#f8fafc;
+    }
+
+    .compact-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
+
+    .compact-name { font-size:0.98rem; font-weight:600; color:#0b2540; margin-bottom:4px; }
+    .compact-meta { font-size:0.82rem; color:#6b7280; margin-bottom:6px; }
+    .compact-occupation { font-size:0.82rem; color:#374151; margin-bottom:8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+
+    .compact-badges { display:flex; gap:.35rem; justify-content:center; margin-bottom:8px; }
+    .badge-compact { font-size:.7rem; padding:.18rem .45rem; border-radius:999px; background:#eef2ff; color:#3730a3; font-weight:700; }
+
+    .compact-actions { margin-top:auto; }
+    .btn-compact { padding:.35rem .7rem; font-size:.85rem; border-radius:999px; }
+
 </style>
 
 @section('content')
@@ -210,27 +259,32 @@
                 </div>
 
                 @if($profiles->count() > 0)
-                    <div class="row g-4">
+                    <div class="compact-grid">
                         @foreach($profiles as $profile)
-                            <!-- Profile cards here -->
-                            <div class="col-md-6 col-lg-4">
-                                <div class="card profile-card h-100 border-0 shadow-sm">
-                                    <div class="card-body text-center">
-                                        <div class="profile-img mb-3">
-                                            <div class="{{ $profile->visibility == 1 ? 'blur-image' : '' }}">
-                                                {!! render_image_markup_by_attachment_id($profile->image, 'rounded-circle', '120x120') 
-                                                    ?? '<img src="' . asset('images/default-profile.jpg') . '" class="rounded-circle" width="120" height="120" alt="Profile">' !!}
-                                            </div>
+                            <div class="compact-col">
+                                <div class="compact-card">
+                                    <div class="{{ $profile->visibility == 1 ? 'blur-image' : '' }}">
+                                        <div class="compact-avatar">
+                                            {!! render_image_markup_by_attachment_id($profile->image, 'rounded-circle', '80x80')
+                                            ?? '<img src="' . asset('images/default-profile.jpg') . '" alt="Profile">' !!}
                                         </div>
-                                        <h5 class="mb-1">{{ $profile->name }}</h5>
-                                        <p class="text-muted small mb-2">
-                                            {{ $profile->age }} years • {{ ucfirst($profile->gender) }}
-                                        </p>
-                                        <p class="small text-truncate mb-3">{{ $profile->occupation }}</p>
-                                        <a href="{{ route('matrimony.profile-details', $profile->id) }}" 
-                                           class="btn btn-sm btn-outline-primary">
-                                            View Profile
-                                        </a>
+                                    </div>
+                                    <div class="compact-name">{{ \Illuminate\Support\Str::limit($profile->name, 26) }}</div>
+                                    <div class="compact-badges" aria-hidden="true">
+                                        <span class="badge-compact">{{ $profile->age ?? '—' }} yrs</span>
+                                        <span class="badge-compact">{{ ucfirst($profile->gender ?? '—') }}</span>
+                                    </div>
+                                    <div class="compact-meta">
+                                        @php
+                                        $loc = array_filter([optional($profile)->city, optional($profile)->state]);
+                                        @endphp
+                                        {{ $loc ? implode(', ', $loc) : '' }}
+                                    </div>
+                                    <div class="compact-occupation" title="{{ $profile->occupation ?? '' }}">
+                                        {{ $profile->occupation ? \Illuminate\Support\Str::limit($profile->occupation, 30) : '—' }}
+                                    </div>
+                                    <div class="compact-actions">
+                                        <a href="{{ route('matrimony.profile-details', $profile->id) }}" class="btn btn-sm btn-outline-primary btn-compact">View</a>
                                     </div>
                                 </div>
                             </div>
@@ -259,57 +313,171 @@
 @endsection
 
 @push('scripts')
+    <script>
+        $(function() {
+            // Build base URLs using blade helpers (adjust prefix if routes are inside a group)
+            const statesBase = "{{ url('get-states') }}"; // will become e.g. /get-states
+            const citiesBase = "{{ url('get-cities') }}"; // will become e.g. /get-cities
+
+            function setOptions($select, items, placeholderText) {
+                $select.empty();
+                $select.append(`<option value="">${placeholderText}</option>`);
+                if (!items || !items.length) return;
+                    items.forEach(it => {
+                    $select.append(`<option value="${it.id}">${it.state || it.city || it.name || it}</option>`);
+                });
+            }
+
+            // load states for countryId, optional selectedStateId to preselect after load
+            function loadStates(countryId, selectedStateId = null) {
+                const $state = $('#state');
+                const $city = $('#city');
+                setOptions($state, [], 'Choose state');
+                setOptions($city, [], 'Choose city');
+
+                if (!countryId) return;
+
+                $.ajax({
+                    url: `${statesBase}/${countryId}`,
+                    method: 'GET',
+                    dataType: 'json'
+                }).done(function(res) {
+                    // Expecting { states: [...] }
+                    const list = res && res.states ? res.states : [];
+                    setOptions($state, list, 'Choose state');
+                    if (selectedStateId) $state.val(selectedStateId).trigger('change');
+                }).fail(function(xhr, status, err) {
+                    console.error('Failed to load states', status, err);
+                    setOptions($state, [], 'Choose state');
+                });
+            }
+
+            // load cities for stateId, optional selectedCityId
+            function loadCities(stateId, selectedCityId = null) {
+                const $city = $('#city');
+                setOptions($city, [], 'Choose city');
+                if (!stateId) return;
+
+                $.ajax({
+                    url: `${citiesBase}/${stateId}`,
+                    method: 'GET',
+                    dataType: 'json'
+                }).done(function(res) {
+                    // Expecting { cities: [...] }
+                    const list = res && res.cities ? res.cities : [];
+                    setOptions($city, list, 'Choose city');
+                    if (selectedCityId) $city.val(selectedCityId);
+                }).fail(function(xhr, status, err) {
+                    console.error('Failed to load cities', status, err);
+                    setOptions($city, [], 'Choose city');
+                });
+            }
+
+            // event handlers
+            $('#country').on('change', function() {
+                const countryId = $(this).val();
+                loadStates(countryId);
+            });
+
+            $('#state').on('change', function() {
+                const stateId = $(this).val();
+                loadCities(stateId);
+            });
+
+            // On page load: if server preselected values or user reloaded
+            const initialCountry = $('#country').val() || "{{ request('country') ?? '' }}";
+            const initialState = $('#state').val() || "{{ request('state') ?? '' }}";
+            const initialCity = $('#city').val() || "{{ request('city') ?? '' }}";
+
+            if (initialCountry) {
+                // load states then select state -> cities will be triggered by state change
+                loadStates(initialCountry, initialState);
+                // if state already present then load cities after short delay as fallback
+                if (initialState) {
+                    // ensure cities are loaded if state wasn't in server output
+                    loadCities(initialState, initialCity);
+                }
+            } else if (initialState) {
+            // unlikely but handle: load cities for provided state
+            loadCities(initialState, initialCity);
+            }
+        });
+    </script>
+
+@endpush
+<!-- Force jQuery Load -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Dynamic caste loading based on religion
-        $('#religion-select').change(function() {
-            const religionId = $(this).val();
-            const casteSelect = $('#caste-select');
-            
-            casteSelect.empty().append('<option value="">Any Caste</option>');
-            
-            if (religionId) {
-                $.get(`/api/castes?religion_id=${religionId}`, function(data) {
-                    data.forEach(caste => {
-                        casteSelect.append(`<option value="${caste.id}">${caste.caste}</option>`);
-                    });
-                });
-            }
-        });
+    $(document).ready(function() {
+        // Verify script is running
+        console.log("Filter Script Loaded!"); 
 
-        // Dynamic state loading based on country
-        $('#country-select').change(function() {
-            const countryId = $(this).val();
-            const stateSelect = $('#state-select');
-            const citySelect = $('#city-select');
-            
-            stateSelect.empty().append('<option value="">Any State</option>');
-            citySelect.empty().append('<option value="">Any City</option>');
-            
+        // Routes
+        var getStatesUrl = "{{ route('matrimony.get-states', '0') }}";
+        var getCitiesUrl = "{{ route('matrimony.get-cities', '0') }}";
+
+        // 1. Country Change
+        $('#country-select').on('change', function() {
+            console.log("Country Changed to: " + $(this).val()); // Debug log
+
+            var countryId = $(this).val();
+            var $state = $('#state-select');
+            var $city = $('#city-select');
+
+            // Reset
+            $state.html('<option value="">Any State</option>');
+            $city.html('<option value="">Any City</option>');
+
             if (countryId) {
-                $.get(`/api/states?country_id=${countryId}`, function(data) {
-                    data.forEach(state => {
-                        stateSelect.append(`<option value="${state.id}">${state.state}</option>`);
-                    });
+                // Replace '0' with actual ID
+                var url = getStatesUrl.replace('/0', '/' + countryId);
+                
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        console.log("States loaded:", data); // Debug log
+                        if (data.states) {
+                            $.each(data.states, function(key, value) {
+                                $state.append('<option value="' + value.id + '">' + value.state + '</option>');
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error("Error:", xhr);
+                    }
                 });
             }
         });
 
-        // Dynamic city loading based on state
-        $('#state-select').change(function() {
-            const stateId = $(this).val();
-            const citySelect = $('#city-select');
-            
-            citySelect.empty().append('<option value="">Any City</option>');
-            
+        // 2. State Change
+        $('#state-select').on('change', function() {
+            console.log("State Changed to: " + $(this).val()); // Debug log
+
+            var stateId = $(this).val();
+            var $city = $('#city-select');
+
+            $city.html('<option value="">Any City</option>');
+
             if (stateId) {
-                $.get(`/api/cities?state_id=${stateId}`, function(data) {
-                    data.forEach(city => {
-                        citySelect.append(`<option value="${city.id}">${city.city}</option>`);
-                    });
+                var url = getCitiesUrl.replace('/0', '/' + stateId);
+
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.cities) {
+                            $.each(data.cities, function(key, value) {
+                                $city.append('<option value="' + value.id + '">' + value.city + '</option>');
+                            });
+                        }
+                    }
                 });
             }
         });
     });
 </script>
-@endpush
+

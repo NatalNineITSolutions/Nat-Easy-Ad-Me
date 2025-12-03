@@ -60,6 +60,12 @@
                 </div>
 
                 <div class="table-responsive">
+                    <a href="{{ route('admin.user.reports.pdf') }}"
+   class="cmnBtn btn_5 btn_bg_blue radius-5 ms-2 mb-3"
+   target="_blank">
+   Download PDF
+</a>
+
                     <table class="table">
                         <thead>
                             <tr>

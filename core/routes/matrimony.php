@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\MatrimonyController;
+use App\Http\Controllers\MatrimonyController;     
 
 Route::middleware(['web'])->group(function () {
     Route::group([
@@ -59,7 +59,6 @@ Route::middleware(['web'])->group(function () {
 
         // Fetch state and cities
         Route::get('/get-states/{country_id}', [MatrimonyController::class, 'getStates'])->name('get-states');
-
         Route::get('/get-cities/{state_id}', [MatrimonyController::class, 'getCities'])->name('get-cities');
         Route::get('/check-subscription', [MatrimonyController::class, 'checkSubscription'])->name('check.subscription');
     });

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1028,26 +1027,8 @@
                     name: 'Weight'
                 }
                 ],
-                2: [{
-                    id: 'caste',
-                    name: 'Caste'
-                },
-                {
-                    id: 'dosham',
-                    name: 'Dosham'
-                },
-                {
-                    id: 'gothram',
-                    name: 'Gothram'
-                },
-                {
-                    id: 'zodiac_sign',
-                    name: 'Zodiac Sign'
-                },
-                {
-                    id: 'star',
-                    name: 'Star'
-                }
+                2: [
+                // Caste, Gothram, Dosham, Zodiac Sign and Star are now OPTIONAL client-side
                 ],
                 3: [{
                     id: 'education',
@@ -1091,7 +1072,8 @@
             let validationMessage = '';
 
             requiredFields.forEach(field => {
-                const value = document.getElementById(field.id).value;
+                const el = document.getElementById(field.id);
+                const value = el ? el.value : '';
                 if (!value) {
                     isValid = false;
                     missingFields.push(field.name);
@@ -1137,7 +1119,7 @@
             formData.append('height', getValue('.section-1 [name="height"]'));
             formData.append('weight', getValue('.section-1 [name="weight"]'));
 
-            // Section 2: Horoscope Details
+            // Section 2: Horoscope Details (all optional client-side)
             formData.append('caste', getValue('.section-2 [name="caste"]'));
             formData.append('dosham', getValue('.section-2 [name="dosham"]'));
             formData.append('gothram', getValue('.section-2 [name="gothram"]'));

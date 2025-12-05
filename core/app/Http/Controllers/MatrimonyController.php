@@ -33,7 +33,6 @@ use App\Models\User;
 use App\Models\ProfileRequest;
 use Carbon\Carbon;
 
-
 class MatrimonyController extends Controller
 {
     public function index()
@@ -247,6 +246,7 @@ class MatrimonyController extends Controller
             'message' => 'Profile request sent successfully!'
         ]);
     }
+
     public function userdetails()
     {
         $castes = Caste::all();
@@ -262,16 +262,43 @@ class MatrimonyController extends Controller
     }
 
     public function getStates($country_id)
-    {
-        $states = State::where('country_id', $country_id)->get(['id', 'state']); // Select only necessary fields
-        return response()->json(['states' => $states]); // Return the states data
+{
+    if (empty($country_id) || !is_numeric($country_id)) {
+        return response()->json(['states' => []], 200);
     }
 
-    public function getCities($state_id)
-    {
-        $cities = City::where('state_id', $state_id)->get(['id', 'city']);
-        return response()->json(['cities' => $cities]);
+    try {
+        $states = \Modules\CountryManage\app\Models\State::where('country_id', $country_id)
+            ->orderBy('state')
+            ->get(['id', 'state']);
+
+        // Wrap result in 'states' key to match paste.txt logic
+        return response()->json(['states' => $states], 200);
+    } catch (\Exception $e) {
+        \Log::error('getStates error: ' . $e->getMessage());
+        return response()->json(['states' => []], 500);
     }
+}
+
+public function getCities($state_id)
+{
+    if (empty($state_id) || !is_numeric($state_id)) {
+        return response()->json(['cities' => []], 200);
+    }
+
+    try {
+        $cities = \Modules\CountryManage\app\Models\City::where('state_id', $state_id)
+            ->orderBy('city')
+            ->get(['id', 'city']);
+
+        // Wrap result in 'cities' key to match paste.txt logic
+        return response()->json(['cities' => $cities], 200);
+    } catch (\Exception $e) {
+        \Log::error('getCities error: ' . $e->getMessage());
+        return response()->json(['cities' => []], 500);
+    }
+}
+
 
     public function storeUserDetails(Request $request)
     {
@@ -284,9 +311,12 @@ class MatrimonyController extends Controller
             'disability' => 'required|string',
             'height' => 'required|numeric',
             'weight' => 'required|string',
-            'caste' => 'required|integer',
-            'dosham' => 'required|integer',
-            'gothram' => 'required|integer',
+
+            // 🔻 CHANGED: these three are now optional
+            'caste' => 'nullable|integer',
+            'dosham' => 'nullable|integer',
+            'gothram' => 'nullable|integer',
+
             'education' => 'required|string',
             'occupation' => 'required|string',
             'annual_income' => 'required|string',
@@ -297,8 +327,8 @@ class MatrimonyController extends Controller
             'about' => 'required|string|max:500',
             'document' => 'nullable|file|mimes:pdf|max:2048',
             'image' => 'required|string',
-            'zodiac_sign' => 'required|integer|exists:zodiac_signs,id',
-            'star' => 'required|integer|exists:stars,id',
+            'zodiac_sign' => 'nullable|integer|exists:zodiac_signs,id',
+            'star' => 'nullable|integer|exists:stars,id',
         ]);
 
         try {
@@ -616,6 +646,7 @@ class MatrimonyController extends Controller
             return back()->with(['msg' => $e->getMessage(), 'type' => 'danger']);
         }
     }
+
     public function common_charge_customer_data($payment_gateway_name)
     {
         $user = Auth::guard('web')->user();
@@ -974,54 +1005,53 @@ class MatrimonyController extends Controller
         return view('matrimony.requests-lists', compact('requests'));
     }
 
-    public function filter(Request $request, $profileId = null)
-    {
-        // Start with base query for verified profiles excluding current user
-        $query = ProfileListing::where('user_id', '!=', auth()->id())
-            ->where('is_verified', 1);
+   public function filter(Request $request, $profileId = null)
+{
+    // Start with base query for verified profiles excluding current user
+    $query = ProfileListing::where('user_id', '!=', auth()->id())
+        ->where('is_verified', 1);
 
-        // Check if we're viewing a single profile
-        $isSingleProfile = $profileId !== null;
+    // Check if we're viewing a single profile
+    $isSingleProfile = $profileId !== null;
 
-        if ($isSingleProfile) {
-            // Handle single profile view
-            $profile = $query->findOrFail($profileId);
+    if ($isSingleProfile) {
+        // Handle single profile view (ensure it's verified and not the current user's)
+        $profile = $query->findOrFail($profileId);
 
-            // Ensure the profile is verified and not the current user's
-            if ($profile->user_id == auth()->id() || !$profile->is_verified) {
-                abort(404);
+        if ($profile->user_id == auth()->id() || !$profile->is_verified) {
+            abort(404);
+        }
+
+        // Wrap single profile inside a paginator so the view can use ->links() etc.
+        $perPage = 12;
+        $currentPage = (int) $request->input('page', 1);
+
+        $profiles = new \Illuminate\Pagination\LengthAwarePaginator(
+            collect([$profile]), // items
+            1,                   // total
+            $perPage,            // per page
+            1,                   // current page (single profile -> page 1)
+            [
+                'path' => url()->current(),
+                'query' => request()->query()
+            ]
+        );
+    } else {
+        // Apply filters only if at least one filter is present
+        if (
+            $request->anyFilled([
+                'gender', 'age_range', 'marital_status', 'income', 'occupation',
+                'religion', 'caste', 'star', 'zodiac_sign', 'country', 'state', 'city'
+            ])
+        ) {
+            if ($request->filled('gender')) {
+                $query->where('gender', $request->gender);
             }
 
-            $profiles = collect([$profile]);
-        } else {
-            // Apply filters only if at least one filter is present
-            if (
-                $request->anyFilled([
-                    'gender',
-                    'age_range',
-                    'marital_status',
-                    'income',
-                    'occupation',
-                    'religion',
-                    'caste',
-                    'star',
-                    'zodiac_sign',
-                    'country',
-                    'state',
-                    'city'
-                ])
-            ) {
-
-                // Apply all filters (same as your existing logic)
-                if ($request->filled('gender')) {
-                    $query->where('gender', $request->gender);
-                }
-
-                if ($request->filled('age_range')) {
-                    $ageRange = AgeRange::find($request->age_range);
-                    if ($ageRange) {
-                        $query->whereBetween('age', [$ageRange->from_age, $ageRange->to_age]);
-                    }
+            if ($request->filled('age_range')) {
+                $ageRange = AgeRange::find($request->age_range);
+                if ($ageRange) {
+                    $query->whereBetween('age', [$ageRange->from_age, $ageRange->to_age]);
                 }
             }
 
@@ -1069,43 +1099,47 @@ class MatrimonyController extends Controller
             }
         }
 
-        // Get paginated results
+        // Get paginated results (keeps existing pagination behavior)
         $profiles = $query->paginate(12);
-
-        // Fetch all filter options from database
-        $filterOptions = [
-            'ages' => AgeRange::orderBy('from_age')->orderBy('to_age')->get(),
-            'income' => IncomeRange::orderBy('from_income')->orderBy('to_income')->get(),
-            'religions' => Religion::orderBy('religion')->get(),
-            'castes' => Caste::orderBy('caste')->get(),
-            'stars' => Star::orderBy('star')->get(),
-            'zodiacSigns' => ZodiacSign::orderBy('zodiac_sign')->get(),
-            'countries' => Country::orderBy('country')->get(),
-            'states' => State::orderBy('state')->get(),
-            'cities' => City::orderBy('city')->get(),
-            'maritalStatuses' => ['Married', 'Unmarried', 'Divorced', 'Widowed'],
-        ];
-
-        return view('matrimony.filter', [
-            'profiles' => $profiles,
-            'filters' => $request->all(),
-            'filterOptions' => $filterOptions,
-            'hasFilters' => $request->anyFilled([
-                'gender',
-                'age_range',
-                'marital_status',
-                'income',
-                'occupation',
-                'religion',
-                'caste',
-                'star',
-                'zodiac_sign',
-                'country',
-                'state',
-                'city'
-            ])
-        ]);
     }
+
+    // Fetch all filter options from database
+    $filterOptions = [
+        'ages' => AgeRange::orderBy('from_age')->orderBy('to_age')->get(),
+        'income' => IncomeRange::orderBy('from_income')->orderBy('to_income')->get(),
+        'religions' => Religion::orderBy('religion')->get(),
+        'castes' => Caste::orderBy('caste')->get(),
+        'stars' => Star::orderBy('star')->get(),
+        'zodiacSigns' => ZodiacSign::orderBy('zodiac_sign')->get(),
+        'countries' => Country::orderBy('country')->get(),
+        
+        // OPTIMIZATION: Only load states if a country is selected
+        'states' => $request->filled('country') 
+            ? State::where('country_id', $request->country)->orderBy('state')->get() 
+            : [],
+
+        // OPTIMIZATION: Only load cities if a state is selected
+        'cities' => $request->filled('state') 
+            ? City::where('state_id', $request->state)->orderBy('city')->get() 
+            : [],
+            
+        'maritalStatuses' => ['Married', 'Unmarried', 'Divorced', 'Widowed'],
+    ];
+
+    // Determine if filters are active (used in the view)
+    $hasFilters = $request->anyFilled([
+        'gender', 'age_range', 'marital_status', 'income', 'occupation',
+        'religion', 'caste', 'star', 'zodiac_sign', 'country', 'state', 'city'
+    ]);
+
+    return view('matrimony.filter', [
+        'profiles' => $profiles,
+        'filters' => $request->all(),
+        'filterOptions' => $filterOptions,
+        'hasFilters' => $hasFilters
+    ]);
+}
+
 
     public function editProfile($id)
     {
@@ -1115,7 +1149,6 @@ class MatrimonyController extends Controller
 
         return view('matrimony.edit-main-profile', compact('userProfile', 'user'));
     }
-
 
     public function updateMainProfile(Request $request, $id)
     {
@@ -1141,5 +1174,4 @@ class MatrimonyController extends Controller
             ->route('matrimony.profile')
             ->with('success', 'Profile updated successfully.');
     }
-
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use App\Actions\Media\MediaHelper;
 use App\Helpers\FlashMsg;
 use App\Http\Controllers\Controller;
@@ -462,6 +463,105 @@ class UserManageController extends Controller
 
         return view('backend.pages.user.users.user-reports', compact('users'));
     }
+
+    public function generateUserReportsPDF(Request $request)
+{
+    $scope = $request->input('scope', 'page');
+    $page = (int) $request->input('page', 1);
+    $perPage = (int) $request->input('per_page', 12);
+
+    $baseQuery = \App\Models\User::with([
+        'bvHistory' => function($q) { $q->orderBy('created_at', 'desc'); },
+        'orderDetails' => function($q) { $q->orderBy('created_at', 'desc'); },
+        'membership'
+    ])->orderBy('id', 'desc');
+
+    if ($scope === 'all') {
+        $usersCollection = $baseQuery->get();
+    } else {
+        $skip = max(0, ($page - 1) * $perPage);
+        $usersCollection = $baseQuery->skip($skip)->take($perPage)->get();
+    }
+
+    $allProductIds = [];
+    foreach ($usersCollection as $user) {
+        foreach ($user->orderDetails as $order) {
+            if (!empty($order->product_id)) {
+                $ids = preg_split('/[|,]/', $order->product_id);
+                foreach ($ids as $id) {
+                    $id = trim($id);
+                    if ($id !== '') $allProductIds[] = (int)$id;
+                }
+            }
+        }
+    }
+    $allProductIds = array_values(array_unique($allProductIds));
+    $productMap = [];
+    if (!empty($allProductIds)) {
+        $productMap = Product::whereIn('id', $allProductIds)->pluck('name', 'id')->toArray();
+    }
+
+    $users = $usersCollection->map(function ($user) use ($productMap) {
+        $bvHistory = $user->bvHistory ?? collect();
+        $user->bv_total_points = $bvHistory->sum('bv_points');
+
+        $user->bv_transactions = $bvHistory->map(function ($bv) {
+            return [
+                'date' => optional($bv->created_at)->format('d M Y'),
+                'points' => $bv->bv_points,
+                'type' => $bv->type ?? null,
+                'notes' => $bv->notes ?? null,
+            ];
+        })->toArray();
+
+        $orderDetails = $user->orderDetails ?? collect();
+        $user->orders_total_amount = $orderDetails->sum('grand_total');
+
+        $user->order_transactions = $orderDetails->map(function ($order) use ($productMap) {
+            $prodNames = [];
+            if (!empty($order->product_id)) {
+                $ids = preg_split('/[|,]/', $order->product_id);
+                foreach ($ids as $id) {
+                    $id = trim($id);
+                    if ($id === '') continue;
+                    $prodNames[] = $productMap[$id] ?? ('#' . $id);
+                }
+            }
+            return [
+                'date' => optional($order->created_at)->format('d M Y'),
+                'products' => implode(' | ', $prodNames),
+                'total' => $order->grand_total ?? 0,
+                'order_id' => $order->id,
+                'status' => $order->status ?? null
+            ];
+        })->toArray();
+
+        return $user;
+    });
+
+    $total_bv_points = $users->sum('bv_total_points');
+    $total_orders_amount = $users->sum('orders_total_amount');
+
+    $title = ($scope === 'all') ? 'All Users Report' : 'User Reports (Page ' . $page . ')';
+
+    $data = [
+        'title' => $title,
+        'date' => now()->format('d/m/Y H:i'),
+        'users' => $users,
+        'total_bv_points' => $total_bv_points,
+        'total_orders_amount' => $total_orders_amount,
+        'scope' => $scope,
+        'page' => $page,
+    ];
+
+    $filename = 'user-reports' . ($scope === 'all' ? '-all' : '-page-' . $page) . '-' . now()->format('Ymd-His') . '.pdf';
+
+    // *** NOTE: view name uses hyphen because file is user-reports-pdf.blade.php ***
+    return PDF::loadView('backend.pages.user.users.user-reports-pdf', $data)
+        ->setPaper('a4', 'landscape')
+        ->download($filename);
+}
+
 
 
 }

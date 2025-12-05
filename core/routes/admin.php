@@ -429,6 +429,7 @@ Route::middleware(['auth', 'setlang'])->group(function () {
             Route::get('search/deactivated-user', 'search_deactivated_user')->name('admin.user.search.deactivated');
 
             Route::get('user-reports', 'user_reports')->name('admin.user.reports')->permission('user-reports');
+            Route::get('user-reports/pdf', 'generateUserReportsPDF')->name('admin.user.reports.pdf');
         });
     });
 

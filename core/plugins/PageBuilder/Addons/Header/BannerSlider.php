@@ -65,7 +65,7 @@ class BannerSlider extends PageBuilderBase
             'label' => __('Slider Speed (ms)'),
             'value' => $widget_saved_values['slider_speed'] ?? 5000,
             'min' => 1000,
-            'max' => 10000,
+            'max' => 30000,
             'step' => 500,
         ]);
 

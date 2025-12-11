@@ -52,16 +52,16 @@
                 console.log('Slider found with', $slider.find('.slider-item').length, 'slides');
 
                 $slider.slick({
-                    infinite: true,
-                    speed: 1000,
-                    fade: true,
-                    cssEase: 'linear',
-                    autoplay: true,
-                    autoplaySpeed: 3000,
-                    pauseOnHover: false,
-                    pauseOnFocus: false,
-                    arrows: false,
-                    dots: false,
+                infinite: true,
+                speed: 1000,
+                fade: true,
+                cssEase: 'linear',
+                autoplay: true,
+                autoplaySpeed: {{ $slider_speed }},
+                pauseOnHover: false,
+                pauseOnFocus: false,
+                arrows: false,
+                dots: false,
                 });
 
                 console.log('Slider initialized successfully.');

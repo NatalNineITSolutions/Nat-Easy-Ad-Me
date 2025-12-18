@@ -44,6 +44,10 @@
             font-size: 16px;
         }
 
+        .pac-container {
+    z-index: 10000 !important;
+}
+
         /* Media query for screens smaller than 768px */
         @media (max-width: 1499px) {
             #pac-input {
@@ -127,6 +131,25 @@
         .media-upload-btn-wrapper .img-wrap .rmv-span {
              padding: 0;
         }
+
+        /* ===== Laravel field error highlighting ===== */
+.is-invalid {
+    border-color: #dc3545 !important;
+    background-color: #fff5f5;
+}
+
+.invalid-feedback {
+    font-size: 12px;
+    color: #dc3545;
+    margin-top: 4px;
+}
+
+/* Select2 error fix */
+.select2-container--default.is-invalid
+.select2-selection--single {
+    border-color: #dc3545 !important;
+}
+
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css" />
 @endsection
@@ -214,24 +237,8 @@
                                         <div class="col-lg-8">
                                             <div class="post-add-wraper">
                                                 <div class="item-name box-shadow1 p-24">
-                                                    <label for="item-name" id="item-name-label">{{ __('Advertisement Name') }} <span class="text-danger">*</span> </label>
-                                                    <input type="text" name="title" id="title" value="{{ old('title') }}" class="input-filed w-100" placeholder="{{ __('Item Name') }}">
-
-                                                    <div class="input-form input-form2 permalink_label">
-                                                        <label for="title" class="mt-4"> {{__('Permalink')}}  <span class="text-danger">*</span>  </label>
-                                                        <span id="slug_show" class="display-inline"></span>
-                                                        <span id="slug_edit" class="display-inline">
-                                                        <button class="btn btn-warning btn-sm slug_edit_button">  <i class="las la-edit"></i> </button>
-                                                        <input class="listing_slug input-filed w-100"  name="slug" value="{{old('slug')}}" id="slug" style="display: none" type="text">
-                                                        <button class="red-btn btn-sm slug_update_button mt-2" style="display: none">{{__('Update')}}</button>
-                                                    </span>
-                                                    </div>
-
-                                                </div>
-                                                <div class="about-item box-shadow1 p-24 mt-4">
                                                     <h3 class="head4">{{ __('About ') }}</h3>
-                                                    <div class="about-item-form">
-                                                        <div class="row g-3 mt-3">
+                                                    <div class="row g-3 mt-3">
                                                             <div class="col-sm-4">
                                                                 <div class="item-catagory-wraper">
                                                                     <label for="item-catagory">{{ __(' Category') }} <span class="text-danger">*</span> </label>
@@ -260,6 +267,23 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+
+                                                </div>
+                                                <div class="about-item box-shadow1 p-24 mt-4">
+                                                    
+                                                    <div class="about-item-form">
+                                                        <label for="item-name" id="item-name-label">{{ __('Advertisement Name') }} <span class="text-danger">*</span> </label>
+                                                    <input type="text" name="title" id="title" value="{{ old('title') }}" class="input-filed w-100" placeholder="{{ __('Item Name') }}">
+
+                                                    <div class="input-form input-form2 permalink_label">
+                                                        <label for="title" class="mt-4"> {{__('Permalink')}}  <span class="text-danger">*</span>  </label>
+                                                        <span id="slug_show" class="display-inline"></span>
+                                                        <span id="slug_edit" class="display-inline">
+                                                        <button class="btn btn-warning btn-sm slug_edit_button">  <i class="las la-edit"></i> </button>
+                                                        <input class="listing_slug input-filed w-100"  name="slug" value="{{old('slug')}}" id="slug" style="display: none" type="text">
+                                                        <button class="red-btn btn-sm slug_update_button mt-2" style="display: none">{{__('Update')}}</button>
+                                                    </span>
+                                                    </div>
                                                         <div class="row mt-3 g-3">
                                                             <div class="col-sm-6">
                                                                 <div class="item-condition-wraper input-filed p-24 mb-sm-0 mb-3">
@@ -499,21 +523,35 @@
                                                     </div>
                                                 @endif
                                                 <div class="address-text mt-3">
-    <input type="hidden" name="latitude" id="latitude">
-    <input type="hidden" name="longitude" id="longitude">
+                                                    <input type="hidden" name="latitude" id="latitude">
+                                                    <input type="hidden" name="longitude" id="longitude">
 
-    <label for="address-text">{{ __('Address') }}</label>
-    <input
-        type="text"
-        class="w-100 input-filed"
-        name="address"
-        id="user_address"
-        value="{{ old('address') }}"
-        placeholder="{{ __('Address') }}"
-        readonly
-    >
-</div>
+                                                    <label for="address-text">{{ __('Address') }}</label>
+                                                    <input
+                                                        type="text"
+                                                        class="w-100 input-filed"
+                                                        name="address"
+                                                        id="user_address"
+                                                        value="{{ old('address') }}"
+                                                        placeholder="{{ __('Address') }}"
+                                                        readonly
+                                                    >
+                                                </div>
                                             </div>
+                                            <div class="mt-3">
+    <label for="radius_km">{{ __('Ad Visibility Radius (KM)') }}</label>
+    <select id="radius_km" name="radius_km" class="input-filed w-100">
+        <option value="5">5 KM</option>
+        <option value="10" selected>10 KM</option>
+        <option value="25">25 KM</option>
+        <option value="50">50 KM</option>
+        <option value="100">100 KM</option>
+    </select>
+    <small class="text-muted">
+        {{ __('Your ad will be visible only to users within this distance.') }}
+    </small>
+</div>
+
                                             <div class="video box-shadow1 p-24 mt-3 mb-3">
                                                 <label for="vedio-link">{{ __('Video Url') }}</label>
                                                 <input type="text"  class="input-filed w-100" name="video_url" id="video_url" value="{{ old('video_url') }}" placeholder="{{__('youtube url')}}">
@@ -873,99 +911,128 @@ if (termsCheckbox.is(':checked')) {
         })(jQuery);
     </script>
 
-    <script>
+<script>
 (function () {
-  // Kanyakumari coordinates
-  const defaultCenter = { lat: 8.0883, lng: 77.5385 };
-  const defaultZoom = 12; // adjust if you want further zoom
+    let circle, geocoder, autocomplete;
 
-  // Try to apply center when google maps becomes available.
-  function applyDefaultCenter() {
-    try {
-      // If there's already a global "map" object created by other script -> reuse it
-      if (window.map && typeof window.map.setCenter === 'function') {
-        window.map.setCenter(defaultCenter);
-        window.map.setZoom(defaultZoom);
-        console.info('[MAP] Centered existing map to Kanyakumari');
-        return true;
-      }
-
-      // Otherwise, try to create a new map in #map_canvas if Google Maps API loaded
-      if (window.google && window.google.maps) {
-        const mapCanvas = document.getElementById('map_canvas');
-        if (!mapCanvas) {
-          console.warn('[MAP] #map_canvas not found yet');
-          return false;
+    function initRadiusAndAddress() {
+        if (
+            !window.google ||
+            !google.maps ||
+            !window.map ||
+            !window.marker ||
+            typeof google.maps.Geocoder !== "function" ||
+            !google.maps.places // Ensure Places library is loaded
+        ) {
+            return false;
         }
 
-        // Create a new map instance and store on window.map so other code can reuse
-        window.map = new google.maps.Map(mapCanvas, {
-          center: defaultCenter,
-          zoom: defaultZoom,
-        });
+        const latInput = document.getElementById('latitude');
+        const lngInput = document.getElementById('longitude');
+        const addressInput = document.getElementById('user_address');
+        const radiusSelect = document.getElementById('radius_km');
+        const searchInput = document.getElementById('pac-input');
 
-        // If pac-input exists, wire up a SearchBox (optional - works with the Places library)
-        const input = document.getElementById('pac-input');
-        if (input && window.google.maps.places) {
-          const searchBox = new google.maps.places.SearchBox(input);
-          window.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+        if (!latInput || !lngInput || !addressInput || !radiusSelect || !searchInput) {
+            return false;
+        }
 
-          // Bias the SearchBox results towards map viewport.
-          window.map.addListener('bounds_changed', function () {
-            searchBox.setBounds(window.map.getBounds());
-          });
+        geocoder = geocoder || new google.maps.Geocoder();
 
-          // When user selects a place, recenter map and set marker (optional)
-          let marker = null;
-          searchBox.addListener('places_changed', function () {
-            const places = searchBox.getPlaces();
-            if (!places || !places.length) return;
+        // =========================================================
+        // FIX: Listen for Search Box Selection
+        // =========================================================
+        if (!autocomplete) {
+            autocomplete = new google.maps.places.Autocomplete(searchInput);
+            autocomplete.bindTo('bounds', window.map);
 
-            const place = places[0];
-            if (!place.geometry || !place.geometry.location) return;
+            autocomplete.addListener('place_changed', function () {
+                const place = autocomplete.getPlace();
+                
+                if (!place.geometry || !place.geometry.location) {
+                    // User entered the name of a Place that was not suggested and
+                    // pressed the Enter key, or the Place Details request failed.
+                    return;
+                }
 
-            window.map.setCenter(place.geometry.location);
-            window.map.setZoom(14);
+                // 1. Update Map View
+                if (place.geometry.viewport) {
+                    window.map.fitBounds(place.geometry.viewport);
+                } else {
+                    window.map.setCenter(place.geometry.location);
+                    window.map.setZoom(17);
+                }
 
-            if (marker) marker.setMap(null);
-            marker = new google.maps.Marker({
-              position: place.geometry.location,
-              map: window.map,
+                // 2. Move Marker to Searched Location
+                window.marker.setPosition(place.geometry.location);
+
+                // 3. Update Inputs Immediately
+                latInput.value = place.geometry.location.lat();
+                lngInput.value = place.geometry.location.lng();
+                
+                if (place.formatted_address) {
+                    addressInput.value = place.formatted_address;
+                }
+            });
+            
+            // Prevent form submission if user hits enter in search box
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') e.preventDefault();
+            });
+        }
+        // =========================================================
+
+        if (!circle) {
+            circle = new google.maps.Circle({
+                map: window.map,
+                radius: Number(radiusSelect.value) * 1000,
+                fillColor: "#2563eb",
+                fillOpacity: 0.2,
+                strokeColor: "#2563eb",
+                strokeOpacity: 0.6,
+                strokeWeight: 2,
             });
 
-            // update hidden lat/lng inputs if present
-            const latInput = document.getElementById('latitude');
-            const lngInput = document.getElementById('longitude');
-            if (latInput) latInput.value = place.geometry.location.lat();
-            if (lngInput) lngInput.value = place.geometry.location.lng();
-          });
+            circle.bindTo('center', window.marker, 'position');
         }
 
-        console.info('[MAP] Created new map centered to Kanyakumari');
+        function updateLatLngAndAddress(position) {
+            latInput.value = position.lat();
+            lngInput.value = position.lng();
+
+            geocoder.geocode({ location: position }, function (results, status) {
+                if (status === "OK" && results && results[0]) {
+                    addressInput.value = results[0].formatted_address;
+                }
+            });
+        }
+
+        // Keep the drag listener for manual adjustments
+        google.maps.event.addListener(window.marker, 'position_changed', function () {
+            // We only need to reverse geocode if the move wasn't triggered by the search box
+            // But doing it safely here ensures the coords always match the address
+            updateLatLngAndAddress(window.marker.getPosition());
+        });
+
+        radiusSelect.addEventListener('change', function () {
+            circle.setRadius(Number(this.value) * 1000);
+        });
+
+        window.map.addListener('click', function (e) {
+            window.marker.setPosition(e.latLng);
+            updateLatLngAndAddress(e.latLng);
+        });
+
         return true;
-      }
-
-      // Google API not ready yet
-      return false;
-    } catch (err) {
-      console.error('[MAP] applyDefaultCenter error:', err);
-      return false;
     }
-  }
 
-  // Poll until the map is ready (or until timeout)
-  let attempts = 0;
-  const maxAttempts = 50; // ~50 * 200ms = 10 seconds max wait
-  const interval = setInterval(function () {
-    attempts++;
-    const done = applyDefaultCenter();
-    if (done || attempts >= maxAttempts) {
-      clearInterval(interval);
-      if (!done) {
-        console.warn('[MAP] Could not set default center — google maps API may be blocked or #map_canvas missing.');
-      }
-    }
-  }, 200);
+    let attempts = 0;
+    const interval = setInterval(() => {
+        attempts++;
+        if (initRadiusAndAddress() || attempts > 50) {
+            clearInterval(interval);
+        }
+    }, 200);
 })();
 </script>
 

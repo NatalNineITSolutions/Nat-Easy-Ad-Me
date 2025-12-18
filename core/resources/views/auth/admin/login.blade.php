@@ -34,6 +34,7 @@
                                 <label class="label_title">{{ __('Password') }}</label>
                                 <div class="include_icon">
                                     <input class="form--control radius-5" type="password" id="password" placeholder="{{ __('password') }}">
+                                    <span class="toggle-password material-symbols-outlined" style="cursor:pointer; margin-left: -35px; user-select:none;">visibility</span>
                                     <div class="icon"><span class="material-symbols-outlined">{{ __('lock') }}</span></div>
                                 </div>
                             </div>
@@ -129,6 +130,13 @@
                         }
                     });
                 });
+
+                $(document).on('click', '.toggle-password', function () {
+    let passInput = $('#password');
+    let type = passInput.attr('type') === 'password' ? 'text' : 'password';
+    passInput.attr('type', type);
+    $(this).text(type === 'password' ? 'visibility' : 'visibility_off');
+});
 
            });
         })(jQuery);

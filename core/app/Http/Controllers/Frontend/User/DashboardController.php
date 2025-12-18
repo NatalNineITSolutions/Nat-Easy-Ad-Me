@@ -85,8 +85,21 @@ class DashboardController extends Controller
         $bvvalue = ($membership?->category == 1)
             ? get_static_option('matrimony_bv_value')
             : get_static_option('payout_value');
-        $bpConversionRate = get_static_option('bp_value') ?? 1;
-        $sealingLimit = get_static_option('sealing_limitation') ?? 1;
+
+        // --- SANITIZE bpConversionRate and sealingLimit to avoid division by zero ---
+        $bpConversionRate = (int) (get_static_option('bp_value') ?? 1);
+        $sealingLimit = (int) (get_static_option('sealing_limitation') ?? 1);
+
+        if ($bpConversionRate <= 0) {
+            Log::warning('Invalid bp_value detected in dashboard(); falling back to 1.', ['bp_value' => get_static_option('bp_value')]);
+            $bpConversionRate = 1;
+        }
+
+        if ($sealingLimit <= 0) {
+            Log::warning('Invalid sealing_limitation detected in dashboard(); falling back to 1.', ['sealing_limitation' => get_static_option('sealing_limitation')]);
+            $sealingLimit = 1;
+        }
+        // ---------------------------------------------------------------------------
 
    
         $userFlushBvs = DB::table('user_flush_bvs')
@@ -101,7 +114,9 @@ class DashboardController extends Controller
         Log::info('RightBV:' . $rightBvPoints);
 
         $sealingLimitBv = $sealingLimit * $bpConversionRate;
-        $flushableAmount = floor(min($leftBvPoints, $rightBvPoints) / $sealingLimitBv) * $sealingLimitBv;
+        // avoid division by zero if sealingLimitBv somehow becomes 0
+        $divisorForFlush = $sealingLimitBv > 0 ? $sealingLimitBv : 1;
+        $flushableAmount = floor(min($leftBvPoints, $rightBvPoints) / $divisorForFlush) * $divisorForFlush;
         $remainingLeft = max(0, $leftBvPoints - $flushableAmount);
         $remainingRight = max(0, $rightBvPoints - $flushableAmount);
         $flushedLeft = $leftBvPoints - $remainingLeft;
@@ -267,8 +282,20 @@ class DashboardController extends Controller
             return redirect()->back()->withErrors(['error' => __('Parent not found')]);
         }
 
-        $bpConversionRate = get_static_option('bp_value') ?? 1;
-        $sealingLimit = get_static_option('sealing_limitation') ?? 1;
+        // --- SANITIZE bpConversionRate and sealingLimit to avoid division by zero ---
+        $bpConversionRate = (int) get_static_option('bp_value');
+        $sealingLimit = (int) get_static_option('sealing_limitation');
+
+        if ($bpConversionRate <= 0) {
+            Log::warning('Invalid bp_value detected in getChildren(); falling back to 1.', ['bp_value' => get_static_option('bp_value'), 'parent_id' => $id]);
+            $bpConversionRate = 1;
+        }
+
+        if ($sealingLimit <= 0) {
+            Log::warning('Invalid sealing_limitation detected in getChildren(); falling back to 1.', ['sealing_limitation' => get_static_option('sealing_limitation'), 'parent_id' => $id]);
+            $sealingLimit = 1;
+        }
+        // --------------------------------------------------------------------------
 
         $userFlushBvs = DB::table('user_flush_bvs')
             ->where('user_id', $user_id)
@@ -317,6 +344,16 @@ class DashboardController extends Controller
         // 3) apply sealing limit & BP conversion
         $bpRate = (int) (get_static_option('bp_value') ?? 1);
         $sealLimit = (int) (get_static_option('sealing_limitation') ?? 1);
+
+        if ($bpRate <= 0) {
+            Log::warning('Invalid bp_value detected in calculateBV(); falling back to 1.', ['bp_value' => get_static_option('bp_value'), 'user_id' => $node->id]);
+            $bpRate = 1;
+        }
+        if ($sealLimit <= 0) {
+            Log::warning('Invalid sealing_limitation detected in calculateBV(); falling back to 1.', ['sealing_limitation' => get_static_option('sealing_limitation'), 'user_id' => $node->id]);
+            $sealLimit = 1;
+        }
+
         $maxAllowed = $sealLimit * $bpRate;
 
         $sealedL = min($leftBV, $maxAllowed);
@@ -1250,7 +1287,7 @@ class DashboardController extends Controller
             'action' => 'required|in:increase,decrease',
         ]);
 
-        // eager‑load product so we can recalc
+        // eager-load product so we can recalc
         $cartItem = Cart::with('product')->findOrFail($request->id);
         $quantity = $cartItem->quantity;
 

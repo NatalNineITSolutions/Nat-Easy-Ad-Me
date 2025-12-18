@@ -25,6 +25,8 @@
 
     {{-- Select 2 --}}
     <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 
     <style>
         * {
@@ -551,69 +553,64 @@
                     </form>
 
                     <form class="user-form section-2" style="display: none;">
-                        <div class="row g-3">
-                            <!-- Zodiac Sign -->
-                            <div class="col-md-12">
-                                <label class="form-label">Zodiac Sign</label>
-                                <select class="form-select" name="zodiac_sign" id="zodiac_sign">
-                                    <option value="" selected>Choose zodiac sign</option>
-                                    @foreach($zodiacsigns as $zodiac)
-                                        <option value="{{ $zodiac->id }}">{{ $zodiac->zodiac_sign }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+    <div class="row g-3">
 
-                            <!-- Star -->
-                            <div class="col-md-12">
-                                <label class="form-label">Star</label>
-                                <select class="form-select" name="star" id="star">
-                                    <option value="" selected>Choose star</option>
-                                    @foreach($stars as $star)
-                                        <option value="{{ $star->id }}">{{ $star->star }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+        <div class="col-md-12">
+            <label class="form-label">Zodiac Sign</label>
+            <select class="form-select searchable-select" name="zodiac_sign" id="zodiac_sign">
+                <option value="" selected>Choose zodiac sign</option>
+                @foreach($zodiacsigns as $zodiac)
+                    <option value="{{ $zodiac->id }}">{{ $zodiac->zodiac_sign }}</option>
+                @endforeach
+            </select>
+        </div>
 
-                            <!-- Caste -->
-                            <div class="col-md-12">
-                                <label class="form-label">Caste</label>
-                                <select class="form-select" name="caste" id="caste">
-                                    <option value="" selected>Choose caste</option> <!-- Empty value -->
-                                    @foreach ($castes as $caste)
-                                        <option value="{{ $caste->id }}">{{ $caste->caste }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+        <div class="col-md-12">
+            <label class="form-label">Star</label>
+            <select class="form-select searchable-select" name="star" id="star">
+                <option value="" selected>Choose star</option>
+                @foreach($stars as $star)
+                    <option value="{{ $star->id }}">{{ $star->star }}</option>
+                @endforeach
+            </select>
+        </div>
 
-                            <!-- Gothram Dropdown -->
-                            <div class="col-md-12">
-                                <label class="form-label">Gothram</label>
-                                <select class="form-select" name="gothram" id="gothram">
-                                    <option value="" selected>Choose gothram</option>
-                                    @foreach ($gothrams as $gothram)
-                                        <option value="{{ $gothram->id }}">{{ $gothram->gothram }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+        <div class="col-md-12">
+            <label class="form-label">Caste</label>
+            <select class="form-select searchable-select" name="caste" id="caste">
+                <option value="" selected>Choose caste</option>
+                @foreach ($castes as $caste)
+                    <option value="{{ $caste->id }}">{{ $caste->caste }}</option>
+                @endforeach
+            </select>
+        </div>
 
-                            <!-- Dosham Dropdown -->
-                            <div class="col-md-12">
-                                <label class="form-label">Dosham</label>
-                                <select class="form-select" name="dosham" id="dosham">
-                                    <option value="" selected>Choose dosham</option>
-                                    @foreach ($doshams as $dosham)
-                                        <option value="{{ $dosham->id }}">{{ $dosham->dosham }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+        <div class="col-md-12">
+            <label class="form-label">Gothram</label>
+            <select class="form-select searchable-select" name="gothram" id="gothram">
+                <option value="" selected>Choose gothram</option>
+                @foreach ($gothrams as $gothram)
+                    <option value="{{ $gothram->id }}">{{ $gothram->gothram }}</option>
+                @endforeach
+            </select>
+        </div>
 
-                            <!-- Next Button -->
-                            <div class="col-12 text-end">
-                                <button type="submit" class="next-button"
-                                    onclick="validateSection(event, 2)">Next</button>
-                            </div>
-                        </div>
-                    </form>
+        <div class="col-md-12">
+            <label class="form-label">Dosham</label>
+            <select class="form-select searchable-select" name="dosham" id="dosham">
+                <option value="" selected>Choose dosham</option>
+                @foreach ($doshams as $dosham)
+                    <option value="{{ $dosham->id }}">{{ $dosham->dosham }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col-12 text-end">
+            <button type="submit" class="next-button" onclick="validateSection(event, 2)">Next</button>
+        </div>
+    </div>
+</form>
+
 
                     <form class="user-form section-3" style="display: none;">
                         <div class="row g-3">
@@ -1255,6 +1252,20 @@ document.addEventListener('DOMContentLoaded', async function () {
   console.log('[LIST DEBUG] done populating education & occupation');
 });
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('.searchable-select').select2({
+        placeholder: "Select an option",
+        allowClear: true,
+        width: '100%'
+    });
+});
+</script>
+
 
 </body>
 

@@ -23,6 +23,18 @@
         .iti__selected-flag{
             padding: 13px;
         }
+.is-invalid {
+    border: 1px solid #dc3545 !important;
+}
+
+.invalid-text {
+    color: #dc3545;
+    font-size: 13px;
+    margin-top: 4px;
+    display: block;
+}
+
+
     </style>
 @endsection
 @section('content')
@@ -430,74 +442,110 @@
                     });
                 });
 
-                //confirm signup
-                $(document).on('click', '.sign_up_now_button', function () {
+                $(document).on('click', '.sign_up_now_button', function (e) {
+    e.preventDefault();
 
-                    let first_name = $('#first_name').val();
-                    let last_name = $('#last_name').val();
-                    let username = $('#username').val();
-                    let email = $('#email').val();
-                    let phone = $('#phone').val();
-                    let dob = $('#dob').val();
-                    let password = $('#password').val();
-                    let confirm_password = $('#confirm_password').val();
-                    let gender = $('#gender').val();
+    let requiredFields = [
+        '#first_name',
+        '#last_name',
+        '#username',
+        '#email',
+        '#phone',
+        '#dob',
+        '#gender',
+        '#password',
+        '#confirm_password'
+    ];
 
-                    let username_validation_text = $('#user_name_availability span').text();
-                    let email_validation_text = $('#email_availability span').text();
-                    let password_validation_text = $('#check_password_match').text();
-                    let phone_validation_text = $('#phone_availability span').text();
+    let firstInvalid = null;
+    let hasError = false;
 
-                    if (first_name == '' || last_name == '' || gender == '' || username == '' || email == '' || phone == '' || dob == '' || password == '' || confirm_password == '') {
-                        toastr_warning_js("{{ __('Please fill all fields') }}")
-                        return false
-                    } else if (username_validation_text == 'Sorry! Username name is not available' || username_validation_text == 'Enter valid username') {
-                        toastr_warning_js("{{ __('Please enter a valid username') }}")
-                        return false
-                    } else if (email_validation_text == 'Sorry! Email has already taken' || email_validation_text == 'Enter valid email') {
-                        toastr_warning_js("{{ __('Please enter a valid email') }}")
-                        return false
-                    } else if (phone_validation_text == 'Sorry! Phone Number has already taken' || phone_validation_text == 'Enter valid phone number') {
-                        toastr_warning_js("{{ __('Please enter a valid phone number') }}")
-                        return false
-                    } else if (password.length < 6) {
-                        toastr_warning_js("{{ __('Password must be 6 character at least') }}")
-                        return false
-                    } else if (confirm_password.length < 6) {
-                        toastr_warning_js("{{ __('Password must be 6 character at least') }}")
-                        return false
-                    } else if (password_validation_text == 'Password does not match !') {
-                        toastr_warning_js("{{ __('Password does not match') }}")
-                        return false
-                    }
+    // Clear old errors
+    $('.is-invalid').removeClass('is-invalid');
+    $('.invalid-text').remove();
 
-                    // Validate Date of Birth (must be at least 18 years old)
-                    const today = new Date();
-                    const birthDate = new Date(dob);
-                    const age = today.getFullYear() - birthDate.getFullYear();
-                    const monthDiff = today.getMonth() - birthDate.getMonth();
+    requiredFields.forEach(function (selector) {
+        let field = $(selector);
+        let value = field.val();
 
-                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                        age--;
-                    }
+        if (!value) {
+            hasError = true;
+            field.addClass('is-invalid');
+            field.after('<span class="invalid-text">This field is required</span>');
 
-                    if (age < 18) {
-                        toastr_warning_js("{{ __('You must be at least 18 years old to register') }}");
-                        return false;
-                    }
+            if (!firstInvalid) {
+                firstInvalid = field;
+            }
+        }
+    });
 
-                    // terms and condition check
-                    if (!$('.terms-conditions .check-input').is(":checked")) {
-                        toastr_warning_js("{{ __('Please agree with terms and conditions') }}")
-                        return false;
-                    }
+    // Username check
+    if ($('#user_name_availability span').text().includes('not available')) {
+        $('#username').addClass('is-invalid')
+            .after('<span class="invalid-text">Username not available</span>');
+        hasError = true;
+        firstInvalid = firstInvalid || $('#username');
+    }
 
-                    $(this).attr("disabled", "disabled");
-                    $(this).html('<i class="fas fa-spinner fa-spin mr-1"></i> {{__("Registering")}}');
-                    // Submit the form
-                    $(this).closest('form').trigger('submit');
+    // Email check
+    if ($('#email_availability span').text().includes('taken')) {
+        $('#email').addClass('is-invalid')
+            .after('<span class="invalid-text">Email already taken</span>');
+        hasError = true;
+        firstInvalid = firstInvalid || $('#email');
+    }
 
-                });
+    // Password match
+    if ($('#check_password_match').text().includes('does not match')) {
+        $('#confirm_password').addClass('is-invalid')
+            .after('<span class="invalid-text">Password does not match</span>');
+        hasError = true;
+        firstInvalid = firstInvalid || $('#confirm_password');
+    }
+
+    // DOB age validation
+    let dob = $('#dob').val();
+    if (dob) {
+        const today = new Date();
+        const birthDate = new Date(dob);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+
+        if (age < 18) {
+            $('#dob').addClass('is-invalid')
+                .after('<span class="invalid-text">You must be at least 18 years old</span>');
+            hasError = true;
+            firstInvalid = firstInvalid || $('#dob');
+        }
+    }
+
+    // Terms
+    if (!$('#terms_conditions').is(':checked')) {
+        $('#terms_conditions').closest('.terms-conditions')
+            .after('<span class="invalid-text">You must agree to terms</span>');
+        hasError = true;
+        firstInvalid = firstInvalid || $('#terms_conditions');
+    }
+
+    if (hasError) {
+        toastr_warning_js("{{ __('Please fix the highlighted fields') }}");
+
+        $('html, body').animate({
+            scrollTop: firstInvalid.offset().top - 120
+        }, 600);
+
+        return false;
+    }
+
+    // Disable button & submit
+    $(this).attr("disabled", true);
+    $(this).html('<i class="fas fa-spinner fa-spin"></i> {{__("Registering")}}');
+    $(this).closest('form').submit();
+});
+
 
             });
         }(jQuery));

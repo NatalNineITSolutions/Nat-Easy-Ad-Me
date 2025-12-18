@@ -55,6 +55,25 @@
     .nav-item .nav-link.active i {
         color: blue !important;
     }
+
+    @media (max-width: 768px) {
+    nav.col-md-4.col-lg-3 {
+        position: relative;
+        z-index: 9999;
+        width: 100%;
+    }
+
+    .sidebar {
+        position: relative;
+        z-index: 9999;
+        pointer-events: auto;
+    }
+
+    .sidebar a {
+        pointer-events: auto;
+    }
+}
+
 </style>
 
 <nav class="col-md-4 col-lg-3 d-md-block ">
@@ -102,63 +121,55 @@
 </nav>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* ================= ACTIVE LINK HANDLER ================= */
     const currentUrl = window.location.href;
-    
-    // Find all nav links
     const navLinks = document.querySelectorAll('.nav-link');
-    
-    // Add 'active' class to matching links
+
     navLinks.forEach(link => {
         if (link.href === currentUrl) {
             link.classList.add('active');
-            
-            // If this is a dropdown link, keep its parent open
+
             const dropdown = link.closest('#profileDropdown');
             if (dropdown) {
                 const bsCollapse = new bootstrap.Collapse(dropdown, { toggle: false });
                 bsCollapse.show();
-                
-                // Also mark the parent toggle as active
+
                 const toggle = document.getElementById('profileToggle');
-                if (toggle) {
-                    toggle.classList.add('active');
-                }
+                if (toggle) toggle.classList.add('active');
             }
         }
     });
-    
-    // Handle click events on dropdown links
-    document.querySelectorAll('#profileDropdown .nav-link').forEach(link => {
-        link.addEventListener('click', function(e) {
-            if (this.classList.contains('active')) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                // Keep the dropdown open
-                const dropdown = this.closest('#profileDropdown');
-                const bsCollapse = new bootstrap.Collapse(dropdown, { toggle: false });
-                bsCollapse.show();
-            }
+
+    /* ================= MOBILE MENU AUTO CLOSE ================= */
+    const mobileMenu = document.getElementById("mobileMenu");
+    if (mobileMenu) {
+        mobileMenu.querySelectorAll("a").forEach(link => {
+            link.addEventListener("click", () => {
+                mobileMenu.classList.remove("show");
+            });
         });
-    });
-    
-    // Update chevron icon based on dropdown state
+    }
+
+    /* ================= CHEVRON TOGGLE ================= */
     const profileToggle = document.getElementById('profileToggle');
     if (profileToggle) {
-        profileToggle.addEventListener('click', function() {
-            const chevron = this.querySelector('.fa-chevron-down');
-            if (chevron) {
-                const dropdown = document.getElementById('profileDropdown');
-                if (dropdown.classList.contains('show')) {
-                    chevron.classList.remove('fa-chevron-down');
-                    chevron.classList.add('fa-chevron-up');
-                } else {
-                    chevron.classList.remove('fa-chevron-up');
-                    chevron.classList.add('fa-chevron-down');
-                }
+        profileToggle.addEventListener('click', function () {
+            const chevron = this.querySelector('.fa-chevron-down, .fa-chevron-up');
+            const dropdown = document.getElementById('profileDropdown');
+
+            if (!chevron || !dropdown) return;
+
+            if (dropdown.classList.contains('show')) {
+                chevron.classList.remove('fa-chevron-down');
+                chevron.classList.add('fa-chevron-up');
+            } else {
+                chevron.classList.remove('fa-chevron-up');
+                chevron.classList.add('fa-chevron-down');
             }
         });
     }
+
 });
 </script>

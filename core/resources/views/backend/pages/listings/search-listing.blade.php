@@ -17,6 +17,7 @@
         </th>
         <th>{{__('Publishing Status')}}</th>
         <th>{{__('Image')}}</th>
+        <th>{{__('Listing Code')}}</th>
         <th>{{__('Title')}}</th>
         <th>{{__('Category')}}</th>
         @if(empty(get_static_option('google_map_settings_on_off')))
@@ -75,6 +76,11 @@
 
                 </td>
                 <td> {!! render_image_markup_by_attachment_id($data->image, '', 'thumb') !!}</td>
+                <td>
+    <span class="badge bg-info text-white">
+        {{ $data->listing_code ?? '—' }}
+    </span>
+</td>
                 <td>{{$data->title}}</td>
                 <td>{{optional($data->category)->name}}</td>
                 @if(empty(get_static_option('google_map_settings_on_off')))

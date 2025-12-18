@@ -16,6 +16,7 @@ use Modules\CountryManage\app\Models\City;
 use Modules\CountryManage\app\Models\Country;
 use Modules\CountryManage\app\Models\State;
 use App\Models\JobDetail;
+use App\Helpers\ListingCodeGenerator;
 
 class Listing extends Model
 {
@@ -25,6 +26,7 @@ class Listing extends Model
     protected $fillable = [
         'user_id',
         'admin_id',
+        'listing_code',
         'category_id',
         'sub_category_id',
         'child_category_id',
@@ -180,5 +182,14 @@ class Listing extends Model
     {
         return $this->hasOne(JobDetail::class, 'listing_id');
     }
+
+    protected static function booted()
+{
+    static::creating(function ($listing) {
+        if (empty($listing->listing_code)) {
+            $listing->listing_code = ListingCodeGenerator::generate();
+        }
+    });
+}
 
 }

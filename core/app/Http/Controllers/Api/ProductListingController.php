@@ -45,53 +45,94 @@ class ProductListingController extends Controller
         ]);
     }
 
-    public function getLocationListings(Request $request)
-    {
-        $items = $request->query('items', 6);
-        $distance = $request->query('distance', 50);
-        $latitude = $request->query('latitude');
-        $longitude = $request->query('longitude');
+   public function getLocationListings(Request $request)
+{
+    $items     = $request->query('items', 6);
+    $latitude  = $request->query('latitude');
+    $longitude = $request->query('longitude');
+    $city      = $request->query('city'); // NEW (optional)
 
-        if (!$latitude || !$longitude) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Latitude and Longitude are required',
-                'data' => []
-            ], 400);
-        }
+    // ---------------------------
+    // 1️⃣ PRIMARY: GPS-based search
+    // ---------------------------
+    $listings = collect();
 
+    if ($latitude && $longitude) {
         $listings = Listing::where('status', 1)
             ->where('is_published', 1)
+            ->whereNotNull('lat')
+            ->whereNotNull('lon')
             ->selectRaw(
-                "*, (6371 * acos(cos(radians(?)) * cos(radians(lat)) * cos(radians(lon) - radians(?)) + sin(radians(?)) * sin(radians(lat)))) AS distance",
+                "listings.*,
+                (6371 * acos(
+                    cos(radians(?)) *
+                    cos(radians(lat)) *
+                    cos(radians(lon) - radians(?)) +
+                    sin(radians(?)) *
+                    sin(radians(lat))
+                )) AS distance",
                 [$latitude, $longitude, $latitude]
             )
-            ->havingRaw('distance <= ?', [$distance])
+            ->havingRaw('distance <= listings.radius_km')
             ->orderBy('distance', 'asc')
             ->take($items)
-            ->get()
-            ->map(function ($listing) {
-                return [
-                    'id' => $listing->id,
-                    'title' => $listing->title,
-                    'description' => $listing->description,
-                    'latitude' => $listing->lat,
-                    'longitude' => $listing->lon,
-                    'price' => $listing->category_id != 54 ? amount_with_currency_symbol($listing->price) : null,
-                    'distance' => round($listing->distance, 2) . ' km',
-                    'image' => get_attachment_url_by_ids($listing->image),
-                    'address' => $listing->address,
-                    'is_featured' => $listing->is_featured,
-                    'created_at' => $listing->published_at,
-                ];
-            });
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Location-based listings retrieved successfully',
-            'data' => $listings
-        ]);
+            ->get();
     }
+
+    // --------------------------------
+    // 2️⃣ FALLBACK: City-based search
+    // --------------------------------
+    if ($listings->isEmpty() && $city) {
+        $listings = Listing::where('status', 1)
+            ->where('is_published', 1)
+            ->where(function ($q) use ($city) {
+                $q->where('address', 'LIKE', "%{$city}%")
+                  ->orWhere('location', 'LIKE', "%{$city}%");
+            })
+            ->orderByDesc('created_at')
+            ->take($items)
+            ->get();
+
+        // mark as fallback
+        $listings = $listings->map(function ($listing) {
+            $listing->distance = null;
+            $listing->is_city_fallback = true;
+            return $listing;
+        });
+    }
+
+    // ---------------------------
+    // RESPONSE FORMAT (unchanged)
+    // ---------------------------
+    $data = $listings->map(function ($listing) {
+        return [
+            'id'        => $listing->id,
+            'title'     => $listing->title,
+            'description' => $listing->description,
+            'latitude'  => $listing->lat,
+            'longitude' => $listing->lon,
+            'price'     => $listing->category_id != 54
+                ? amount_with_currency_symbol($listing->price)
+                : null,
+            'distance'  => $listing->distance !== null
+                ? round($listing->distance, 2) . ' km'
+                : null,
+            'image'     => get_attachment_url_by_ids($listing->image),
+            'address'   => $listing->address,
+            'is_featured' => $listing->is_featured,
+            'created_at' => $listing->published_at,
+            'fallback'  => $listing->is_city_fallback ?? false,
+        ];
+    });
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Location-based listings retrieved successfully',
+        'data'    => $data
+    ]);
+}
+
+
 
     public function getJobListings(Request $request)
     {

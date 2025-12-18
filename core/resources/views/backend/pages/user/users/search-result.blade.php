@@ -2,6 +2,7 @@
     <thead>
     <tr>
         <th>{{__('ID')}}</th>
+        <th>{{ __('User Code') }}</th>
         <th>{{__('Name')}}</th>
         <th>{{__('Email')}}</th>
         <th>{{__('Phone')}}</th>
@@ -15,6 +16,11 @@
         @foreach($all_users as $user)
             <tr>
                 <td>{{ $user->id }}</td>
+                <td>
+    <span class="badge bg-primary">
+        {{ $user->user_code }}
+    </span>
+</td>
                 <td>{{ $user->first_name.' '.$user->last_name }}</td>
                 <td>
                     {{ $user->email }}

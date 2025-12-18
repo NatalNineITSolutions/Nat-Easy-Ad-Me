@@ -59,6 +59,7 @@
 
                 $('#user_details .full_name').text(full_name);
                 $('#user_details .username').text(username);
+                $('.user_code').text(user.user_code);
                 $('#user_details .email').text(email);
                 $('#user_details .phone').text(phone);
                 country != '' ? $('#user_details .country').text(country) : $('#user_details .country').text('No country');

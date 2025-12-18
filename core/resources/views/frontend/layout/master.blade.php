@@ -119,5 +119,20 @@
 
     @yield('scripts') 
 
+    <script>
+if (!localStorage.getItem('user_lat')) {
+    navigator.geolocation.getCurrentPosition(
+        function (position) {
+            localStorage.setItem('user_lat', position.coords.latitude);
+            localStorage.setItem('user_lng', position.coords.longitude);
+        },
+        function () {
+            console.warn("Location permission denied");
+        }
+    );
+}
+</script>
+
+
 </body>
 </html>

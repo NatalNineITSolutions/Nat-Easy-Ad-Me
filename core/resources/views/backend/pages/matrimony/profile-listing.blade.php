@@ -17,7 +17,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="bv" class="form-label">{{ __('BV Points') }}</label>
+                    <label for="bv" class="form-label">{{ __('BP') }}</label>
                     <input type="number" class="form-control" id="bv" name="bv"
                         value="{{ get_static_option('matrimony_bv_points', '') }}" placeholder="{{ __('Enter BV Points') }}"
                         required>

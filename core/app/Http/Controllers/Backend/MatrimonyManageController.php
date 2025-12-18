@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Backend;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MatrimonyProfileApproved;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ProfileListing;
@@ -67,20 +69,36 @@ class MatrimonyManageController extends Controller
     }
 
     public function verifyProfile(Request $request)
-    {
-        $profile = ProfileListing::find($request->id);
+{
+    $profile = ProfileListing::find($request->id);
 
-        if ($profile) {
-            $profile->is_verified = 1;
-            $profile->save();
+    if ($profile) {
 
-            Log::info("Profile ID {$profile->id} verified successfully.");
-
+        // Prevent duplicate verification
+        if ($profile->is_verified == 1) {
             return response()->json(['success' => true]);
         }
 
-        return response()->json(['success' => false]);
+        $profile->is_verified = 1;
+        $profile->save();
+
+        Log::info("Profile ID {$profile->id} verified successfully.");
+
+        if (!empty($profile->email)) {
+            try {
+                Mail::to($profile->email)
+                    ->send(new MatrimonyProfileApproved($profile));
+            } catch (\Exception $e) {
+                Log::error('Profile approval mail failed: ' . $e->getMessage());
+            }
+        }
+
+        return response()->json(['success' => true]);
     }
+
+    return response()->json(['success' => false]);
+}
+
 
     public function rejectProfile(Request $request)
     {

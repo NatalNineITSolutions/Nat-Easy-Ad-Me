@@ -37,9 +37,16 @@
                 </div>
             @endif
 
-            <h3 class="catagory-wise-title">
-                {{ sprintf(__('Available Listing Sub Categories in :subcategory', ['subcategory' => $subcategory->name])) }}
-            </h3>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="catagory-wise-title mb-0">
+        {{ sprintf(__('Available Listing Sub Categories in :subcategory', ['subcategory' => $subcategory->name])) }}
+    </h3>
+
+    <a href="{{ route('user.addjob.listing') }}" class="red-btn">
+        <i class="las la-plus"></i> {{ __('Add New Job') }}
+    </a>
+</div>
+
             <div class="catagory-wise-list-wraper exploreCategories">
                 <div id="services_sub_category_load_wrap">
                     <div class="services_sub_category_load_wraper mt-4">

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Helpers\BranchCodeGenerator;
 
 class Branch extends Authenticatable
 {
@@ -13,6 +14,7 @@ class Branch extends Authenticatable
     protected $table = 'branches';
 
     protected $fillable = [
+        'branch_code',
         'name',
         'email',
         'phone_number',
@@ -75,4 +77,13 @@ class Branch extends Authenticatable
     {
         return 'remember_token';
     }
+
+    protected static function booted()
+{
+    static::creating(function ($branch) {
+        if (empty($branch->branch_code)) {
+            $branch->branch_code = BranchCodeGenerator::generate();
+        }
+    });
+}
 }

@@ -52,6 +52,7 @@
       <thead>
         <tr>
             <th>S.No</th>
+            <th>Product Code</th>
             <th>Product Name</th>
             <th>Category</th>
             <th>Distributor Price</th>
@@ -75,6 +76,9 @@
           @endphp
           <tr id="product-row-{{ $product->id }}">
               <td>{{ $loop->iteration }}</td>
+              <td>
+    <strong>{{ $product->product_code ?? '—' }}</strong>
+</td>
               <td>
                 <div class="d-flex align-items-center gap-3">
                     <img src="{{ asset('assets/uploads/media-uploader/' . ($product->imageFile->path ?? 'default.jpg')) }}"

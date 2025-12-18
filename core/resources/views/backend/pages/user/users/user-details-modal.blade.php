@@ -17,6 +17,7 @@
                     <div class="userDetails__wrapper">
                         <p class="userDetails__wrapper__item"><strong>{{ __('Full Name: ') }}</strong><span class="full_name"></span></p>
                         <p class="userDetails__wrapper__item"><strong>{{ __('Username: ') }}</strong><span class="username"></span></p>
+                        <p class="userDetails__wrapper__item"><strong>User Code:</strong> <span class="user_code"></span></p>
                         <p class="userDetails__wrapper__item"><strong>{{ __('Email: ') }}</strong><span class="email"></span></p>
                         <p class="userDetails__wrapper__item"><strong>{{ __('Phone: ') }}</strong><span class="phone"></span></p>
                         <p class="userDetails__wrapper__item"><strong>{{ __('Country: ') }}</strong><span class="country"></span></p>

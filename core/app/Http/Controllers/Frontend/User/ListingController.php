@@ -146,17 +146,18 @@ class ListingController extends Controller
             // Validation rules
             $request->validate([
                 'category_id' => 'required',
-                'sub_category_id' => 'nullable|exists:sub_categories,id,category_id,' . $request->category_id,
-                'child_category_id' => 'nullable|exists:child_categories,id,sub_category_id,' . $request->sub_category_id,
+                'sub_category_id' => 'required|nullable|exists:sub_categories,id,category_id,' . $request->category_id,
+                'child_category_id' => 'required|nullable|exists:child_categories,id,sub_category_id,' . $request->sub_category_id,
                 'title' => 'required|max:191',
                 'description' => 'required|min:20',
                 'slug' => 'required|max:255|unique:listings',
-                'price' => $request->category_id == 54 ? 'nullable|numeric' : 'required|numeric',
+                'price' => $request->category_id == 54 ? 'required|nullable|numeric' : 'required|numeric',
                 // Job-related fields validation
                 'qualification' => $request->category_id == 54 ? 'required|string|max:255' : 'nullable|string|max:255',
                 'experience' => $request->category_id == 54 ? 'required|string|max:255' : 'nullable|string|max:255',
                 'salary' => $request->category_id == 54 ? 'required|numeric' : 'nullable|numeric',
                 'job_location' => $request->category_id == 54 ? 'required|string|max:255' : 'nullable|string|max:255',
+                'radius_km' => 'nullable|integer|min:1|max:500',
             ], [
                 'title.required' => __('The title field is required.'),
                 'title.max' => __('The title must not exceed 191 characters.'),
@@ -170,6 +171,7 @@ class ListingController extends Controller
                 'experience.required' => __('The experience field is required for job listings.'),
                 'salary.required' => __('The expected salary field is required for job listings.'),
                 'job_location.required' => __('The job location field is required for job listings.'),
+                'radius_km.required' => __('The Ad Visibility Radius field is required for job listings.'),
             ]);
 
             $user = User::where('id', Auth::guard('web')->user()->id)->first();
@@ -216,6 +218,7 @@ class ListingController extends Controller
             $listing->lat = $request->latitude;
             $listing->lon = $request->longitude;
             $listing->is_featured = $request->is_featured ?? 0;
+            $listing->radius_km = $request->radius_km ?? 10;
             $listing->status = $status;
 
             // Add job-related fields if category is job category
@@ -455,6 +458,7 @@ class ListingController extends Controller
             $listing->lat = $request->latitude;
             $listing->lon = $request->longitude;
             $listing->is_featured = $request->is_featured ?? 0;
+            $listing->radius_km = $request->radius_km ?? $listing->radius_km;
             $listing->status = $status;
 
 

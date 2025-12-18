@@ -23,6 +23,7 @@ use App\Models\UsersBV;
 use Modules\Wallet\app\Models\Wallet;
 use Kalnoy\Nestedset\NodeTrait;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -322,6 +323,24 @@ class User extends Authenticatable
     {
         return $this->hasOne(IdentityVerification::class);
     }
+
+    protected static function booted()
+{
+    static::creating(function ($user) {
+        if (empty($user->user_code)) {
+            $user->user_code = self::generateUniqueUserCode();
+        }
+    });
+}
+
+private static function generateUniqueUserCode()
+{
+    do {
+        $code = 'USR-' . strtoupper(Str::random(6));
+    } while (self::where('user_code', $code)->exists());
+
+    return $code;
+}
 
 
 }

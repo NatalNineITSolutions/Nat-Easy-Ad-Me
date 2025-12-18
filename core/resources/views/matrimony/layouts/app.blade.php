@@ -66,6 +66,7 @@
             padding: 0px 20px;
             background-color: white;
             border-bottom: 1px solid #ddd;
+            height: 56px;
         }
 
         .header-container {
@@ -151,12 +152,13 @@
             display: none;
             flex-direction: column;
             position: absolute;
-            top: 60px;
+            top: 50px;
             left: 0;
             width: 100%;
             background: white;
             padding: 10px;
-            border-top: 1px solid #ddd;
+            border-top: 1\px solid #ddd;
+           
         }
 
         .mobile-menu a {
@@ -192,18 +194,26 @@
 
         .mobile-menu {
             display: none;
-            position: absolute;
-            top: 60px;
+            position: fixed;
+            top: 50px;
             left: 0;
             width: 100%;
             background: white;
             padding: 10px;
             border-top: 1px solid #ddd;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+            pointer-events: none;
         }
 
         .mobile-menu.show {
             display: block;
+            pointer-events: auto;
+        }
+
+        .header {
+        position: relative;
+        z-index: 10000;
         }
 
         .btn {

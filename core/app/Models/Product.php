@@ -5,31 +5,35 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Backend\MediaUpload;
+use App\Helpers\ProductCodeGenerator;
 
 class Product extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'vendor_id',
-        'branch_id',
-        'name',
-        'price',
-        'distributor_price',
-        'bv_points',
-        'stock',
-        'gst',
-        'category_id',
-        'unit_id',
-        'unit_measurement',
-        'description',
-        'weight',
-        'image',
-        'size_id',
-        'size_price',
-        'size_stock',
-        'is_active',
-    ];
+    'vendor_id',
+    'branch_id',
+    'product_code', 
+    'name',
+    'price',
+    'distributor_price',
+    'bv_points',
+    'stock',
+    'gst',
+    'category_id',
+    'unit_id',
+    'unit_measurement',
+    'description',
+    'weight',
+    'image',
+    'size_id',
+    'size_price',
+    'size_stock',
+    'is_active',
+];
+
+
 
     public function branch()
     {
@@ -106,6 +110,15 @@ class Product extends Model
     {
         return $this->belongsTo(Size::class);
     }
+
+    protected static function booted()
+{
+    static::creating(function ($product) {
+        if (empty($product->product_code)) {
+            $product->product_code = ProductCodeGenerator::generate();
+        }
+    });
+}
 
 
 }

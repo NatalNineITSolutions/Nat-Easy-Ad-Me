@@ -416,6 +416,7 @@ class DashboardController extends Controller
                 // Location Information
                 'country_id' => 'required|exists:countries,id',
                 'state_id' => 'required|exists:states,id',
+                'district_id' => 'required|exists:districts,id',
                 'city_id' => 'required|exists:cities,id',
 
                 // Job Preferences
@@ -502,6 +503,7 @@ class DashboardController extends Controller
 
                 'country_id' => 'required|exists:countries,id',
                 'state_id' => 'required|exists:states,id',
+                'district_id'  => 'required|exists:districts,id',
                 'city_id' => 'required|exists:cities,id',
 
                 'child_category_id' => 'required|exists:child_categories,id',
@@ -530,6 +532,7 @@ class DashboardController extends Controller
                     'child_category_id' => $validated['child_category_id'],
                     'country_id' => $validated['country_id'],
                     'state_id' => $validated['state_id'],
+                    'district_id' => $validated['district_id'],
                     'city_id' => $validated['city_id'],
                 ]
             ));
@@ -554,6 +557,7 @@ class DashboardController extends Controller
 
             'country_id' => 'required|exists:countries,id',
             'state_id' => 'required|exists:states,id',
+            'district_id' => 'required|exists:districts,id',
             'city_id' => 'required|exists:cities,id',
 
             'child_category_id' => 'required|exists:child_categories,id',
@@ -642,6 +646,7 @@ class DashboardController extends Controller
             'address' => $user->address,
             'country_id' => $user->country_id,
             'state_id' => $user->state_id,
+            'district_id' => $user->district_id,
             'city_id' => $user->city_id,
             'phone' => $user->phone,
             'is_verified' => $user->email_verified_at && $user->phone_verified_at

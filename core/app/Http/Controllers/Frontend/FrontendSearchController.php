@@ -11,51 +11,59 @@ use Modules\CountryManage\app\Models\State;
 class FrontendSearchController extends Controller
 {
     public function home_search(Request $request)
-    {
+{
+    $memberIds = [0];
 
-        $memberIds = [0];
-        // get all users ids from the users table according to listing table datas
-        if (moduleExists('Membership') && membershipModuleExistsAndEnable('Membership')){
-            $memberIds = Listing::query()->select('listings.user_id')
-                ->join('user_memberships', 'user_memberships.user_id','=','listings.user_id')
-                ->whereNot('listings.user_id', 0)
-                ->where('user_memberships.expire_date','>=',date('Y-m-d'))
-                ->distinct()
-                ->pluck('user_id')->push(0)->toArray(); // this gives us the user ids
-        }
-
-        $listings = Listing::query()->where(function ($query) use ($memberIds){
-            return $query->whereIn('listings.user_id', $memberIds)
-                ->orWhereNotNull('admin_id');
-            })
-            ->where('status', 1)
-            ->where('is_published', 1);
-
-
-        if (!isset($request->country_id) || !isset($request->state_id) || !isset($request->city_id)) {
-            $listings->where('status', 1)->where(function ($query) use ($request) {
-                $query->where('title', 'LIKE', '%' . $request->search_text . '%')
-                    ->orWhere('description', 'LIKE', '%' . $request->search_text . '%')
-                    ->orWhere('price', 'LIKE', '%' . $request->search_text . '%');
-            });
-        } else {
-            $listings->where('status', 1)
-                ->where(function ($query) use ($request) {
-                    $query->where('title', 'LIKE', '%' . $request->search_text . '%')
-                        ->orWhere('description', 'LIKE', '%' . $request->search_text . '%')
-                        ->orWhere('price', 'LIKE', '%' . $request->search_text . '%');
-                });
-        }
-
-        $listings = $listings->orderBy('id', 'desc')->get();
-
-        return response()->json([
-            'status' => 'success',
-            'listings' => $listings,
-            'result' => view('frontend.layout.partials.search.search-result', compact('listings'))->render(),
-        ]);
-
+    if (moduleExists('Membership') && membershipModuleExistsAndEnable('Membership')) {
+        $memberIds = Listing::query()
+            ->join('user_memberships', 'user_memberships.user_id','=','listings.user_id')
+            ->where('user_memberships.expire_date','>=',date('Y-m-d'))
+            ->pluck('listings.user_id')
+            ->push(0)
+            ->toArray();
     }
+
+    $listings = Listing::query()
+        ->where(function ($query) use ($memberIds) {
+            $query->whereIn('listings.user_id', $memberIds)
+                  ->orWhereNotNull('admin_id');
+        })
+        ->where('status', 1)
+        ->where('is_published', 1);
+
+    // 🔍 text search
+    if (!empty($request->search_text)) {
+        $listings->where(function ($query) use ($request) {
+            $query->where('listings.title', 'LIKE', '%' . $request->search_text . '%')
+            ->orWhere('listings.description', 'LIKE', '%' . $request->search_text . '%')
+            ->orWhere('listings.price', 'LIKE', '%' . $request->search_text . '%')
+            ->orWhereHas('tags', function ($q) use ($request) {
+                $q->where('tags.name', 'LIKE', '%' . $request->search_text . '%');
+            });
+        });
+    }
+
+    // 📍 location filters
+    if (!empty($request->country_id)) {
+        $listings->where('country_id', $request->country_id);
+    }
+
+    if (!empty($request->state_id)) {
+        $listings->where('state_id', $request->state_id);
+    }
+
+    if (!empty($request->city_id)) {
+        $listings->where('city_id', $request->city_id);
+    }
+
+    $listings = $listings->latest()->get();
+
+    return response()->json([
+        'status' => 'success',
+        'result' => view('frontend.layout.partials.search.search-result', compact('listings'))->render(),
+    ]);
+}
+
 
     public function getState(Request $request)
     {

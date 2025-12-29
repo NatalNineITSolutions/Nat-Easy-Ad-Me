@@ -86,8 +86,13 @@
 
                 <main class="col-md-8 col-lg-9 px-md-4">
                     <div class="main">
-                        <h3>Profile Lists</h3>
-
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <h3 class="mb-0">Profile Lists</h3>
+                            <a href="{{ route('matrimony.preference.table') }}" class="btn btn-primary btn-sm">
+                                Preference
+                            </a>
+                        </div>
+                   
                         <table>
                             <thead>
                                 <tr>

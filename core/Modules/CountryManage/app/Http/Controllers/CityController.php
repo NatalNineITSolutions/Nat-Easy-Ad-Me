@@ -25,11 +25,13 @@ class CityController extends Controller
                 'city'=> 'required|unique:cities|max:191',
             ]);
             City::create([
-                'city' => $request->city,
-                'country_id' => $request->country,
-                'state_id' => $request->state,
-                'status' => $request->status,
-            ]);
+    'city' => $request->city,
+    'country_id' => $request->country,
+    'state_id' => $request->state,
+    'district_id' => $request->district,
+    'status' => $request->status,
+]);
+
             FlashMsg::item_new(__('New City Successfully Added'));
         }
         $all_countries = Country::all_countries();
@@ -43,15 +45,17 @@ class CityController extends Controller
     public function edit_city(Request $request)
     {
         $request->validate([
-            'city'=> 'required|max:191|unique:cities,city,'.$request->city_id,
-            'country'=> 'required',
-            'state'=> 'required',
-        ]);
-        City::where('id',$request->city_id)->update([
-            'city'=>$request->city,
-            'state_id'=>$request->state,
-            'country_id'=>$request->country,
-        ]);
+    'country' => 'required',
+    'state' => 'required',
+    'district' => 'required',
+    'city' => 'required|max:191'
+]);
+        City::where('id', $request->city_id)->update([
+    'city' => $request->edit_city,
+    'country_id' => $request->edit_country,
+    'state_id' => $request->edit_state,
+    'district_id' => $request->edit_district,
+]);
         return redirect()->back()->with(FlashMsg::item_new(__('City Successfully Updated')));
     }
 

@@ -28,6 +28,7 @@ use App\Models\Star;
 use Modules\CountryManage\app\Models\City;
 use Modules\CountryManage\app\Models\State;
 use Modules\CountryManage\app\Models\Country;
+use Modules\CountryManage\app\Models\District;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\ProfileRequest;
@@ -258,7 +259,9 @@ class MatrimonyController extends Controller
         $zodiacsigns = ZodiacSign::all();
         $stars = Star::all();
 
-        return view('matrimony.user-details', compact('castes', 'gothrams', 'doshams', 'countries', 'states', 'cities', 'zodiacsigns', 'stars'));
+        $incomeRanges = IncomeRange::orderBy('from_income')->get();
+
+        return view('matrimony.user-details', compact('castes', 'gothrams', 'doshams', 'countries', 'states', 'cities', 'zodiacsigns', 'stars', 'incomeRanges'));
     }
 
     public function getStates($country_id)
@@ -280,25 +283,18 @@ class MatrimonyController extends Controller
     }
 }
 
-public function getCities($state_id)
+public function getCities($district_id)
 {
-    if (empty($state_id) || !is_numeric($state_id)) {
-        return response()->json(['cities' => []], 200);
+    if (!$district_id) {
+        return response()->json(['cities' => []]);
     }
 
-    try {
-        $cities = \Modules\CountryManage\app\Models\City::where('state_id', $state_id)
-            ->orderBy('city')
-            ->get(['id', 'city']);
+    $cities = \Modules\CountryManage\app\Models\City::where('district_id', $district_id)
+        ->orderBy('city')
+        ->get(['id', 'city']);
 
-        // Wrap result in 'cities' key to match paste.txt logic
-        return response()->json(['cities' => $cities], 200);
-    } catch (\Exception $e) {
-        \Log::error('getCities error: ' . $e->getMessage());
-        return response()->json(['cities' => []], 500);
-    }
+    return response()->json(['cities' => $cities]);
 }
-
 
     public function storeUserDetails(Request $request)
     {
@@ -323,6 +319,7 @@ public function getCities($state_id)
             'employed_in' => 'required|string',
             'country' => 'required|integer',
             'state' => 'required|integer',
+            'district' => 'required|integer',
             'city' => 'required|integer',
             'about' => 'required|string|max:500',
             'document' => 'nullable|file|mimes:pdf|max:2048',
@@ -362,6 +359,7 @@ public function getCities($state_id)
                 'employed_in' => $validated['employed_in'],
                 'country' => $validated['country'],
                 'state' => $validated['state'],
+                'district' => $validated['district'],
                 'city' => $validated['city'],
                 'about' => $validated['about'],
                 'document_path' => $documentPath,
@@ -470,6 +468,77 @@ public function getCities($state_id)
         }
     }
 
+  public function preferenceTable()
+{
+    $preferences = MatrimonyPreference::where('user_id', auth()->id())->first();
+    return view('matrimony.preference-table', compact('preferences'));
+}
+
+public function editPreference()
+{
+    $motherTongues = MotherTongue::all();
+    $castes = Caste::all();
+    $zodiacsigns = ZodiacSign::all();
+    $stars = Star::all();
+    $ages = AgeRange::all();
+    $income = IncomeRange::all();
+    $religions = Religion::all();
+    $marital_status = ['Married', 'Unmarried', 'Divorced', 'Widowed'];
+
+    $preferences = MatrimonyPreference::where('user_id', auth()->id())->first();
+
+    return view('matrimony.preference-edit', compact(
+        'motherTongues',
+        'castes',
+        'zodiacsigns',
+        'stars',
+        'ages',
+        'income',
+        'religions',
+        'marital_status',
+        'preferences'
+    ));
+}
+
+public function updatePreference(Request $request)
+{
+    $validatedData = $request->validate([
+        'partner_age' => 'required|string',
+        'income' => 'required|string',
+        'mother_tongue' => 'required|string',
+        'religion' => 'required|string',
+        'caste' => 'required|string',
+        'height' => 'required|string',
+        'weight' => 'required|string',
+        'occupation' => 'required|string',
+        'location' => 'required|string',
+        'zodiac_sign' => 'nullable|array',
+        'star' => 'nullable|array',
+        'marital_status' => 'required|string',
+        'gender' => 'required|string',
+    ]);
+
+    // Convert multi-select arrays to pipe-separated values
+    $validatedData['zodiac_sign'] = $request->zodiac_sign
+        ? implode('|', $request->zodiac_sign)
+        : null;
+
+    $validatedData['star'] = $request->star
+        ? implode('|', $request->star)
+        : null;
+
+    MatrimonyPreference::updateOrCreate(
+        ['user_id' => auth()->id()],
+        $validatedData
+    );
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Preference updated successfully'
+    ]);
+}
+
+
     public function profile()
     {
         $userId = auth()->id();
@@ -497,8 +566,10 @@ public function getCities($state_id)
         $stars = Star::all();
         $countries = Country::all();
         $states = State::all();
+        $districts = District::all();
         $cities = City::all();
         $religions = Religion::all();
+        $income = IncomeRange::orderBy('from_income')->get();
         $marital_status = ['married', 'unmarried', 'divorced', 'widowed'];
 
         $profile = null;
@@ -507,7 +578,7 @@ public function getCities($state_id)
             $profile = ProfileListing::find($request->profile_id);
         }
 
-        return view('matrimony.profile-listing', compact('castes', 'motherTongues', 'countries', 'states', 'cities', 'profile', 'zodiacsign', 'stars', 'religions', 'marital_status'));
+        return view('matrimony.profile-listing', compact('castes', 'motherTongues', 'countries', 'states', 'districts', 'cities', 'profile', 'zodiacsign', 'stars', 'religions', 'income', 'marital_status'));
     }
 
     // Update Profile Listing
@@ -517,12 +588,14 @@ public function getCities($state_id)
         $motherTongues = MotherTongue::all();
         $countries = Country::all();
         $states = State::all();
+        $districts = District::all();
         $cities = City::all();
+        $income = IncomeRange::orderBy('from_income')->get();
 
         // Find the profile if profile_id is provided
         $profile = $profile_id ? ProfileListing::find($profile_id) : null;
 
-        return view('matrimony.update-profile-listing', compact('castes', 'motherTongues', 'countries', 'states', 'cities', 'profile'));
+        return view('matrimony.update-profile-listing', compact('castes', 'motherTongues', 'countries', 'states', 'districts', 'cities', 'income','profile'));
     }
 
     public function submitUpdateProfile(Request $request, $profile_id)
@@ -575,6 +648,7 @@ public function getCities($state_id)
             'mother_tongue' => $request->motherTongue,
             'country' => $request->country,
             'state' => $request->state,
+            'district' => $request->district,
             'city' => $request->city,
             'image' => $imagePathString, // Store the pipe-separated string
             'description' => $request->description,
@@ -1151,27 +1225,44 @@ public function getCities($state_id)
     }
 
     public function updateMainProfile(Request $request, $id)
-    {
-        // 1. Validate the incoming data
-        $data = $request->validate([
-            'education' => 'nullable|string|max:255',
-            'occupation' => 'nullable|string|max:255',
-            'annual_income' => 'nullable|numeric|min:0',
-            // 'username' is readonly, so no need to validate/save
-        ]);
+{
+    $data = $request->validate([
+        'marital_status' => 'required|string',
+        'dob' => 'required|date',
+        'family_status' => 'required|string',
+        'family_values' => 'required|string',
+        'family_type' => 'required|string',
+        'disability' => 'required|string',
+        'height' => 'required|numeric',
+        'weight' => 'required|numeric',
+        'education' => 'required|string',
+        'occupation' => 'required|string',
+        'employed_in' => 'required|string',
+        'annual_income' => 'required|string',
+        'country' => 'required|integer',
+        'state' => 'required|integer',
+        'district' => 'required|integer',
+        'city' => 'required|integer',
+        'about' => 'required|string|max:500',
+    ]);
 
-        // 2. Fetch or create the model
-        $profile = MatrimonyKYC::firstOrNew(['user_id' => $id]);
+    $profile = MatrimonyKyc::updateOrCreate(
+        ['user_id' => $id],
+        $data
+    );
 
-        // 3. Mass‐assign the updatable fields
-        $profile->fill($data);
+    return redirect()
+        ->route('matrimony.profile')
+        ->with('success', 'Profile updated successfully');
+}
 
-        // 4. Persist
-        $profile->save();
 
-        // 5. Redirect back (or wherever you like) with a success message
-        return redirect()
-            ->route('matrimony.profile')
-            ->with('success', 'Profile updated successfully.');
-    }
+    public function getDistricts($state_id)
+{
+    $districts = \Modules\CountryManage\app\Models\District::where('state_id', $state_id)
+        ->orderBy('district')
+        ->get(['id', 'district']);
+
+    return response()->json(['districts' => $districts]);
+}
 }

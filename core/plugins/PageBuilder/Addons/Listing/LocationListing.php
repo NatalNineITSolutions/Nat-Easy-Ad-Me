@@ -126,17 +126,16 @@ class LocationListing extends PageBuilderBase
 
     $listings = $listings->whereNotNull('lat')->whereNotNull('lon')
         ->selectRaw("
-            ,
-            (6371 acos(
-                cos(radians(?)) *
-                cos(radians(lat)) *
-                cos(radians(lon) - radians(?)) +
-                sin(radians(?)) *
-                sin(radians(lat))
+            listings.*,
+            (6371 * acos(
+            cos(radians(?)) *
+            cos(radians(lat)) *
+            cos(radians(lon) - radians(?)) +
+            sin(radians(?)) *
+            sin(radians(lat))
             )) AS distance
         ", [$latitude, $longitude, $latitude])
-        // comment out havingRaw temporarily to test
-        // ->havingRaw('distance <= ?', [$distance])
+        ->havingRaw('distance <= listings.radius_km')
         ->orderBy('distance', 'asc');
 } 
 
@@ -157,7 +156,6 @@ class LocationListing extends PageBuilderBase
             'longitude'          => $longitude,
         ]);
     }
-
 
     public function addon_title()
     {

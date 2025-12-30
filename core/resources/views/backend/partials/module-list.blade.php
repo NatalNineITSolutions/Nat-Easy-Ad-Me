@@ -44,6 +44,18 @@
             <a href="{{ route('admin.state.import.csv.settings') }}">{{ __('Import States') }}</a>
         </li>
         @endcan
+        
+        @can('district-list')
+        <li class="dashboard__bottom__list__item @if(request()->is('admin/location/district/all-district')) selected @endif">
+            <a href="{{ route('admin.district.all') }}">{{ __('All Districts') }}</a>
+        </li>
+        @endcan
+        @can('district-csv-file-import')
+        <li class="dashboard__bottom__list__item @if(request()->is('admin/location/district/csv/import')) selected @endif">
+            <a href="{{ route('admin.district.import.csv.settings') }}">{{ __('Import Districts') }}</a>
+        </li>
+        @endcan
+
         @can('city-list')
         <li class="dashboard__bottom__list__item @if(request()->is('admin/location/city/all-city')) selected @endif">
             <a href="{{ route('admin.city.all') }}">{{ __('All Cities') }}</a>

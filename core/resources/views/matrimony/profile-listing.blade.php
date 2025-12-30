@@ -230,6 +230,17 @@
             box-shadow: none;
             margin: auto;
         }
+
+        .select2-container .select2-selection--single {
+            height: 38px;
+            padding: 6px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 0.375rem;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+        }
+
     </style>
     <x-media.css />
 @endsection
@@ -273,7 +284,7 @@
                             <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label class="form-label">Religion</label>
-                                    <select class="form-select" name="religion" id="religion">
+                                    <select class="form-select select2" name="religion" id="religion">
                                         <option value="" selected>Choose Religion</option>
                                         @foreach($religions as $religion)
                                             <option value="{{ $religion->id }}">{{ $religion->religion }}</option>
@@ -282,20 +293,26 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label for="occupation" class="form-label">Occupation</label>
-                                    <input type="text" id="occupation" name="occupation" class="form-control"
-                                        placeholder="Enter Occupation" required>
+                                    <select id="occupation" name="occupation" class="form-select select2" required>
+                                        <option value="">Select Occupation</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="annual_income" class="form-label">Annual Income</label>
-                                    <input type="number" id="annual_income" name="annual_income" class="form-control"
-                                        placeholder="Enter Annual Income" required>
+                                    <select class="form-select select2" name="income" id="income">
+    <option value="">Choose Annual Income</option>
+    @foreach($income as $inc)
+        <option value="{{ $inc->id }}">
+            {{ $inc->from_income }} - {{ $inc->to_income }}
+        </option>
+    @endforeach
+</select>
                                 </div>
                             </div>
-
                             <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label class="form-label">Caste</label>
-                                    <select class="form-select" name="caste" id="caste">
+                                    <select class="form-select select2" name="caste" id="caste">
                                         <option value="" selected>Choose Caste</option>
                                         @foreach($castes as $caste)
                                             <option value="{{ $caste->id }}">{{ $caste->caste }}</option>
@@ -304,7 +321,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label for="motherTongue" class="form-label">Mother Tongue</label>
-                                    <select class="form-select" id="motherTongue" name="motherTongue" required>
+                                    <select class="form-select select2" id="motherTongue" name="motherTongue" required>
                                         <option value="" selected>Choose Mother Tongue</option>
                                         @foreach($motherTongues as $tongue)
                                             <option value="{{ $tongue->mother_tongue }}">{{ $tongue->mother_tongue }}</option>
@@ -313,7 +330,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Zodiac Sign</label>
-                                    <select class="form-select" name="zodiac_sign" id="zodiac_sign" required>
+                                    <select class="form-select select2" name="zodiac_sign" id="zodiac_sign" required>
                                         <option value="" selected disabled>Choose Zodiac Sign</option>
                                         @foreach($zodiacsign as $zodiac)
                                             <option value="{{ $zodiac->id }}">{{ $zodiac->zodiac_sign }}</option>
@@ -324,7 +341,7 @@
                             <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label for="star" class="form-label">Star</label>
-                                    <select class="form-select" id="star" name="star" required>
+                                    <select class="form-select select2" id="star" name="star" required>
                                         <option value="" selected disabled>Choose Star</option>
                                         @foreach($stars as $star)
                                             <option value="{{ $star->id }}">{{ $star->star }}</option>
@@ -333,7 +350,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label for="marital_status" class="form-label">Marital Status</label>
-                                    <select class="form-select" id="marital_status" name="marital_status" required>
+                                    <select class="form-select select2" id="marital_status" name="marital_status" required>
                                         <option value="" selected disabled>Choose Marital Status</option>
                                         @foreach($marital_status as $status)
                                             <option value="{{ $status }}">{{ $status }}</option>
@@ -342,7 +359,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label for="country" class="form-label">Country</label>
-                                    <select class="form-select" id="country" name="country" required>
+                                    <select class="form-select select2" id="country" name="country" required>
                                         <option value="" selected>Choose Country</option>
                                         @foreach($countries as $country)
                                             <option value="{{ $country->id }}">{{ $country->country }}</option>
@@ -351,21 +368,29 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label for="state" class="form-label">State</label>
-                                    <select class="form-select" id="state" name="state" required>
-                                        <option value="" selected>Choose State</option>
-                                        @foreach($states as $state)
-                                            <option value="{{ $state->id }}">{{ $state->state }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="city" class="form-label">City</label>
-                                    <select class="form-select" id="city" name="city" required>
-                                        <option value="" selected>Choose City</option>
-                                    </select>
-                                </div>
+                                <div class="row mb-3">
+    <div class="col-md-4">
+        <label for="state" class="form-label">State</label>
+        <select class="form-select select2" id="state" name="state" required>
+            <option value="">Choose State</option>
+        </select>
+    </div>
+
+    <div class="col-md-4">
+        <label for="district" class="form-label">District</label>
+        <select class="form-select select2" id="district" name="district" required>
+            <option value="">Choose District</option>
+        </select>
+    </div>
+
+    <div class="col-md-4">
+        <label for="city" class="form-label">City</label>
+        <select class="form-select select2" id="city" name="city" required>
+            <option value="">Choose City</option>
+        </select>
+    </div>
+</div>
+
 
                                 <div class="col-md-4">
                                     <label class="form-label">Profile Visibility</label>
@@ -653,68 +678,104 @@
 
     {{-- Fetch country --}}
     <script>
-        // When the country dropdown changes, get the states
-        document.getElementById('country').addEventListener('change', function () {
-            const countryId = this.value;
+/* Country → State */
+document.getElementById('country').addEventListener('change', function () {
+    const countryId = this.value;
 
-            // Reset the state and city dropdowns
-            const stateSelect = document.getElementById('state');
-            const citySelect = document.getElementById('city');
-            stateSelect.innerHTML = '<option value="" selected>Choose State</option>';
-            citySelect.innerHTML = '<option value="" selected>Choose City</option>';
+    const state = document.getElementById('state');
+    const district = document.getElementById('district');
+    const city = document.getElementById('city');
 
-            if (countryId) {
-                // Fetch states based on selected country
-                fetch(`/matrimony/get-states/${countryId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data); // Log the response to verify the data structure
-                        if (data.states && data.states.length > 0) {
-                            data.states.forEach(state => {
-                                const option = document.createElement('option');
-                                option.value = state.id;
-                                option.textContent = state.state;
-                                stateSelect.appendChild(option);
-                            });
-                        } else {
-                            console.log('No states found for this country.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching states:', error);
-                    });
-            }
+    state.innerHTML = '<option value="">Choose State</option>';
+    district.innerHTML = '<option value="">Choose District</option>';
+    city.innerHTML = '<option value="">Choose City</option>';
+
+    if (!countryId) return;
+
+    fetch(`/matrimony/get-states/${countryId}`)
+        .then(res => res.json())
+        .then(res => {
+            res.states.forEach(item => {
+                state.innerHTML += `<option value="${item.id}">${item.state}</option>`;
+            });
         });
+});
 
-        // When the state dropdown changes, get the cities
-        document.getElementById('state').addEventListener('change', function () {
-            const stateId = this.value;
+/* State → District */
+document.getElementById('state').addEventListener('change', function () {
+    const stateId = this.value;
 
-            // Reset the city dropdown
-            const citySelect = document.getElementById('city');
-            citySelect.innerHTML = '<option value="" selected>Choose City</option>';
+    const district = document.getElementById('district');
+    const city = document.getElementById('city');
 
-            if (stateId) {
-                // Fetch cities based on selected state
-                fetch(`/matrimony/get-cities/${stateId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data); // Log the response to verify the data structure
-                        if (data.cities && data.cities.length > 0) {
-                            data.cities.forEach(city => {
-                                const option = document.createElement('option');
-                                option.value = city.id;
-                                option.textContent = city.city;
-                                citySelect.appendChild(option);
-                            });
-                        } else {
-                            console.log('No cities found for this state.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching cities:', error);
-                    });
-            }
+    district.innerHTML = '<option value="">Choose District</option>';
+    city.innerHTML = '<option value="">Choose City</option>';
+
+    if (!stateId) return;
+
+    fetch(`/matrimony/get-districts/${stateId}`)
+        .then(res => res.json())
+        .then(res => {
+            res.districts.forEach(item => {
+                district.innerHTML += `<option value="${item.id}">${item.district}</option>`;
+            });
         });
-    </script>
+});
+
+/* District → City */
+document.getElementById('district').addEventListener('change', function () {
+    const districtId = this.value;
+    const city = document.getElementById('city');
+
+    city.innerHTML = '<option value="">Choose City</option>';
+
+    if (!districtId) return;
+
+    fetch(`/matrimony/get-cities/${districtId}`)
+        .then(res => res.json())
+        .then(res => {
+            res.cities.forEach(item => {
+                city.innerHTML += `<option value="${item.id}">${item.city}</option>`;
+            });
+        });
+});
+</script>
+
+<script>
+const occFallback = [
+  "Accountant","Administration","Air Hostess / Steward","Architect","Artist",
+  "Assembly Operator / Production Worker","Banker","Business Analyst",
+  "Business Owner","Civil Engineer","Content Writer","Consultant","Data Analyst",
+  "Data Scientist","Designer","Developer / Programmer","Doctor","Economist",
+  "Electrical Engineer","Engineer","Event Manager","Farmer","Finance Professional",
+  "Graphic Designer","HR / Recruitment","Hotel / Hospitality","Interior Designer",
+  "Lawyer","Lecturer / Professor","Machine Operator","Marketing / Sales",
+  "Mechanical Engineer","Medical Professional","Nurse","Pilot","Police / Defence",
+  "Program Manager","Project Manager","Scientist","Software Engineer","Teacher",
+  "Technician","Trader","UI/UX Designer","Unemployed","Web Developer"
+];
+
+$(document).ready(function () {
+    const occupationSelect = $('#occupation');
+    const selectedOccupation = "{{ old('occupation', $profile->occupation ?? '') }}";
+
+    occFallback.forEach(occ => {
+        const option = new Option(occ, occ, false, occ === selectedOccupation);
+        occupationSelect.append(option);
+    });
+});
+</script>
+<script>
+$(document).ready(function () {
+    $('.select2').select2({
+        width: '100%',
+        placeholder: 'Select an option',
+        allowClear: true,
+        minimumResultsForSearch: 0  
+    });
+});
+</script>
+
+
+
 @endsection

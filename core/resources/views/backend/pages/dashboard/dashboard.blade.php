@@ -24,13 +24,21 @@
                                     <h4 class="dashboard__inner__header__title"> <strong id="greeting"></strong>, {{ Auth::guard('admin')->user()->name }} </h4>
                                     <p class="dashboard__inner__header__para">{{ __('Manage your dashboard here') }}</p>
                                 </div>
+                                <div class="dashboard__filter">
+    <select id="dashboardFilter" class="select2_activation">
+        <option value="all">All</option>
+        <option value="today">Today</option>
+        <option value="month">This Month</option>
+    </select>
+</div>
+
                             </div>
                         </div>
                         <div class="dashboard_promo">
                             <div class="row g-4 mt-2">
                                 @foreach($dashboardData as $card)
                                 <div class="col-xxl-2 col-xl-3 col-sm-6">
-                                    <div class="dashboard_promo__single style_02 bg__white radius-10 padding-20">
+                                    <div class="dashboard_promo__single style_02 bg__white radius-10 padding-20"data-key="{{ Str::slug($card['title'], '_') }}">
                                         <span class="dashboard_promo__single__subtitle d-flex justify-content-between align-items-center">
                                         <span>{{ $card['title'] ?? '' }}</span>
                                             @if(isset($card['route']))
@@ -275,6 +283,32 @@
             }
         });
     </script>
+    <script>
+    $('#dashboardFilter').on('change', function () {
+        let filter = $(this).val();
+
+        $.ajax({
+            url: "{{ route('admin.dashboard.filter') }}",
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                filter: filter
+            },
+            success: function (response) {
+                $('.dashboard_promo__single').each(function () {
+                    let key = $(this).data('key');
+
+                    if (response[key] !== undefined) {
+                        $(this)
+                            .find('.dashboard_promo__single__price')
+                            .text(response[key]);
+                    }
+                });
+            }
+        });
+    });
+</script>
+
     @include('backend.pages.dashboard.line-graph-js')
     @if($visitors->count() > 0)
        @include('backend.pages.dashboard.visitors-by-country-js')

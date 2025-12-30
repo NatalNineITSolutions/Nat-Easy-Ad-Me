@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Frontend\User;
 
 use App\Http\Controllers\Controller;
 use App\Mail\BasicMail;
+use Modules\CountryManage\app\Models\City;
+use Modules\CountryManage\app\Models\Country;
+use Modules\CountryManage\app\Models\State;
+use Modules\CountryManage\app\Models\District;
 use App\Models\Backend\AdminNotification;
 use App\Models\Backend\Category;
 use App\Models\Backend\ChildCategory;
@@ -24,9 +28,6 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Modules\Blog\app\Models\Tag;
 use Modules\Brand\app\Models\Brand;
-use Modules\CountryManage\app\Models\City;
-use Modules\CountryManage\app\Models\Country;
-use Modules\CountryManage\app\Models\State;
 use Modules\Membership\app\Models\UserMembership;
 
 class ListingController extends Controller
@@ -624,6 +625,43 @@ class ListingController extends Controller
 
         return redirect()->back();
     }
+
+/* COUNTRY → STATES */
+public function getStates(Request $request)
+{
+    return response()->json([
+        'status' => 'success',
+        'states' => State::where('country_id', $request->country_id)
+            ->where('status', 1)
+            ->select('id', 'state')
+            ->get()
+    ]);
+}
+
+/* STATE → DISTRICTS */
+public function getDistricts(Request $request)
+{
+    return response()->json([
+        'status' => 'success',
+        'districts' => District::where('state_id', $request->state_id)
+            ->where('status', 1)
+            ->select('id', 'district')
+            ->get()
+    ]);
+}
+
+/* DISTRICT → CITIES */
+public function getCities(Request $request)
+{
+    return response()->json([
+        'status' => 'success',
+        'cities' => City::where('district_id', $request->district_id)
+            ->where('status', 1)
+            ->select('id', 'city')
+            ->get()
+    ]);
+}
+
 
 
 }

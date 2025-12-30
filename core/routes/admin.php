@@ -41,6 +41,8 @@ Route::middleware(['auth', 'setlang'])->group(function () {
         Route::get('/', [AdminDashboardController::class, 'adminDashboard'])->name('admin.dashboard')->permission('admin-dashboard');
         Route::get('/getUserData', [AdminDashboardController::class, 'getUserData'])->name('admin.get.user.graph.data');
         Route::get('/getListingData', [AdminDashboardController::class, 'getListingData'])->name('admin.get.listing.graph.data');
+        Route::post('dashboard/filter', [AdminDashboardController::class, 'dashboardFilter'])->name('admin.dashboard.filter');
+
     });
 
     // Matrimony_manage

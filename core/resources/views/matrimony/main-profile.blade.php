@@ -165,25 +165,26 @@
                                 @if ($kycRecord)
                                     <table class="table table-borderless">
                                         <tbody>
-                                            <tr>
-                                                <td class="label"><strong>Username</strong></td>
-                                                <td class="value">{{ $kycRecord->username ?? 'N/A' }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="label"><strong>Education</strong></td>
-                                                <td class="value">{{ $kycRecord->education ?? 'N/A' }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="label"><strong>Occupation</strong></td>
-                                                <td class="value">{{ $kycRecord->occupation ?? 'N/A' }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="label"><strong>Annual Income</strong></td>
-                                                <td class="value">
-                                                    {{ isset($kycRecord->annual_income) ? '₹' . number_format($kycRecord->annual_income) : 'N/A' }}
-                                                </td>
-                                            </tr>
-                                        </tbody>
+<tr><td class="label">Username</td><td class="value">{{ $kycRecord->username ?? 'N/A' }}</td></tr>
+<tr><td class="label">Marital Status</td><td class="value">{{ ucfirst($kycRecord->marital_status) }}</td></tr>
+<tr><td class="label">Date of Birth</td><td class="value">{{ $kycRecord->dob }}</td></tr>
+<tr><td class="label">Family Status</td><td class="value">{{ $kycRecord->family_status }}</td></tr>
+<tr><td class="label">Family Values</td><td class="value">{{ $kycRecord->family_values }}</td></tr>
+<tr><td class="label">Family Type</td><td class="value">{{ $kycRecord->family_type }}</td></tr>
+<tr><td class="label">Disability</td><td class="value">{{ $kycRecord->disability }}</td></tr>
+<tr><td class="label">Height</td><td class="value">{{ $kycRecord->height }} cm</td></tr>
+<tr><td class="label">Weight</td><td class="value">{{ $kycRecord->weight }} kg</td></tr>
+<tr><td class="label">Education</td><td class="value">{{ $kycRecord->education }}</td></tr>
+<tr><td class="label">Occupation</td><td class="value">{{ $kycRecord->occupation }}</td></tr>
+<tr><td class="label">Employed In</td><td class="value">{{ $kycRecord->employed_in }}</td></tr>
+<tr><td class="label">Annual Income</td><td class="value">{{ $kycRecord->annual_income }}</td></tr>
+<tr><td class="label">Country</td><td class="value">{{ $kycRecord->country }}</td></tr>
+<tr><td class="label">State</td><td class="value">{{ $kycRecord->state }}</td></tr>
+<tr><td class="label">District</td><td class="value">{{ $kycRecord->district }}</td></tr>
+<tr><td class="label">City</td><td class="value">{{ $kycRecord->city }}</td></tr>
+<tr><td class="label">About</td><td class="value">{{ $kycRecord->about }}</td></tr>
+</tbody>
+
                                     </table>
                                 @else
                                     <p>No profile information available.</p>

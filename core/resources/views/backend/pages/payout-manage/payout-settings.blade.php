@@ -35,7 +35,7 @@
                         <div class="col-md-6">
                             <div class="form__input__single mb-3">
                                 <label for="payout_value" class="form__input__single__label">{{__('BV Value')}} <span
-                                        class="text-danger">*</span></label>
+                                        class="text-danger">*</span><small>For Each</small></label>
                                 <input type="number" name="payout_value" id="payout_value" class="form-control radius-5"
                                     value="{{ get_static_option('payout_value') }}" placeholder="{{ __('Enter value') }}">
                             </div>

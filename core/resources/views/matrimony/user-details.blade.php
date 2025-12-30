@@ -622,61 +622,37 @@
                                 </select>
                             </div>
 
-                            <!-- Occupation -->
                             <div class="col-md-4">
-                                <label class="form-label">Occupation</label>
-                                <select class="form-select" name="occupation" id="occupation">
-                                    <option value="" selected>Choose one</option>
-                                    <option value="Biomedical Engineer">Biomedical Engineer</option>
-                                    <option value="Doctor">Doctor</option>
-                                    <option value="Developer">Developer</option>
-                                </select>
-                            </div>
+    <label class="form-label">Job Type</label>
+    <select class="form-select" id="employed_in" name="employed_in">
+        <option value="">Choose job type</option>
+        <option value="government">Government</option>
+        <option value="private">Private</option>
+        <option value="business">Business</option>
+        <option value="self_employed">Self Employed</option>
+        <option value="not_working">Not Working</option>
+    </select>
+</div>
 
-                            <!-- Annual Income -->
-                            <div class="col-md-4">
-                                <label class="form-label">Annual Income</label>
-                                <input type="text" class="form-control" name="annual_income" id="annual_income"
-                                    placeholder="Annual income">
-                            </div>
+<label class="form-label">Salary Range</label>
+<select class="form-select" name="annual_income" id="annual_income" required>
+    <option value="">Choose salary range</option>
 
-                            <!-- Employed In -->
-                            <div class="col-md-12">
-                                <label class="form-label">Employed In</label>
-                                <div class="badge-select">
-                                    <span class="badge" onclick="toggleBadge(this, 'Government', 'employed_in')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete">
-                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
-                                        Government
-                                    </span>
-                                    <span class="badge" onclick="toggleBadge(this, 'Private', 'employed_in')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete">
-                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
-                                        Private
-                                    </span>
-                                    <span class="badge" onclick="toggleBadge(this, 'Defense', 'employed_in')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete">
-                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
-                                        Defense
-                                    </span>
-                                    <span class="badge" onclick="toggleBadge(this, 'Business', 'employed_in')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete">
-                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
-                                        Business
-                                    </span>
-                                    <span class="badge" onclick="toggleBadge(this, 'Self-employed', 'employed_in')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete">
-                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
-                                        Self-employed
-                                    </span>
-                                    <span class="badge" onclick="toggleBadge(this, 'Not working', 'employed_in')">
-                                        <img src="/assets/uploads/matrimony/delete.png" class="delete" alt="Delete">
-                                        <img src="/assets/uploads/matrimony/tick.png" class="tick" alt="Tick">
-                                        Not working
-                                    </span>
-                                </div>
-                                <input type="hidden" name="employed_in" id="employed_in">
-                            </div>
+    @foreach($incomeRanges as $range)
+        <option value="{{ $range->from_income }}-{{ $range->to_income }}">
+            ₹{{ number_format($range->from_income) }} - ₹{{ number_format($range->to_income) }}
+        </option>
+    @endforeach
+</select>
+
+
+<div class="col-md-4">
+    <label class="form-label">Occupation</label>
+    <select class="form-select searchable-select" name="occupation" id="occupation">
+        <option value="">Choose occupation</option>
+    </select>
+</div>
+
 
                             <!-- Country, State, and City Fields -->
                             <div class="col-md-4">
@@ -700,6 +676,13 @@
                                     <option value="" selected>Choose state</option>
                                 </select>
                             </div>
+
+                            <div class="col-md-4">
+    <label class="form-label">District</label>
+    <select class="form-select" name="district" id="district">
+        <option value="">Choose district</option>
+    </select>
+</div>
 
                             <div class="col-md-4">
                                 <label class="form-label">City</label>
@@ -1232,12 +1215,77 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   // fallback lists (short safe defaults)
   const eduFallback = [
-    "High School","Intermediate / 12th","Diploma","Bachelor's Degree (BA / BSc / BCom)",
-    "B.Tech / BE","MBA / PGDM","MBBS / BDS","Master's Degree (MA / MSc / MCom)","Other"
-  ];
-  const occFallback = [
-    "Developer / Programmer","Doctor","Teacher","Engineer","Business Owner","Unemployed","Other"
-  ];
+  "High School",
+  "Intermediate / 12th",
+  "Diploma",
+  "Bachelor's Degree (BA / BSc / BCom)",
+  "B.Tech / BE",
+  "BBA / BCA",
+  "MBBS / BDS",
+  "Master's Degree (MA / MSc / MCom)",
+  "M.Tech / ME",
+  "MBA / PGDM",
+  "MCA",
+  "LLB / LLM",
+  "Doctorate (PhD)",
+  "CA / CS / ICWA",
+  "Other Professional Qualification",
+  "Vocational / ITI",
+  "Professional Certificate",
+  "Post Doctorate",
+  "Not Applicable",
+  "Other"
+];
+
+const occFallback = [
+  "Accountant",
+  "Administration",
+  "Air Hostess / Steward",
+  "Architect",
+  "Artist",
+  "Assembly Operator / Production Worker",
+  "Banker",
+  "Business Analyst",
+  "Business Owner",
+  "Civil Engineer",
+  "Content Writer",
+  "Consultant",
+  "Data Analyst",
+  "Data Scientist",
+  "Designer",
+  "Developer / Programmer",
+  "Doctor",
+  "Economist",
+  "Electrical Engineer",
+  "Engineer",
+  "Event Manager",
+  "Farmer",
+  "Finance Professional",
+  "Graphic Designer",
+  "HR / Recruitment",
+  "Hotel / Hospitality",
+  "Interior Designer",
+  "Lawyer",
+  "Lecturer / Professor",
+  "Machine Operator",
+  "Marketing / Sales",
+  "Mechanical Engineer",
+  "Medical Professional",
+  "Nurse",
+  "Pilot",
+  "Police / Defence",
+  "Program Manager",
+  "Project Manager",
+  "Scientist",
+  "Software Engineer",
+  "Teacher",
+  "Technician",
+  "Trader",
+  "UI/UX Designer",
+  "Unemployed",
+  "Web Developer"
+];
+
 
   // fetch both lists in parallel
   const [eduList, occList] = await Promise.all([
@@ -1265,6 +1313,124 @@ $(document).ready(function() {
     });
 });
 </script>
+
+<script>
+$('#state').on('change', function () {
+    let state_id = $(this).val();
+
+    $('#district').html('<option value="">Choose district</option>');
+    $('#city').html('<option value="">Choose city</option>');
+
+    if (state_id) {
+        $.get("{{ route('matrimony.get-districts', ':id') }}".replace(':id', state_id),
+            function (res) {
+                $.each(res.districts, function (_, d) {
+                    $('#district').append(`<option value="${d.id}">${d.district}</option>`);
+                });
+            }
+        );
+    }
+});
+
+$('#district').on('change', function () {
+    let district_id = $(this).val();
+
+    $('#city').html('<option value="">Choose city</option>');
+
+    if (district_id) {
+        $.get("{{ route('matrimony.get-cities', ':id') }}".replace(':id', district_id),
+            function (res) {
+                $.each(res.cities, function (_, c) {
+                    $('#city').append(`<option value="${c.id}">${c.city}</option>`);
+                });
+            }
+        );
+    }
+});
+
+</script>
+<script>
+$(document).ready(function () {
+    $('.searchable-select').select2({
+        placeholder: "Select occupation",
+        allowClear: true,
+        width: '100%'
+    });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', async function () {
+  async function fetchList(url) {
+    try {
+      const res = await fetch(url, { cache: 'no-store' });
+      console.log('[LIST DEBUG] fetched', url, res.status);
+      if (!res.ok) { console.warn('[LIST DEBUG] non-OK', url, res.status); return null; }
+      const text = await res.text();
+      try {
+        const parsed = JSON.parse(text);
+        if (!Array.isArray(parsed)) { console.warn('[LIST DEBUG] not array', url); return null; }
+        return parsed;
+      } catch (pe) {
+        console.error('[LIST DEBUG] JSON parse error for', url, pe);
+        return null;
+      }
+    } catch (err) {
+      console.error('[LIST DEBUG] fetch error for', url, err);
+      return null;
+    }
+  }
+
+  function populateSelect(selectId, list, fallback) {
+    const sel = document.getElementById(selectId);
+    if (!sel) return;
+    const currentVal = sel.value || '';
+    const source = (Array.isArray(list) && list.length) ? list : fallback;
+    let html = '<option value="">Choose one</option>';
+    source.forEach(item => {
+      const val = item == null ? '' : String(item);
+      const esc = val.replace(/"/g, '&quot;');
+      const selAttr = (currentVal && currentVal === val) ? ' selected' : '';
+      html += `<option value="${esc}"${selAttr}>${esc}</option>`;
+    });
+    sel.innerHTML = html;
+  }
+
+  const eduFallback = [];
+  const occFallback = [];
+
+  const [eduList, occList] = await Promise.all([
+    fetchList('/json/educations.json'),
+    fetchList('/json/occupations.json')
+  ]);
+
+  populateSelect('education', eduList, eduFallback);
+  populateSelect('occupation', occList, occFallback);
+});
+</script>
+
+<script>
+$('#annual_income').on('change', function () {
+    let salary = $(this).val();
+
+    fetch('/json/occupations.json', { cache: 'no-store' })
+        .then(res => res.json())
+        .then(list => {
+            let html = '<option value="">Choose occupation</option>';
+            list.forEach(item => {
+                html += `<option value="${item}">${item}</option>`;
+            });
+
+            $('#occupation')
+                .html(html)
+                .trigger('change');
+        })
+        .catch(err => {
+            console.error('Occupation load error', err);
+        });
+});
+</script>
+
 
 
 </body>

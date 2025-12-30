@@ -1,14 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-use \Modules\CountryManage\app\Http\Controllers\CountryController;
-use \Modules\CountryManage\app\Http\Controllers\StateController;
-use \Modules\CountryManage\app\Http\Controllers\CityController;
+use Modules\CountryManage\app\Http\Controllers\CountryController;
+use Modules\CountryManage\app\Http\Controllers\StateController;
+use Modules\CountryManage\app\Http\Controllers\DistrictController;
+use Modules\CountryManage\app\Http\Controllers\CityController;
 
 Route::group(['prefix' => 'admin/location', 'middleware' => ['auth:admin', 'setlang']], function () {
+
+    /* ---------------- COUNTRY ---------------- */
     Route::group(['prefix' => 'country'], function () {
-        Route::match(['get', 'post'], '/all-country', [CountryController::class, 'all_country'])->name('admin.country.all')->permission('country-list');
+        Route::match(['get', 'post'], 'all-country', [CountryController::class, 'all_country'])->name('admin.country.all')->permission('country-list');
         Route::post('edit-country/{id?}', [CountryController::class,'edit_country'])->name('admin.country.edit')->permission('country-edit');
         Route::post('change-status/{id}', [CountryController::class,'change_status_country'])->name('admin.country.status')->permission('country-status-change');
         Route::post('delete/{id}', [CountryController::class,'delete_country'])->name('admin.country.delete')->permission('country-delete');
@@ -20,6 +22,7 @@ Route::group(['prefix' => 'admin/location', 'middleware' => ['auth:admin', 'setl
         Route::post('csv/import/database', [CountryController::class,'import_to_database_settings'])->name('admin.country.import.database');
     });
 
+    /* ---------------- STATE ---------------- */
     Route::group(['prefix' => 'state'], function () {
         Route::controller(StateController::class)->group(function () {
             Route::match(['get', 'post'], 'all-state', 'all_state')->name('admin.state.all')->permission('state-list');
@@ -35,6 +38,23 @@ Route::group(['prefix' => 'admin/location', 'middleware' => ['auth:admin', 'setl
         });
     });
 
+    /* ---------------- DISTRICT ---------------- */
+    Route::group(['prefix' => 'district'], function () {
+        Route::controller(DistrictController::class)->group(function () {
+            Route::match(['get', 'post'], 'all-district', 'all_district')->name('admin.district.all')->permission('district-list');
+            Route::post('edit-district/{id?}', 'edit_district')->name('admin.district.edit')->permission('district-edit');
+            Route::post('change-status/{id}', 'change_status_district')->name('admin.district.status')->permission('district-status-change');
+            Route::post('delete/{id}', 'delete_district')->name('admin.district.delete')->permission('district-delete');
+            Route::post('bulk-action', 'bulk_action_district')->name('admin.district.delete.bulk.action')->permission('district-bulk-delete');
+            Route::get('paginate/data', 'pagination')->name('admin.district.paginate.data');
+            Route::get('search-district', 'search_district')->name('admin.district.search');
+            Route::get('csv/import', 'import_settings')->name('admin.district.import.csv.settings')->permission('district-csv-file-import');
+            Route::post('csv/import', 'update_import_settings')->name('admin.district.import.csv.update.settings');
+            Route::post('csv/import/database', 'import_to_database_settings')->name('admin.district.import.database');
+        });
+    });
+
+    /* ---------------- CITY ---------------- */
     Route::group(['prefix' => 'city'], function () {
         Route::controller(CityController::class)->group(function () {
             Route::match(['get', 'post'], 'all-city', 'all_city')->name('admin.city.all')->permission('city-list');
@@ -49,4 +69,24 @@ Route::group(['prefix' => 'admin/location', 'middleware' => ['auth:admin', 'setl
             Route::post('csv/import/database', 'import_to_database_settings')->name('admin.city.import.database');
         });
     });
+
+    /* ---------------- AJAX DEPENDENT DROPDOWNS ---------------- */
+    Route::get('get-state-by-country/{country_id}', function ($country_id) {
+        return \Modules\CountryManage\app\Models\State::where('country_id', $country_id)
+            ->where('status', 1)
+            ->get();
+    })->name('admin.get.state.by.country');
+
+    Route::get('get-district-by-state/{state_id}', function ($state_id) {
+        return \Modules\CountryManage\app\Models\District::where('state_id', $state_id)
+            ->where('status', 1)
+            ->get();
+    })->name('admin.get.district.by.state');
+
+    Route::get('get-city-by-district/{district_id}', function ($district_id) {
+        return \Modules\CountryManage\app\Models\City::where('district_id', $district_id)
+            ->where('status', 1)
+            ->get();
+    })->name('admin.get.city.by.district');
+
 });

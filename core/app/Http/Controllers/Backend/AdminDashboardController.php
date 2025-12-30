@@ -244,5 +244,93 @@ class AdminDashboardController extends Controller
         return response()->json(['status'=>'done']);
     }
 
+    public function dashboardFilter(Request $request)
+{
+    $filter = $request->filter;
+
+    // TODAY
+    if ($filter === 'today') {
+        $data = [
+            'total_admins' => Admin::whereDate('created_at', today())->count(),
+            'total_users' => User::whereDate('created_at', today())->count(),
+            'total_listings' => Listing::whereDate('created_at', today())->count(),
+            'total_guest_listings' => Listing::guestListings()->whereDate('created_at', today())->count(),
+            'total_user_listings' => Listing::userListings()->whereDate('created_at', today())->count(),
+            'total_admin_listings' => Listing::adminListings()->whereDate('created_at', today())->count(),
+            'total_blogs' => Blog::whereDate('created_at', today())->count(),
+            'total_brand' => Brand::whereDate('created_at', today())->count(),
+            'total_categories' => Category::whereDate('created_at', today())->count(),
+            'total_subcategories' => SubCategory::whereDate('created_at', today())->count(),
+            'total_child_categories' => ChildCategory::whereDate('created_at', today())->count(),
+            'total_countries' => Country::whereDate('created_at', today())->count(),
+            'total_states' => State::whereDate('created_at', today())->count(),
+            'total_cities' => City::whereDate('created_at', today())->count(),
+            'total_tags' => Tag::whereDate('created_at', today())->count(),
+            'total_tickets' => Ticket::whereDate('created_at', today())->count(),
+            'total_newsletter' => NewsLetter::whereDate('created_at', today())->count(),
+            'total_advertisements' => Advertisement::whereDate('created_at', today())->count(),
+            'total_languages' => Language::whereDate('created_at', today())->count(),
+            'total_media_images' => MediaUpload::whereDate('created_at', today())->count(),
+            'total_notice' => Notice::whereDate('created_at', today())->count(),
+        ];
+    }
+
+    // THIS MONTH
+    elseif ($filter === 'month') {
+        $data = [
+            'total_admins' => Admin::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count(),
+            'total_users' => User::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count(),
+            'total_listings' => Listing::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count(),
+            'total_guest_listings' => Listing::guestListings()->whereMonth('created_at', now()->month)->count(),
+            'total_user_listings' => Listing::userListings()->whereMonth('created_at', now()->month)->count(),
+            'total_admin_listings' => Listing::adminListings()->whereMonth('created_at', now()->month)->count(),
+            'total_blogs' => Blog::whereMonth('created_at', now()->month)->count(),
+            'total_brand' => Brand::whereMonth('created_at', now()->month)->count(),
+            'total_categories' => Category::whereMonth('created_at', now()->month)->count(),
+            'total_subcategories' => SubCategory::whereMonth('created_at', now()->month)->count(),
+            'total_child_categories' => ChildCategory::whereMonth('created_at', now()->month)->count(),
+            'total_countries' => Country::whereMonth('created_at', now()->month)->count(),
+            'total_states' => State::whereMonth('created_at', now()->month)->count(),
+            'total_cities' => City::whereMonth('created_at', now()->month)->count(),
+            'total_tags' => Tag::whereMonth('created_at', now()->month)->count(),
+            'total_tickets' => Ticket::whereMonth('created_at', now()->month)->count(),
+            'total_newsletter' => NewsLetter::whereMonth('created_at', now()->month)->count(),
+            'total_advertisements' => Advertisement::whereMonth('created_at', now()->month)->count(),
+            'total_languages' => Language::whereMonth('created_at', now()->month)->count(),
+            'total_media_images' => MediaUpload::whereMonth('created_at', now()->month)->count(),
+            'total_notice' => Notice::whereMonth('created_at', now()->month)->count(),
+        ];
+    }
+
+    // ALL (DEFAULT)
+    else {
+        $data = [
+            'total_admins' => Admin::count(),
+            'total_users' => User::count(),
+            'total_listings' => Listing::count(),
+            'total_guest_listings' => Listing::guestListings()->count(),
+            'total_user_listings' => Listing::userListings()->count(),
+            'total_admin_listings' => Listing::adminListings()->count(),
+            'total_blogs' => Blog::count(),
+            'total_brand' => Brand::count(),
+            'total_categories' => Category::count(),
+            'total_subcategories' => SubCategory::count(),
+            'total_child_categories' => ChildCategory::count(),
+            'total_countries' => Country::count(),
+            'total_states' => State::count(),
+            'total_cities' => City::count(),
+            'total_tags' => Tag::count(),
+            'total_tickets' => Ticket::count(),
+            'total_newsletter' => NewsLetter::count(),
+            'total_advertisements' => Advertisement::count(),
+            'total_languages' => Language::count(),
+            'total_media_images' => MediaUpload::count(),
+            'total_notice' => Notice::count(),
+        ];
+    }
+
+    return response()->json($data);
+}
+
 
 }

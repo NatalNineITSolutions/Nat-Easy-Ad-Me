@@ -162,4 +162,35 @@ Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
             Route::get('favorite/listing/all', 'ListingFavoriteAll')->name('listing.favorite.all');
         });
     });
+
+    Route::post('/get-states-by-country', function (\Illuminate\Http\Request $request) {
+    return response()->json([
+        'status' => 'success',
+        'states' => \Modules\CountryManage\app\Models\State::where('country_id', $request->country_id)
+            ->where('status', 1)
+            ->select('id', 'state')
+            ->get()
+    ]);
+})->name('frontend.get.states');
+
+Route::post('/get-districts-by-state', function (\Illuminate\Http\Request $request) {
+    return response()->json([
+        'status' => 'success',
+        'districts' => \Modules\CountryManage\app\Models\District::where('state_id', $request->state_id)
+            ->where('status', 1)
+            ->select('id', 'district')
+            ->get()
+    ]);
+})->name('frontend.get.districts');
+
+Route::post('/get-cities-by-district', function (\Illuminate\Http\Request $request) {
+    return response()->json([
+        'status' => 'success',
+        'cities' => \Modules\CountryManage\app\Models\City::where('district_id', $request->district_id)
+            ->where('status', 1)
+            ->select('id', 'city')
+            ->get()
+    ]);
+})->name('frontend.get.cities');
+
 });

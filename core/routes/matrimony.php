@@ -24,6 +24,15 @@ Route::middleware(['web'])->group(function () {
         // Preference
         Route::get('/preference', [MatrimonyController::class, 'preference'])->name('preference');
         Route::post('/preference', [MatrimonyController::class, 'storePreference'])->name('preference.store');
+        Route::get('/preference-table', [MatrimonyController::class, 'preferenceTable'])
+    ->name('preference.table');
+    // Preference Edit
+Route::get('/preference/edit', [MatrimonyController::class, 'editPreference'])
+    ->name('preference.edit');
+
+Route::put('/preference/update', [MatrimonyController::class, 'updatePreference'])
+    ->name('preference.update');
+
 
         // Profile
         Route::get('/profile', [MatrimonyController::class, 'profile'])->name('profile');
@@ -61,6 +70,7 @@ Route::middleware(['web'])->group(function () {
         Route::get('/get-states/{country_id}', [MatrimonyController::class, 'getStates'])->name('get-states');
         Route::get('/get-cities/{state_id}', [MatrimonyController::class, 'getCities'])->name('get-cities');
         Route::get('/check-subscription', [MatrimonyController::class, 'checkSubscription'])->name('check.subscription');
+        Route::get('/get-districts/{state_id}', [MatrimonyController::class, 'getDistricts'])->name('get-districts');
     });
 });
 

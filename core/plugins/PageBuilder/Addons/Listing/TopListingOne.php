@@ -1,6 +1,5 @@
 <?php
 
-
 namespace plugins\PageBuilder\Addons\Listing;
 
 use App\Models\Backend\Listing;
@@ -28,12 +27,12 @@ class TopListingOne extends PageBuilderBase
         $output .= $this->default_fields();
         $widget_saved_values = $this->get_settings();
 
-
         $output .= Text::get([
             'name' => 'title',
             'label' => __('Title'),
             'value' => $widget_saved_values['title'] ?? null,
         ]);
+
         $output .= Text::get([
             'name' => 'explore_all',
             'label' => __('Explore Text'),
@@ -46,24 +45,28 @@ class TopListingOne extends PageBuilderBase
             'value' => $widget_saved_values['items'] ?? null,
             'info' => __('enter how many item you want to show in frontend'),
         ]);
+
         $output .= Slider::get([
             'name' => 'padding_top',
             'label' => __('Padding Top'),
             'value' => $widget_saved_values['padding_top'] ?? 260,
             'max' => 500,
         ]);
+
         $output .= Slider::get([
             'name' => 'padding_bottom',
             'label' => __('Padding Bottom'),
             'value' => $widget_saved_values['padding_bottom'] ?? 190,
             'max' => 500,
         ]);
+
         $output .= ColorPicker::get([
             'name' => 'section_bg',
             'label' => __('Background Color'),
             'value' => $widget_saved_values['section_bg'] ?? null,
             'info' => __('select color you want to show in frontend'),
         ]);
+
         $output .= ColorPicker::get([
             'name' => 'btn_color',
             'label' => __('Button Background Color'),
@@ -85,10 +88,8 @@ class TopListingOne extends PageBuilderBase
         return $output;
     }
 
-
     public function frontend_render(): string
     {
-
         $settings = $this->get_settings();
         $section_title = $settings['title'];
         $explore_text = $settings['explore_all'];
@@ -99,21 +100,13 @@ class TopListingOne extends PageBuilderBase
         $btn_color = $settings['btn_color'] ?? '';
         $button_text_color = $settings['button_text_color'] ?? '';
 
-        //static text helpers
         $static_text = static_text();
 
-        $listings = Listing::where('status', 1)->where('is_published', 1);
-        // if (moduleExists('Membership') && membershipModuleExistsAndEnable('Membership')) {
-        //     $listings = $listings->where(function ($query) {
-        //         $query->whereHas('user_membership');
-        //     });
-        // }
-
-        $listings = $listings->orderBy('view', 'desc')
-            ->take($items)
-            ->where('status', 1)
+        $listings = Listing::where('status', 1)
             ->where('is_published', 1)
-            ->inRandomOrder()
+            ->orderBy('view', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->take($items)
             ->get();
 
         return $this->renderBlade('listing.top-listing-one', [

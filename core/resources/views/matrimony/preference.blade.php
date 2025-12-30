@@ -485,8 +485,9 @@
                             <!-- Occupation -->
                             <div class="col-md-6">
                                 <label class="form-label">Occupation</label>
-                                <input type="text" class="form-control" name="occupation" id="occupation"
-                                    placeholder="Enter the Occupation">
+                                <select class="form-select" name="occupation" id="occupation">
+                                    <option value="">Choose Occupation</option>
+                                </select>
                             </div>
 
                             <!-- Marital Status -->
@@ -649,6 +650,74 @@
             });
         });
     </script>
+    <script>
+const occFallback = [
+  "Accountant",
+  "Administration",
+  "Air Hostess / Steward",
+  "Architect",
+  "Artist",
+  "Assembly Operator / Production Worker",
+  "Banker",
+  "Business Analyst",
+  "Business Owner",
+  "Civil Engineer",
+  "Content Writer",
+  "Consultant",
+  "Data Analyst",
+  "Data Scientist",
+  "Designer",
+  "Developer / Programmer",
+  "Doctor",
+  "Economist",
+  "Electrical Engineer",
+  "Engineer",
+  "Event Manager",
+  "Farmer",
+  "Finance Professional",
+  "Graphic Designer",
+  "HR / Recruitment",
+  "Hotel / Hospitality",
+  "Interior Designer",
+  "Lawyer",
+  "Lecturer / Professor",
+  "Machine Operator",
+  "Marketing / Sales",
+  "Mechanical Engineer",
+  "Medical Professional",
+  "Nurse",
+  "Pilot",
+  "Police / Defence",
+  "Program Manager",
+  "Project Manager",
+  "Scientist",
+  "Software Engineer",
+  "Teacher",
+  "Technician",
+  "Trader",
+  "UI/UX Designer",
+  "Unemployed",
+  "Web Developer"
+];
+
+document.addEventListener('DOMContentLoaded', function () {
+    const occupationSelect = document.getElementById('occupation');
+    const selectedOccupation = "{{ $preferences->occupation ?? '' }}";
+
+    occFallback.forEach(occ => {
+        const option = document.createElement('option');
+        option.value = occ;
+        option.textContent = occ;
+
+        if (occ === selectedOccupation) {
+            option.selected = true;
+        }
+
+        occupationSelect.appendChild(option);
+    });
+});
+</script>
+
 
 </body>
 

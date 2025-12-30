@@ -36,6 +36,7 @@ class JobDetail extends Model
         'work_authorization',
         'country_id',
         'state_id',
+        'district_id',
         'city_id',
         'category_id',
         'sub_category_id',

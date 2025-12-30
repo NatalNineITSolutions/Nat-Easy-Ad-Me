@@ -24,6 +24,9 @@ use App\Http\Controllers\Frontend\User\MLMController;
 use App\Http\Controllers\Frontend\User\UserController;
 use App\Models\Backend\SubCategory;
 use App\Models\Backend\ChildCategory;
+use Modules\CountryManage\app\Models\State;
+use Modules\CountryManage\app\Models\District;
+use Modules\CountryManage\app\Models\City;
 
 require_once __DIR__ . '/admin.php';
 require_once __DIR__ . '/user.php';
@@ -182,6 +185,35 @@ Route::group(['middleware' => ['globalVariable', 'maintains_mode', 'setlang']], 
 
     Route::get('/get-subcategories', [ListingController::class, 'getSubCategories'])->name('get.subcategories');
     Route::get('/get-childcategories', [ListingController::class, 'getChildCategories'])->name('get.childcategories');
+
+    Route::post('/get-states', function (\Illuminate\Http\Request $request) {
+    return response()->json([
+        'status' => 'success',
+        'states' => State::where('country_id', $request->country_id)
+            ->where('status', 1)
+            ->get(['id', 'state'])
+    ]);
+})->name('frontend.get.states');
+
+Route::post('/get-districts', function (\Illuminate\Http\Request $request) {
+    return response()->json([
+        'status' => 'success',
+        'districts' => District::where('state_id', $request->state_id)
+            ->where('status', 1)
+            ->get(['id', 'district'])
+    ]);
+})->name('frontend.get.districts');
+
+Route::post('/get-cities', function (\Illuminate\Http\Request $request) {
+    return response()->json([
+        'status' => 'success',
+        'cities' => City::where('district_id', $request->district_id)
+            ->where('status', 1)
+            ->get(['id', 'city'])
+    ]);
+})->name('frontend.get.cities');
+
+
 });
 
 

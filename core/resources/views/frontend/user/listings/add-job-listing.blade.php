@@ -230,40 +230,42 @@
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
-                        <div class="col-md-4">
-                            <label class="form-label">Country <span class="text-danger">*</span></label>
-                            <select name="country_id" id="country_id" class="form-control select2" required>
-                                <option value="">Select Country</option>
-                                @foreach($countries as $country)
-                                    <option value="{{ $country->id }}">{{ $country->country }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+    {{-- Country --}}
+    <div class="col-md-3">
+        <label class="form-label">Country <span class="text-danger">*</span></label>
+        <select id="country_id" name="country_id" class="form-control select2">
+            <option value="">Select Country</option>
+            @foreach($countries as $country)
+                <option value="{{ $country->id }}">{{ $country->country }}</option>
+            @endforeach
+        </select>
+    </div>
 
-                        <div class="col-md-4">
-                            <label class="form-label">State <span class="text-danger">*</span></label>
-                            <select name="state_id" id="state_id" class="form-control select2" required>
-                                <option value="">Select State</option>
-                                @foreach($states as $state)
-                                    <option value="{{ $state->id }}" {{ (isset($identity) && $identity->state_id == $state->id) ? 'selected' : '' }}>
-                                        {{ $state->state }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+    {{-- State --}}
+    <div class="col-md-3">
+        <label class="form-label">State <span class="text-danger">*</span></label>
+        <select id="state_id" name="state_id" class="form-control select2">
+            <option value="">Select State</option>
+        </select>
+    </div>
 
-                        <div class="col-md-4">
-                            <label class="form-label">City <span class="text-danger">*</span></label>
-                            <select name="city_id" id="city_id" class="form-control select2" required>
-                                <option value="">Select City</option>
-                                @foreach($cities as $city)
-                                    <option value="{{ $city->id }}" {{ (isset($identity) && $identity->city_id == $city->id) ? 'selected' : '' }}>
-                                        {{ $city->city }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
+    {{-- District --}}
+    <div class="col-md-3">
+        <label class="form-label">District <span class="text-danger">*</span></label>
+        <select id="district_id" name="district_id" class="form-control select2">
+            <option value="">Select District</option>
+        </select>
+    </div>
+
+    {{-- City --}}
+    <div class="col-md-3">
+        <label class="form-label">City <span class="text-danger">*</span></label>
+        <select id="city_id" name="city_id" class="form-control select2">
+            <option value="">Select City</option>
+        </select>
+    </div>
+</div>
+
                 </div>
             </div>
 
@@ -463,4 +465,82 @@
             });
         });
     </script>
+
+    <script>
+$(document).ready(function () {
+
+    /* COUNTRY → STATE */
+    $('#country_id').on('change', function () {
+        let countryId = $(this).val();
+
+        $('#state_id').html('<option value="">Select State</option>');
+        $('#district_id').html('<option value="">Select District</option>');
+        $('#city_id').html('<option value="">Select City</option>');
+
+        if (!countryId) return;
+
+        $.post("{{ route('frontend.get.states') }}", {
+            _token: "{{ csrf_token() }}",
+            country_id: countryId
+        }, function (res) {
+            if (res.status === 'success') {
+                $.each(res.states, function (_, state) {
+                    $('#state_id').append(
+                        `<option value="${state.id}">${state.state}</option>`
+                    );
+                });
+            }
+        });
+    });
+
+    /* STATE → DISTRICT */
+    $('#state_id').on('change', function () {
+        let stateId = $(this).val();
+
+        $('#district_id').html('<option value="">Select District</option>');
+        $('#city_id').html('<option value="">Select City</option>');
+
+        if (!stateId) return;
+
+        $.post("{{ route('frontend.get.districts') }}", {
+            _token: "{{ csrf_token() }}",
+            state_id: stateId
+        }, function (res) {
+            if (res.status === 'success') {
+                $.each(res.districts, function (_, district) {
+                    $('#district_id').append(
+                        `<option value="${district.id}">${district.district}</option>`
+                    );
+                });
+            }
+        });
+    });
+
+    /* DISTRICT → CITY */
+    $('#district_id').on('change', function () {
+        let districtId = $(this).val();
+
+        $('#city_id').html('<option value="">Select City</option>');
+
+        if (!districtId) return;
+
+        $.post("{{ route('frontend.get.cities') }}", {
+            _token: "{{ csrf_token() }}",
+            district_id: districtId
+        }, function (res) {
+            if (res.status === 'success') {
+                $.each(res.cities, function (_, city) {
+                    $('#city_id').append(
+                        `<option value="${city.id}">${city.city}</option>`
+                    );
+                });
+            }
+        });
+    });
+
+});
+</script>
+
+
+
 @endsection

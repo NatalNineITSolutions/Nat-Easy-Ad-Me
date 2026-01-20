@@ -14,6 +14,7 @@
             <input type="hidden" name="motherTongue" id="modal_motherTongue">
             <input type="hidden" name="country" id="modal_country">
             <input type="hidden" name="state" id="modal_state">
+            <input type="hidden" name="district" id="modal_district">
             <input type="hidden" name="city" id="modal_city">
             <input type="hidden" name="description" id="modal_description">
             <input type="hidden" name="date_of_birth" id="modal_date_of_birth">

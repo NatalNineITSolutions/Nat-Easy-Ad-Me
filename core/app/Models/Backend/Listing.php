@@ -59,7 +59,12 @@ class Listing extends Model
         'experience',
         'expected_salary',
         'job_location',
+        'visibility_type',
+        'city_name',
+        'district_name',
+        'state_name',
     ];
+
 
     protected $casts = [
         'status' => 'integer',

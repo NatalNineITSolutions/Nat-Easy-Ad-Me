@@ -159,6 +159,10 @@ class ListingController extends Controller
                 'salary' => $request->category_id == 54 ? 'required|numeric' : 'nullable|numeric',
                 'job_location' => $request->category_id == 54 ? 'required|string|max:255' : 'nullable|string|max:255',
                 'radius_km' => 'nullable|integer|min:1|max:500',
+                'visibility_type' => 'required|in:radius,city,district,state',
+                'city_name' => 'nullable|string|max:191',
+                'district_name' => 'nullable|string|max:191',
+                'state_name' => 'nullable|string|max:191',
             ], [
                 'title.required' => __('The title field is required.'),
                 'title.max' => __('The title must not exceed 191 characters.'),
@@ -220,6 +224,17 @@ class ListingController extends Controller
             $listing->lon = $request->longitude;
             $listing->is_featured = $request->is_featured ?? 0;
             $listing->radius_km = $request->radius_km ?? 10;
+            $listing->visibility_type = $request->visibility_type;
+            $listing->city_name = $request->visibility_type === 'city'
+                ? $request->city_name
+            : null;
+            $listing->district_name = $request->visibility_type === 'district'
+                ? $request->district_name
+            : null;
+            $listing->state_name = $request->visibility_type === 'state'
+                ? $request->state_name
+            : null;
+
             $listing->status = $status;
 
             // Add job-related fields if category is job category

@@ -230,18 +230,27 @@
             box-shadow: none;
             margin: auto;
         }
+        /* FIX Select2 vertical alignment */
+.select2-container .select2-selection--single {
+    height: 38px !important;
+    display: flex;
+    align-items: center;
+}
 
-        .select2-container .select2-selection--single {
-            height: 38px;
-            padding: 6px 12px;
-            border: 1px solid #ced4da;
-            border-radius: 0.375rem;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-        }
+.select2-container .select2-selection--single .select2-selection__rendered {
+    padding-left: 8px;
+    padding-right: 8px;
+    line-height: normal !important;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.select2-container .select2-selection--single .select2-selection__arrow {
+    height: 100%;
+}
 
     </style>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <x-media.css />
 @endsection
 
@@ -272,7 +281,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label for="gender" class="form-label">Gender</label>
-                                    <select class="form-select" id="gender" name="gender" required>
+                                    <select class="form-select searchable-select" id="gender" name="gender" required>
                                         <option value="" selected disabled>Select Gender</option>
                                         <option value="male">Male</option>
                                         <option value="female">Female</option>
@@ -284,7 +293,7 @@
                             <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label class="form-label">Religion</label>
-                                    <select class="form-select select2" name="religion" id="religion">
+                                    <select class="form-select searchable-select" name="religion" id="religion">
                                         <option value="" selected>Choose Religion</option>
                                         @foreach($religions as $religion)
                                             <option value="{{ $religion->id }}">{{ $religion->religion }}</option>
@@ -292,27 +301,28 @@
                                     </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="occupation" class="form-label">Occupation</label>
-                                    <select id="occupation" name="occupation" class="form-select select2" required>
-                                        <option value="">Select Occupation</option>
-                                    </select>
-                                </div>
+    <label class="form-label">Occupation</label>
+    <select class="form-select searchable-select" name="occupation" id="occupation">
+        <option value="">Choose occupation</option>
+    </select>
+</div>
                                 <div class="col-md-4">
-                                    <label for="annual_income" class="form-label">Annual Income</label>
-                                    <select class="form-select select2" name="income" id="income">
-    <option value="">Choose Annual Income</option>
-    @foreach($income as $inc)
-        <option value="{{ $inc->id }}">
-            {{ $inc->from_income }} - {{ $inc->to_income }}
-        </option>
-    @endforeach
-</select>
-                                </div>
+    <label class="form-label">Annual Income</label>
+    <select class="form-select searchable-select" id="income" name="income" required>
+        <option value="">Choose Annual Income</option>
+        @foreach($income as $inc)
+            <option value="{{ $inc->id }}">
+                {{ $inc->from_income }} - {{ $inc->to_income }}
+            </option>
+        @endforeach
+    </select>
+</div>
                             </div>
+
                             <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label class="form-label">Caste</label>
-                                    <select class="form-select select2" name="caste" id="caste">
+                                    <select class="form-select searchable-select" name="caste" id="caste">
                                         <option value="" selected>Choose Caste</option>
                                         @foreach($castes as $caste)
                                             <option value="{{ $caste->id }}">{{ $caste->caste }}</option>
@@ -321,7 +331,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label for="motherTongue" class="form-label">Mother Tongue</label>
-                                    <select class="form-select select2" id="motherTongue" name="motherTongue" required>
+                                    <select class="form-select searchable-select" id="motherTongue" name="motherTongue" required>
                                         <option value="" selected>Choose Mother Tongue</option>
                                         @foreach($motherTongues as $tongue)
                                             <option value="{{ $tongue->mother_tongue }}">{{ $tongue->mother_tongue }}</option>
@@ -330,7 +340,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Zodiac Sign</label>
-                                    <select class="form-select select2" name="zodiac_sign" id="zodiac_sign" required>
+                                    <select class="form-select searchable-select" name="zodiac_sign" id="zodiac_sign" required>
                                         <option value="" selected disabled>Choose Zodiac Sign</option>
                                         @foreach($zodiacsign as $zodiac)
                                             <option value="{{ $zodiac->id }}">{{ $zodiac->zodiac_sign }}</option>
@@ -341,7 +351,7 @@
                             <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label for="star" class="form-label">Star</label>
-                                    <select class="form-select select2" id="star" name="star" required>
+                                    <select class="form-select searchable-select" id="star" name="star" required>
                                         <option value="" selected disabled>Choose Star</option>
                                         @foreach($stars as $star)
                                             <option value="{{ $star->id }}">{{ $star->star }}</option>
@@ -350,7 +360,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label for="marital_status" class="form-label">Marital Status</label>
-                                    <select class="form-select select2" id="marital_status" name="marital_status" required>
+                                    <select class="form-select" id="marital_status" name="marital_status" required>
                                         <option value="" selected disabled>Choose Marital Status</option>
                                         @foreach($marital_status as $status)
                                             <option value="{{ $status }}">{{ $status }}</option>
@@ -358,39 +368,36 @@
                                     </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="country" class="form-label">Country</label>
-                                    <select class="form-select select2" id="country" name="country" required>
-                                        <option value="" selected>Choose Country</option>
-                                        @foreach($countries as $country)
-                                            <option value="{{ $country->id }}">{{ $country->country }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+        <label class="form-label">Country</label>
+        <select class="form-select" id="country" name="country" required>
+            <option value="">Choose Country</option>
+            @foreach($countries as $country)
+                <option value="{{ $country->id }}">{{ $country->country }}</option>
+            @endforeach
+        </select>
+    </div>
                             </div>
                             <div class="row mb-3">
-                                <div class="row mb-3">
-    <div class="col-md-4">
-        <label for="state" class="form-label">State</label>
-        <select class="form-select select2" id="state" name="state" required>
+                                <div class="col-md-4">
+        <label class="form-label">State</label>
+        <select class="form-select" id="state" name="state" required>
             <option value="">Choose State</option>
         </select>
     </div>
 
     <div class="col-md-4">
-        <label for="district" class="form-label">District</label>
-        <select class="form-select select2" id="district" name="district" required>
+        <label class="form-label">District</label>
+        <select class="form-select" id="district" name="district" required>
             <option value="">Choose District</option>
         </select>
     </div>
 
     <div class="col-md-4">
-        <label for="city" class="form-label">City</label>
-        <select class="form-select select2" id="city" name="city" required>
+        <label class="form-label">City</label>
+        <select class="form-select" id="city" name="city" required>
             <option value="">Choose City</option>
         </select>
     </div>
-</div>
-
 
                                 <div class="col-md-4">
                                     <label class="form-label">Profile Visibility</label>
@@ -408,44 +415,39 @@
                                 <div class="address box-shadow1 p-24">
                                     @if(get_static_option('google_map_settings_on_off') == null)
                                     <div class="address-wraper">
-                                        <div class="row g-3">
-                                            <div class="col-sm-4">
-                                                <div class="country">
-                                                    <label for="country">{{ __('Select Your Country') }}</label>
-                                                    <select name="country_id" id="country_id" class="select2_activation">
-                                                        <option value="">{{ __('Select Country') }}</option>
-                                                        @foreach($all_countries as $country)
-                                                            <option value="{{ $country->id }}" @if(Auth::guard('web')->check() && $country->id == Auth::guard('web')->user()->country_id) selected @endif>{{ $country->country }}</option>
-                                                        @endforeach
-                                                    </select><br>
-                                                    <span class="country_info"></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="country">
-                                                    <label for="country">{{ __('Select Your State') }}</label>
-                                                    <select name="state_id" id="state_id" class="get_country_state select2_activation">
-                                                        <option value="">{{ __('Select State') }}</option>
-                                                        @foreach($all_states as $state)
-                                                            <option value="{{ $state->id }}" @if(Auth::guard('web')->check() && $state->id == Auth::guard('web')->user()->state_id) selected @endif>{{ $state->state }}</option>
-                                                        @endforeach
-                                                    </select> <br>
-                                                    <span class="state_info"></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="country">
-                                                    <label for="country">{{ __('Select Your City') }}</label>
-                                                    <select name="city_id" id="city_id" class="get_state_city select2_activation">
-                                                        <option value="">{{ __('Select City') }}</option>
-                                                        @foreach($all_cities as $city)
-                                                            <option value="{{ $city->id }}" @if($city->id == Auth::guard('web')->user()->city_id) selected @endif>{{ $city->city }}</option>
-                                                        @endforeach
-                                                    </select><br>
-                                                    <span class="city_info"></span>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <div class="row mb-3">
+    <div class="col-md-3">
+        <label class="form-label">Country</label>
+        <select class="form-select" id="country" name="country" required>
+            <option value="">Choose Country</option>
+            @foreach($countries as $country)
+                <option value="{{ $country->id }}">{{ $country->country }}</option>
+            @endforeach
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">State</label>
+        <select class="form-select" id="state" name="state" required>
+            <option value="">Choose State</option>
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">District</label>
+        <select class="form-select" id="district" name="district" required>
+            <option value="">Choose District</option>
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">City</label>
+        <select class="form-select" id="city" name="city" required>
+            <option value="">Choose City</option>
+        </select>
+    </div>
+</div>
+
                                     </div>
                                     @else
                                         <!--Google Map -->
@@ -528,6 +530,7 @@
 <x-media.markup :type="'web'" />
 
 @section('script')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     @if(!empty(get_static_option('google_map_settings_on_off')))
         <x-map.google-map-api-key-set />
         <x-map.google-map-listing-js />
@@ -626,7 +629,7 @@
 
             chooseMembershipBtn.addEventListener('click', function () {
                 const requiredFields = ['name', 'date_of_birth', 'gender', 'religion', 'occupation',
-                    'annual_income', 'caste', 'motherTongue', 'country', 'state', 'city',
+                    'income', 'caste', 'motherTongue', 'country', 'state', 'city',
                     'description', 'zodiac_sign', 'star', 'marital_status'
                 ];
 
@@ -657,7 +660,7 @@
                 document.getElementById('modal_gender').value = document.getElementById('gender').value;
                 document.getElementById('modal_religion').value = document.getElementById('religion').value;
                 document.getElementById('modal_occupation').value = document.getElementById('occupation').value;
-                document.getElementById('modal_annual_income').value = document.getElementById('annual_income').value;
+                document.getElementById('modal_annual_income').value = document.getElementById('income').value;
                 document.getElementById('modal_caste').value = document.getElementById('caste').value;
                 document.getElementById('modal_motherTongue').value = document.getElementById('motherTongue').value;
                 document.getElementById('modal_country').value = document.getElementById('country').value;
@@ -678,8 +681,8 @@
 
     {{-- Fetch country --}}
     <script>
-/* Country → State */
-document.getElementById('country').addEventListener('change', function () {
+        // When the country dropdown changes, get the states
+        document.getElementById('country').addEventListener('change', function () {
     const countryId = this.value;
 
     const state = document.getElementById('state');
@@ -701,8 +704,8 @@ document.getElementById('country').addEventListener('change', function () {
         });
 });
 
-/* State → District */
-document.getElementById('state').addEventListener('change', function () {
+        // When the state dropdown changes, get the cities
+        document.getElementById('state').addEventListener('change', function () {
     const stateId = this.value;
 
     const district = document.getElementById('district');
@@ -722,7 +725,6 @@ document.getElementById('state').addEventListener('change', function () {
         });
 });
 
-/* District → City */
 document.getElementById('district').addEventListener('change', function () {
     const districtId = this.value;
     const city = document.getElementById('city');
@@ -739,43 +741,140 @@ document.getElementById('district').addEventListener('change', function () {
             });
         });
 });
-</script>
+    </script>
+    <script>
+async function fetchList(url) {
+    try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Fetch failed');
+        const data = await res.json();
+        return Array.isArray(data) ? data : [];
+    } catch (err) {
+        console.warn(`[FETCH ERROR] ${url}`, err);
+        return [];
+    }
+}
 
-<script>
-const occFallback = [
-  "Accountant","Administration","Air Hostess / Steward","Architect","Artist",
-  "Assembly Operator / Production Worker","Banker","Business Analyst",
-  "Business Owner","Civil Engineer","Content Writer","Consultant","Data Analyst",
-  "Data Scientist","Designer","Developer / Programmer","Doctor","Economist",
-  "Electrical Engineer","Engineer","Event Manager","Farmer","Finance Professional",
-  "Graphic Designer","HR / Recruitment","Hotel / Hospitality","Interior Designer",
-  "Lawyer","Lecturer / Professor","Machine Operator","Marketing / Sales",
-  "Mechanical Engineer","Medical Professional","Nurse","Pilot","Police / Defence",
-  "Program Manager","Project Manager","Scientist","Software Engineer","Teacher",
-  "Technician","Trader","UI/UX Designer","Unemployed","Web Developer"
-];
+function populateSelect(selectId, list, fallback = []) {
+    const select = document.getElementById(selectId);
+    if (!select) return;
 
-$(document).ready(function () {
-    const occupationSelect = $('#occupation');
-    const selectedOccupation = "{{ old('occupation', $profile->occupation ?? '') }}";
+    // clear existing options except first
+    select.querySelectorAll('option:not(:first-child)').forEach(o => o.remove());
 
-    occFallback.forEach(occ => {
-        const option = new Option(occ, occ, false, occ === selectedOccupation);
-        occupationSelect.append(option);
+    const finalList = list.length ? list : fallback;
+
+    finalList.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item;
+        option.textContent = item;
+        select.appendChild(option);
     });
+
+    console.log(
+        `[POPULATE] ${selectId}:`,
+        list.length ? 'JSON data used' : 'Fallback used',
+        `(${finalList.length} items)`
+    );
+}
+
+document.addEventListener('DOMContentLoaded', async function () {
+
+    const occFallback = [
+        "Accountant","Administration","Air Hostess / Steward","Architect","Artist",
+        "Assembly Operator / Production Worker","Banker","Business Analyst",
+        "Business Owner","Civil Engineer","Content Writer","Consultant",
+        "Data Analyst","Data Scientist","Designer","Developer / Programmer",
+        "Doctor","Economist","Electrical Engineer","Engineer","Event Manager",
+        "Farmer","Finance Professional","Graphic Designer","HR / Recruitment",
+        "Hotel / Hospitality","Interior Designer","Lawyer","Lecturer / Professor",
+        "Machine Operator","Marketing / Sales","Mechanical Engineer",
+        "Medical Professional","Nurse","Pilot","Police / Defence",
+        "Program Manager","Project Manager","Scientist","Software Engineer",
+        "Teacher","Technician","Trader","UI/UX Designer","Unemployed",
+        "Web Developer"
+    ];
+
+    // fetch occupation list
+    const occList = await fetchList('/data/occupations.json');
+
+    // populate occupation select
+    populateSelect('occupation', occList, occFallback);
+
+    console.log('[LIST DEBUG] Occupation dropdown ready');
 });
 </script>
+
 <script>
-$(document).ready(function () {
-    $('.select2').select2({
+function initSelect2(context = document) {
+    $(context).find('.searchable-select').select2({
         width: '100%',
         placeholder: 'Select an option',
-        allowClear: true,
-        minimumResultsForSearch: 0  
+        allowClear: true
+    });
+}
+
+$(document).ready(function () {
+    initSelect2();
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const submitBtn = document.querySelector('.choose_membership_plan');
+    if (!submitBtn) return;
+
+    submitBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const formData = new FormData();
+
+        // Collect ALL inputs (district included)
+        document.querySelectorAll('#profileForm input, #profileForm select, #profileForm textarea')
+            .forEach(el => {
+                if (!el.name) return;
+
+                if (el.type === 'checkbox') {
+                    formData.append(el.name, el.checked ? 1 : 0);
+                } else {
+                    formData.append(el.name, el.value);
+                }
+            });
+
+        // 🔴 REQUIRED: payment gateway (same as live)
+        const gateway = document.querySelector('input[name="selected_payment_gateway"]:checked');
+        if (gateway) {
+            formData.append('selected_payment_gateway', gateway.value);
+        }
+
+        fetch("{{ route('matrimony.storeProfileListing') }}", {
+            method: "POST",
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: formData
+        })
+        .then(res => {
+            // 🔁 Gateway redirects return here
+            if (res.redirected) {
+                window.location.href = res.url;
+                return;
+            }
+            return res.json();
+        })
+        .then(data => {
+            if (data?.success) {
+                // fallback if no gateway selected
+                window.location.href = "{{ route('matrimony.price') }}";
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            toastr.error('Payment failed. Please try again.');
+        });
     });
 });
 </script>
-
 
 
 @endsection

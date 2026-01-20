@@ -615,94 +615,82 @@ public function updatePreference(Request $request)
     }
 
     public function storeProfileListing(Request $request)
-    {
-        Log::info('Form submission data:', $request->all());
+{
+    Log::info('Form submission data:', $request->all());
 
-        $imagePaths = [];
-        if ($request->filled('images')) {
-            $imageIds = explode('|', $request->input('images'));
+    // 🔒 VALIDATION (LIVE + district)
+    $request->validate([
+        'name'           => 'required|string|max:255',
+        'date_of_birth'  => 'required|date',
+        'gender'         => 'required|string',
+        'occupation'     => 'required|string',
+        'marital_status' => 'required|string',
+        'annual_income'  => 'required',
+        'country'        => 'required',
+        'state'          => 'required',
+        'district'       => 'required',   // ✅ EXTRA FIELD
+        'city'           => 'required',
+        'description'    => 'required|string',
+    ]);
 
-            foreach ($imageIds as $imageId) {
-                $imagePaths[] = $imageId;
-            }
-        }
-
-        $imagePathString = !empty($imagePaths) ? implode('|', $imagePaths) : null;
-
-        // Calculate age from date of birth
-        $dob = Carbon::parse($request->date_of_birth);
-        $age = $dob->age;
-
-        // Create profile with IDs and calculated age
-        $profileListing = ProfileListing::create([
-            'user_id' => Auth::id(),
-            'name' => $request->name,
-            'date_of_birth' => $request->date_of_birth,
-            'age' => $age,
-            'gender' => $request->gender,
-            'religion' => $request->religion,
-            'occupation' => $request->occupation,
-            'marital_status' => $request->marital_status,
-            'annual_income' => $request->annual_income,
-            'caste' => $request->caste,
-            'mother_tongue' => $request->motherTongue,
-            'country' => $request->country,
-            'state' => $request->state,
-            'district' => $request->district,
-            'city' => $request->city,
-            'image' => $imagePathString, // Store the pipe-separated string
-            'description' => $request->description,
-            'paid' => 0,
-            'payment_method' => null,
-            'zodiac_sign' => $request->zodiac_sign,
-            'star' => $request->star,
-            'visibility' => $request->visibility ?? 0,
-            'address' => $request->address, // Store the address
-            'lat' => $request->latitude, // Store latitude
-            'lon' => $request->longitude, // Store longitude
-        ]);
-
-        Log::info('Profile Listing Created:', $profileListing->toArray());
-
-        session()->put('profile_listing_id', $profileListing->id);
-
-        // Handle payment gateway if selected
-        if ($request->filled('selected_payment_gateway')) {
-            $payment_gateway = $request->selected_payment_gateway;
-            $credential_function = 'get_' . $payment_gateway . '_credential';
-
-            if (!method_exists((new PaymentGatewayCredential()), $credential_function)) {
-                $custom_data = [
-                    'request' => $request->all(),
-                    'total' => get_static_option('matrimony_price'),
-                    'payment_type' => "deposit",
-                    'payment_for' => "membership",
-                    'success_url' => route('user.membership.all'),
-                ];
-
-                $charge_customer_class_namespace = getChargeCustomerMethodNameByPaymentGatewayNameSpace($payment_gateway);
-                $charge_customer_method_name = getChargeCustomerMethodNameByPaymentGatewayName($payment_gateway);
-
-                $custom_charge_customer_class_object = new $charge_customer_class_namespace;
-
-                if (
-                    class_exists($charge_customer_class_namespace) &&
-                    method_exists($custom_charge_customer_class_object, $charge_customer_method_name)
-                ) {
-                    return $custom_charge_customer_class_object->$charge_customer_method_name($custom_data);
-                } else {
-                    return back()->with(toastr_error('Incorrect Class or Method'));
-                }
-            } else {
-                return $this->payment_with_gateway($payment_gateway);
-            }
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Profile Listing Saved Successfully!',
-        ]);
+    // 🖼 Images (same as live)
+    $imagePathString = null;
+    if ($request->filled('images')) {
+        $imagePathString = implode('|', explode('|', $request->images));
     }
+
+    // 🎂 Age calculation (same as live)
+    $age = Carbon::parse($request->date_of_birth)->age;
+
+    // 🧾 Create profile FIRST (same as live)
+    $profileListing = ProfileListing::create([
+        'user_id'        => Auth::id(),
+        'name'           => $request->name,
+        'date_of_birth'  => $request->date_of_birth,
+        'age'            => $age,
+        'gender'         => $request->gender,
+        'religion'       => $request->religion,
+        'occupation'     => $request->occupation,
+        'marital_status' => $request->marital_status,
+        'annual_income'  => $request->annual_income,
+        'caste'          => $request->caste,
+        'mother_tongue'  => $request->motherTongue,
+        'country'        => $request->country,
+        'state'          => $request->state,
+        'district'       => $request->district, // ✅ ADDED
+        'city'           => $request->city,
+        'image'          => $imagePathString,
+        'description'    => $request->description,
+        'paid'           => 0,
+        'payment_method' => null,
+        'zodiac_sign'    => $request->zodiac_sign,
+        'star'           => $request->star,
+        'visibility'     => $request->visibility ?? 0,
+        'address'        => $request->address,
+        'lat'            => $request->latitude,
+        'lon'            => $request->longitude,
+    ]);
+
+    Log::info('Profile Listing Created', [
+        'profile_id' => $profileListing->id
+    ]);
+
+    // 🔐 Session (MANDATORY for payment)
+    session()->put('profile_listing_id', $profileListing->id);
+
+    // 💳 PAYMENT (EXACTLY LIKE LIVE)
+    if ($request->filled('selected_payment_gateway')) {
+        return $this->payment_with_gateway($request->selected_payment_gateway);
+    }
+
+    // 📦 JSON RESPONSE (LIVE EXPECTS THIS)
+    return response()->json([
+        'success' => true,
+        'message' => 'Profile Listing Saved Successfully!',
+    ]);
+}
+
+
 
     public function payment_with_gateway($payment_gateway_name)
     {

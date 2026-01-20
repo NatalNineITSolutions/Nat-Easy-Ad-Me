@@ -1113,6 +1113,7 @@
             formData.append('employed_in', getValue('.section-3 #employed_in'));
             formData.append('country', getValue('.section-3 [name="country"]'));
             formData.append('state', getValue('.section-3 [name="state"]'));
+            formData.append('district', getValue('.section-3 [name="district"]'));
             formData.append('city', getValue('.section-3 [name="city"]'));
 
             // Section 4: Profile Details

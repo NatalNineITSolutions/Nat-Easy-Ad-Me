@@ -552,6 +552,19 @@
     </small>
 </div>
 
+<div class="mt-3">
+    <label>{{ __('Show Ad By') }}</label>
+    <select name="visibility_type" id="visibility_type" class="input-filed w-100">
+        <option value="radius" selected>Radius</option>
+        <option value="city">City</option>
+        <option value="district">District</option>
+        <option value="state">State</option>
+    </select>
+    <small class="text-muted">
+        {{ __('Choose how the ad visibility should be applied') }}
+    </small>
+</div>
+
                                             <div class="video box-shadow1 p-24 mt-3 mb-3">
                                                 <label for="vedio-link">{{ __('Video Url') }}</label>
                                                 <input type="text"  class="input-filed w-100" name="video_url" id="video_url" value="{{ old('video_url') }}" placeholder="{{__('youtube url')}}">

@@ -45,7 +45,7 @@ class BVDistributionService
         // 2) record the referral‐BV
         $bvRecord = UsersBV::create([
             'user_id'       => $parent->id,
-            'membership_id' => $upgradeMembershipId,
+            'membership_id' => null,
             'bv_points'     => $bvPoints,
             'upgrade_time'  => Carbon::now(),
             'type'          => $type,
